@@ -30,8 +30,12 @@ char* myStrCpy(char* dest, const char* src);
 char* myStrDup(const char *str);
 char* myFGets(char* str, int count, FILE* stream);
 void clearBuffer();
+void skipSpaces(char** buffer);
 
 bool isYes(char* answer);
 bool isNo(char* answer);
+
+void utf8Shift(int amountSymShift, char** pos);
+int getUtf8CharLength(unsigned char c);
 
 #endif /* STR_FUNC_H */

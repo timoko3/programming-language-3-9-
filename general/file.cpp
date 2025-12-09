@@ -1,10 +1,9 @@
 #include "file.h"
+#include "debug.h"
 
 #include <sys/stat.h>
 #include <stdlib.h>
 #include <assert.h>
-
-#define $ fprintf(stderr, "MEOW in %s:%d\n", __FILE__, __LINE__);
 
 // #define DEBUG
 
@@ -93,17 +92,15 @@ static string* divideBufferToStringsStructure(char* buffer, size_t nStrings){
     strings[0].ptr = buffer;
 
     #ifdef DEBUG
-    printBuffer(buffer);
+    // printBuffer(buffer);
     #endif /* DEBUG */
 
     int curStr = 1;
     int curSym = 0;
     for(curSym = 0; buffer[curSym + 1] != '\0'; curSym++){
-        #ifdef DEBUG
-        fprintf(stderr, "curSym = %d\n", curSym);
-        fprintf(stderr, "buffer[curSym] = %d\n", buffer[curSym]);
-        fprintf(stderr, "buffer[curSym + 1] = %d\n", buffer[curSym + 1]);
-        #endif /* DEBUG */
+        // LPRINTF("curSym = %d\n", curSym);
+        // LPRINTF("buffer[curSym] = %d\n", buffer[curSym]);
+        // LPRINTF("buffer[curSym + 1] = %d\n", buffer[curSym + 1]);
         if(buffer[curSym] == END_STR){
             strings[curStr].ptr = buffer + curSym + 1;
             strings[curStr - 1].len = (size_t) strings[curStr].ptr - 
@@ -155,7 +152,7 @@ static void printBuffer(char* buffer){
     assert(buffer);
 
     for(size_t curSym = 0; curSym < 31; curSym++){
-        printf("Символ %ld: %d\n", curSym, buffer[curSym]);
+        LPRINTF("Символ %ld: %d\n", curSym, buffer[curSym]);
     }   
 }
 #endif /* DEBUG */

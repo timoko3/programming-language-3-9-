@@ -1,7 +1,6 @@
 #include "strFunc.h"
 #include "hash.h"
 #include "poison.h"
-#define DEBUG
 #include "debug.h"
 
 #include <assert.h>
@@ -92,6 +91,14 @@ void clearBuffer(){
     }
 }
 
+void skipSpaces(char** buffer){
+    assert(buffer);
+
+    while(**buffer == '\0'){
+        (*buffer)++;
+    }
+}
+
 bool isYes(char* answer){
     assert(answer);
 
@@ -102,4 +109,20 @@ bool isNo(char* answer){
     assert(answer);
 
     return isEqualStrings(answer, "нет");
+}
+
+void utf8Shift(int amountSymShift, char** pos){
+    assert(pos);
+
+    for(size_t symSkipped = 0; symSkipped < amountSymShift; symSkipped++){
+        *pos += getUtf8CharLength(**pos);
+    }
+}
+
+int getUtf8CharLength(unsigned char c){
+    if      ((c & 0x80) == 0x00) return 1;
+    else if ((c & 0xE0) == 0xC0) return 2;
+    else if ((c & 0xF0) == 0xE0) return 3;
+    else if ((c & 0xF8) == 0xF0) return 4;
+    return -1;
 }

@@ -2,8 +2,6 @@
 // #include "operations.h"
 // #include "DSL.h"
 
-// #define DEBUG
-
 #include "../general/tree.h"
 #include "../general/strFunc.h"
 #include "../general/debug.h"
@@ -366,7 +364,7 @@ static void SyntaxError(){
 static bool isSupportedOperation(char* readOpName){
     assert(readOpName);
 
-    for(size_t curOper = 0; curOper < sizeof(operations) / sizeof(operation_t); curOper++){
+    for(size_t curOper = 0; curOper < sizeof(operations) / sizeof(token_t); curOper++){
         if(isEqualStrings(readOpName, operations[curOper].nameString)){
             LPRINTF("Операция доступна");
             return true;
@@ -377,7 +375,7 @@ static bool isSupportedOperation(char* readOpName){
 }
 
 static bool isOperationPrefix(const char* prefix) {
-    for (size_t curOper = 0; curOper < sizeof(operations)/sizeof(operation_t); curOper++) {
+    for (size_t curOper = 0; curOper < sizeof(operations)/sizeof(token_t); curOper++) {
         const char* op = operations[curOper].nameString;
         if (strncmp(prefix, op, strlen(prefix)) == 0) {
             return true;

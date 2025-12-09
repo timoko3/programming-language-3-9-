@@ -1,12 +1,3 @@
-#include "expressionTree.h"
+#include "tokens.h"
 
-#include <stdio.h>
-
-enum TOKENS{
-    NUMBER,
-    IDENT,
-    CYCLE,
-    COND
-};
-
-treeNode_t* tokenize(FILE* codeFilePtr);
+token_t* tokenize(const char* codeFileName);
