@@ -40,6 +40,7 @@ tokensSequence_t* tokenSequenceDtor(tokensSequence_t* tokenSequence){
 
     for(size_t curTokenInd = 0; curTokenInd < tokenSequence->size; curTokenInd++){
         if(tokenSequence->data[curTokenInd].type != NUMBER){
+            LPRINTF("free[%p]", *tokenStrData(&tokenSequence->data[curTokenInd]));
             free(*tokenStrData(&tokenSequence->data[curTokenInd]));
         }
     }
@@ -119,7 +120,7 @@ bool createVariableToken(token_t* token, char* tokenValue){
     return true;
 }
 
-bool copyTokenContent(token_t* token, token_t* reference){
+bool copyStrTokenContent(token_t* token, token_t* reference){
     assert(token);
     assert(reference);
 
@@ -127,6 +128,23 @@ bool copyTokenContent(token_t* token, token_t* reference){
     assert(*tokenStrData(token));
 
     myStrCpy(*tokenStrData(token),  *tokenStrData(reference));
+
+    return copyTokenContent(token, reference);
+}
+
+bool copyNumTokenContent(token_t* token, token_t* reference){
+    assert(token);
+    assert(reference);
+
+    *tokenNumData(token) = *tokenNumData(reference);
+
+    return copyTokenContent(token, reference);
+}
+
+bool copyTokenContent(token_t* token, token_t* reference){
+    assert(token);
+    assert(reference);
+
     token->tClass       = reference->tClass;
     token->type         = reference->type;
     token->paramCount   = reference->paramCount;

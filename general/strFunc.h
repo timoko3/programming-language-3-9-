@@ -37,5 +37,6 @@ bool isNo(char* answer);
 
 void utf8Shift(int amountSymShift, char** pos);
 int getUtf8CharLength(char c);
+void skipWhitespace(char** bufferPos);
 
 #endif /* STR_FUNC_H */

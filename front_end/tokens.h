@@ -59,6 +59,8 @@ void initTokensSequence(tokensSequence_t* tokensSequence, size_t startInd = 0);
 
 token_t* getCurrentToken(const char* curOpStringName);
 
+bool copyNumTokenContent(token_t* token, token_t* reference);
+bool copyStrTokenContent(token_t* token, token_t* reference);
 bool copyTokenContent(token_t* token, token_t* reference);
 
 bool createNumberToken(token_t* token, int tokenValue);

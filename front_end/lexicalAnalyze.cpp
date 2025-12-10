@@ -11,74 +11,118 @@
 #include <ctype.h>
 #include <stdlib.h>
 
-static token_t* getKeyword(char* curBufferPos);
+static bool parseKeyword(char* curBufferPos, token_t* token);
+static bool parseNumber(char* curBufferPos, token_t* token, char** endPos);
+static bool parseVariable(char* curBufferPos, token_t* token, char** endPos);
+
+static tokensSequence_t* appendToken(tokensSequence_t* tokensSequence, token_t* newToken);
 
 tokensSequence_t* tokenize(char* curBufferPos, tokensSequence_t* tokensSequence){
     assert(curBufferPos);
     assert(tokensSequence);
 
-    size_t curTokenInd = 0;
     while(*curBufferPos != '\0'){
-        if(tokensSequence->size >= tokensSequence->capacity) tokensSequence = reallocateTokensSequence(tokensSequence);
-
-        dumpTokenSequence(tokensSequence);
         LPRINTF("cycle iteration of reading token");
         LPRINTF("remaining string with curBufferPos: %s", curBufferPos);
+        dumpTokenSequence(tokensSequence);
+        skipSpaces(&curBufferPos);
+        if (*curBufferPos == '\0') break;
 
-        token_t* curToken = getKeyword(curBufferPos);
-        if(curToken){
-            LPRINTF("is keyword");
-            copyTokenContent(&tokensSequence->data[curTokenInd], curToken);
+        token_t tempToken = {0}; 
+        bool tokenFound = false;
 
-            curBufferPos += strlen(*tokenStrData(curToken));
+        if(parseKeyword(curBufferPos, &tempToken)){
+            LPRINTF("keyword case");
+            curBufferPos += strlen(*tokenStrData(&tempToken));   
+            tokenFound = true;
         }
-        else{
-            LPRINTF("NOT KEYWORD");
-            if(isdigit(*curBufferPos)){
-                LPRINTF("start creating number token lexical");
-                char* endNumBufferPos = NULL;
+        else if(parseNumber(curBufferPos, &tempToken, &curBufferPos)){
+            LPRINTF("number case");
+            tokenFound = true;
+        }
+        else if(parseVariable(curBufferPos, &tempToken, &curBufferPos)){
+            LPRINTF("variable case");
+            tokenFound = true;
+        }
 
-                int number = (int) strtol(curBufferPos, &endNumBufferPos, 10);
-                LPRINTF("get number token value: %d", number);
-                createNumberToken(&tokensSequence->data[curTokenInd], number);
+        if(tokenFound){
+            tokensSequence_t* tempSeqPtr = appendToken(tokensSequence, &tempToken);
+            assert(tempSeqPtr);
 
-                curBufferPos = endNumBufferPos;
-            }
-            else if(!isspace(*curBufferPos)){
-                LPRINTF("start creating variable token lexical");
-                int curBufferShift = 0;
-
-                char curTokenValue[MAX_VARIABLE_SIZE] = "";
-                sscanf(curBufferPos, "%s%n", curTokenValue, &curBufferShift);
-
-                createVariableToken(&tokensSequence->data[curTokenInd], curTokenValue);
-
-                curBufferPos += curBufferShift;
-            }
-            else{
-                utf8Shift(1, &curBufferPos);
-                continue;
-            }
-        }        
-        tokensSequence->size++;
-        curTokenInd++;
+            tokensSequence = tempSeqPtr;
+            if(tempToken.type != NUMBER) free(*tokenStrData(&tempToken));
+        }
     }
-    
+
     LPRINTF("ended tokenization cycle");
 
     return tokensSequence;
 }
 
-static token_t* getKeyword(char* curBufferPos){
+static bool parseKeyword(char* curBufferPos, token_t* token){
     assert(curBufferPos);
+    assert(token);
 
     for(size_t curTokenInd = 0; curTokenInd < TOKENS_COUNT; curTokenInd++){
-        LPRINTF("tokens[curTokenInd].nameString = %s, myStrLen(tokens[curTokenInd].nameString) = %d", *tokenStrData(&tokens[curTokenInd]),  myStrLen(*tokenStrData(&tokens[curTokenInd])));
         if(!strncmp(curBufferPos, *tokenStrData(&tokens[curTokenInd]), myStrLen(*tokenStrData(&tokens[curTokenInd])))){
             LPRINTF("Needed token found tokens[curTokenInd].nameString = %s", tokens[curTokenInd].nameString);
-            return &tokens[curTokenInd];
+
+            copyStrTokenContent(token, &tokens[curTokenInd]); 
+            return true;
         }
     }
+    return false;
+}
 
-    return NULL;
+static bool parseNumber(char* curBufferPos, token_t* token, char** endPos){
+    assert(curBufferPos);
+    assert(token);
+
+    if (isdigit(*curBufferPos)) {
+        int number = (int) strtol(curBufferPos, endPos, 10);
+        LPRINTF("Found number: %d", number);
+        createNumberToken(token, number);
+
+        return true;
+    }
+    return false;
+}
+
+static bool parseVariable(char* curBufferPos, token_t* token, char** endPos){
+    assert(curBufferPos);
+    assert(token);
+    assert(endPos);
+
+    if(!isspace(*curBufferPos)) {
+        char curTokenValue[MAX_VARIABLE_SIZE] = "";
+        int curBufferShift = 0;
+        
+        sscanf(curBufferPos, "%s%n", curTokenValue, &curBufferShift);
+        
+        createVariableToken(token, curTokenValue);
+        
+        *endPos = curBufferPos + curBufferShift;
+        return true;
+    }
+    return false;
+}
+
+static tokensSequence_t* appendToken(tokensSequence_t* tokensSequence, token_t* newToken){
+    assert(tokensSequence);
+    assert(newToken);
+
+    if(tokensSequence->size >= tokensSequence->capacity){
+        reallocateTokensSequence(tokensSequence);
+    }
+
+    if(newToken->type == NUMBER){
+        copyNumTokenContent(&tokensSequence->data[tokensSequence->size], newToken);
+    }
+    else{
+        copyStrTokenContent(&tokensSequence->data[tokensSequence->size], newToken);
+    }
+
+    tokensSequence->size++;
+
+    return tokensSequence;
 }

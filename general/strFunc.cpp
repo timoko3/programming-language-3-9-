@@ -6,6 +6,7 @@
 #include <assert.h>
 #include <stdio.h>
 #include <malloc.h>
+#include <ctype.h>
 
 size_t myStrLen(const char* start, char endStr){
     assert(start);
@@ -94,7 +95,9 @@ void clearBuffer(){
 void skipSpaces(char** buffer){
     assert(buffer);
 
-    while(**buffer == '\0'){
+    LPRINTF("entered skipSpaces func");
+
+    while(isspace(**buffer)){
         (*buffer)++;
     }
 }
@@ -125,4 +128,10 @@ int getUtf8CharLength(char c){
     else if ((c & 0xF0) == 0xE0) return 3;
     else if ((c & 0xF8) == 0xF0) return 4;
     return -1;
+}
+
+void skipWhitespace(char** bufferPos){
+    while(isspace(**bufferPos)){
+        utf8Shift(1, bufferPos); 
+    }
 }

@@ -26,6 +26,6 @@ void dumpTokenSequence(tokensSequence_t* tokenSequence){
             }
         }
     }
-
+    
     fclose(logFilePtr);
 }
