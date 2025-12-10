@@ -5,7 +5,7 @@
 #include <assert.h>
 #include <stdarg.h>
 
-static const char* LOG_FILE_NAME = "logLanguage.txt";
+const char* LOG_FILE_NAME = "logLanguage.txt";
 
 void lprintf(const char* text, ...){
     assert(text);

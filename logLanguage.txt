@@ -1,154 +1,584 @@
-[DEBUG] front_end/lexicalAnalyze.cpp:20:tokenize(): opened codeFile for lexical analyze(tokenizing)
-[DEBUG] front_end/lexicalAnalyze.cpp:24:tokenize(): successfully allocated memory for tokensSequence
-[DEBUG] front_end/lexicalAnalyze.cpp:29:tokenize(): cycle iteration of reading token
-[DEBUG] front_end/lexicalAnalyze.cpp:32:tokenize(): string starting with curBufferPos: Жили-были
-Добрый молодец с силушкой богатырской 9 убавить 3 так и было
-[DEBUG] front_end/lexicalAnalyze.cpp:34:tokenize(): Read word: 
-[DEBUG] front_end/lexicalAnalyze.cpp:62:isKeyword(): tokens[curTokenInd].nameString = собрать воедино, myStrLen(tokens[curTokenInd].nameString) = 29
-[DEBUG] front_end/lexicalAnalyze.cpp:62:isKeyword(): tokens[curTokenInd].nameString = убавить, myStrLen(tokens[curTokenInd].nameString) = 14
-[DEBUG] front_end/lexicalAnalyze.cpp:62:isKeyword(): tokens[curTokenInd].nameString = трижды, myStrLen(tokens[curTokenInd].nameString) = 12
-[DEBUG] front_end/lexicalAnalyze.cpp:62:isKeyword(): tokens[curTokenInd].nameString = повелеваю поделить, myStrLen(tokens[curTokenInd].nameString) = 35
-[DEBUG] front_end/lexicalAnalyze.cpp:62:isKeyword(): tokens[curTokenInd].nameString = Жили-были, myStrLen(tokens[curTokenInd].nameString) = 17
-[DEBUG] front_end/lexicalAnalyze.cpp:64:isKeyword(): Needed token found tokens[curTokenInd].nameString = Жили-были
-[DEBUG] front_end/lexicalAnalyze.cpp:38:tokenize(): is keyword
-[DEBUG] front_end/lexicalAnalyze.cpp:29:tokenize(): cycle iteration of reading token
-[DEBUG] front_end/lexicalAnalyze.cpp:32:tokenize(): string starting with curBufferPos: 
-Добрый молодец с силушкой богатырской 9 убавить 3 так и было
-[DEBUG] front_end/lexicalAnalyze.cpp:34:tokenize(): Read word: 
-[DEBUG] front_end/lexicalAnalyze.cpp:62:isKeyword(): tokens[curTokenInd].nameString = собрать воедино, myStrLen(tokens[curTokenInd].nameString) = 29
-[DEBUG] front_end/lexicalAnalyze.cpp:62:isKeyword(): tokens[curTokenInd].nameString = убавить, myStrLen(tokens[curTokenInd].nameString) = 14
-[DEBUG] front_end/lexicalAnalyze.cpp:62:isKeyword(): tokens[curTokenInd].nameString = трижды, myStrLen(tokens[curTokenInd].nameString) = 12
-[DEBUG] front_end/lexicalAnalyze.cpp:62:isKeyword(): tokens[curTokenInd].nameString = повелеваю поделить, myStrLen(tokens[curTokenInd].nameString) = 35
-[DEBUG] front_end/lexicalAnalyze.cpp:62:isKeyword(): tokens[curTokenInd].nameString = Жили-были, myStrLen(tokens[curTokenInd].nameString) = 17
-[DEBUG] front_end/lexicalAnalyze.cpp:62:isKeyword(): tokens[curTokenInd].nameString = Добрый молодец, myStrLen(tokens[curTokenInd].nameString) = 27
-[DEBUG] front_end/lexicalAnalyze.cpp:62:isKeyword(): tokens[curTokenInd].nameString = с силушкой богатырской, myStrLen(tokens[curTokenInd].nameString) = 42
-[DEBUG] front_end/lexicalAnalyze.cpp:62:isKeyword(): tokens[curTokenInd].nameString = так и было, myStrLen(tokens[curTokenInd].nameString) = 18
+[DEBUG] front_end/lexicalAnalyze.cpp:23:tokenize(): opened codeFile for lexical analyze(tokenizing)
+[DEBUG] front_end/lexicalAnalyze.cpp:27:tokenize(): successfully allocated memory for tokensSequence
+token with index 0, data: (null)
+token with index 1, data: (null)
+token with index 2, data: (null)
+token with index 3, data: (null)
+token with index 4, data: (null)
+token with index 5, data: (null)
+token with index 6, data: (null)
+token with index 7, data: (null)
+[DEBUG] front_end/lexicalAnalyze.cpp:33:tokenize(): cycle iteration of reading token
+[DEBUG] front_end/lexicalAnalyze.cpp:35:tokenize(): string starting with curBufferPos: Жили-были
+Добрый молодец Илья с силушкой богатырской 9 убавить 3 так и было
+[DEBUG] front_end/lexicalAnalyze.cpp:88:getKeyword(): tokens[curTokenInd].nameString = собрать воедино, myStrLen(tokens[curTokenInd].nameString) = 29
+[DEBUG] front_end/lexicalAnalyze.cpp:88:getKeyword(): tokens[curTokenInd].nameString = убавить, myStrLen(tokens[curTokenInd].nameString) = 14
+[DEBUG] front_end/lexicalAnalyze.cpp:88:getKeyword(): tokens[curTokenInd].nameString = трижды, myStrLen(tokens[curTokenInd].nameString) = 12
+[DEBUG] front_end/lexicalAnalyze.cpp:88:getKeyword(): tokens[curTokenInd].nameString = повелеваю поделить, myStrLen(tokens[curTokenInd].nameString) = 35
+[DEBUG] front_end/lexicalAnalyze.cpp:88:getKeyword(): tokens[curTokenInd].nameString = Жили-были, myStrLen(tokens[curTokenInd].nameString) = 17
+[DEBUG] front_end/lexicalAnalyze.cpp:90:getKeyword(): Needed token found tokens[curTokenInd].nameString = Жили-были
+[DEBUG] front_end/lexicalAnalyze.cpp:39:tokenize(): is keyword
+token with index 0, data: Жили-были
+token with index 1, data: (null)
+token with index 2, data: (null)
+token with index 3, data: (null)
+token with index 4, data: (null)
+token with index 5, data: (null)
+token with index 6, data: (null)
+token with index 7, data: (null)
+[DEBUG] front_end/lexicalAnalyze.cpp:33:tokenize(): cycle iteration of reading token
+[DEBUG] front_end/lexicalAnalyze.cpp:35:tokenize(): string starting with curBufferPos: 
+Добрый молодец Илья с силушкой богатырской 9 убавить 3 так и было
+[DEBUG] front_end/lexicalAnalyze.cpp:88:getKeyword(): tokens[curTokenInd].nameString = собрать воедино, myStrLen(tokens[curTokenInd].nameString) = 29
+[DEBUG] front_end/lexicalAnalyze.cpp:88:getKeyword(): tokens[curTokenInd].nameString = убавить, myStrLen(tokens[curTokenInd].nameString) = 14
+[DEBUG] front_end/lexicalAnalyze.cpp:88:getKeyword(): tokens[curTokenInd].nameString = трижды, myStrLen(tokens[curTokenInd].nameString) = 12
+[DEBUG] front_end/lexicalAnalyze.cpp:88:getKeyword(): tokens[curTokenInd].nameString = повелеваю поделить, myStrLen(tokens[curTokenInd].nameString) = 35
+[DEBUG] front_end/lexicalAnalyze.cpp:88:getKeyword(): tokens[curTokenInd].nameString = Жили-были, myStrLen(tokens[curTokenInd].nameString) = 17
+[DEBUG] front_end/lexicalAnalyze.cpp:88:getKeyword(): tokens[curTokenInd].nameString = Добрый молодец, myStrLen(tokens[curTokenInd].nameString) = 27
+[DEBUG] front_end/lexicalAnalyze.cpp:88:getKeyword(): tokens[curTokenInd].nameString = с силушкой богатырской, myStrLen(tokens[curTokenInd].nameString) = 42
+[DEBUG] front_end/lexicalAnalyze.cpp:88:getKeyword(): tokens[curTokenInd].nameString = так и было, myStrLen(tokens[curTokenInd].nameString) = 18
 [DEBUG] front_end/lexicalAnalyze.cpp:46:tokenize(): NOT KEYWORD
-[DEBUG] front_end/lexicalAnalyze.cpp:29:tokenize(): cycle iteration of reading token
-[DEBUG] front_end/lexicalAnalyze.cpp:32:tokenize(): string starting with curBufferPos: Добрый молодец с силушкой богатырской 9 убавить 3 так и было
-[DEBUG] front_end/lexicalAnalyze.cpp:34:tokenize(): Read word: 
-[DEBUG] front_end/lexicalAnalyze.cpp:62:isKeyword(): tokens[curTokenInd].nameString = собрать воедино, myStrLen(tokens[curTokenInd].nameString) = 29
-[DEBUG] front_end/lexicalAnalyze.cpp:62:isKeyword(): tokens[curTokenInd].nameString = убавить, myStrLen(tokens[curTokenInd].nameString) = 14
-[DEBUG] front_end/lexicalAnalyze.cpp:62:isKeyword(): tokens[curTokenInd].nameString = трижды, myStrLen(tokens[curTokenInd].nameString) = 12
-[DEBUG] front_end/lexicalAnalyze.cpp:62:isKeyword(): tokens[curTokenInd].nameString = повелеваю поделить, myStrLen(tokens[curTokenInd].nameString) = 35
-[DEBUG] front_end/lexicalAnalyze.cpp:62:isKeyword(): tokens[curTokenInd].nameString = Жили-были, myStrLen(tokens[curTokenInd].nameString) = 17
-[DEBUG] front_end/lexicalAnalyze.cpp:62:isKeyword(): tokens[curTokenInd].nameString = Добрый молодец, myStrLen(tokens[curTokenInd].nameString) = 27
-[DEBUG] front_end/lexicalAnalyze.cpp:64:isKeyword(): Needed token found tokens[curTokenInd].nameString = Добрый молодец
-[DEBUG] front_end/lexicalAnalyze.cpp:38:tokenize(): is keyword
-[DEBUG] front_end/lexicalAnalyze.cpp:29:tokenize(): cycle iteration of reading token
-[DEBUG] front_end/lexicalAnalyze.cpp:32:tokenize(): string starting with curBufferPos:  с силушкой богатырской 9 убавить 3 так и было
-[DEBUG] front_end/lexicalAnalyze.cpp:34:tokenize(): Read word: 
-[DEBUG] front_end/lexicalAnalyze.cpp:62:isKeyword(): tokens[curTokenInd].nameString = собрать воедино, myStrLen(tokens[curTokenInd].nameString) = 29
-[DEBUG] front_end/lexicalAnalyze.cpp:62:isKeyword(): tokens[curTokenInd].nameString = убавить, myStrLen(tokens[curTokenInd].nameString) = 14
-[DEBUG] front_end/lexicalAnalyze.cpp:62:isKeyword(): tokens[curTokenInd].nameString = трижды, myStrLen(tokens[curTokenInd].nameString) = 12
-[DEBUG] front_end/lexicalAnalyze.cpp:62:isKeyword(): tokens[curTokenInd].nameString = повелеваю поделить, myStrLen(tokens[curTokenInd].nameString) = 35
-[DEBUG] front_end/lexicalAnalyze.cpp:62:isKeyword(): tokens[curTokenInd].nameString = Жили-были, myStrLen(tokens[curTokenInd].nameString) = 17
-[DEBUG] front_end/lexicalAnalyze.cpp:62:isKeyword(): tokens[curTokenInd].nameString = Добрый молодец, myStrLen(tokens[curTokenInd].nameString) = 27
-[DEBUG] front_end/lexicalAnalyze.cpp:62:isKeyword(): tokens[curTokenInd].nameString = с силушкой богатырской, myStrLen(tokens[curTokenInd].nameString) = 42
-[DEBUG] front_end/lexicalAnalyze.cpp:62:isKeyword(): tokens[curTokenInd].nameString = так и было, myStrLen(tokens[curTokenInd].nameString) = 18
+token with index 0, data: Жили-были
+token with index 1, data: (null)
+token with index 2, data: (null)
+token with index 3, data: (null)
+token with index 4, data: (null)
+token with index 5, data: (null)
+token with index 6, data: (null)
+token with index 7, data: (null)
+[DEBUG] front_end/lexicalAnalyze.cpp:33:tokenize(): cycle iteration of reading token
+[DEBUG] front_end/lexicalAnalyze.cpp:35:tokenize(): string starting with curBufferPos: Добрый молодец Илья с силушкой богатырской 9 убавить 3 так и было
+[DEBUG] front_end/lexicalAnalyze.cpp:88:getKeyword(): tokens[curTokenInd].nameString = собрать воедино, myStrLen(tokens[curTokenInd].nameString) = 29
+[DEBUG] front_end/lexicalAnalyze.cpp:88:getKeyword(): tokens[curTokenInd].nameString = убавить, myStrLen(tokens[curTokenInd].nameString) = 14
+[DEBUG] front_end/lexicalAnalyze.cpp:88:getKeyword(): tokens[curTokenInd].nameString = трижды, myStrLen(tokens[curTokenInd].nameString) = 12
+[DEBUG] front_end/lexicalAnalyze.cpp:88:getKeyword(): tokens[curTokenInd].nameString = повелеваю поделить, myStrLen(tokens[curTokenInd].nameString) = 35
+[DEBUG] front_end/lexicalAnalyze.cpp:88:getKeyword(): tokens[curTokenInd].nameString = Жили-были, myStrLen(tokens[curTokenInd].nameString) = 17
+[DEBUG] front_end/lexicalAnalyze.cpp:88:getKeyword(): tokens[curTokenInd].nameString = Добрый молодец, myStrLen(tokens[curTokenInd].nameString) = 27
+[DEBUG] front_end/lexicalAnalyze.cpp:90:getKeyword(): Needed token found tokens[curTokenInd].nameString = Добрый молодец
+[DEBUG] front_end/lexicalAnalyze.cpp:39:tokenize(): is keyword
+token with index 0, data: Жили-были
+token with index 1, data: Добрый молодец
+token with index 2, data: (null)
+token with index 3, data: (null)
+token with index 4, data: (null)
+token with index 5, data: (null)
+token with index 6, data: (null)
+token with index 7, data: (null)
+[DEBUG] front_end/lexicalAnalyze.cpp:33:tokenize(): cycle iteration of reading token
+[DEBUG] front_end/lexicalAnalyze.cpp:35:tokenize(): string starting with curBufferPos:  Илья с силушкой богатырской 9 убавить 3 так и было
+[DEBUG] front_end/lexicalAnalyze.cpp:88:getKeyword(): tokens[curTokenInd].nameString = собрать воедино, myStrLen(tokens[curTokenInd].nameString) = 29
+[DEBUG] front_end/lexicalAnalyze.cpp:88:getKeyword(): tokens[curTokenInd].nameString = убавить, myStrLen(tokens[curTokenInd].nameString) = 14
+[DEBUG] front_end/lexicalAnalyze.cpp:88:getKeyword(): tokens[curTokenInd].nameString = трижды, myStrLen(tokens[curTokenInd].nameString) = 12
+[DEBUG] front_end/lexicalAnalyze.cpp:88:getKeyword(): tokens[curTokenInd].nameString = повелеваю поделить, myStrLen(tokens[curTokenInd].nameString) = 35
+[DEBUG] front_end/lexicalAnalyze.cpp:88:getKeyword(): tokens[curTokenInd].nameString = Жили-были, myStrLen(tokens[curTokenInd].nameString) = 17
+[DEBUG] front_end/lexicalAnalyze.cpp:88:getKeyword(): tokens[curTokenInd].nameString = Добрый молодец, myStrLen(tokens[curTokenInd].nameString) = 27
+[DEBUG] front_end/lexicalAnalyze.cpp:88:getKeyword(): tokens[curTokenInd].nameString = с силушкой богатырской, myStrLen(tokens[curTokenInd].nameString) = 42
+[DEBUG] front_end/lexicalAnalyze.cpp:88:getKeyword(): tokens[curTokenInd].nameString = так и было, myStrLen(tokens[curTokenInd].nameString) = 18
 [DEBUG] front_end/lexicalAnalyze.cpp:46:tokenize(): NOT KEYWORD
-[DEBUG] front_end/lexicalAnalyze.cpp:29:tokenize(): cycle iteration of reading token
-[DEBUG] front_end/lexicalAnalyze.cpp:32:tokenize(): string starting with curBufferPos: с силушкой богатырской 9 убавить 3 так и было
-[DEBUG] front_end/lexicalAnalyze.cpp:34:tokenize(): Read word: 
-[DEBUG] front_end/lexicalAnalyze.cpp:62:isKeyword(): tokens[curTokenInd].nameString = собрать воедино, myStrLen(tokens[curTokenInd].nameString) = 29
-[DEBUG] front_end/lexicalAnalyze.cpp:62:isKeyword(): tokens[curTokenInd].nameString = убавить, myStrLen(tokens[curTokenInd].nameString) = 14
-[DEBUG] front_end/lexicalAnalyze.cpp:62:isKeyword(): tokens[curTokenInd].nameString = трижды, myStrLen(tokens[curTokenInd].nameString) = 12
-[DEBUG] front_end/lexicalAnalyze.cpp:62:isKeyword(): tokens[curTokenInd].nameString = повелеваю поделить, myStrLen(tokens[curTokenInd].nameString) = 35
-[DEBUG] front_end/lexicalAnalyze.cpp:62:isKeyword(): tokens[curTokenInd].nameString = Жили-были, myStrLen(tokens[curTokenInd].nameString) = 17
-[DEBUG] front_end/lexicalAnalyze.cpp:62:isKeyword(): tokens[curTokenInd].nameString = Добрый молодец, myStrLen(tokens[curTokenInd].nameString) = 27
-[DEBUG] front_end/lexicalAnalyze.cpp:62:isKeyword(): tokens[curTokenInd].nameString = с силушкой богатырской, myStrLen(tokens[curTokenInd].nameString) = 42
-[DEBUG] front_end/lexicalAnalyze.cpp:64:isKeyword(): Needed token found tokens[curTokenInd].nameString = с силушкой богатырской
-[DEBUG] front_end/lexicalAnalyze.cpp:38:tokenize(): is keyword
-[DEBUG] front_end/lexicalAnalyze.cpp:29:tokenize(): cycle iteration of reading token
-[DEBUG] front_end/lexicalAnalyze.cpp:32:tokenize(): string starting with curBufferPos:  9 убавить 3 так и было
-[DEBUG] front_end/lexicalAnalyze.cpp:34:tokenize(): Read word: 
-[DEBUG] front_end/lexicalAnalyze.cpp:62:isKeyword(): tokens[curTokenInd].nameString = собрать воедино, myStrLen(tokens[curTokenInd].nameString) = 29
-[DEBUG] front_end/lexicalAnalyze.cpp:62:isKeyword(): tokens[curTokenInd].nameString = убавить, myStrLen(tokens[curTokenInd].nameString) = 14
-[DEBUG] front_end/lexicalAnalyze.cpp:62:isKeyword(): tokens[curTokenInd].nameString = трижды, myStrLen(tokens[curTokenInd].nameString) = 12
-[DEBUG] front_end/lexicalAnalyze.cpp:62:isKeyword(): tokens[curTokenInd].nameString = повелеваю поделить, myStrLen(tokens[curTokenInd].nameString) = 35
-[DEBUG] front_end/lexicalAnalyze.cpp:62:isKeyword(): tokens[curTokenInd].nameString = Жили-были, myStrLen(tokens[curTokenInd].nameString) = 17
-[DEBUG] front_end/lexicalAnalyze.cpp:62:isKeyword(): tokens[curTokenInd].nameString = Добрый молодец, myStrLen(tokens[curTokenInd].nameString) = 27
-[DEBUG] front_end/lexicalAnalyze.cpp:62:isKeyword(): tokens[curTokenInd].nameString = с силушкой богатырской, myStrLen(tokens[curTokenInd].nameString) = 42
-[DEBUG] front_end/lexicalAnalyze.cpp:62:isKeyword(): tokens[curTokenInd].nameString = так и было, myStrLen(tokens[curTokenInd].nameString) = 18
+token with index 0, data: Жили-были
+token with index 1, data: Добрый молодец
+token with index 2, data: (null)
+token with index 3, data: (null)
+token with index 4, data: (null)
+token with index 5, data: (null)
+token with index 6, data: (null)
+token with index 7, data: (null)
+[DEBUG] front_end/lexicalAnalyze.cpp:33:tokenize(): cycle iteration of reading token
+[DEBUG] front_end/lexicalAnalyze.cpp:35:tokenize(): string starting with curBufferPos: Илья с силушкой богатырской 9 убавить 3 так и было
+[DEBUG] front_end/lexicalAnalyze.cpp:88:getKeyword(): tokens[curTokenInd].nameString = собрать воедино, myStrLen(tokens[curTokenInd].nameString) = 29
+[DEBUG] front_end/lexicalAnalyze.cpp:88:getKeyword(): tokens[curTokenInd].nameString = убавить, myStrLen(tokens[curTokenInd].nameString) = 14
+[DEBUG] front_end/lexicalAnalyze.cpp:88:getKeyword(): tokens[curTokenInd].nameString = трижды, myStrLen(tokens[curTokenInd].nameString) = 12
+[DEBUG] front_end/lexicalAnalyze.cpp:88:getKeyword(): tokens[curTokenInd].nameString = повелеваю поделить, myStrLen(tokens[curTokenInd].nameString) = 35
+[DEBUG] front_end/lexicalAnalyze.cpp:88:getKeyword(): tokens[curTokenInd].nameString = Жили-были, myStrLen(tokens[curTokenInd].nameString) = 17
+[DEBUG] front_end/lexicalAnalyze.cpp:88:getKeyword(): tokens[curTokenInd].nameString = Добрый молодец, myStrLen(tokens[curTokenInd].nameString) = 27
+[DEBUG] front_end/lexicalAnalyze.cpp:88:getKeyword(): tokens[curTokenInd].nameString = с силушкой богатырской, myStrLen(tokens[curTokenInd].nameString) = 42
+[DEBUG] front_end/lexicalAnalyze.cpp:88:getKeyword(): tokens[curTokenInd].nameString = так и было, myStrLen(tokens[curTokenInd].nameString) = 18
 [DEBUG] front_end/lexicalAnalyze.cpp:46:tokenize(): NOT KEYWORD
-[DEBUG] front_end/lexicalAnalyze.cpp:29:tokenize(): cycle iteration of reading token
-[DEBUG] front_end/lexicalAnalyze.cpp:32:tokenize(): string starting with curBufferPos: 9 убавить 3 так и было
-[DEBUG] front_end/lexicalAnalyze.cpp:34:tokenize(): Read word: 
-[DEBUG] front_end/lexicalAnalyze.cpp:62:isKeyword(): tokens[curTokenInd].nameString = собрать воедино, myStrLen(tokens[curTokenInd].nameString) = 29
-[DEBUG] front_end/lexicalAnalyze.cpp:62:isKeyword(): tokens[curTokenInd].nameString = убавить, myStrLen(tokens[curTokenInd].nameString) = 14
-[DEBUG] front_end/lexicalAnalyze.cpp:62:isKeyword(): tokens[curTokenInd].nameString = трижды, myStrLen(tokens[curTokenInd].nameString) = 12
-[DEBUG] front_end/lexicalAnalyze.cpp:62:isKeyword(): tokens[curTokenInd].nameString = повелеваю поделить, myStrLen(tokens[curTokenInd].nameString) = 35
-[DEBUG] front_end/lexicalAnalyze.cpp:62:isKeyword(): tokens[curTokenInd].nameString = Жили-были, myStrLen(tokens[curTokenInd].nameString) = 17
-[DEBUG] front_end/lexicalAnalyze.cpp:62:isKeyword(): tokens[curTokenInd].nameString = Добрый молодец, myStrLen(tokens[curTokenInd].nameString) = 27
-[DEBUG] front_end/lexicalAnalyze.cpp:62:isKeyword(): tokens[curTokenInd].nameString = с силушкой богатырской, myStrLen(tokens[curTokenInd].nameString) = 42
-[DEBUG] front_end/lexicalAnalyze.cpp:62:isKeyword(): tokens[curTokenInd].nameString = так и было, myStrLen(tokens[curTokenInd].nameString) = 18
+[DEBUG] front_end/lexicalAnalyze.cpp:58:tokenize(): start creating variable token lexical
+[DEBUG] front_end/tokens.cpp:54:createVariableToken(): create variable token memory allocated
+token with index 0, data: Жили-были
+token with index 1, data: Добрый молодец
+token with index 2, data: Илья
+token with index 3, data: (null)
+token with index 4, data: (null)
+token with index 5, data: (null)
+token with index 6, data: (null)
+token with index 7, data: (null)
+[DEBUG] front_end/lexicalAnalyze.cpp:33:tokenize(): cycle iteration of reading token
+[DEBUG] front_end/lexicalAnalyze.cpp:35:tokenize(): string starting with curBufferPos:  с силушкой богатырской 9 убавить 3 так и было
+[DEBUG] front_end/lexicalAnalyze.cpp:88:getKeyword(): tokens[curTokenInd].nameString = собрать воедино, myStrLen(tokens[curTokenInd].nameString) = 29
+[DEBUG] front_end/lexicalAnalyze.cpp:88:getKeyword(): tokens[curTokenInd].nameString = убавить, myStrLen(tokens[curTokenInd].nameString) = 14
+[DEBUG] front_end/lexicalAnalyze.cpp:88:getKeyword(): tokens[curTokenInd].nameString = трижды, myStrLen(tokens[curTokenInd].nameString) = 12
+[DEBUG] front_end/lexicalAnalyze.cpp:88:getKeyword(): tokens[curTokenInd].nameString = повелеваю поделить, myStrLen(tokens[curTokenInd].nameString) = 35
+[DEBUG] front_end/lexicalAnalyze.cpp:88:getKeyword(): tokens[curTokenInd].nameString = Жили-были, myStrLen(tokens[curTokenInd].nameString) = 17
+[DEBUG] front_end/lexicalAnalyze.cpp:88:getKeyword(): tokens[curTokenInd].nameString = Добрый молодец, myStrLen(tokens[curTokenInd].nameString) = 27
+[DEBUG] front_end/lexicalAnalyze.cpp:88:getKeyword(): tokens[curTokenInd].nameString = с силушкой богатырской, myStrLen(tokens[curTokenInd].nameString) = 42
+[DEBUG] front_end/lexicalAnalyze.cpp:88:getKeyword(): tokens[curTokenInd].nameString = так и было, myStrLen(tokens[curTokenInd].nameString) = 18
 [DEBUG] front_end/lexicalAnalyze.cpp:46:tokenize(): NOT KEYWORD
-[DEBUG] front_end/lexicalAnalyze.cpp:29:tokenize(): cycle iteration of reading token
-[DEBUG] front_end/lexicalAnalyze.cpp:32:tokenize(): string starting with curBufferPos:  убавить 3 так и было
-[DEBUG] front_end/lexicalAnalyze.cpp:34:tokenize(): Read word: 
-[DEBUG] front_end/lexicalAnalyze.cpp:62:isKeyword(): tokens[curTokenInd].nameString = собрать воедино, myStrLen(tokens[curTokenInd].nameString) = 29
-[DEBUG] front_end/lexicalAnalyze.cpp:62:isKeyword(): tokens[curTokenInd].nameString = убавить, myStrLen(tokens[curTokenInd].nameString) = 14
-[DEBUG] front_end/lexicalAnalyze.cpp:62:isKeyword(): tokens[curTokenInd].nameString = трижды, myStrLen(tokens[curTokenInd].nameString) = 12
-[DEBUG] front_end/lexicalAnalyze.cpp:62:isKeyword(): tokens[curTokenInd].nameString = повелеваю поделить, myStrLen(tokens[curTokenInd].nameString) = 35
-[DEBUG] front_end/lexicalAnalyze.cpp:62:isKeyword(): tokens[curTokenInd].nameString = Жили-были, myStrLen(tokens[curTokenInd].nameString) = 17
-[DEBUG] front_end/lexicalAnalyze.cpp:62:isKeyword(): tokens[curTokenInd].nameString = Добрый молодец, myStrLen(tokens[curTokenInd].nameString) = 27
-[DEBUG] front_end/lexicalAnalyze.cpp:62:isKeyword(): tokens[curTokenInd].nameString = с силушкой богатырской, myStrLen(tokens[curTokenInd].nameString) = 42
-[DEBUG] front_end/lexicalAnalyze.cpp:62:isKeyword(): tokens[curTokenInd].nameString = так и было, myStrLen(tokens[curTokenInd].nameString) = 18
+token with index 0, data: Жили-были
+token with index 1, data: Добрый молодец
+token with index 2, data: Илья
+token with index 3, data: (null)
+token with index 4, data: (null)
+token with index 5, data: (null)
+token with index 6, data: (null)
+token with index 7, data: (null)
+[DEBUG] front_end/lexicalAnalyze.cpp:33:tokenize(): cycle iteration of reading token
+[DEBUG] front_end/lexicalAnalyze.cpp:35:tokenize(): string starting with curBufferPos: с силушкой богатырской 9 убавить 3 так и было
+[DEBUG] front_end/lexicalAnalyze.cpp:88:getKeyword(): tokens[curTokenInd].nameString = собрать воедино, myStrLen(tokens[curTokenInd].nameString) = 29
+[DEBUG] front_end/lexicalAnalyze.cpp:88:getKeyword(): tokens[curTokenInd].nameString = убавить, myStrLen(tokens[curTokenInd].nameString) = 14
+[DEBUG] front_end/lexicalAnalyze.cpp:88:getKeyword(): tokens[curTokenInd].nameString = трижды, myStrLen(tokens[curTokenInd].nameString) = 12
+[DEBUG] front_end/lexicalAnalyze.cpp:88:getKeyword(): tokens[curTokenInd].nameString = повелеваю поделить, myStrLen(tokens[curTokenInd].nameString) = 35
+[DEBUG] front_end/lexicalAnalyze.cpp:88:getKeyword(): tokens[curTokenInd].nameString = Жили-были, myStrLen(tokens[curTokenInd].nameString) = 17
+[DEBUG] front_end/lexicalAnalyze.cpp:88:getKeyword(): tokens[curTokenInd].nameString = Добрый молодец, myStrLen(tokens[curTokenInd].nameString) = 27
+[DEBUG] front_end/lexicalAnalyze.cpp:88:getKeyword(): tokens[curTokenInd].nameString = с силушкой богатырской, myStrLen(tokens[curTokenInd].nameString) = 42
+[DEBUG] front_end/lexicalAnalyze.cpp:90:getKeyword(): Needed token found tokens[curTokenInd].nameString = с силушкой богатырской
+[DEBUG] front_end/lexicalAnalyze.cpp:39:tokenize(): is keyword
+token with index 0, data: Жили-были
+token with index 1, data: Добрый молодец
+token with index 2, data: Илья
+token with index 3, data: с силушкой богатырской
+token with index 4, data: (null)
+token with index 5, data: (null)
+token with index 6, data: (null)
+token with index 7, data: (null)
+[DEBUG] front_end/lexicalAnalyze.cpp:33:tokenize(): cycle iteration of reading token
+[DEBUG] front_end/lexicalAnalyze.cpp:35:tokenize(): string starting with curBufferPos:  9 убавить 3 так и было
+[DEBUG] front_end/lexicalAnalyze.cpp:88:getKeyword(): tokens[curTokenInd].nameString = собрать воедино, myStrLen(tokens[curTokenInd].nameString) = 29
+[DEBUG] front_end/lexicalAnalyze.cpp:88:getKeyword(): tokens[curTokenInd].nameString = убавить, myStrLen(tokens[curTokenInd].nameString) = 14
+[DEBUG] front_end/lexicalAnalyze.cpp:88:getKeyword(): tokens[curTokenInd].nameString = трижды, myStrLen(tokens[curTokenInd].nameString) = 12
+[DEBUG] front_end/lexicalAnalyze.cpp:88:getKeyword(): tokens[curTokenInd].nameString = повелеваю поделить, myStrLen(tokens[curTokenInd].nameString) = 35
+[DEBUG] front_end/lexicalAnalyze.cpp:88:getKeyword(): tokens[curTokenInd].nameString = Жили-были, myStrLen(tokens[curTokenInd].nameString) = 17
+[DEBUG] front_end/lexicalAnalyze.cpp:88:getKeyword(): tokens[curTokenInd].nameString = Добрый молодец, myStrLen(tokens[curTokenInd].nameString) = 27
+[DEBUG] front_end/lexicalAnalyze.cpp:88:getKeyword(): tokens[curTokenInd].nameString = с силушкой богатырской, myStrLen(tokens[curTokenInd].nameString) = 42
+[DEBUG] front_end/lexicalAnalyze.cpp:88:getKeyword(): tokens[curTokenInd].nameString = так и было, myStrLen(tokens[curTokenInd].nameString) = 18
 [DEBUG] front_end/lexicalAnalyze.cpp:46:tokenize(): NOT KEYWORD
-[DEBUG] front_end/lexicalAnalyze.cpp:29:tokenize(): cycle iteration of reading token
-[DEBUG] front_end/lexicalAnalyze.cpp:32:tokenize(): string starting with curBufferPos: убавить 3 так и было
-[DEBUG] front_end/lexicalAnalyze.cpp:34:tokenize(): Read word: 
-[DEBUG] front_end/lexicalAnalyze.cpp:62:isKeyword(): tokens[curTokenInd].nameString = собрать воедино, myStrLen(tokens[curTokenInd].nameString) = 29
-[DEBUG] front_end/lexicalAnalyze.cpp:62:isKeyword(): tokens[curTokenInd].nameString = убавить, myStrLen(tokens[curTokenInd].nameString) = 14
-[DEBUG] front_end/lexicalAnalyze.cpp:64:isKeyword(): Needed token found tokens[curTokenInd].nameString = убавить
-[DEBUG] front_end/lexicalAnalyze.cpp:38:tokenize(): is keyword
-[DEBUG] front_end/lexicalAnalyze.cpp:29:tokenize(): cycle iteration of reading token
-[DEBUG] front_end/lexicalAnalyze.cpp:32:tokenize(): string starting with curBufferPos:  3 так и было
-[DEBUG] front_end/lexicalAnalyze.cpp:34:tokenize(): Read word: 
-[DEBUG] front_end/lexicalAnalyze.cpp:62:isKeyword(): tokens[curTokenInd].nameString = собрать воедино, myStrLen(tokens[curTokenInd].nameString) = 29
-[DEBUG] front_end/lexicalAnalyze.cpp:62:isKeyword(): tokens[curTokenInd].nameString = убавить, myStrLen(tokens[curTokenInd].nameString) = 14
-[DEBUG] front_end/lexicalAnalyze.cpp:62:isKeyword(): tokens[curTokenInd].nameString = трижды, myStrLen(tokens[curTokenInd].nameString) = 12
-[DEBUG] front_end/lexicalAnalyze.cpp:62:isKeyword(): tokens[curTokenInd].nameString = повелеваю поделить, myStrLen(tokens[curTokenInd].nameString) = 35
-[DEBUG] front_end/lexicalAnalyze.cpp:62:isKeyword(): tokens[curTokenInd].nameString = Жили-были, myStrLen(tokens[curTokenInd].nameString) = 17
-[DEBUG] front_end/lexicalAnalyze.cpp:62:isKeyword(): tokens[curTokenInd].nameString = Добрый молодец, myStrLen(tokens[curTokenInd].nameString) = 27
-[DEBUG] front_end/lexicalAnalyze.cpp:62:isKeyword(): tokens[curTokenInd].nameString = с силушкой богатырской, myStrLen(tokens[curTokenInd].nameString) = 42
-[DEBUG] front_end/lexicalAnalyze.cpp:62:isKeyword(): tokens[curTokenInd].nameString = так и было, myStrLen(tokens[curTokenInd].nameString) = 18
+token with index 0, data: Жили-были
+token with index 1, data: Добрый молодец
+token with index 2, data: Илья
+token with index 3, data: с силушкой богатырской
+token with index 4, data: (null)
+token with index 5, data: (null)
+token with index 6, data: (null)
+token with index 7, data: (null)
+[DEBUG] front_end/lexicalAnalyze.cpp:33:tokenize(): cycle iteration of reading token
+[DEBUG] front_end/lexicalAnalyze.cpp:35:tokenize(): string starting with curBufferPos: 9 убавить 3 так и было
+[DEBUG] front_end/lexicalAnalyze.cpp:88:getKeyword(): tokens[curTokenInd].nameString = собрать воедино, myStrLen(tokens[curTokenInd].nameString) = 29
+[DEBUG] front_end/lexicalAnalyze.cpp:88:getKeyword(): tokens[curTokenInd].nameString = убавить, myStrLen(tokens[curTokenInd].nameString) = 14
+[DEBUG] front_end/lexicalAnalyze.cpp:88:getKeyword(): tokens[curTokenInd].nameString = трижды, myStrLen(tokens[curTokenInd].nameString) = 12
+[DEBUG] front_end/lexicalAnalyze.cpp:88:getKeyword(): tokens[curTokenInd].nameString = повелеваю поделить, myStrLen(tokens[curTokenInd].nameString) = 35
+[DEBUG] front_end/lexicalAnalyze.cpp:88:getKeyword(): tokens[curTokenInd].nameString = Жили-были, myStrLen(tokens[curTokenInd].nameString) = 17
+[DEBUG] front_end/lexicalAnalyze.cpp:88:getKeyword(): tokens[curTokenInd].nameString = Добрый молодец, myStrLen(tokens[curTokenInd].nameString) = 27
+[DEBUG] front_end/lexicalAnalyze.cpp:88:getKeyword(): tokens[curTokenInd].nameString = с силушкой богатырской, myStrLen(tokens[curTokenInd].nameString) = 42
+[DEBUG] front_end/lexicalAnalyze.cpp:88:getKeyword(): tokens[curTokenInd].nameString = так и было, myStrLen(tokens[curTokenInd].nameString) = 18
 [DEBUG] front_end/lexicalAnalyze.cpp:46:tokenize(): NOT KEYWORD
-[DEBUG] front_end/lexicalAnalyze.cpp:29:tokenize(): cycle iteration of reading token
-[DEBUG] front_end/lexicalAnalyze.cpp:32:tokenize(): string starting with curBufferPos: 3 так и было
-[DEBUG] front_end/lexicalAnalyze.cpp:34:tokenize(): Read word: 
-[DEBUG] front_end/lexicalAnalyze.cpp:62:isKeyword(): tokens[curTokenInd].nameString = собрать воедино, myStrLen(tokens[curTokenInd].nameString) = 29
-[DEBUG] front_end/lexicalAnalyze.cpp:62:isKeyword(): tokens[curTokenInd].nameString = убавить, myStrLen(tokens[curTokenInd].nameString) = 14
-[DEBUG] front_end/lexicalAnalyze.cpp:62:isKeyword(): tokens[curTokenInd].nameString = трижды, myStrLen(tokens[curTokenInd].nameString) = 12
-[DEBUG] front_end/lexicalAnalyze.cpp:62:isKeyword(): tokens[curTokenInd].nameString = повелеваю поделить, myStrLen(tokens[curTokenInd].nameString) = 35
-[DEBUG] front_end/lexicalAnalyze.cpp:62:isKeyword(): tokens[curTokenInd].nameString = Жили-были, myStrLen(tokens[curTokenInd].nameString) = 17
-[DEBUG] front_end/lexicalAnalyze.cpp:62:isKeyword(): tokens[curTokenInd].nameString = Добрый молодец, myStrLen(tokens[curTokenInd].nameString) = 27
-[DEBUG] front_end/lexicalAnalyze.cpp:62:isKeyword(): tokens[curTokenInd].nameString = с силушкой богатырской, myStrLen(tokens[curTokenInd].nameString) = 42
-[DEBUG] front_end/lexicalAnalyze.cpp:62:isKeyword(): tokens[curTokenInd].nameString = так и было, myStrLen(tokens[curTokenInd].nameString) = 18
+[DEBUG] front_end/lexicalAnalyze.cpp:48:tokenize(): start creating number token lexical
+[DEBUG] front_end/lexicalAnalyze.cpp:52:tokenize(): get number token value: 9
+[DEBUG] front_end/tokens.cpp:44:createNumberToken(): created number node
+token with index 0, data: Жили-были
+token with index 1, data: Добрый молодец
+token with index 2, data: Илья
+token with index 3, data: с силушкой богатырской
+token with index 4, data: 9
+token with index 5, data: (null)
+token with index 6, data: (null)
+token with index 7, data: (null)
+[DEBUG] front_end/lexicalAnalyze.cpp:33:tokenize(): cycle iteration of reading token
+[DEBUG] front_end/lexicalAnalyze.cpp:35:tokenize(): string starting with curBufferPos:  убавить 3 так и было
+[DEBUG] front_end/lexicalAnalyze.cpp:88:getKeyword(): tokens[curTokenInd].nameString = собрать воедино, myStrLen(tokens[curTokenInd].nameString) = 29
+[DEBUG] front_end/lexicalAnalyze.cpp:88:getKeyword(): tokens[curTokenInd].nameString = убавить, myStrLen(tokens[curTokenInd].nameString) = 14
+[DEBUG] front_end/lexicalAnalyze.cpp:88:getKeyword(): tokens[curTokenInd].nameString = трижды, myStrLen(tokens[curTokenInd].nameString) = 12
+[DEBUG] front_end/lexicalAnalyze.cpp:88:getKeyword(): tokens[curTokenInd].nameString = повелеваю поделить, myStrLen(tokens[curTokenInd].nameString) = 35
+[DEBUG] front_end/lexicalAnalyze.cpp:88:getKeyword(): tokens[curTokenInd].nameString = Жили-были, myStrLen(tokens[curTokenInd].nameString) = 17
+[DEBUG] front_end/lexicalAnalyze.cpp:88:getKeyword(): tokens[curTokenInd].nameString = Добрый молодец, myStrLen(tokens[curTokenInd].nameString) = 27
+[DEBUG] front_end/lexicalAnalyze.cpp:88:getKeyword(): tokens[curTokenInd].nameString = с силушкой богатырской, myStrLen(tokens[curTokenInd].nameString) = 42
+[DEBUG] front_end/lexicalAnalyze.cpp:88:getKeyword(): tokens[curTokenInd].nameString = так и было, myStrLen(tokens[curTokenInd].nameString) = 18
 [DEBUG] front_end/lexicalAnalyze.cpp:46:tokenize(): NOT KEYWORD
-[DEBUG] front_end/lexicalAnalyze.cpp:29:tokenize(): cycle iteration of reading token
-[DEBUG] front_end/lexicalAnalyze.cpp:32:tokenize(): string starting with curBufferPos:  так и было
-[DEBUG] front_end/lexicalAnalyze.cpp:34:tokenize(): Read word: 
-[DEBUG] front_end/lexicalAnalyze.cpp:62:isKeyword(): tokens[curTokenInd].nameString = собрать воедино, myStrLen(tokens[curTokenInd].nameString) = 29
-[DEBUG] front_end/lexicalAnalyze.cpp:62:isKeyword(): tokens[curTokenInd].nameString = убавить, myStrLen(tokens[curTokenInd].nameString) = 14
-[DEBUG] front_end/lexicalAnalyze.cpp:62:isKeyword(): tokens[curTokenInd].nameString = трижды, myStrLen(tokens[curTokenInd].nameString) = 12
-[DEBUG] front_end/lexicalAnalyze.cpp:62:isKeyword(): tokens[curTokenInd].nameString = повелеваю поделить, myStrLen(tokens[curTokenInd].nameString) = 35
-[DEBUG] front_end/lexicalAnalyze.cpp:62:isKeyword(): tokens[curTokenInd].nameString = Жили-были, myStrLen(tokens[curTokenInd].nameString) = 17
-[DEBUG] front_end/lexicalAnalyze.cpp:62:isKeyword(): tokens[curTokenInd].nameString = Добрый молодец, myStrLen(tokens[curTokenInd].nameString) = 27
-[DEBUG] front_end/lexicalAnalyze.cpp:62:isKeyword(): tokens[curTokenInd].nameString = с силушкой богатырской, myStrLen(tokens[curTokenInd].nameString) = 42
-[DEBUG] front_end/lexicalAnalyze.cpp:62:isKeyword(): tokens[curTokenInd].nameString = так и было, myStrLen(tokens[curTokenInd].nameString) = 18
+token with index 0, data: Жили-были
+token with index 1, data: Добрый молодец
+token with index 2, data: Илья
+token with index 3, data: с силушкой богатырской
+token with index 4, data: 9
+token with index 5, data: (null)
+token with index 6, data: (null)
+token with index 7, data: (null)
+[DEBUG] front_end/lexicalAnalyze.cpp:33:tokenize(): cycle iteration of reading token
+[DEBUG] front_end/lexicalAnalyze.cpp:35:tokenize(): string starting with curBufferPos: убавить 3 так и было
+[DEBUG] front_end/lexicalAnalyze.cpp:88:getKeyword(): tokens[curTokenInd].nameString = собрать воедино, myStrLen(tokens[curTokenInd].nameString) = 29
+[DEBUG] front_end/lexicalAnalyze.cpp:88:getKeyword(): tokens[curTokenInd].nameString = убавить, myStrLen(tokens[curTokenInd].nameString) = 14
+[DEBUG] front_end/lexicalAnalyze.cpp:90:getKeyword(): Needed token found tokens[curTokenInd].nameString = убавить
+[DEBUG] front_end/lexicalAnalyze.cpp:39:tokenize(): is keyword
+token with index 0, data: Жили-были
+token with index 1, data: Добрый молодец
+token with index 2, data: Илья
+token with index 3, data: с силушкой богатырской
+token with index 4, data: 9
+token with index 5, data: убавить
+token with index 6, data: (null)
+token with index 7, data: (null)
+[DEBUG] front_end/lexicalAnalyze.cpp:33:tokenize(): cycle iteration of reading token
+[DEBUG] front_end/lexicalAnalyze.cpp:35:tokenize(): string starting with curBufferPos:  3 так и было
+[DEBUG] front_end/lexicalAnalyze.cpp:88:getKeyword(): tokens[curTokenInd].nameString = собрать воедино, myStrLen(tokens[curTokenInd].nameString) = 29
+[DEBUG] front_end/lexicalAnalyze.cpp:88:getKeyword(): tokens[curTokenInd].nameString = убавить, myStrLen(tokens[curTokenInd].nameString) = 14
+[DEBUG] front_end/lexicalAnalyze.cpp:88:getKeyword(): tokens[curTokenInd].nameString = трижды, myStrLen(tokens[curTokenInd].nameString) = 12
+[DEBUG] front_end/lexicalAnalyze.cpp:88:getKeyword(): tokens[curTokenInd].nameString = повелеваю поделить, myStrLen(tokens[curTokenInd].nameString) = 35
+[DEBUG] front_end/lexicalAnalyze.cpp:88:getKeyword(): tokens[curTokenInd].nameString = Жили-были, myStrLen(tokens[curTokenInd].nameString) = 17
+[DEBUG] front_end/lexicalAnalyze.cpp:88:getKeyword(): tokens[curTokenInd].nameString = Добрый молодец, myStrLen(tokens[curTokenInd].nameString) = 27
+[DEBUG] front_end/lexicalAnalyze.cpp:88:getKeyword(): tokens[curTokenInd].nameString = с силушкой богатырской, myStrLen(tokens[curTokenInd].nameString) = 42
+[DEBUG] front_end/lexicalAnalyze.cpp:88:getKeyword(): tokens[curTokenInd].nameString = так и было, myStrLen(tokens[curTokenInd].nameString) = 18
 [DEBUG] front_end/lexicalAnalyze.cpp:46:tokenize(): NOT KEYWORD
-[DEBUG] front_end/lexicalAnalyze.cpp:29:tokenize(): cycle iteration of reading token
-[DEBUG] front_end/lexicalAnalyze.cpp:32:tokenize(): string starting with curBufferPos: так и было
-[DEBUG] front_end/lexicalAnalyze.cpp:34:tokenize(): Read word: 
-[DEBUG] front_end/lexicalAnalyze.cpp:62:isKeyword(): tokens[curTokenInd].nameString = собрать воедино, myStrLen(tokens[curTokenInd].nameString) = 29
-[DEBUG] front_end/lexicalAnalyze.cpp:62:isKeyword(): tokens[curTokenInd].nameString = убавить, myStrLen(tokens[curTokenInd].nameString) = 14
-[DEBUG] front_end/lexicalAnalyze.cpp:62:isKeyword(): tokens[curTokenInd].nameString = трижды, myStrLen(tokens[curTokenInd].nameString) = 12
-[DEBUG] front_end/lexicalAnalyze.cpp:62:isKeyword(): tokens[curTokenInd].nameString = повелеваю поделить, myStrLen(tokens[curTokenInd].nameString) = 35
-[DEBUG] front_end/lexicalAnalyze.cpp:62:isKeyword(): tokens[curTokenInd].nameString = Жили-были, myStrLen(tokens[curTokenInd].nameString) = 17
-[DEBUG] front_end/lexicalAnalyze.cpp:62:isKeyword(): tokens[curTokenInd].nameString = Добрый молодец, myStrLen(tokens[curTokenInd].nameString) = 27
-[DEBUG] front_end/lexicalAnalyze.cpp:62:isKeyword(): tokens[curTokenInd].nameString = с силушкой богатырской, myStrLen(tokens[curTokenInd].nameString) = 42
-[DEBUG] front_end/lexicalAnalyze.cpp:62:isKeyword(): tokens[curTokenInd].nameString = так и было, myStrLen(tokens[curTokenInd].nameString) = 18
-[DEBUG] front_end/lexicalAnalyze.cpp:64:isKeyword(): Needed token found tokens[curTokenInd].nameString = так и было
-[DEBUG] front_end/lexicalAnalyze.cpp:38:tokenize(): is keyword
-[DEBUG] front_end/lexicalAnalyze.cpp:51:tokenize(): ended tokenization cycle
+token with index 0, data: Жили-были
+token with index 1, data: Добрый молодец
+token with index 2, data: Илья
+token with index 3, data: с силушкой богатырской
+token with index 4, data: 9
+token with index 5, data: убавить
+token with index 6, data: (null)
+token with index 7, data: (null)
+[DEBUG] front_end/lexicalAnalyze.cpp:33:tokenize(): cycle iteration of reading token
+[DEBUG] front_end/lexicalAnalyze.cpp:35:tokenize(): string starting with curBufferPos: 3 так и было
+[DEBUG] front_end/lexicalAnalyze.cpp:88:getKeyword(): tokens[curTokenInd].nameString = собрать воедино, myStrLen(tokens[curTokenInd].nameString) = 29
+[DEBUG] front_end/lexicalAnalyze.cpp:88:getKeyword(): tokens[curTokenInd].nameString = убавить, myStrLen(tokens[curTokenInd].nameString) = 14
+[DEBUG] front_end/lexicalAnalyze.cpp:88:getKeyword(): tokens[curTokenInd].nameString = трижды, myStrLen(tokens[curTokenInd].nameString) = 12
+[DEBUG] front_end/lexicalAnalyze.cpp:88:getKeyword(): tokens[curTokenInd].nameString = повелеваю поделить, myStrLen(tokens[curTokenInd].nameString) = 35
+[DEBUG] front_end/lexicalAnalyze.cpp:88:getKeyword(): tokens[curTokenInd].nameString = Жили-были, myStrLen(tokens[curTokenInd].nameString) = 17
+[DEBUG] front_end/lexicalAnalyze.cpp:88:getKeyword(): tokens[curTokenInd].nameString = Добрый молодец, myStrLen(tokens[curTokenInd].nameString) = 27
+[DEBUG] front_end/lexicalAnalyze.cpp:88:getKeyword(): tokens[curTokenInd].nameString = с силушкой богатырской, myStrLen(tokens[curTokenInd].nameString) = 42
+[DEBUG] front_end/lexicalAnalyze.cpp:88:getKeyword(): tokens[curTokenInd].nameString = так и было, myStrLen(tokens[curTokenInd].nameString) = 18
+[DEBUG] front_end/lexicalAnalyze.cpp:46:tokenize(): NOT KEYWORD
+[DEBUG] front_end/lexicalAnalyze.cpp:48:tokenize(): start creating number token lexical
+[DEBUG] front_end/lexicalAnalyze.cpp:52:tokenize(): get number token value: 3
+[DEBUG] front_end/tokens.cpp:44:createNumberToken(): created number node
+token with index 0, data: Жили-были
+token with index 1, data: Добрый молодец
+token with index 2, data: Илья
+token with index 3, data: с силушкой богатырской
+token with index 4, data: 9
+token with index 5, data: убавить
+token with index 6, data: 3
+token with index 7, data: (null)
+[DEBUG] front_end/lexicalAnalyze.cpp:33:tokenize(): cycle iteration of reading token
+[DEBUG] front_end/lexicalAnalyze.cpp:35:tokenize(): string starting with curBufferPos:  так и было
+[DEBUG] front_end/lexicalAnalyze.cpp:88:getKeyword(): tokens[curTokenInd].nameString = собрать воедино, myStrLen(tokens[curTokenInd].nameString) = 29
+[DEBUG] front_end/lexicalAnalyze.cpp:88:getKeyword(): tokens[curTokenInd].nameString = убавить, myStrLen(tokens[curTokenInd].nameString) = 14
+[DEBUG] front_end/lexicalAnalyze.cpp:88:getKeyword(): tokens[curTokenInd].nameString = трижды, myStrLen(tokens[curTokenInd].nameString) = 12
+[DEBUG] front_end/lexicalAnalyze.cpp:88:getKeyword(): tokens[curTokenInd].nameString = повелеваю поделить, myStrLen(tokens[curTokenInd].nameString) = 35
+[DEBUG] front_end/lexicalAnalyze.cpp:88:getKeyword(): tokens[curTokenInd].nameString = Жили-были, myStrLen(tokens[curTokenInd].nameString) = 17
+[DEBUG] front_end/lexicalAnalyze.cpp:88:getKeyword(): tokens[curTokenInd].nameString = Добрый молодец, myStrLen(tokens[curTokenInd].nameString) = 27
+[DEBUG] front_end/lexicalAnalyze.cpp:88:getKeyword(): tokens[curTokenInd].nameString = с силушкой богатырской, myStrLen(tokens[curTokenInd].nameString) = 42
+[DEBUG] front_end/lexicalAnalyze.cpp:88:getKeyword(): tokens[curTokenInd].nameString = так и было, myStrLen(tokens[curTokenInd].nameString) = 18
+[DEBUG] front_end/lexicalAnalyze.cpp:46:tokenize(): NOT KEYWORD
+token with index 0, data: Жили-были
+token with index 1, data: Добрый молодец
+token with index 2, data: Илья
+token with index 3, data: с силушкой богатырской
+token with index 4, data: 9
+token with index 5, data: убавить
+token with index 6, data: 3
+token with index 7, data: (null)
+[DEBUG] front_end/lexicalAnalyze.cpp:33:tokenize(): cycle iteration of reading token
+[DEBUG] front_end/lexicalAnalyze.cpp:35:tokenize(): string starting with curBufferPos: так и было
+[DEBUG] front_end/lexicalAnalyze.cpp:88:getKeyword(): tokens[curTokenInd].nameString = собрать воедино, myStrLen(tokens[curTokenInd].nameString) = 29
+[DEBUG] front_end/lexicalAnalyze.cpp:88:getKeyword(): tokens[curTokenInd].nameString = убавить, myStrLen(tokens[curTokenInd].nameString) = 14
+[DEBUG] front_end/lexicalAnalyze.cpp:88:getKeyword(): tokens[curTokenInd].nameString = трижды, myStrLen(tokens[curTokenInd].nameString) = 12
+[DEBUG] front_end/lexicalAnalyze.cpp:88:getKeyword(): tokens[curTokenInd].nameString = повелеваю поделить, myStrLen(tokens[curTokenInd].nameString) = 35
+[DEBUG] front_end/lexicalAnalyze.cpp:88:getKeyword(): tokens[curTokenInd].nameString = Жили-были, myStrLen(tokens[curTokenInd].nameString) = 17
+[DEBUG] front_end/lexicalAnalyze.cpp:88:getKeyword(): tokens[curTokenInd].nameString = Добрый молодец, myStrLen(tokens[curTokenInd].nameString) = 27
+[DEBUG] front_end/lexicalAnalyze.cpp:88:getKeyword(): tokens[curTokenInd].nameString = с силушкой богатырской, myStrLen(tokens[curTokenInd].nameString) = 42
+[DEBUG] front_end/lexicalAnalyze.cpp:88:getKeyword(): tokens[curTokenInd].nameString = так и было, myStrLen(tokens[curTokenInd].nameString) = 18
+[DEBUG] front_end/lexicalAnalyze.cpp:90:getKeyword(): Needed token found tokens[curTokenInd].nameString = так и было
+[DEBUG] front_end/lexicalAnalyze.cpp:39:tokenize(): is keyword
+[DEBUG] front_end/lexicalAnalyze.cpp:76:tokenize(): ended tokenization cycle
+[DEBUG] front_end/main.cpp:16:main(): tokenization ended
+[DEBUG] front_end/lexicalAnalyze.cpp:23:tokenize(): opened codeFile for lexical analyze(tokenizing)
+[DEBUG] front_end/lexicalAnalyze.cpp:27:tokenize(): successfully allocated memory for tokensSequence
+token with index 0, data: (null)
+token with index 1, data: (null)
+token with index 2, data: (null)
+token with index 3, data: (null)
+token with index 4, data: (null)
+token with index 5, data: (null)
+token with index 6, data: (null)
+token with index 7, data: (null)
+[DEBUG] front_end/lexicalAnalyze.cpp:33:tokenize(): cycle iteration of reading token
+[DEBUG] front_end/lexicalAnalyze.cpp:35:tokenize(): string starting with curBufferPos: Жили-были
+Добрый молодец Илья с силушкой богатырской 9 убавить 3 так и было
+[DEBUG] front_end/lexicalAnalyze.cpp:88:getKeyword(): tokens[curTokenInd].nameString = собрать воедино, myStrLen(tokens[curTokenInd].nameString) = 29
+[DEBUG] front_end/lexicalAnalyze.cpp:88:getKeyword(): tokens[curTokenInd].nameString = убавить, myStrLen(tokens[curTokenInd].nameString) = 14
+[DEBUG] front_end/lexicalAnalyze.cpp:88:getKeyword(): tokens[curTokenInd].nameString = трижды, myStrLen(tokens[curTokenInd].nameString) = 12
+[DEBUG] front_end/lexicalAnalyze.cpp:88:getKeyword(): tokens[curTokenInd].nameString = повелеваю поделить, myStrLen(tokens[curTokenInd].nameString) = 35
+[DEBUG] front_end/lexicalAnalyze.cpp:88:getKeyword(): tokens[curTokenInd].nameString = Жили-были, myStrLen(tokens[curTokenInd].nameString) = 17
+[DEBUG] front_end/lexicalAnalyze.cpp:90:getKeyword(): Needed token found tokens[curTokenInd].nameString = Жили-были
+[DEBUG] front_end/lexicalAnalyze.cpp:39:tokenize(): is keyword
+token with index 0, data: Жили-были
+token with index 1, data: (null)
+token with index 2, data: (null)
+token with index 3, data: (null)
+token with index 4, data: (null)
+token with index 5, data: (null)
+token with index 6, data: (null)
+token with index 7, data: (null)
+[DEBUG] front_end/lexicalAnalyze.cpp:33:tokenize(): cycle iteration of reading token
+[DEBUG] front_end/lexicalAnalyze.cpp:35:tokenize(): string starting with curBufferPos: 
+Добрый молодец Илья с силушкой богатырской 9 убавить 3 так и было
+[DEBUG] front_end/lexicalAnalyze.cpp:88:getKeyword(): tokens[curTokenInd].nameString = собрать воедино, myStrLen(tokens[curTokenInd].nameString) = 29
+[DEBUG] front_end/lexicalAnalyze.cpp:88:getKeyword(): tokens[curTokenInd].nameString = убавить, myStrLen(tokens[curTokenInd].nameString) = 14
+[DEBUG] front_end/lexicalAnalyze.cpp:88:getKeyword(): tokens[curTokenInd].nameString = трижды, myStrLen(tokens[curTokenInd].nameString) = 12
+[DEBUG] front_end/lexicalAnalyze.cpp:88:getKeyword(): tokens[curTokenInd].nameString = повелеваю поделить, myStrLen(tokens[curTokenInd].nameString) = 35
+[DEBUG] front_end/lexicalAnalyze.cpp:88:getKeyword(): tokens[curTokenInd].nameString = Жили-были, myStrLen(tokens[curTokenInd].nameString) = 17
+[DEBUG] front_end/lexicalAnalyze.cpp:88:getKeyword(): tokens[curTokenInd].nameString = Добрый молодец, myStrLen(tokens[curTokenInd].nameString) = 27
+[DEBUG] front_end/lexicalAnalyze.cpp:88:getKeyword(): tokens[curTokenInd].nameString = с силушкой богатырской, myStrLen(tokens[curTokenInd].nameString) = 42
+[DEBUG] front_end/lexicalAnalyze.cpp:88:getKeyword(): tokens[curTokenInd].nameString = так и было, myStrLen(tokens[curTokenInd].nameString) = 18
+[DEBUG] front_end/lexicalAnalyze.cpp:46:tokenize(): NOT KEYWORD
+token with index 0, data: Жили-были
+token with index 1, data: (null)
+token with index 2, data: (null)
+token with index 3, data: (null)
+token with index 4, data: (null)
+token with index 5, data: (null)
+token with index 6, data: (null)
+token with index 7, data: (null)
+[DEBUG] front_end/lexicalAnalyze.cpp:33:tokenize(): cycle iteration of reading token
+[DEBUG] front_end/lexicalAnalyze.cpp:35:tokenize(): string starting with curBufferPos: Добрый молодец Илья с силушкой богатырской 9 убавить 3 так и было
+[DEBUG] front_end/lexicalAnalyze.cpp:88:getKeyword(): tokens[curTokenInd].nameString = собрать воедино, myStrLen(tokens[curTokenInd].nameString) = 29
+[DEBUG] front_end/lexicalAnalyze.cpp:88:getKeyword(): tokens[curTokenInd].nameString = убавить, myStrLen(tokens[curTokenInd].nameString) = 14
+[DEBUG] front_end/lexicalAnalyze.cpp:88:getKeyword(): tokens[curTokenInd].nameString = трижды, myStrLen(tokens[curTokenInd].nameString) = 12
+[DEBUG] front_end/lexicalAnalyze.cpp:88:getKeyword(): tokens[curTokenInd].nameString = повелеваю поделить, myStrLen(tokens[curTokenInd].nameString) = 35
+[DEBUG] front_end/lexicalAnalyze.cpp:88:getKeyword(): tokens[curTokenInd].nameString = Жили-были, myStrLen(tokens[curTokenInd].nameString) = 17
+[DEBUG] front_end/lexicalAnalyze.cpp:88:getKeyword(): tokens[curTokenInd].nameString = Добрый молодец, myStrLen(tokens[curTokenInd].nameString) = 27
+[DEBUG] front_end/lexicalAnalyze.cpp:90:getKeyword(): Needed token found tokens[curTokenInd].nameString = Добрый молодец
+[DEBUG] front_end/lexicalAnalyze.cpp:39:tokenize(): is keyword
+token with index 0, data: Жили-были
+token with index 1, data: Добрый молодец
+token with index 2, data: (null)
+token with index 3, data: (null)
+token with index 4, data: (null)
+token with index 5, data: (null)
+token with index 6, data: (null)
+token with index 7, data: (null)
+[DEBUG] front_end/lexicalAnalyze.cpp:33:tokenize(): cycle iteration of reading token
+[DEBUG] front_end/lexicalAnalyze.cpp:35:tokenize(): string starting with curBufferPos:  Илья с силушкой богатырской 9 убавить 3 так и было
+[DEBUG] front_end/lexicalAnalyze.cpp:88:getKeyword(): tokens[curTokenInd].nameString = собрать воедино, myStrLen(tokens[curTokenInd].nameString) = 29
+[DEBUG] front_end/lexicalAnalyze.cpp:88:getKeyword(): tokens[curTokenInd].nameString = убавить, myStrLen(tokens[curTokenInd].nameString) = 14
+[DEBUG] front_end/lexicalAnalyze.cpp:88:getKeyword(): tokens[curTokenInd].nameString = трижды, myStrLen(tokens[curTokenInd].nameString) = 12
+[DEBUG] front_end/lexicalAnalyze.cpp:88:getKeyword(): tokens[curTokenInd].nameString = повелеваю поделить, myStrLen(tokens[curTokenInd].nameString) = 35
+[DEBUG] front_end/lexicalAnalyze.cpp:88:getKeyword(): tokens[curTokenInd].nameString = Жили-были, myStrLen(tokens[curTokenInd].nameString) = 17
+[DEBUG] front_end/lexicalAnalyze.cpp:88:getKeyword(): tokens[curTokenInd].nameString = Добрый молодец, myStrLen(tokens[curTokenInd].nameString) = 27
+[DEBUG] front_end/lexicalAnalyze.cpp:88:getKeyword(): tokens[curTokenInd].nameString = с силушкой богатырской, myStrLen(tokens[curTokenInd].nameString) = 42
+[DEBUG] front_end/lexicalAnalyze.cpp:88:getKeyword(): tokens[curTokenInd].nameString = так и было, myStrLen(tokens[curTokenInd].nameString) = 18
+[DEBUG] front_end/lexicalAnalyze.cpp:46:tokenize(): NOT KEYWORD
+token with index 0, data: Жили-были
+token with index 1, data: Добрый молодец
+token with index 2, data: (null)
+token with index 3, data: (null)
+token with index 4, data: (null)
+token with index 5, data: (null)
+token with index 6, data: (null)
+token with index 7, data: (null)
+[DEBUG] front_end/lexicalAnalyze.cpp:33:tokenize(): cycle iteration of reading token
+[DEBUG] front_end/lexicalAnalyze.cpp:35:tokenize(): string starting with curBufferPos: Илья с силушкой богатырской 9 убавить 3 так и было
+[DEBUG] front_end/lexicalAnalyze.cpp:88:getKeyword(): tokens[curTokenInd].nameString = собрать воедино, myStrLen(tokens[curTokenInd].nameString) = 29
+[DEBUG] front_end/lexicalAnalyze.cpp:88:getKeyword(): tokens[curTokenInd].nameString = убавить, myStrLen(tokens[curTokenInd].nameString) = 14
+[DEBUG] front_end/lexicalAnalyze.cpp:88:getKeyword(): tokens[curTokenInd].nameString = трижды, myStrLen(tokens[curTokenInd].nameString) = 12
+[DEBUG] front_end/lexicalAnalyze.cpp:88:getKeyword(): tokens[curTokenInd].nameString = повелеваю поделить, myStrLen(tokens[curTokenInd].nameString) = 35
+[DEBUG] front_end/lexicalAnalyze.cpp:88:getKeyword(): tokens[curTokenInd].nameString = Жили-были, myStrLen(tokens[curTokenInd].nameString) = 17
+[DEBUG] front_end/lexicalAnalyze.cpp:88:getKeyword(): tokens[curTokenInd].nameString = Добрый молодец, myStrLen(tokens[curTokenInd].nameString) = 27
+[DEBUG] front_end/lexicalAnalyze.cpp:88:getKeyword(): tokens[curTokenInd].nameString = с силушкой богатырской, myStrLen(tokens[curTokenInd].nameString) = 42
+[DEBUG] front_end/lexicalAnalyze.cpp:88:getKeyword(): tokens[curTokenInd].nameString = так и было, myStrLen(tokens[curTokenInd].nameString) = 18
+[DEBUG] front_end/lexicalAnalyze.cpp:46:tokenize(): NOT KEYWORD
+[DEBUG] front_end/lexicalAnalyze.cpp:58:tokenize(): start creating variable token lexical
+[DEBUG] front_end/tokens.cpp:56:createVariableToken(): create variable token memory allocated
+token with index 0, data: Жили-были
+token with index 1, data: Добрый молодец
+token with index 2, data: Илья
+token with index 3, data: (null)
+token with index 4, data: (null)
+token with index 5, data: (null)
+token with index 6, data: (null)
+token with index 7, data: (null)
+[DEBUG] front_end/lexicalAnalyze.cpp:33:tokenize(): cycle iteration of reading token
+[DEBUG] front_end/lexicalAnalyze.cpp:35:tokenize(): string starting with curBufferPos:  с силушкой богатырской 9 убавить 3 так и было
+[DEBUG] front_end/lexicalAnalyze.cpp:88:getKeyword(): tokens[curTokenInd].nameString = собрать воедино, myStrLen(tokens[curTokenInd].nameString) = 29
+[DEBUG] front_end/lexicalAnalyze.cpp:88:getKeyword(): tokens[curTokenInd].nameString = убавить, myStrLen(tokens[curTokenInd].nameString) = 14
+[DEBUG] front_end/lexicalAnalyze.cpp:88:getKeyword(): tokens[curTokenInd].nameString = трижды, myStrLen(tokens[curTokenInd].nameString) = 12
+[DEBUG] front_end/lexicalAnalyze.cpp:88:getKeyword(): tokens[curTokenInd].nameString = повелеваю поделить, myStrLen(tokens[curTokenInd].nameString) = 35
+[DEBUG] front_end/lexicalAnalyze.cpp:88:getKeyword(): tokens[curTokenInd].nameString = Жили-были, myStrLen(tokens[curTokenInd].nameString) = 17
+[DEBUG] front_end/lexicalAnalyze.cpp:88:getKeyword(): tokens[curTokenInd].nameString = Добрый молодец, myStrLen(tokens[curTokenInd].nameString) = 27
+[DEBUG] front_end/lexicalAnalyze.cpp:88:getKeyword(): tokens[curTokenInd].nameString = с силушкой богатырской, myStrLen(tokens[curTokenInd].nameString) = 42
+[DEBUG] front_end/lexicalAnalyze.cpp:88:getKeyword(): tokens[curTokenInd].nameString = так и было, myStrLen(tokens[curTokenInd].nameString) = 18
+[DEBUG] front_end/lexicalAnalyze.cpp:46:tokenize(): NOT KEYWORD
+token with index 0, data: Жили-были
+token with index 1, data: Добрый молодец
+token with index 2, data: Илья
+token with index 3, data: (null)
+token with index 4, data: (null)
+token with index 5, data: (null)
+token with index 6, data: (null)
+token with index 7, data: (null)
+[DEBUG] front_end/lexicalAnalyze.cpp:33:tokenize(): cycle iteration of reading token
+[DEBUG] front_end/lexicalAnalyze.cpp:35:tokenize(): string starting with curBufferPos: с силушкой богатырской 9 убавить 3 так и было
+[DEBUG] front_end/lexicalAnalyze.cpp:88:getKeyword(): tokens[curTokenInd].nameString = собрать воедино, myStrLen(tokens[curTokenInd].nameString) = 29
+[DEBUG] front_end/lexicalAnalyze.cpp:88:getKeyword(): tokens[curTokenInd].nameString = убавить, myStrLen(tokens[curTokenInd].nameString) = 14
+[DEBUG] front_end/lexicalAnalyze.cpp:88:getKeyword(): tokens[curTokenInd].nameString = трижды, myStrLen(tokens[curTokenInd].nameString) = 12
+[DEBUG] front_end/lexicalAnalyze.cpp:88:getKeyword(): tokens[curTokenInd].nameString = повелеваю поделить, myStrLen(tokens[curTokenInd].nameString) = 35
+[DEBUG] front_end/lexicalAnalyze.cpp:88:getKeyword(): tokens[curTokenInd].nameString = Жили-были, myStrLen(tokens[curTokenInd].nameString) = 17
+[DEBUG] front_end/lexicalAnalyze.cpp:88:getKeyword(): tokens[curTokenInd].nameString = Добрый молодец, myStrLen(tokens[curTokenInd].nameString) = 27
+[DEBUG] front_end/lexicalAnalyze.cpp:88:getKeyword(): tokens[curTokenInd].nameString = с силушкой богатырской, myStrLen(tokens[curTokenInd].nameString) = 42
+[DEBUG] front_end/lexicalAnalyze.cpp:90:getKeyword(): Needed token found tokens[curTokenInd].nameString = с силушкой богатырской
+[DEBUG] front_end/lexicalAnalyze.cpp:39:tokenize(): is keyword
+token with index 0, data: Жили-были
+token with index 1, data: Добрый молодец
+token with index 2, data: Илья
+token with index 3, data: с силушкой богатырской
+token with index 4, data: (null)
+token with index 5, data: (null)
+token with index 6, data: (null)
+token with index 7, data: (null)
+[DEBUG] front_end/lexicalAnalyze.cpp:33:tokenize(): cycle iteration of reading token
+[DEBUG] front_end/lexicalAnalyze.cpp:35:tokenize(): string starting with curBufferPos:  9 убавить 3 так и было
+[DEBUG] front_end/lexicalAnalyze.cpp:88:getKeyword(): tokens[curTokenInd].nameString = собрать воедино, myStrLen(tokens[curTokenInd].nameString) = 29
+[DEBUG] front_end/lexicalAnalyze.cpp:88:getKeyword(): tokens[curTokenInd].nameString = убавить, myStrLen(tokens[curTokenInd].nameString) = 14
+[DEBUG] front_end/lexicalAnalyze.cpp:88:getKeyword(): tokens[curTokenInd].nameString = трижды, myStrLen(tokens[curTokenInd].nameString) = 12
+[DEBUG] front_end/lexicalAnalyze.cpp:88:getKeyword(): tokens[curTokenInd].nameString = повелеваю поделить, myStrLen(tokens[curTokenInd].nameString) = 35
+[DEBUG] front_end/lexicalAnalyze.cpp:88:getKeyword(): tokens[curTokenInd].nameString = Жили-были, myStrLen(tokens[curTokenInd].nameString) = 17
+[DEBUG] front_end/lexicalAnalyze.cpp:88:getKeyword(): tokens[curTokenInd].nameString = Добрый молодец, myStrLen(tokens[curTokenInd].nameString) = 27
+[DEBUG] front_end/lexicalAnalyze.cpp:88:getKeyword(): tokens[curTokenInd].nameString = с силушкой богатырской, myStrLen(tokens[curTokenInd].nameString) = 42
+[DEBUG] front_end/lexicalAnalyze.cpp:88:getKeyword(): tokens[curTokenInd].nameString = так и было, myStrLen(tokens[curTokenInd].nameString) = 18
+[DEBUG] front_end/lexicalAnalyze.cpp:46:tokenize(): NOT KEYWORD
+token with index 0, data: Жили-были
+token with index 1, data: Добрый молодец
+token with index 2, data: Илья
+token with index 3, data: с силушкой богатырской
+token with index 4, data: (null)
+token with index 5, data: (null)
+token with index 6, data: (null)
+token with index 7, data: (null)
+[DEBUG] front_end/lexicalAnalyze.cpp:33:tokenize(): cycle iteration of reading token
+[DEBUG] front_end/lexicalAnalyze.cpp:35:tokenize(): string starting with curBufferPos: 9 убавить 3 так и было
+[DEBUG] front_end/lexicalAnalyze.cpp:88:getKeyword(): tokens[curTokenInd].nameString = собрать воедино, myStrLen(tokens[curTokenInd].nameString) = 29
+[DEBUG] front_end/lexicalAnalyze.cpp:88:getKeyword(): tokens[curTokenInd].nameString = убавить, myStrLen(tokens[curTokenInd].nameString) = 14
+[DEBUG] front_end/lexicalAnalyze.cpp:88:getKeyword(): tokens[curTokenInd].nameString = трижды, myStrLen(tokens[curTokenInd].nameString) = 12
+[DEBUG] front_end/lexicalAnalyze.cpp:88:getKeyword(): tokens[curTokenInd].nameString = повелеваю поделить, myStrLen(tokens[curTokenInd].nameString) = 35
+[DEBUG] front_end/lexicalAnalyze.cpp:88:getKeyword(): tokens[curTokenInd].nameString = Жили-были, myStrLen(tokens[curTokenInd].nameString) = 17
+[DEBUG] front_end/lexicalAnalyze.cpp:88:getKeyword(): tokens[curTokenInd].nameString = Добрый молодец, myStrLen(tokens[curTokenInd].nameString) = 27
+[DEBUG] front_end/lexicalAnalyze.cpp:88:getKeyword(): tokens[curTokenInd].nameString = с силушкой богатырской, myStrLen(tokens[curTokenInd].nameString) = 42
+[DEBUG] front_end/lexicalAnalyze.cpp:88:getKeyword(): tokens[curTokenInd].nameString = так и было, myStrLen(tokens[curTokenInd].nameString) = 18
+[DEBUG] front_end/lexicalAnalyze.cpp:46:tokenize(): NOT KEYWORD
+[DEBUG] front_end/lexicalAnalyze.cpp:48:tokenize(): start creating number token lexical
+[DEBUG] front_end/lexicalAnalyze.cpp:52:tokenize(): get number token value: 9
+[DEBUG] front_end/tokens.cpp:46:createNumberToken(): created number node
+token with index 0, data: Жили-были
+token with index 1, data: Добрый молодец
+token with index 2, data: Илья
+token with index 3, data: с силушкой богатырской
+token with index 4, data: 9
+token with index 5, data: (null)
+token with index 6, data: (null)
+token with index 7, data: (null)
+[DEBUG] front_end/lexicalAnalyze.cpp:33:tokenize(): cycle iteration of reading token
+[DEBUG] front_end/lexicalAnalyze.cpp:35:tokenize(): string starting with curBufferPos:  убавить 3 так и было
+[DEBUG] front_end/lexicalAnalyze.cpp:88:getKeyword(): tokens[curTokenInd].nameString = собрать воедино, myStrLen(tokens[curTokenInd].nameString) = 29
+[DEBUG] front_end/lexicalAnalyze.cpp:88:getKeyword(): tokens[curTokenInd].nameString = убавить, myStrLen(tokens[curTokenInd].nameString) = 14
+[DEBUG] front_end/lexicalAnalyze.cpp:88:getKeyword(): tokens[curTokenInd].nameString = трижды, myStrLen(tokens[curTokenInd].nameString) = 12
+[DEBUG] front_end/lexicalAnalyze.cpp:88:getKeyword(): tokens[curTokenInd].nameString = повелеваю поделить, myStrLen(tokens[curTokenInd].nameString) = 35
+[DEBUG] front_end/lexicalAnalyze.cpp:88:getKeyword(): tokens[curTokenInd].nameString = Жили-были, myStrLen(tokens[curTokenInd].nameString) = 17
+[DEBUG] front_end/lexicalAnalyze.cpp:88:getKeyword(): tokens[curTokenInd].nameString = Добрый молодец, myStrLen(tokens[curTokenInd].nameString) = 27
+[DEBUG] front_end/lexicalAnalyze.cpp:88:getKeyword(): tokens[curTokenInd].nameString = с силушкой богатырской, myStrLen(tokens[curTokenInd].nameString) = 42
+[DEBUG] front_end/lexicalAnalyze.cpp:88:getKeyword(): tokens[curTokenInd].nameString = так и было, myStrLen(tokens[curTokenInd].nameString) = 18
+[DEBUG] front_end/lexicalAnalyze.cpp:46:tokenize(): NOT KEYWORD
+token with index 0, data: Жили-были
+token with index 1, data: Добрый молодец
+token with index 2, data: Илья
+token with index 3, data: с силушкой богатырской
+token with index 4, data: 9
+token with index 5, data: (null)
+token with index 6, data: (null)
+token with index 7, data: (null)
+[DEBUG] front_end/lexicalAnalyze.cpp:33:tokenize(): cycle iteration of reading token
+[DEBUG] front_end/lexicalAnalyze.cpp:35:tokenize(): string starting with curBufferPos: убавить 3 так и было
+[DEBUG] front_end/lexicalAnalyze.cpp:88:getKeyword(): tokens[curTokenInd].nameString = собрать воедино, myStrLen(tokens[curTokenInd].nameString) = 29
+[DEBUG] front_end/lexicalAnalyze.cpp:88:getKeyword(): tokens[curTokenInd].nameString = убавить, myStrLen(tokens[curTokenInd].nameString) = 14
+[DEBUG] front_end/lexicalAnalyze.cpp:90:getKeyword(): Needed token found tokens[curTokenInd].nameString = убавить
+[DEBUG] front_end/lexicalAnalyze.cpp:39:tokenize(): is keyword
+token with index 0, data: Жили-были
+token with index 1, data: Добрый молодец
+token with index 2, data: Илья
+token with index 3, data: с силушкой богатырской
+token with index 4, data: 9
+token with index 5, data: убавить
+token with index 6, data: (null)
+token with index 7, data: (null)
+[DEBUG] front_end/lexicalAnalyze.cpp:33:tokenize(): cycle iteration of reading token
+[DEBUG] front_end/lexicalAnalyze.cpp:35:tokenize(): string starting with curBufferPos:  3 так и было
+[DEBUG] front_end/lexicalAnalyze.cpp:88:getKeyword(): tokens[curTokenInd].nameString = собрать воедино, myStrLen(tokens[curTokenInd].nameString) = 29
+[DEBUG] front_end/lexicalAnalyze.cpp:88:getKeyword(): tokens[curTokenInd].nameString = убавить, myStrLen(tokens[curTokenInd].nameString) = 14
+[DEBUG] front_end/lexicalAnalyze.cpp:88:getKeyword(): tokens[curTokenInd].nameString = трижды, myStrLen(tokens[curTokenInd].nameString) = 12
+[DEBUG] front_end/lexicalAnalyze.cpp:88:getKeyword(): tokens[curTokenInd].nameString = повелеваю поделить, myStrLen(tokens[curTokenInd].nameString) = 35
+[DEBUG] front_end/lexicalAnalyze.cpp:88:getKeyword(): tokens[curTokenInd].nameString = Жили-были, myStrLen(tokens[curTokenInd].nameString) = 17
+[DEBUG] front_end/lexicalAnalyze.cpp:88:getKeyword(): tokens[curTokenInd].nameString = Добрый молодец, myStrLen(tokens[curTokenInd].nameString) = 27
+[DEBUG] front_end/lexicalAnalyze.cpp:88:getKeyword(): tokens[curTokenInd].nameString = с силушкой богатырской, myStrLen(tokens[curTokenInd].nameString) = 42
+[DEBUG] front_end/lexicalAnalyze.cpp:88:getKeyword(): tokens[curTokenInd].nameString = так и было, myStrLen(tokens[curTokenInd].nameString) = 18
+[DEBUG] front_end/lexicalAnalyze.cpp:46:tokenize(): NOT KEYWORD
+token with index 0, data: Жили-были
+token with index 1, data: Добрый молодец
+token with index 2, data: Илья
+token with index 3, data: с силушкой богатырской
+token with index 4, data: 9
+token with index 5, data: убавить
+token with index 6, data: (null)
+token with index 7, data: (null)
+[DEBUG] front_end/lexicalAnalyze.cpp:33:tokenize(): cycle iteration of reading token
+[DEBUG] front_end/lexicalAnalyze.cpp:35:tokenize(): string starting with curBufferPos: 3 так и было
+[DEBUG] front_end/lexicalAnalyze.cpp:88:getKeyword(): tokens[curTokenInd].nameString = собрать воедино, myStrLen(tokens[curTokenInd].nameString) = 29
+[DEBUG] front_end/lexicalAnalyze.cpp:88:getKeyword(): tokens[curTokenInd].nameString = убавить, myStrLen(tokens[curTokenInd].nameString) = 14
+[DEBUG] front_end/lexicalAnalyze.cpp:88:getKeyword(): tokens[curTokenInd].nameString = трижды, myStrLen(tokens[curTokenInd].nameString) = 12
+[DEBUG] front_end/lexicalAnalyze.cpp:88:getKeyword(): tokens[curTokenInd].nameString = повелеваю поделить, myStrLen(tokens[curTokenInd].nameString) = 35
+[DEBUG] front_end/lexicalAnalyze.cpp:88:getKeyword(): tokens[curTokenInd].nameString = Жили-были, myStrLen(tokens[curTokenInd].nameString) = 17
+[DEBUG] front_end/lexicalAnalyze.cpp:88:getKeyword(): tokens[curTokenInd].nameString = Добрый молодец, myStrLen(tokens[curTokenInd].nameString) = 27
+[DEBUG] front_end/lexicalAnalyze.cpp:88:getKeyword(): tokens[curTokenInd].nameString = с силушкой богатырской, myStrLen(tokens[curTokenInd].nameString) = 42
+[DEBUG] front_end/lexicalAnalyze.cpp:88:getKeyword(): tokens[curTokenInd].nameString = так и было, myStrLen(tokens[curTokenInd].nameString) = 18
+[DEBUG] front_end/lexicalAnalyze.cpp:46:tokenize(): NOT KEYWORD
+[DEBUG] front_end/lexicalAnalyze.cpp:48:tokenize(): start creating number token lexical
+[DEBUG] front_end/lexicalAnalyze.cpp:52:tokenize(): get number token value: 3
+[DEBUG] front_end/tokens.cpp:46:createNumberToken(): created number node
+token with index 0, data: Жили-были
+token with index 1, data: Добрый молодец
+token with index 2, data: Илья
+token with index 3, data: с силушкой богатырской
+token with index 4, data: 9
+token with index 5, data: убавить
+token with index 6, data: 3
+token with index 7, data: (null)
+[DEBUG] front_end/lexicalAnalyze.cpp:33:tokenize(): cycle iteration of reading token
+[DEBUG] front_end/lexicalAnalyze.cpp:35:tokenize(): string starting with curBufferPos:  так и было
+[DEBUG] front_end/lexicalAnalyze.cpp:88:getKeyword(): tokens[curTokenInd].nameString = собрать воедино, myStrLen(tokens[curTokenInd].nameString) = 29
+[DEBUG] front_end/lexicalAnalyze.cpp:88:getKeyword(): tokens[curTokenInd].nameString = убавить, myStrLen(tokens[curTokenInd].nameString) = 14
+[DEBUG] front_end/lexicalAnalyze.cpp:88:getKeyword(): tokens[curTokenInd].nameString = трижды, myStrLen(tokens[curTokenInd].nameString) = 12
+[DEBUG] front_end/lexicalAnalyze.cpp:88:getKeyword(): tokens[curTokenInd].nameString = повелеваю поделить, myStrLen(tokens[curTokenInd].nameString) = 35
+[DEBUG] front_end/lexicalAnalyze.cpp:88:getKeyword(): tokens[curTokenInd].nameString = Жили-были, myStrLen(tokens[curTokenInd].nameString) = 17
+[DEBUG] front_end/lexicalAnalyze.cpp:88:getKeyword(): tokens[curTokenInd].nameString = Добрый молодец, myStrLen(tokens[curTokenInd].nameString) = 27
+[DEBUG] front_end/lexicalAnalyze.cpp:88:getKeyword(): tokens[curTokenInd].nameString = с силушкой богатырской, myStrLen(tokens[curTokenInd].nameString) = 42
+[DEBUG] front_end/lexicalAnalyze.cpp:88:getKeyword(): tokens[curTokenInd].nameString = так и было, myStrLen(tokens[curTokenInd].nameString) = 18
+[DEBUG] front_end/lexicalAnalyze.cpp:46:tokenize(): NOT KEYWORD
+token with index 0, data: Жили-были
+token with index 1, data: Добрый молодец
+token with index 2, data: Илья
+token with index 3, data: с силушкой богатырской
+token with index 4, data: 9
+token with index 5, data: убавить
+token with index 6, data: 3
+token with index 7, data: (null)
+[DEBUG] front_end/lexicalAnalyze.cpp:33:tokenize(): cycle iteration of reading token
+[DEBUG] front_end/lexicalAnalyze.cpp:35:tokenize(): string starting with curBufferPos: так и было
+[DEBUG] front_end/lexicalAnalyze.cpp:88:getKeyword(): tokens[curTokenInd].nameString = собрать воедино, myStrLen(tokens[curTokenInd].nameString) = 29
+[DEBUG] front_end/lexicalAnalyze.cpp:88:getKeyword(): tokens[curTokenInd].nameString = убавить, myStrLen(tokens[curTokenInd].nameString) = 14
+[DEBUG] front_end/lexicalAnalyze.cpp:88:getKeyword(): tokens[curTokenInd].nameString = трижды, myStrLen(tokens[curTokenInd].nameString) = 12
+[DEBUG] front_end/lexicalAnalyze.cpp:88:getKeyword(): tokens[curTokenInd].nameString = повелеваю поделить, myStrLen(tokens[curTokenInd].nameString) = 35
+[DEBUG] front_end/lexicalAnalyze.cpp:88:getKeyword(): tokens[curTokenInd].nameString = Жили-были, myStrLen(tokens[curTokenInd].nameString) = 17
+[DEBUG] front_end/lexicalAnalyze.cpp:88:getKeyword(): tokens[curTokenInd].nameString = Добрый молодец, myStrLen(tokens[curTokenInd].nameString) = 27
+[DEBUG] front_end/lexicalAnalyze.cpp:88:getKeyword(): tokens[curTokenInd].nameString = с силушкой богатырской, myStrLen(tokens[curTokenInd].nameString) = 42
+[DEBUG] front_end/lexicalAnalyze.cpp:88:getKeyword(): tokens[curTokenInd].nameString = так и было, myStrLen(tokens[curTokenInd].nameString) = 18
+[DEBUG] front_end/lexicalAnalyze.cpp:90:getKeyword(): Needed token found tokens[curTokenInd].nameString = так и было
+[DEBUG] front_end/lexicalAnalyze.cpp:39:tokenize(): is keyword
+[DEBUG] front_end/lexicalAnalyze.cpp:76:tokenize(): ended tokenization cycle
+[DEBUG] front_end/main.cpp:16:main(): tokenization ended

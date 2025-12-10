@@ -36,6 +36,6 @@ bool isYes(char* answer);
 bool isNo(char* answer);
 
 void utf8Shift(int amountSymShift, char** pos);
-int getUtf8CharLength(unsigned char c);
+int getUtf8CharLength(char c);
 
 #endif /* STR_FUNC_H */

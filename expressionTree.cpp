@@ -12,7 +12,7 @@
 #include <ctype.h>
 #include <string.h>
 
-const size_t MAX_VARIABLE_SIZE = 64;
+// const size_t MAX_VARIABLE_SIZE = 64;
 
 const int GRAPHIC_STANDARD_MIN_X = -10;
 const int GRAPHIC_STANDARD_MAX_X =  10;

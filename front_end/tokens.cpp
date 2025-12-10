@@ -1,9 +1,23 @@
 #include "tokens.h"
 
+#include "../general/debug.h"
 #include "../general/strFunc.h"
 
 #include <assert.h>
 #include <malloc.h>
+
+token_t tokens[]{
+    {"собрать воедино",        ADD,           OPERATOR, 2, 2},
+    {"убавить",                SUB,           OPERATOR, 2, 2},
+    {"трижды",                 MUL3,          OPERATOR, 0, 1},
+    {"повелеваю поделить",     DIVIDE,        OPERATOR, 2, 1},
+    {"Жили-были",              START,         SPECIAL,  0, 0},
+    {"Добрый молодец",         VARIABLE,      KEYWORD,  1, 0},
+    {"с силушкой богатырской", ASSIGN,        OPERATOR, 2, 0},
+    {"так и было",             END_STATEMENT, SPECIAL,  0, 0}
+};
+
+const size_t TOKENS_COUNT = sizeof(tokens) / sizeof(tokens[0]);
 
 token_t* tokenSequenceCtor(token_t* tokenSequence){
     assert(tokenSequence);
@@ -14,8 +28,10 @@ token_t* tokenSequenceCtor(token_t* tokenSequence){
 token_t* tokenSequenceDtor(token_t* tokenSequence){
     assert(tokenSequence);
 
-    for(size_t curTokenInd = 0; tokenSequence[curTokenInd].nameString != NULL; curTokenInd++){
-        free(tokenSequence[curTokenInd].nameString);
+    for(size_t curTokenInd = 0; *tokenStrData(&tokenSequence[curTokenInd]) != NULL; curTokenInd++){
+        if(tokenSequence[curTokenInd].type != NUMBER){
+            free(*tokenStrData(&tokenSequence[curTokenInd]));
+        }
     }
 
     return NULL;
@@ -23,7 +39,7 @@ token_t* tokenSequenceDtor(token_t* tokenSequence){
 
 token_t* getCurrentToken(const char* curOpStringName){
     for(size_t curTokenInd = 0; curTokenInd < sizeof(tokens) / sizeof(token_t); curTokenInd++){
-        if(isEqualStrings(curOpStringName, tokens[curTokenInd].nameString)){
+        if(isEqualStrings(curOpStringName, *tokenStrData(&tokens[curTokenInd]))){
             return &tokens[curTokenInd];
         }
     }
@@ -31,18 +47,60 @@ token_t* getCurrentToken(const char* curOpStringName){
     return NULL;
 }
 
+bool createNumberToken(token_t* token, int tokenValue){
+    assert(token);
+
+    *tokenNumData(token) = tokenValue;
+    token->tClass        = LITERAL;
+    token->type          = NUMBER;
+    token->paramCount    = 0;
+    token->priorityRank  = 0;
+
+    LPRINTF("created number node");
+    return true;
+}
+
+bool createVariableToken(token_t* token, char* tokenValue){
+    assert(token);
+    assert(tokenValue);
+
+    *tokenStrData(token) = (char*) calloc(MAX_VARIABLE_SIZE, sizeof(char));
+    assert(*tokenStrData(token));
+    LPRINTF("create variable token memory allocated");
+
+    myStrCpy(*tokenStrData(token),  tokenValue);    
+    token->tClass       = IDENTIFIER;
+    token->type         = VARIABLE;
+    token->paramCount   = 0;
+    token->priorityRank = 0;
+
+    return true;
+}
+
 bool copyTokenContent(token_t* token, token_t* reference){
     assert(token);
     assert(reference);
 
-    token->nameString = (char*) calloc(MAX_VARIABLE_SIZE, sizeof(char));
-    assert(token->nameString);
+    *tokenStrData(token) = (char*) calloc(MAX_VARIABLE_SIZE, sizeof(char));
+    assert(*tokenStrData(token));
 
-    myStrCpy(token->nameString,  reference->nameString);
+    myStrCpy(*tokenStrData(token),  *tokenStrData(reference));
     token->tClass       = reference->tClass;
     token->type         = reference->type;
     token->paramCount   = reference->paramCount;
     token->priorityRank = reference->priorityRank;
 
     return true;
+}
+
+char** tokenStrData(token_t* token){
+    assert(token);
+
+    return &token->nameString.str;
+}
+
+int* tokenNumData(token_t* token){
+    assert(token);
+
+    return &token->nameString.num;
 }

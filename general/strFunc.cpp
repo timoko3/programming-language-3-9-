@@ -114,12 +114,12 @@ bool isNo(char* answer){
 void utf8Shift(int amountSymShift, char** pos){
     assert(pos);
 
-    for(size_t symSkipped = 0; symSkipped < amountSymShift; symSkipped++){
+    for(size_t symSkipped = 0; symSkipped < (size_t) amountSymShift; symSkipped++){
         *pos += getUtf8CharLength(**pos);
     }
 }
 
-int getUtf8CharLength(unsigned char c){
+int getUtf8CharLength(char c){
     if      ((c & 0x80) == 0x00) return 1;
     else if ((c & 0xE0) == 0xC0) return 2;
     else if ((c & 0xF0) == 0xE0) return 3;
