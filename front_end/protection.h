@@ -3,6 +3,6 @@
 
 #include "tokens.h"
 
-void dumpTokenSequence(token_t* tokenSequence);
+void dumpTokenSequence(tokensSequence_t* tokenSequence);
 
 #endif /* PROTECTION_H */

@@ -5,7 +5,7 @@
 
 #include <assert.h>
 
-void dumpTokenSequence(token_t* tokenSequence){
+void dumpTokenSequence(tokensSequence_t* tokenSequence){
     assert(tokenSequence);
 
     fileDescription logFile = {
@@ -16,12 +16,14 @@ void dumpTokenSequence(token_t* tokenSequence){
     FILE* logFilePtr = myOpenFile(&logFile);
     if(!logFilePtr) return;
 
-    for(size_t curTokenInd = 0; curTokenInd < TOKENS_COUNT /*FIX WRONG token count*/; curTokenInd++){
-        if(tokenSequence[curTokenInd].type != NUMBER){
-            fprintf(logFilePtr, "token with index %lu, data: %s\n", curTokenInd, *tokenStrData(&tokenSequence[curTokenInd]));
-        }
-        else if(tokenSequence[curTokenInd].type == NUMBER){
-            fprintf(logFilePtr, "token with index %lu, data: %d\n", curTokenInd, *tokenNumData(&tokenSequence[curTokenInd]));
+    for(size_t curTokenInd = 0; curTokenInd < tokenSequence->size; curTokenInd++){
+        if(tokenSequence->data[curTokenInd].tClass != EMPTY_TOKEN){
+            if(tokenSequence->data[curTokenInd].type != NUMBER){
+                fprintf(logFilePtr, "token with index %lu, data: %s\n", curTokenInd, *tokenStrData(&tokenSequence->data[curTokenInd]));
+            }
+            else if(tokenSequence->data[curTokenInd].type == NUMBER){
+                fprintf(logFilePtr, "token with index %lu, data: %d\n", curTokenInd, *tokenNumData(&tokenSequence->data[curTokenInd]));
+            }
         }
     }
 

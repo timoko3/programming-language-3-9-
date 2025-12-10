@@ -1,4 +1,5 @@
 #include "tokens.h"
+#include "protection.h"
 
 #include "../general/debug.h"
 #include "../general/strFunc.h"
@@ -19,22 +20,63 @@ token_t tokens[]{
 
 const size_t TOKENS_COUNT = sizeof(tokens) / sizeof(tokens[0]);
 
-token_t* tokenSequenceCtor(token_t* tokenSequence){
+tokensSequence_t* tokenSequenceCtor(tokensSequence_t* tokensSequence){
+    assert(tokensSequence);
+
+    tokensSequence->data = (token_t*) calloc(1, sizeof(token_t));
+    assert(tokensSequence->data);
+
+    tokensSequence->data[0].tClass = EMPTY_TOKEN;
+
+    tokensSequence->capacity = 1;
+
+    LPRINTF("successfully allocated memory for tokensSequence");
+
+    return tokensSequence;
+}
+
+tokensSequence_t* tokenSequenceDtor(tokensSequence_t* tokenSequence){
     assert(tokenSequence);
+
+    for(size_t curTokenInd = 0; curTokenInd < tokenSequence->size; curTokenInd++){
+        if(tokenSequence->data[curTokenInd].type != NUMBER){
+            free(*tokenStrData(&tokenSequence->data[curTokenInd]));
+        }
+    }
+
+    free(tokenSequence->data);
 
     return NULL;
 }
 
-token_t* tokenSequenceDtor(token_t* tokenSequence){
+tokensSequence_t* reallocateTokensSequence(tokensSequence_t* tokenSequence){
     assert(tokenSequence);
 
-    for(size_t curTokenInd = 0; *tokenStrData(&tokenSequence[curTokenInd]) != NULL; curTokenInd++){
-        if(tokenSequence[curTokenInd].type != NUMBER){
-            free(*tokenStrData(&tokenSequence[curTokenInd]));
-        }
-    }
+    LPRINTF("start reallocation");
 
-    return NULL;
+    size_t startSize = tokenSequence->capacity;
+
+    token_t* temp = (token_t*) realloc(tokenSequence->data, tokenSequence->capacity * 2 * sizeof(token_t));
+    assert(temp);
+
+    LPRINTF("temp->data[0].tClass= %d, temp->data[0].type = %d", temp[0].tClass, temp[0].type);
+
+    tokenSequence->data = temp;
+    tokenSequence->capacity *= 2;
+
+    initTokensSequence(tokenSequence, startSize);
+
+    LPRINTF("ended reallocation");
+
+    return tokenSequence;
+}
+
+void initTokensSequence(tokensSequence_t* tokensSequence, size_t startInd){
+    assert(tokensSequence);
+
+    for(size_t curTokenInd = startInd; curTokenInd < tokensSequence->capacity; curTokenInd++){
+        tokensSequence->data[curTokenInd].tClass = EMPTY_TOKEN;
+    }
 }
 
 token_t* getCurrentToken(const char* curOpStringName){

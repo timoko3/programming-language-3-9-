@@ -24,7 +24,8 @@ enum tokenClass{
     OPERATOR,
     LITERAL,
     IDENTIFIER,
-    SPECIAL
+    SPECIAL,
+    EMPTY_TOKEN
 };
 
 union tokenVal_t{
@@ -40,13 +41,21 @@ struct token_t{
     int          priorityRank;
 };
 
+struct tokensSequence_t{
+    token_t* data;
+    size_t size;
+    size_t capacity;
+};
+
 extern token_t tokens[];
 extern const size_t TOKENS_COUNT;
 
 const size_t MAX_VARIABLE_SIZE    = 64;
 
-token_t* tokenSequenceCtor(token_t* tokenSequence);
-token_t* tokenSequenceDtor(token_t* tokenSequence);
+tokensSequence_t* tokenSequenceCtor(tokensSequence_t* tokenSequence);
+tokensSequence_t* tokenSequenceDtor(tokensSequence_t* tokenSequence);
+tokensSequence_t* reallocateTokensSequence(tokensSequence_t* tokenSequence);
+void initTokensSequence(tokensSequence_t* tokensSequence, size_t startInd = 0);
 
 token_t* getCurrentToken(const char* curOpStringName);
 

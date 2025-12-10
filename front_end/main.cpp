@@ -11,10 +11,21 @@
 const char* CODE_FILE_NAME = "beta.tale";
 
 int main(){
-    token_t* tokenSequence = tokenize(CODE_FILE_NAME);
+    data_t code;
+    parseStringsFile(&code, CODE_FILE_NAME);
+    char* curBufferPos = code.buffer;
 
+    LPRINTF("opened codeFile for lexical analyze(tokenizing)");
+
+    tokensSequence_t tokensSequence;
+    tokenSequenceCtor(&tokensSequence);
+
+    LPRINTF("tokenization start");
+    tokenize(curBufferPos, &tokensSequence);
     LPRINTF("tokenization ended");
 
-    tokenSequenceDtor(tokenSequence);
-    free(tokenSequence);   
+    free(code.strings);
+    free(code.buffer);
+
+    tokenSequenceDtor(&tokensSequence);
 }
