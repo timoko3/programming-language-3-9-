@@ -3,7 +3,7 @@
 
 #include <stddef.h>
 
-enum tokenNames{
+enum tokenType{
     START,
     VARIABLE,
     NUMBER,
@@ -16,7 +16,8 @@ enum tokenNames{
     SUB,
     MUL3,
     DIVIDE,
-    END_STATEMENT
+    END_STATEMENT,
+    END_PROGRAM
 };
 
 enum tokenClass{
@@ -35,7 +36,7 @@ union tokenVal_t{
 
 struct token_t{
     tokenVal_t   nameString; 
-    tokenNames   type;
+    tokenType    type;
     tokenClass   tClass;
     size_t       paramCount;
     int          priorityRank;
@@ -50,7 +51,7 @@ struct tokensSequence_t{
 extern token_t tokens[];
 extern const size_t TOKENS_COUNT;
 
-const size_t MAX_VARIABLE_SIZE    = 64;
+const size_t MAX_VARIABLE_SIZE    = 512;
 
 tokensSequence_t* tokenSequenceCtor(tokensSequence_t* tokenSequence);
 tokensSequence_t* tokenSequenceDtor(tokensSequence_t* tokenSequence);

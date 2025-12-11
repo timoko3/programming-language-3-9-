@@ -2,7 +2,7 @@
 
 #include "../general/debug.h"
 #include "../general/file.h"
-// #include "../general/tree.h"
+#include "../general/tree.h"
 
 #include <stdio.h>
 #include <assert.h>
@@ -23,6 +23,14 @@ int main(){
     LPRINTF("tokenization start");
     tokenize(curBufferPos, &tokensSequence);
     LPRINTF("tokenization ended");
+
+    tree_t syntaxTree;
+
+    treeCtor(&syntaxTree);
+    
+    syntaxAnalyze();
+
+    treeDtor(&syntaxTree);
 
     free(code.strings);
     free(code.buffer);

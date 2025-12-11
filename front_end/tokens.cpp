@@ -15,7 +15,11 @@ token_t tokens[]{
     {"Жили-были",              START,         SPECIAL,  0, 0},
     {"Добрый молодец",         VARIABLE,      KEYWORD,  1, 0},
     {"с силушкой богатырской", ASSIGN,        OPERATOR, 2, 0},
-    {"так и было",             END_STATEMENT, SPECIAL,  0, 0}
+    {"так и было",             END_STATEMENT, SPECIAL,  0, 0},
+    {"и я там был мед пиво "
+        "пил по усам текло, " 
+        "а в рот не попало",   END_PROGRAM,   SPECIAL,  0, 0},
+    
 };
 
 const size_t TOKENS_COUNT = sizeof(tokens) / sizeof(tokens[0]);

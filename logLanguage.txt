@@ -1,34 +1,38 @@
 [DEBUG] front_end/main.cpp:18:main(): opened codeFile for lexical analyze(tokenizing)
-[DEBUG] front_end/tokens.cpp:33:tokenSequenceCtor(): successfully allocated memory for tokensSequence
+[DEBUG] front_end/tokens.cpp:35:tokenSequenceCtor(): successfully allocated memory for tokensSequence
 [DEBUG] front_end/main.cpp:23:main(): tokenization start
 [DEBUG] front_end/lexicalAnalyze.cpp:25:tokenize(): cycle iteration of reading token
 [DEBUG] front_end/lexicalAnalyze.cpp:26:tokenize(): remaining string with curBufferPos: Жили-были
 Добрый молодец Илья с силушкой богатырской 9 убавить 3 так и было
+и я там был мед пиво пил по усам текло, а в рот не попало
 [DEBUG] general/strFunc.cpp:98:skipSpaces(): entered skipSpaces func
 [DEBUG] front_end/lexicalAnalyze.cpp:68:parseKeyword(): Needed token found tokens[curTokenInd].nameString = Жили-были
 [DEBUG] front_end/lexicalAnalyze.cpp:35:tokenize(): keyword case
 [DEBUG] front_end/lexicalAnalyze.cpp:25:tokenize(): cycle iteration of reading token
 [DEBUG] front_end/lexicalAnalyze.cpp:26:tokenize(): remaining string with curBufferPos: 
 Добрый молодец Илья с силушкой богатырской 9 убавить 3 так и было
+и я там был мед пиво пил по усам текло, а в рот не попало
 token with index 0, data: Жили-были
 [DEBUG] general/strFunc.cpp:98:skipSpaces(): entered skipSpaces func
 [DEBUG] front_end/lexicalAnalyze.cpp:68:parseKeyword(): Needed token found tokens[curTokenInd].nameString = Добрый молодец
 [DEBUG] front_end/lexicalAnalyze.cpp:35:tokenize(): keyword case
-[DEBUG] front_end/tokens.cpp:56:reallocateTokensSequence(): start reallocation
-[DEBUG] front_end/tokens.cpp:63:reallocateTokensSequence(): temp->data[0].tClass= 4, temp->data[0].type = 0
-[DEBUG] front_end/tokens.cpp:70:reallocateTokensSequence(): ended reallocation
+[DEBUG] front_end/tokens.cpp:58:reallocateTokensSequence(): start reallocation
+[DEBUG] front_end/tokens.cpp:65:reallocateTokensSequence(): temp->data[0].tClass= 4, temp->data[0].type = 0
+[DEBUG] front_end/tokens.cpp:72:reallocateTokensSequence(): ended reallocation
 [DEBUG] front_end/lexicalAnalyze.cpp:25:tokenize(): cycle iteration of reading token
 [DEBUG] front_end/lexicalAnalyze.cpp:26:tokenize(): remaining string with curBufferPos:  Илья с силушкой богатырской 9 убавить 3 так и было
+и я там был мед пиво пил по усам текло, а в рот не попало
 token with index 0, data: Жили-были
 token with index 1, data: Добрый молодец
 [DEBUG] general/strFunc.cpp:98:skipSpaces(): entered skipSpaces func
-[DEBUG] front_end/tokens.cpp:112:createVariableToken(): create variable token memory allocated
+[DEBUG] front_end/tokens.cpp:114:createVariableToken(): create variable token memory allocated
 [DEBUG] front_end/lexicalAnalyze.cpp:44:tokenize(): variable case
-[DEBUG] front_end/tokens.cpp:56:reallocateTokensSequence(): start reallocation
-[DEBUG] front_end/tokens.cpp:63:reallocateTokensSequence(): temp->data[0].tClass= 4, temp->data[0].type = 0
-[DEBUG] front_end/tokens.cpp:70:reallocateTokensSequence(): ended reallocation
+[DEBUG] front_end/tokens.cpp:58:reallocateTokensSequence(): start reallocation
+[DEBUG] front_end/tokens.cpp:65:reallocateTokensSequence(): temp->data[0].tClass= 4, temp->data[0].type = 0
+[DEBUG] front_end/tokens.cpp:72:reallocateTokensSequence(): ended reallocation
 [DEBUG] front_end/lexicalAnalyze.cpp:25:tokenize(): cycle iteration of reading token
 [DEBUG] front_end/lexicalAnalyze.cpp:26:tokenize(): remaining string with curBufferPos:  с силушкой богатырской 9 убавить 3 так и было
+и я там был мед пиво пил по усам текло, а в рот не попало
 token with index 0, data: Жили-были
 token with index 1, data: Добрый молодец
 token with index 2, data: Илья
@@ -37,19 +41,21 @@ token with index 2, data: Илья
 [DEBUG] front_end/lexicalAnalyze.cpp:35:tokenize(): keyword case
 [DEBUG] front_end/lexicalAnalyze.cpp:25:tokenize(): cycle iteration of reading token
 [DEBUG] front_end/lexicalAnalyze.cpp:26:tokenize(): remaining string with curBufferPos:  9 убавить 3 так и было
+и я там был мед пиво пил по усам текло, а в рот не попало
 token with index 0, data: Жили-были
 token with index 1, data: Добрый молодец
 token with index 2, data: Илья
 token with index 3, data: с силушкой богатырской
 [DEBUG] general/strFunc.cpp:98:skipSpaces(): entered skipSpaces func
 [DEBUG] front_end/lexicalAnalyze.cpp:83:parseNumber(): Found number: 9
-[DEBUG] front_end/tokens.cpp:102:createNumberToken(): created number node
+[DEBUG] front_end/tokens.cpp:104:createNumberToken(): created number node
 [DEBUG] front_end/lexicalAnalyze.cpp:40:tokenize(): number case
-[DEBUG] front_end/tokens.cpp:56:reallocateTokensSequence(): start reallocation
-[DEBUG] front_end/tokens.cpp:63:reallocateTokensSequence(): temp->data[0].tClass= 4, temp->data[0].type = 0
-[DEBUG] front_end/tokens.cpp:70:reallocateTokensSequence(): ended reallocation
+[DEBUG] front_end/tokens.cpp:58:reallocateTokensSequence(): start reallocation
+[DEBUG] front_end/tokens.cpp:65:reallocateTokensSequence(): temp->data[0].tClass= 4, temp->data[0].type = 0
+[DEBUG] front_end/tokens.cpp:72:reallocateTokensSequence(): ended reallocation
 [DEBUG] front_end/lexicalAnalyze.cpp:25:tokenize(): cycle iteration of reading token
 [DEBUG] front_end/lexicalAnalyze.cpp:26:tokenize(): remaining string with curBufferPos:  убавить 3 так и было
+и я там был мед пиво пил по усам текло, а в рот не попало
 token with index 0, data: Жили-были
 token with index 1, data: Добрый молодец
 token with index 2, data: Илья
@@ -60,6 +66,7 @@ token with index 4, data: 9
 [DEBUG] front_end/lexicalAnalyze.cpp:35:tokenize(): keyword case
 [DEBUG] front_end/lexicalAnalyze.cpp:25:tokenize(): cycle iteration of reading token
 [DEBUG] front_end/lexicalAnalyze.cpp:26:tokenize(): remaining string with curBufferPos:  3 так и было
+и я там был мед пиво пил по усам текло, а в рот не попало
 token with index 0, data: Жили-были
 token with index 1, data: Добрый молодец
 token with index 2, data: Илья
@@ -68,10 +75,11 @@ token with index 4, data: 9
 token with index 5, data: убавить
 [DEBUG] general/strFunc.cpp:98:skipSpaces(): entered skipSpaces func
 [DEBUG] front_end/lexicalAnalyze.cpp:83:parseNumber(): Found number: 3
-[DEBUG] front_end/tokens.cpp:102:createNumberToken(): created number node
+[DEBUG] front_end/tokens.cpp:104:createNumberToken(): created number node
 [DEBUG] front_end/lexicalAnalyze.cpp:40:tokenize(): number case
 [DEBUG] front_end/lexicalAnalyze.cpp:25:tokenize(): cycle iteration of reading token
 [DEBUG] front_end/lexicalAnalyze.cpp:26:tokenize(): remaining string with curBufferPos:  так и было
+и я там был мед пиво пил по усам текло, а в рот не попало
 token with index 0, data: Жили-были
 token with index 1, data: Добрый молодец
 token with index 2, data: Илья
@@ -82,11 +90,134 @@ token with index 6, data: 3
 [DEBUG] general/strFunc.cpp:98:skipSpaces(): entered skipSpaces func
 [DEBUG] front_end/lexicalAnalyze.cpp:68:parseKeyword(): Needed token found tokens[curTokenInd].nameString = так и было
 [DEBUG] front_end/lexicalAnalyze.cpp:35:tokenize(): keyword case
+[DEBUG] front_end/lexicalAnalyze.cpp:25:tokenize(): cycle iteration of reading token
+[DEBUG] front_end/lexicalAnalyze.cpp:26:tokenize(): remaining string with curBufferPos: 
+и я там был мед пиво пил по усам текло, а в рот не попало
+token with index 0, data: Жили-были
+token with index 1, data: Добрый молодец
+token with index 2, data: Илья
+token with index 3, data: с силушкой богатырской
+token with index 4, data: 9
+token with index 5, data: убавить
+token with index 6, data: 3
+token with index 7, data: так и было
+[DEBUG] general/strFunc.cpp:98:skipSpaces(): entered skipSpaces func
+[DEBUG] front_end/lexicalAnalyze.cpp:68:parseKeyword(): Needed token found tokens[curTokenInd].nameString = и я там был мед пиво пил по усам текло, а в рот не попало
+[DEBUG] front_end/main.cpp:18:main(): opened codeFile for lexical analyze(tokenizing)
+[DEBUG] front_end/tokens.cpp:35:tokenSequenceCtor(): successfully allocated memory for tokensSequence
+[DEBUG] front_end/main.cpp:23:main(): tokenization start
+[DEBUG] front_end/lexicalAnalyze.cpp:25:tokenize(): cycle iteration of reading token
+[DEBUG] front_end/lexicalAnalyze.cpp:26:tokenize(): remaining string with curBufferPos: Жили-были
+Добрый молодец Илья с силушкой богатырской 9 убавить 3 так и было
+и я там был мед пиво пил по усам текло, а в рот не попало
+[DEBUG] general/strFunc.cpp:98:skipSpaces(): entered skipSpaces func
+[DEBUG] front_end/lexicalAnalyze.cpp:68:parseKeyword(): Needed token found tokens[curTokenInd].nameString = Жили-были
+[DEBUG] front_end/lexicalAnalyze.cpp:35:tokenize(): keyword case
+[DEBUG] front_end/lexicalAnalyze.cpp:25:tokenize(): cycle iteration of reading token
+[DEBUG] front_end/lexicalAnalyze.cpp:26:tokenize(): remaining string with curBufferPos: 
+Добрый молодец Илья с силушкой богатырской 9 убавить 3 так и было
+и я там был мед пиво пил по усам текло, а в рот не попало
+token with index 0, data: Жили-были
+[DEBUG] general/strFunc.cpp:98:skipSpaces(): entered skipSpaces func
+[DEBUG] front_end/lexicalAnalyze.cpp:68:parseKeyword(): Needed token found tokens[curTokenInd].nameString = Добрый молодец
+[DEBUG] front_end/lexicalAnalyze.cpp:35:tokenize(): keyword case
+[DEBUG] front_end/tokens.cpp:58:reallocateTokensSequence(): start reallocation
+[DEBUG] front_end/tokens.cpp:65:reallocateTokensSequence(): temp->data[0].tClass= 4, temp->data[0].type = 0
+[DEBUG] front_end/tokens.cpp:72:reallocateTokensSequence(): ended reallocation
+[DEBUG] front_end/lexicalAnalyze.cpp:25:tokenize(): cycle iteration of reading token
+[DEBUG] front_end/lexicalAnalyze.cpp:26:tokenize(): remaining string with curBufferPos:  Илья с силушкой богатырской 9 убавить 3 так и было
+и я там был мед пиво пил по усам текло, а в рот не попало
+token with index 0, data: Жили-были
+token with index 1, data: Добрый молодец
+[DEBUG] general/strFunc.cpp:98:skipSpaces(): entered skipSpaces func
+[DEBUG] front_end/tokens.cpp:114:createVariableToken(): create variable token memory allocated
+[DEBUG] front_end/lexicalAnalyze.cpp:44:tokenize(): variable case
+[DEBUG] front_end/tokens.cpp:58:reallocateTokensSequence(): start reallocation
+[DEBUG] front_end/tokens.cpp:65:reallocateTokensSequence(): temp->data[0].tClass= 4, temp->data[0].type = 0
+[DEBUG] front_end/tokens.cpp:72:reallocateTokensSequence(): ended reallocation
+[DEBUG] front_end/lexicalAnalyze.cpp:25:tokenize(): cycle iteration of reading token
+[DEBUG] front_end/lexicalAnalyze.cpp:26:tokenize(): remaining string with curBufferPos:  с силушкой богатырской 9 убавить 3 так и было
+и я там был мед пиво пил по усам текло, а в рот не попало
+token with index 0, data: Жили-были
+token with index 1, data: Добрый молодец
+token with index 2, data: Илья
+[DEBUG] general/strFunc.cpp:98:skipSpaces(): entered skipSpaces func
+[DEBUG] front_end/lexicalAnalyze.cpp:68:parseKeyword(): Needed token found tokens[curTokenInd].nameString = с силушкой богатырской
+[DEBUG] front_end/lexicalAnalyze.cpp:35:tokenize(): keyword case
+[DEBUG] front_end/lexicalAnalyze.cpp:25:tokenize(): cycle iteration of reading token
+[DEBUG] front_end/lexicalAnalyze.cpp:26:tokenize(): remaining string with curBufferPos:  9 убавить 3 так и было
+и я там был мед пиво пил по усам текло, а в рот не попало
+token with index 0, data: Жили-были
+token with index 1, data: Добрый молодец
+token with index 2, data: Илья
+token with index 3, data: с силушкой богатырской
+[DEBUG] general/strFunc.cpp:98:skipSpaces(): entered skipSpaces func
+[DEBUG] front_end/lexicalAnalyze.cpp:83:parseNumber(): Found number: 9
+[DEBUG] front_end/tokens.cpp:104:createNumberToken(): created number node
+[DEBUG] front_end/lexicalAnalyze.cpp:40:tokenize(): number case
+[DEBUG] front_end/tokens.cpp:58:reallocateTokensSequence(): start reallocation
+[DEBUG] front_end/tokens.cpp:65:reallocateTokensSequence(): temp->data[0].tClass= 4, temp->data[0].type = 0
+[DEBUG] front_end/tokens.cpp:72:reallocateTokensSequence(): ended reallocation
+[DEBUG] front_end/lexicalAnalyze.cpp:25:tokenize(): cycle iteration of reading token
+[DEBUG] front_end/lexicalAnalyze.cpp:26:tokenize(): remaining string with curBufferPos:  убавить 3 так и было
+и я там был мед пиво пил по усам текло, а в рот не попало
+token with index 0, data: Жили-были
+token with index 1, data: Добрый молодец
+token with index 2, data: Илья
+token with index 3, data: с силушкой богатырской
+token with index 4, data: 9
+[DEBUG] general/strFunc.cpp:98:skipSpaces(): entered skipSpaces func
+[DEBUG] front_end/lexicalAnalyze.cpp:68:parseKeyword(): Needed token found tokens[curTokenInd].nameString = убавить
+[DEBUG] front_end/lexicalAnalyze.cpp:35:tokenize(): keyword case
+[DEBUG] front_end/lexicalAnalyze.cpp:25:tokenize(): cycle iteration of reading token
+[DEBUG] front_end/lexicalAnalyze.cpp:26:tokenize(): remaining string with curBufferPos:  3 так и было
+и я там был мед пиво пил по усам текло, а в рот не попало
+token with index 0, data: Жили-были
+token with index 1, data: Добрый молодец
+token with index 2, data: Илья
+token with index 3, data: с силушкой богатырской
+token with index 4, data: 9
+token with index 5, data: убавить
+[DEBUG] general/strFunc.cpp:98:skipSpaces(): entered skipSpaces func
+[DEBUG] front_end/lexicalAnalyze.cpp:83:parseNumber(): Found number: 3
+[DEBUG] front_end/tokens.cpp:104:createNumberToken(): created number node
+[DEBUG] front_end/lexicalAnalyze.cpp:40:tokenize(): number case
+[DEBUG] front_end/lexicalAnalyze.cpp:25:tokenize(): cycle iteration of reading token
+[DEBUG] front_end/lexicalAnalyze.cpp:26:tokenize(): remaining string with curBufferPos:  так и было
+и я там был мед пиво пил по усам текло, а в рот не попало
+token with index 0, data: Жили-были
+token with index 1, data: Добрый молодец
+token with index 2, data: Илья
+token with index 3, data: с силушкой богатырской
+token with index 4, data: 9
+token with index 5, data: убавить
+token with index 6, data: 3
+[DEBUG] general/strFunc.cpp:98:skipSpaces(): entered skipSpaces func
+[DEBUG] front_end/lexicalAnalyze.cpp:68:parseKeyword(): Needed token found tokens[curTokenInd].nameString = так и было
+[DEBUG] front_end/lexicalAnalyze.cpp:35:tokenize(): keyword case
+[DEBUG] front_end/lexicalAnalyze.cpp:25:tokenize(): cycle iteration of reading token
+[DEBUG] front_end/lexicalAnalyze.cpp:26:tokenize(): remaining string with curBufferPos: 
+и я там был мед пиво пил по усам текло, а в рот не попало
+token with index 0, data: Жили-были
+token with index 1, data: Добрый молодец
+token with index 2, data: Илья
+token with index 3, data: с силушкой богатырской
+token with index 4, data: 9
+token with index 5, data: убавить
+token with index 6, data: 3
+token with index 7, data: так и было
+[DEBUG] general/strFunc.cpp:98:skipSpaces(): entered skipSpaces func
+[DEBUG] front_end/lexicalAnalyze.cpp:68:parseKeyword(): Needed token found tokens[curTokenInd].nameString = и я там был мед пиво пил по усам текло, а в рот не попало
+[DEBUG] front_end/lexicalAnalyze.cpp:35:tokenize(): keyword case
+[DEBUG] front_end/tokens.cpp:58:reallocateTokensSequence(): start reallocation
+[DEBUG] front_end/tokens.cpp:65:reallocateTokensSequence(): temp->data[0].tClass= 4, temp->data[0].type = 0
+[DEBUG] front_end/tokens.cpp:72:reallocateTokensSequence(): ended reallocation
 [DEBUG] front_end/lexicalAnalyze.cpp:57:tokenize(): ended tokenization cycle
 [DEBUG] front_end/main.cpp:25:main(): tokenization ended
-[DEBUG] front_end/tokens.cpp:43:tokenSequenceDtor(): free[0x506000000080]
-[DEBUG] front_end/tokens.cpp:43:tokenSequenceDtor(): free[0x5060000001a0]
-[DEBUG] front_end/tokens.cpp:43:tokenSequenceDtor(): free[0x506000000260]
-[DEBUG] front_end/tokens.cpp:43:tokenSequenceDtor(): free[0x506000000320]
-[DEBUG] front_end/tokens.cpp:43:tokenSequenceDtor(): free[0x5060000003e0]
-[DEBUG] front_end/tokens.cpp:43:tokenSequenceDtor(): free[0x5060000004a0]
+[DEBUG] front_end/tokens.cpp:45:tokenSequenceDtor(): free[0x515000001c00]
+[DEBUG] front_end/tokens.cpp:45:tokenSequenceDtor(): free[0x515000003780]
+[DEBUG] front_end/tokens.cpp:45:tokenSequenceDtor(): free[0x515000005300]
+[DEBUG] front_end/tokens.cpp:45:tokenSequenceDtor(): free[0x515000006700]
+[DEBUG] front_end/tokens.cpp:45:tokenSequenceDtor(): free[0x515000009400]
+[DEBUG] front_end/tokens.cpp:45:tokenSequenceDtor(): free[0x51500000b980]
+[DEBUG] front_end/tokens.cpp:45:tokenSequenceDtor(): free[0x51500000d780]
