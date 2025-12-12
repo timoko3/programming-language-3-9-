@@ -1,3 +1,4 @@
+
 #include "tokens.h"
 #include "protection.h"
 
@@ -10,7 +11,8 @@
 token_t tokens[]{
     {"собрать воедино",        ADD,           OPERATOR, 2, 2},
     {"убавить",                SUB,           OPERATOR, 2, 2},
-    {"трижды",                 MUL3,          OPERATOR, 0, 1},
+    {"трижды",                 MUL3,          OPERATOR, 1, 1},
+    {"преумножить",            MUL,           OPERATOR, 2, 0},
     {"повелеваю поделить",     DIVIDE,        OPERATOR, 2, 1},
     {"Жили-были",              START,         SPECIAL,  0, 0},
     {"Добрый молодец",         VARIABLE,      KEYWORD,  1, 0},
@@ -19,6 +21,9 @@ token_t tokens[]{
     {"и я там был мед пиво "
         "пил по усам текло, " 
         "а в рот не попало",   END_PROGRAM,   SPECIAL,  0, 0},
+    {"Сивка-бурка вещая каурка "
+     "стань передо мной "
+      "как лист перед травой", CALL_FUNC,     SPECIAL,  1, 0}
     
 };
 
@@ -33,6 +38,7 @@ tokensSequence_t* tokenSequenceCtor(tokensSequence_t* tokensSequence){
     tokensSequence->data[0].tClass = EMPTY_TOKEN;
 
     tokensSequence->capacity = 1;
+    tokensSequence->size = 0;
 
     LPRINTF("successfully allocated memory for tokensSequence");
 
@@ -117,7 +123,7 @@ bool createVariableToken(token_t* token, char* tokenValue){
 
     myStrCpy(*tokenStrData(token),  tokenValue);    
     token->tClass       = IDENTIFIER;
-    token->type         = VARIABLE;
+    token->type         = NAME;
     token->paramCount   = 0;
     token->priorityRank = 0;
 
@@ -141,8 +147,12 @@ bool copyNumTokenContent(token_t* token, token_t* reference){
     assert(reference);
 
     *tokenNumData(token) = *tokenNumData(reference);
+    
+    // LPRINTF("before token.type = %d, reference.type = %d", token->type, reference->type);
+    copyTokenContent(token, reference);
+    // LPRINTF("after token.type = %d, reference.type = %d", token->type, reference->type);
 
-    return copyTokenContent(token, reference);
+    return true;
 }
 
 bool copyTokenContent(token_t* token, token_t* reference){

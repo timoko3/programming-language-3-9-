@@ -107,6 +107,7 @@ static bool parseVariable(char* curBufferPos, token_t* token, char** endPos){
     return false;
 }
 
+
 static tokensSequence_t* appendToken(tokensSequence_t* tokensSequence, token_t* newToken){
     assert(tokensSequence);
     assert(newToken);

@@ -1,3 +1,4 @@
+
 #ifndef TOKENS_H
 #define TOKENS_H
 
@@ -5,6 +6,7 @@
 
 enum tokenType{
     START,
+    CALL_FUNC,
     VARIABLE,
     NUMBER,
     NAME,
@@ -15,6 +17,7 @@ enum tokenType{
     ADD,
     SUB,
     MUL3,
+    MUL,
     DIVIDE,
     END_STATEMENT,
     END_PROGRAM

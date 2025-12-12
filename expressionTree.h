@@ -1,7 +1,7 @@
 #ifndef EXPRESSION_TREE_H
 #define EXPRESSION_TREE_H
 
-#include "tokens.h"
+#include "front_end/tokens.h"
 
 union treeVal_t{
     char* str;
@@ -27,7 +27,7 @@ struct treeNode_t{
 // treeNode_t* createNewNodeOperator(const char* type, treeNode_t* left, treeNode_t* right);
 
 // void copyExpressionNode(treeNode_t* copy, treeNode_t* node);
-// bool freeExpressionNodeData(treeNode_t* node, bool withoutRoot, int depth);
+bool freeExpressionNodeData(treeNode_t* node, bool withoutRoot, int depth);
 
 // bool checkNotHaveVariables(treeNode_t* curNode);
 

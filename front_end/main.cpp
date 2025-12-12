@@ -1,14 +1,16 @@
+
 #include "lexicalAnalyze.h"
+#include "syntaxAnalyze.h"
 
 #include "../general/debug.h"
 #include "../general/file.h"
-#include "../general/tree.h"
+#include "../general/devTools/protectionTree.h"
 
 #include <stdio.h>
 #include <assert.h>
 #include <malloc.h>
 
-const char* CODE_FILE_NAME = "beta.tale";
+const char* CODE_FILE_NAME = "test.tale";
 
 int main(){
     data_t code;
@@ -28,7 +30,9 @@ int main(){
 
     treeCtor(&syntaxTree);
     
-    syntaxAnalyze();
+    syntaxAnalyze(&syntaxTree, &tokensSequence);
+
+    logTree(&syntaxTree, "created synTree");
 
     treeDtor(&syntaxTree);
 

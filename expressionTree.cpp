@@ -1,14 +1,14 @@
-// #include "expressionTree.h"
+#include "expressionTree.h"
 // // #include "operations.h"
 // // #include "DSL.h"
 
 // #include "../general/tree.h"
 // #include "../general/strFunc.h"
-// #include "../general/debug.h"
+#include "../general/debug.h"
 // #include "../general/poison.h"
 
-// #include <assert.h>
-// #include <malloc.h>
+#include <assert.h>
+#include <malloc.h>
 // #include <ctype.h>
 // #include <string.h>
 
@@ -94,23 +94,20 @@
 // //     }
 // // }
 
-// // bool freeExpressionNodeData(treeNode_t* node, bool withoutRoot, int depth){
-// //     assert(node);
+bool freeExpressionNodeData(treeNode_t* node, bool withoutRoot, int depth){
+    assert(node);
     
-// //     LPRINTF("entered freeExpressionNodeData func with node %p, withoutRoot = %d, depth = %d", node, withoutRoot, depth);
+    LPRINTF("entered freeExpressionNodeData func with node %p, withoutRoot = %d, depth = %d", node, withoutRoot, depth);
 
-// //     if(!withoutRoot || (withoutRoot && depth != 1)){
-// //         if(node->type == VARIABLE){
-// //             free(node->data.var);
-// //         }
-// //         if(node->type == OPERATOR){
-// //             free(node->data.op);
-// //         }
-// //         return true;
-// //     }
+    if(!withoutRoot || (withoutRoot && depth != 1)){
+        if(node->type != NUMBER){
+            free(node->data.str);
+        }
+        return true;
+    }
 
-// //     return false;
-// // }
+    return false;
+}
 
 // bool checkNotHaveVariables(treeNode_t* curNode){
 //     assert(curNode);

@@ -1,3 +1,4 @@
+
 #ifndef LEXICAL_ANALYZE_H
 #define LEXICAL_ANALYZE_H
 

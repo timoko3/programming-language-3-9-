@@ -1,8 +1,4 @@
 #include "tree.h"
-#include "expressionTree.h"
-#include "differentiator.h"
-#include "protectionDifferentiator.h"
-#include "../derivative/differentiatorConfig.h"
 
 // #define DEBUG
 
@@ -42,10 +38,10 @@ void treeRead(const char* expressionFile){
 
     LPRINTF("expression buffer: %s\n", treeData.buffer);
 
-    for(size_t curStringInd = 0; curStringInd < treeData.nStrings; curStringInd++){
-        LPRINTF("treeRead main cycle iteration: %lu", curStringInd + 1);
-        differentiatorReadConfigParam(treeData.strings[curStringInd]);
-    }
+    // for(size_t curStringInd = 0; curStringInd < treeData.nStrings; curStringInd++){
+    //     LPRINTF("treeRead main cycle iteration: %lu", curStringInd + 1);
+    //     differentiatorReadConfigParam(treeData.strings[curStringInd]);
+    // }
     
     free(treeData.buffer);
     free(treeData.strings);
@@ -69,7 +65,7 @@ treeNode_t* copyNode(treeNode_t* node){
 
     treeNode_t* copy = createNewNode(NULL, NULL);
 
-    copyExpressionNode(copy, node);
+    // copyExpressionNode(copy, node);
 
     if(node->left){
         copy->left  = copyNode(node->left);

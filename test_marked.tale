@@ -1,0 +1,14 @@
+START[Жили-были] 
+CALL_FUNC[Сивка-бурка вещая каурка стань передо мной как лист перед травой] NAME[царь-батюшка] 
+INT[добрый молодец] NAME[Илья Муромец], ASSIGN_VARIANT[с силушкой богатырской] EXPRESSION[NUMBER[9] SUB[убавить] MUL3[трижды] NUMBER[3] END_STATEMENT[так и было]
+
+INT[нечисть] NAME[войско супостатово], ASSIGN_VARIANT[темная мощь] BRACKL[(]NUMBER[9] OPER[убавить] NUMBER[3]BRACKR[)] OPER[собрать воедино] BRACKL[(]OPER[повеливаю поделить NUMBER[9] миж] NUMBER[3]BRACKR[)] 
+
+INT[добрый молодец]  NAME[Добрыня Никитич], ASSIGN_VARIANT[с силушкой богатырской] OPER[повеливаю поделить NUMBER[9] миж] NUMBER[3]BRACKR[)
+
+CYCLE[Покуль] VALUE[силушка] NAME[Илья Муромец] OPER[не превосходить] VALUE[мощь] NAME[войско супостатово] FIGBRAL[{]
+    Добрыня Никитич силушка-преумножить NUMBER[9] SUB[убавить] MUL3[трижды] NUMBER[3] и над царством воцарила тишина
+FIGBRAR[}]
+
+PRINTF[Жар-Птица на земелюшке русской выжгла] VALUE[силушка] NAME[Добрыня Никитич] END_STATEMENT[и засияло все вокруг]
+END_PROGRAMM[и я там был мед пиво пил по усам текло, а в рот не попало]

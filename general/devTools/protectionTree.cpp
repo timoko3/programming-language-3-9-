@@ -1,5 +1,7 @@
 #include "protectionTree.h"
 
+#include "../front_end/protection.h"
+
 #include "../general/file.h"
 #include "../general/debug.h"
 #define DEBUG
@@ -13,7 +15,7 @@ static const char* GRAPH_DUMP_DOT_FILE_NAME = "graphDumps/graphDump.dot";
 static const char* CONVERT_TO_IMAGE_COMMAND = "dot -Tpng graphDumps/graphDump.dot -o graphDumps/graph%d.png";
 const size_t CONVERSION_COMMAND_SIZE = 61;
 
-const char* LOG_FILE_NAME = "logDifferentiator.html";
+const char* LOG_HTML_FILE_NAME = "logLanguage.html";
 
 static size_t logCount = 0;
 
@@ -74,9 +76,9 @@ void htmlLog(tree_t* expression, const char* callFileName, const char* callFuncN
 
     fileDescription logFile = {};
     if (logCount == 0)
-        logFile = (fileDescription){ LOG_FILE_NAME, "wb" };
+        logFile = (fileDescription){ LOG_HTML_FILE_NAME, "wb" };
     else
-        logFile = (fileDescription){ LOG_FILE_NAME, "ab" };
+        logFile = (fileDescription){ LOG_HTML_FILE_NAME, "ab" };
 
     FILE* logFilePtr = myOpenFile(&logFile);
     assert(logFilePtr);
@@ -215,30 +217,31 @@ static void initGraphNodes(const treeNode_t* node, FILE* graphFilePtr){
             (int)(uintptr_t) node,
             node->parent, 
             node, 
-            node->data.var, 
+            node->data.str, 
             node->left, 
             node->right,
             VARIABLE_NODE_COLOR);
     }
-    else if(node->type == OPERATOR){
-        fprintf(graphFilePtr, "\tnode%d [label=\"{type = OPERATOR | parent = %p | address = %p | data = %s | {left = %p | right = %p}} \", fillcolor=\"%s\"];\n", 
+    else{
+        fprintf(graphFilePtr, "\tnode%d [label=\"{type = %s | parent = %p | address = %p | data = %s | {left = %p | right = %p}} \", fillcolor=\"%s\"];\n", 
             (int)(uintptr_t) node,
+            tokenTypeToStr(node->type),
             node->parent, 
             node, 
-            node->data.op, 
+            node->data.str, 
             node->left, 
             node->right,
             OPERATOR_NODE_COLOR);
     }
-    else if(node->type == NO_TYPE){
-        fprintf(graphFilePtr, "\tnode%d [label=\"{type = NO | parent = %p | address = %p | data = no | {left = %p | right = %p}} \", fillcolor=\"%s\"];\n", 
-            (int)(uintptr_t) node,
-            node->parent, 
-            node, 
-            node->left, 
-            node->right,
-            NO_TYPE_COLOR);
-    }
+    // else if(node->type == NO_TYPE){
+    //     fprintf(graphFilePtr, "\tnode%d [label=\"{type = NO | parent = %p | address = %p | data = no | {left = %p | right = %p}} \", fillcolor=\"%s\"];\n", 
+    //         (int)(uintptr_t) node,
+    //         node->parent, 
+    //         node, 
+    //         node->left, 
+    //         node->right,
+    //         NO_TYPE_COLOR);
+    // }
 
     if(node->left){
         initGraphNodes(node->left, graphFilePtr);

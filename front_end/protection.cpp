@@ -1,3 +1,4 @@
+
 #include "protection.h"
 
 #include "../general/debug.h"
@@ -19,13 +20,35 @@ void dumpTokenSequence(tokensSequence_t* tokenSequence){
     for(size_t curTokenInd = 0; curTokenInd < tokenSequence->size; curTokenInd++){
         if(tokenSequence->data[curTokenInd].tClass != EMPTY_TOKEN){
             if(tokenSequence->data[curTokenInd].type != NUMBER){
-                fprintf(logFilePtr, "token with index %lu, data: %s\n", curTokenInd, *tokenStrData(&tokenSequence->data[curTokenInd]));
+                fprintf(logFilePtr, "token with index %lu, data: %s, type: %s, addr: %p\n", curTokenInd, *tokenStrData(&tokenSequence->data[curTokenInd]), tokenTypeToStr(tokenSequence->data[curTokenInd].type), &tokenSequence->data[curTokenInd]);
             }
             else if(tokenSequence->data[curTokenInd].type == NUMBER){
-                fprintf(logFilePtr, "token with index %lu, data: %d\n", curTokenInd, *tokenNumData(&tokenSequence->data[curTokenInd]));
+                fprintf(logFilePtr, "token with index %lu, data: %d, type: %s, addr: %p\n", curTokenInd, *tokenNumData(&tokenSequence->data[curTokenInd]), tokenTypeToStr(tokenSequence->data[curTokenInd].type), &tokenSequence->data[curTokenInd]);
             }
         }
     }
     
     fclose(logFilePtr);
+}
+
+const char* tokenTypeToStr(tokenType type){
+    switch (type) {
+        case START:         return "START";
+        case CALL_FUNC:     return "CALL_FUNC";
+        case VARIABLE:      return "VARIABLE";
+        case NUMBER:        return "NUMBER";
+        case NAME:          return "NAME";
+        case ASSIGN:        return "ASSIGN";
+        case EXPRESS:       return "EXPRESS";
+        case BRACKL:        return "BRACKL";
+        case BRACKR:        return "BRACKR";
+        case ADD:           return "ADD";
+        case SUB:           return "SUB";
+        case MUL:           return "MUL";
+        case MUL3:          return "MUL3";
+        case DIVIDE:        return "DIVIDE";
+        case END_STATEMENT: return "END_STATEMENT";
+        case END_PROGRAM:   return "END_PROGRAM";
+        default:            return "UNKNOWN";
+    }
 }

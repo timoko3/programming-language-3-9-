@@ -3,6 +3,8 @@
 
 #define logTree(expression, text, ...) htmlLog(expression, __FILE__, __FUNCTION__, __LINE__, text, ##__VA_ARGS__)
 
+#include "../tree.h"
+
 #include <stdio.h>
 
 void htmlLog(tree_t* expression, const char* callFileName, const char* callFuncName, int callLine,

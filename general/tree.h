@@ -1,5 +1,7 @@
 #ifndef TREE_H
-#define TREE_h
+#define TREE_H
+
+#include "../expressionTree.h"
 
 struct tree_t{ 
     treeNode_t*   root;
