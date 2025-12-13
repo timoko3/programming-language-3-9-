@@ -48,9 +48,14 @@ const char* tokenTypeToStr(tokenType type){
         case MUL3:          return "MUL3";
         case DIVIDE:        return "DIVIDE";
         case END_STATEMENT: return "END_STATEMENT";
+        case END_BLOCK:     return "END_BLOCK";
         case END_PROGRAM:   return "END_PROGRAM";
-        case END_FUNC:      return "END_FUNC";
         case COMMA:         return "COMMA";
+        case WHILE:         return "WHILE";
+        case IF:            return "IF";
+        case ELSE_IF:       return "ELSE_IF";
+        case ELSE:          return "ELSE";
+        case INIT_FUNC:     return "INIT_FUNC";
         default:            return "UNKNOWN";
     }
 }

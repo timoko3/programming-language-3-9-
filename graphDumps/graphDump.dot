@@ -4,7 +4,7 @@ nodesep = 1;
 ranksep = 1
 	node [shape=Mrecord, style="filled", fillcolor="#70c07cff", fontcolor="#001effff", color="#035068ff", penwidth=4, fontname="Menlo", fontsize=30];
 
-	node1552 [label="{type = END_FUNC | parent = (nil) | address = 0x504000000610 | data = Скоро сказка сказывается, да не скоро дело делается | {left = 0x5040000005d0 | right = (nil)}} ", fillcolor="#ffca2aff"];
+	node1552 [label="{type = END_BLOCK | parent = (nil) | address = 0x504000000610 | data = Скоро сказка сказывается, да не скоро дело делается | {left = 0x5040000005d0 | right = (nil)}} ", fillcolor="#ffca2aff"];
 	node1488 [label="{type = NAME | parent = (nil) | address = 0x5040000005d0 | data = царь-батюшка | {left = 0x504000000110 | right = 0x504000000590}} ", fillcolor="#ffca2aff"];
 	node272 [label="{type = COMMA | parent = (nil) | address = 0x504000000110 | data = , | {left = 0x504000000090 | right = 0x5040000000d0}} ", fillcolor="#ffca2aff"];
 	node144 [label="{type = COMMA | parent = (nil) | address = 0x504000000090 | data = , | {left = 0x504000000010 | right = 0x504000000050}} ", fillcolor="#ffca2aff"];
@@ -15,7 +15,7 @@ ranksep = 1
 	node1360 [label="{type = END_STATEMENT | parent = (nil) | address = 0x504000000550 | data = так и было | {left = 0x504000000310 | right = 0x504000000510}} ", fillcolor="#ffca2aff"];
 	node784 [label="{type = ASSIGN | parent = (nil) | address = 0x504000000310 | data = с силушкой богатырской | {left = 0x504000000190 | right = 0x5040000002d0}} ", fillcolor="#ffca2aff"];
 	node400 [label="{type = VARIABLE | parent = (nil) | address = 0x504000000190 | data = Добрый молодец | {left = 0x504000000150 | right = (nil)}} ", fillcolor="#ff298dff"];
-	node336 [label="{type = NAME | parent = (nil) | address = 0x504000000150 | data = ИльяМуромец | {left = (nil) | right = (nil)}} ", fillcolor="#ffca2aff"];
+	node336 [label="{type = NAME | parent = (nil) | address = 0x504000000150 | data = иванВасильевич | {left = (nil) | right = (nil)}} ", fillcolor="#ffca2aff"];
 	node720 [label="{type = SUB | parent = (nil) | address = 0x5040000002d0 | data = убавить | {left = 0x5040000001d0 | right = 0x504000000290}} ", fillcolor="#ffca2aff"];
 	node464 [label="{type = NUMBER | parent = (nil) | address = 0x5040000001d0 | data = 9 | {left = (nil) | right = (nil)}} ", fillcolor="#4ede8dff"];
 	node656 [label="{type = MUL | parent = (nil) | address = 0x504000000290 | data = преумножить | {left = 0x504000000210 | right = 0x504000000250}} ", fillcolor="#ffca2aff"];
@@ -23,12 +23,12 @@ ranksep = 1
 	node592 [label="{type = NUMBER | parent = (nil) | address = 0x504000000250 | data = 3 | {left = (nil) | right = (nil)}} ", fillcolor="#4ede8dff"];
 	node1296 [label="{type = ASSIGN | parent = (nil) | address = 0x504000000510 | data = с силушкой богатырской | {left = 0x504000000390 | right = 0x5040000004d0}} ", fillcolor="#ffca2aff"];
 	node912 [label="{type = VARIABLE | parent = (nil) | address = 0x504000000390 | data = Добрый молодец | {left = 0x504000000350 | right = (nil)}} ", fillcolor="#ff298dff"];
-	node848 [label="{type = NAME | parent = (nil) | address = 0x504000000350 | data = ДобрыняНикитич | {left = (nil) | right = (nil)}} ", fillcolor="#ffca2aff"];
+	node848 [label="{type = NAME | parent = (nil) | address = 0x504000000350 | data = юлий | {left = (nil) | right = (nil)}} ", fillcolor="#ffca2aff"];
 	node1232 [label="{type = SUB | parent = (nil) | address = 0x5040000004d0 | data = убавить | {left = 0x5040000003d0 | right = 0x504000000490}} ", fillcolor="#ffca2aff"];
-	node976 [label="{type = NUMBER | parent = (nil) | address = 0x5040000003d0 | data = 6 | {left = (nil) | right = (nil)}} ", fillcolor="#4ede8dff"];
+	node976 [label="{type = NUMBER | parent = (nil) | address = 0x5040000003d0 | data = 17 | {left = (nil) | right = (nil)}} ", fillcolor="#4ede8dff"];
 	node1168 [label="{type = MUL | parent = (nil) | address = 0x504000000490 | data = преумножить | {left = 0x504000000410 | right = 0x504000000450}} ", fillcolor="#ffca2aff"];
-	node1040 [label="{type = NUMBER | parent = (nil) | address = 0x504000000410 | data = 5 | {left = (nil) | right = (nil)}} ", fillcolor="#4ede8dff"];
-	node1104 [label="{type = NUMBER | parent = (nil) | address = 0x504000000450 | data = 7 | {left = (nil) | right = (nil)}} ", fillcolor="#4ede8dff"];
+	node1040 [label="{type = NUMBER | parent = (nil) | address = 0x504000000410 | data = 13 | {left = (nil) | right = (nil)}} ", fillcolor="#4ede8dff"];
+	node1104 [label="{type = NUMBER | parent = (nil) | address = 0x504000000450 | data = 5 | {left = (nil) | right = (nil)}} ", fillcolor="#4ede8dff"];
 node1552 ->node1488 [color="#785946ff", arrowsize=1.5, penwidth=7, weight=1000];
 node1488 ->node272 [color="#785946ff", arrowsize=1.5, penwidth=7, weight=1000];
 node272 ->node144 [color="#785946ff", arrowsize=1.5, penwidth=7, weight=1000];
