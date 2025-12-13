@@ -49,6 +49,8 @@ const char* tokenTypeToStr(tokenType type){
         case DIVIDE:        return "DIVIDE";
         case END_STATEMENT: return "END_STATEMENT";
         case END_PROGRAM:   return "END_PROGRAM";
+        case END_FUNC:      return "END_FUNC";
+        case COMMA:         return "COMMA";
         default:            return "UNKNOWN";
     }
 }

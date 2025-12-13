@@ -97,11 +97,20 @@ static bool parseVariable(char* curBufferPos, token_t* token, char** endPos){
         char curTokenValue[MAX_VARIABLE_SIZE] = "";
         int curBufferShift = 0;
         
-        sscanf(curBufferPos, "%s%n", curTokenValue, &curBufferShift);
+        LPRINTF("start getting varible name");
+        while(isApprovedVariableSym(curBufferPos)){
+            int symAmountBytes = getUtf8CharLength(*curBufferPos);
+            for(int curByte = 0; curByte < symAmountBytes; curByte++){
+                LPRINTF("getUtf8CharLength(*curBufferPos) = %d, curBufferShift = %d", getUtf8CharLength(*curBufferPos), curBufferShift);
+                curTokenValue[curBufferShift] = *curBufferPos;
+                curBufferPos++;
+                curBufferShift++;
+            }
+        }
         
         createVariableToken(token, curTokenValue);
         
-        *endPos = curBufferPos + curBufferShift;
+        *endPos = curBufferPos;
         return true;
     }
     return false;

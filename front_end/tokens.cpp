@@ -21,10 +21,17 @@ token_t tokens[]{
     {"и я там был мед пиво "
         "пил по усам текло, " 
         "а в рот не попало",   END_PROGRAM,   SPECIAL,  0, 0},
+    {"Скоро сказка "
+     "сказывается, да не "
+     "скоро дело делается",    END_FUNC,      SPECIAL,  0, 0},
     {"Сивка-бурка вещая каурка "
      "стань передо мной "
-      "как лист перед травой", CALL_FUNC,     SPECIAL,  1, 0}
-    
+      "как лист перед травой", CALL_FUNC,     SPECIAL,  1, 0},
+    {"(",                      BRACKL,        SPECIAL,  0, 0},
+    {")",                      BRACKR,        SPECIAL,  0, 0},
+    {"{",                      FIGBRAL,       SPECIAL,  0, 0},
+    {"}",                      FIGBRAR,       SPECIAL,  0, 0},
+    {",",                      COMMA,         SPECIAL,  0, 0}
 };
 
 const size_t TOKENS_COUNT = sizeof(tokens) / sizeof(tokens[0]);

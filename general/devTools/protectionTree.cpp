@@ -4,7 +4,6 @@
 
 #include "../general/file.h"
 #include "../general/debug.h"
-#define DEBUG
 
 #include <assert.h>
 #include <stdint.h>

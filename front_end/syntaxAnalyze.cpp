@@ -10,7 +10,7 @@
 #include <malloc.h>
 
 static treeNode_t* getG(treeNode_t* node, token_t** curToken);
-static treeNode_t* getES(treeNode_t* node, token_t** curToken);
+static treeNode_t* getEF(treeNode_t* node, token_t** curToken);
 static treeNode_t* getM(treeNode_t* node, token_t** curToken);
 static treeNode_t* getE(treeNode_t* node, token_t** curToken);
 static treeNode_t* getT(treeNode_t* node, token_t** curToken);
@@ -18,11 +18,16 @@ static treeNode_t* getVar(treeNode_t* node, token_t** curToken);
 static treeNode_t* getName(treeNode_t* node, token_t** curToken);
 static treeNode_t* getN(treeNode_t* node, token_t** curToken);
 static treeNode_t* getFunc(treeNode_t* node, token_t** curToken);
+static treeNode_t* getFuncArg(treeNode_t* node, token_t** curToken);
+static treeNode_t* getComma(treeNode_t* node, token_t** curToken);
 static treeNode_t* getStart(treeNode_t* node, token_t** curToken);
+static treeNode_t* getES(treeNode_t* node, token_t** curToken);
 
 static treeNode_t* createTreeNodeFromToken(token_t* curToken, treeNode_t* left, treeNode_t* right);
 
-static void SyntaxError();
+static void SyntaxError(const char* file, int line, const char* func);
+
+#define SYNTAX_ERROR SyntaxError(__FILE__, __LINE__, __FUNCTION__)
 
 treeNode_t* syntaxAnalyze(tree_t* syntaxTree, tokensSequence_t* tokensSequence){
     assert(syntaxTree);
@@ -42,9 +47,9 @@ static treeNode_t* getG(treeNode_t* node, token_t** curToken){
     assert(curToken);
     
     LPRINTF("Зашел в G. Текущий токен: %p", *curToken);
-    node = getES(node, curToken);
+    node = getEF(node, curToken);
     if((*curToken)->type != END_PROGRAM){
-        SyntaxError();
+        SYNTAX_ERROR;
     }
     (*curToken)++;
 
@@ -53,19 +58,114 @@ static treeNode_t* getG(treeNode_t* node, token_t** curToken){
     return node;
 }
 
+static treeNode_t* getEF(treeNode_t* node, token_t** curToken){
+    assert(curToken);
+
+    LPRINTF("Зашел в EF. Текущий токен: %p", *curToken);
+    treeNode_t* val1 = getFunc(node, curToken);
+    while((*curToken)->type == END_FUNC){      
+        token_t tempToken = **curToken;
+        (*curToken)++;
+
+        treeNode_t* val2 = getFunc(node, curToken);
+
+        val1 = createTreeNodeFromToken(&tempToken, val1, val2);
+    }
+
+    LPRINTF("Выхожу из EF. Текущий токен: %p", *curToken);
+
+    return val1;
+}
+
+static treeNode_t* getFunc(treeNode_t* node, token_t** curToken){
+    assert(curToken);
+
+    LPRINTF("Зашел в Func. Текущий токен: %p", *curToken);
+
+    getStart(node, curToken);
+
+    treeNode_t* funcNode = NULL;
+    if((*curToken)->type == CALL_FUNC){
+        (*curToken)++;
+        token_t tempToken = **curToken;
+        (*curToken)++;        
+
+        treeNode_t* val1 = getFuncArg(node, curToken);
+
+        treeNode_t* val2 = getES(node, curToken);
+
+        funcNode = createTreeNodeFromToken(&tempToken, val1, val2);
+    }
+
+    LPRINTF("Выхожу из Func. Текущий токен: %p", *curToken);
+
+    return funcNode;
+}
+
+static treeNode_t* getFuncArg(treeNode_t* node, token_t** curToken){
+    assert(curToken);
+
+    LPRINTF("Зашел в FuncArg. Текущий токен: %p", *curToken);
+
+    treeNode_t* result = 0;
+    if((*curToken)->type == BRACKL){
+        (*curToken)++;
+        while((*curToken)->type != BRACKR){
+            result = getComma(node, curToken);
+        }
+        (*curToken)++;
+    }
+    else{
+        SYNTAX_ERROR;
+    }
+
+    LPRINTF("Вышел из FuncArg. Текущий токен: %p", *curToken);
+
+    return result;
+}
+
 static treeNode_t* getES(treeNode_t* node, token_t** curToken){
     assert(curToken);
 
     LPRINTF("Зашел в ES. Текущий токен: %p", *curToken);
-    node = getStart(node, curToken);
-    if((*curToken)->type != END_STATEMENT){
-        SyntaxError();
+    treeNode_t* val1 = getM(node, curToken);
+    while((*curToken)->type == END_STATEMENT){      
+        token_t tempToken = **curToken;
+        (*curToken)++;
+
+        treeNode_t* val2 = getM(node, curToken);
+
+        val1 = createTreeNodeFromToken(&tempToken, val1, val2);
     }
-    (*curToken)++;
 
-    LPRINTF("Выхожу из ES. Текущий токен: %p", *curToken);
+    LPRINTF("Вышел из ES. Текущий токен: %p", *curToken);
 
-    return node;
+    return val1;
+}
+
+static treeNode_t* getComma(treeNode_t* node, token_t** curToken){
+    assert(curToken);
+
+    LPRINTF("Зашел в Comma. Текущий токен: %p", *curToken);
+
+    treeNode_t* val1 = getName(node, curToken);
+
+    treeNode_t* result = NULL;
+    while((*curToken)->type == COMMA){
+            token_t tempToken = **curToken;
+            (*curToken)++;   
+
+            treeNode_t* val2 = getName(node, curToken);
+
+            val1 = createTreeNodeFromToken(&tempToken, val1, val2);
+    }
+    if(!val1){
+        SYNTAX_ERROR;
+    }
+
+    LPRINTF("Вышел из Comma. Текущий токен: %p", *curToken);
+
+    return val1;
 }
 
 static treeNode_t* getM(treeNode_t* node, token_t** curToken){
@@ -74,7 +174,6 @@ static treeNode_t* getM(treeNode_t* node, token_t** curToken){
     LPRINTF("Зашел в M. Текущий токен: %p", *curToken);
 
     treeNode_t* val1 = getVar(node, curToken);
-    assert(val1);
 
     if((*curToken)->type == ASSIGN){
         token_t tempToken = **curToken;
@@ -99,7 +198,7 @@ static treeNode_t* getE(treeNode_t* node, token_t** curToken){
     treeNode_t* val1 = getT(node, curToken);
     assert(val1);
 
-    if((*curToken)->type == ADD || (*curToken)->type == SUB){
+    while((*curToken)->type == ADD || (*curToken)->type == SUB){
         token_t tempToken = **curToken;
         (*curToken)++;
 
@@ -122,7 +221,7 @@ static treeNode_t* getT(treeNode_t* node, token_t** curToken){
     treeNode_t* val1 = getN(node, curToken);
     assert(val1);
 
-    if((*curToken)->type == MUL || (*curToken)->type == DIVIDE){
+    while((*curToken)->type == MUL || (*curToken)->type == DIVIDE){
         token_t tempToken = **curToken;
         (*curToken)++;
 
@@ -151,9 +250,6 @@ static treeNode_t* getVar(treeNode_t* node, token_t** curToken){
 
         val1 = createTreeNodeFromToken(&tempToken, val1, NULL);
     }   
-    else{
-        SyntaxError();
-    }
 
     LPRINTF("Выхожу из VAR. Текущий токен: %p", *curToken);
 
@@ -192,53 +288,26 @@ static treeNode_t* getN(treeNode_t* node, token_t** curToken){
     return number;
 }
 
-static treeNode_t* getFunc(treeNode_t* node, token_t** curToken){
-    assert(curToken);
-
-    LPRINTF("Зашел в Func. Текущий токен: %p", *curToken);
-
-
-    treeNode_t* funcNode = NULL;
-    if((*curToken)->type == CALL_FUNC){
-        token_t tempToken = **curToken;
-        (*curToken)++;
-
-        treeNode_t* val1 = getName(node, curToken);
-
-        treeNode_t* val2 = getM(node, curToken);
-
-        funcNode = createTreeNodeFromToken(&tempToken, val1, val2);
-    }
-    else{
-        SyntaxError();
-    }
-
-    LPRINTF("Выхожу из Func. Текущий токен: %p", *curToken);
-
-    return funcNode;
-}
-
 static treeNode_t* getStart(treeNode_t* node, token_t** curToken){
     assert(curToken);
 
     LPRINTF("Зашел в START. Текущий токен: %p", *curToken);
 
-    treeNode_t* startNode = NULL;
-    if((*curToken)->type == START){
-        token_t tempToken = **curToken;
+    static size_t amountStartCalls = 0;
+    amountStartCalls++;
+
+    treeNode_t* val1 = NULL;
+    if((*curToken)->type == START && amountStartCalls == 1){
         (*curToken)++;
-
-        treeNode_t* val1 = getFunc(node, curToken);
-
-        startNode = createTreeNodeFromToken(&tempToken, val1, NULL);
     }
+    else if(amountStartCalls > 0) return NULL;
     else{
-        SyntaxError();
+        SYNTAX_ERROR;
     }
 
     LPRINTF("Выхожу из START. Текущий токен: %p", *curToken);
 
-    return startNode;
+    return val1;
 }
 
 static treeNode_t* createTreeNodeFromToken(token_t* curToken, treeNode_t* left, treeNode_t* right){
@@ -262,6 +331,9 @@ static treeNode_t* createTreeNodeFromToken(token_t* curToken, treeNode_t* left, 
     return newNode;
 }
 
-static void SyntaxError(){
-    printf("Синтаксическая ошибка!!");
+static void SyntaxError(const char* file, int line, const char* func){
+    assert(file);
+    assert(func);
+
+    printf("Синтаксическая ошибка!! %s:%d:%s", file, line, func);
 }

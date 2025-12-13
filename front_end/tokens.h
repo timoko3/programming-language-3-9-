@@ -14,11 +14,15 @@ enum tokenType{
     EXPRESS,
     BRACKL,
     BRACKR,
+    FIGBRAL,
+    FIGBRAR,
     ADD,
     SUB,
     MUL3,
     MUL,
     DIVIDE,
+    COMMA,
+    END_FUNC,
     END_STATEMENT,
     END_PROGRAM
 };

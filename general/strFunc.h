@@ -38,5 +38,8 @@ bool isNo(char* answer);
 void utf8Shift(int amountSymShift, char** pos);
 int getUtf8CharLength(char c);
 void skipWhitespace(char** bufferPos);
+bool isApprovedVariableSym(const char* str);
+bool isSpecialVarSymUtf8(const char* str);
+bool isalphaUtf8(const char* str);
 
 #endif /* STR_FUNC_H */
