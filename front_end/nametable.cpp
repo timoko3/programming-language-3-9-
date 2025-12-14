@@ -20,7 +20,7 @@ nametable_t* nameTableDtor(nametable_t* nametable){
     assert(nametable);
 
     for(size_t curNameInd = 0; curNameInd < nametable->size; curNameInd++){
-        free(&nametable->data[curNameInd]);
+        free(nametable->data[curNameInd].nameString);
     }
 
     free(nametable->data);
@@ -36,10 +36,13 @@ void nameTableAddElem(stack* nametables, char* stringName, nameType type){
 
     stackPop(nametables, (void**)&curNameTable);
 
-    if(curNameTable->size <= curNameTable->capacity){
+    if(curNameTable->size >= curNameTable->capacity){
         reallocateNameTable(curNameTable);
     }
     
+    curNameTable->data[curNameTable->size].nameString = (char*) calloc(myStrLen(stringName) + 1, sizeof(char));
+    assert(curNameTable->data[curNameTable->size].nameString);
+
     myStrCpy(curNameTable->data[curNameTable->size].nameString, stringName);
     curNameTable->data[curNameTable->size].type = type;
 
@@ -55,19 +58,21 @@ bool checkExistsName(stack* nametables, char* name){
 
     stackPop(nametables, (void**) &curNameTable);
     
+    bool found = 0;
     for(size_t curNameInd = 0; curNameInd < curNameTable->size; curNameInd++){
-        if(nametables->size != 0){
-            return checkExistsName(nametables, name);
-        }
         if(isEqualStrings(curNameTable->data[curNameInd].nameString, name)){
-            stackPush(nametables, curNameTable);
-            return true;
+            found = true;
+            break;
         }
+    }
+
+    if (!found && nametables->size > 0) {
+        found = checkExistsName(nametables, name);
     }
 
     stackPush(nametables, curNameTable);
 
-    return false;
+    return found;
 }
 
 nametable_t* reallocateNameTable(nametable_t* nametable){
@@ -94,7 +99,7 @@ void initTokensSequence(nametable_t* nametable, size_t startInd){
     assert(nametable);
 
     for(size_t curNameTableInd = startInd; curNameTableInd < nametable->capacity; curNameTableInd++){
-        nametable->data = NULL;
+        nametable->data[curNameTableInd].nameString = NULL;
     }
 }
 

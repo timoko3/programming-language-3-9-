@@ -37,13 +37,13 @@ ranksep = 1
 	node1552 [label="{type = NAME | parent = (nil) | address = 0x504000000610 | data = нечисть | {left = (nil) | right = (nil)}} ", fillcolor="#e64250ff"];
 	node2576 [label="{type = END_STATEMENT | parent = (nil) | address = 0x504000000a10 | data = так и было | {left = 0x5040000007d0 | right = 0x5040000009d0}} ", fillcolor="#deda10ff"];
 	node2000 [label="{type = ASSIGN | parent = (nil) | address = 0x5040000007d0 | data = с силушкой богатырской | {left = 0x5040000006d0 | right = 0x504000000790}} ", fillcolor="#77d0e4ff"];
-	node1744 [label="{type = CALL_VARIABLE | parent = (nil) | address = 0x5040000006d0 | data = сила | {left = 0x504000000690 | right = (nil)}} ", fillcolor="#ffca2aff"];
+	node1744 [label="{type = CALL_VARIABLE | parent = (nil) | address = 0x5040000006d0 | data = сила | {left = 0x504000000690 | right = (nil)}} ", fillcolor="#ff2222ff"];
 	node1680 [label="{type = NAME | parent = (nil) | address = 0x504000000690 | data = АлешаПопович | {left = (nil) | right = (nil)}} ", fillcolor="#e64250ff"];
 	node1936 [label="{type = MUL | parent = (nil) | address = 0x504000000790 | data = преумножить | {left = 0x504000000710 | right = 0x504000000750}} ", fillcolor="#ffca2aff"];
 	node1808 [label="{type = NAME | parent = (nil) | address = 0x504000000710 | data = АлешаПопович | {left = (nil) | right = (nil)}} ", fillcolor="#e64250ff"];
 	node1872 [label="{type = NAME | parent = (nil) | address = 0x504000000750 | data = ИльяМуромец | {left = (nil) | right = (nil)}} ", fillcolor="#e64250ff"];
 	node2512 [label="{type = ASSIGN | parent = (nil) | address = 0x5040000009d0 | data = с силушкой богатырской | {left = 0x504000000850 | right = 0x504000000990}} ", fillcolor="#77d0e4ff"];
-	node2128 [label="{type = CALL_VARIABLE | parent = (nil) | address = 0x504000000850 | data = сила | {left = 0x504000000810 | right = (nil)}} ", fillcolor="#ffca2aff"];
+	node2128 [label="{type = CALL_VARIABLE | parent = (nil) | address = 0x504000000850 | data = сила | {left = 0x504000000810 | right = (nil)}} ", fillcolor="#ff2222ff"];
 	node2064 [label="{type = NAME | parent = (nil) | address = 0x504000000810 | data = ИльяМуромец | {left = (nil) | right = (nil)}} ", fillcolor="#e64250ff"];
 	node2448 [label="{type = ADD | parent = (nil) | address = 0x504000000990 | data = собрать воедино | {left = 0x504000000890 | right = 0x504000000950}} ", fillcolor="#ffca2aff"];
 	node2192 [label="{type = NAME | parent = (nil) | address = 0x504000000890 | data = ИльяМуромец | {left = (nil) | right = (nil)}} ", fillcolor="#e64250ff"];

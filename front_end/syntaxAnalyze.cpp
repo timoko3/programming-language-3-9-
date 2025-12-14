@@ -109,10 +109,11 @@ static treeNode_t* getBlock(treeNode_t* node, token_t** curToken, stack* nameTab
     treeNode_t* result = NULL;
     treeNode_t* last   = NULL;
 
-    nametable_t newNameTable;
-    nameTableCtor(&newNameTable);
+    nametable_t* newNameTable = (nametable_t*) calloc(1, sizeof(nametable_t));
+    assert(newNameTable);
 
-    stackPush(nameTables, &newNameTable);
+    nameTableCtor(newNameTable);
+    stackPush(nameTables, newNameTable);
     
     if((*curToken)->type == INIT_FUNC){
         treeNode_t* stmt = getFunc(node, curToken, nameTables);
@@ -163,8 +164,12 @@ static treeNode_t* getBlock(treeNode_t* node, token_t** curToken, stack* nameTab
 
         last = stmt;
     }
-    nametable_t* nameTableToDelete;
-    stackPop(nameTables, (void**) &nameTableToDelete);
+
+    nametable_t* nameTableToDelete = NULL;
+    stackPop(nameTables, (void**)&nameTableToDelete);
+
+    nameTableDtor(nameTableToDelete);
+    free(nameTableToDelete);
 
     LPRINTF("Вышел из BLOCK. Текущий токен: %p", *curToken);
 
@@ -198,12 +203,9 @@ static treeNode_t* getStatement(treeNode_t* node, token_t** curToken, stack* nam
     assert(curToken);
 
     treeNode_t* result = NULL;
-    if((*curToken)->type == INIT_VARIABLE){
+    if((*curToken)->type == INIT_VARIABLE || (*curToken)->type == CALL_VARIABLE){
         result = getM(node, curToken, nameTables);
     }  
-    else if((*curToken)->type == CALL_VARIABLE){
-        result = getCallVar(node, curToken, nameTables); 
-    }
     else if((*curToken)->type == CALL_FUNC){
         EXPECT(curToken, CALL_FUNC);
         result = getCallFunc(node, curToken, nameTables);
@@ -240,6 +242,11 @@ static treeNode_t* getCallFunc(treeNode_t* node, token_t** curToken, stack* name
     assert(curToken);
 
     LPRINTF("Зашел в CallFunc. Текущий токен: %p", *curToken);
+
+    // if(!checkExistsName(nameTables, *tokenStrData(*curToken))){
+    //     SYNTAX_ERROR;
+    //     return NULL;
+    // }
 
     token_t tempToken = **curToken;
     (*curToken)++;        
@@ -370,7 +377,9 @@ static treeNode_t* getM(treeNode_t* node, token_t** curToken, stack* nameTables)
 
     LPRINTF("Зашел в M. Текущий токен: %p", *curToken);
 
-    treeNode_t* val1 = getInitVar(node, curToken, nameTables);
+     treeNode_t* val1 = NULL;
+    if((*curToken)->type == INIT_VARIABLE) val1 = getInitVar(node, curToken, nameTables);
+    if((*curToken)->type == CALL_VARIABLE) val1 = getCallVar(node, curToken, nameTables);
 
     if((*curToken)->type == ASSIGN){
         token_t tempToken = **curToken;
@@ -529,6 +538,8 @@ static treeNode_t* getCallVar(treeNode_t* node, token_t** curToken, stack* nameT
     }   
 
     LPRINTF("Выхожу из callVar. Текущий токен: %p", *curToken);
+
+    return val1;
 }
 
 static treeNode_t* getName(treeNode_t* node, token_t** curToken, stack* nameTables){
