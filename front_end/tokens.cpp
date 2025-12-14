@@ -48,7 +48,12 @@ token_t tokens[]{
     {"по плечу",               LE,            OPERATOR, 2, 0},
     {"не по плечу",            GT,            OPERATOR, 2, 0},
     {"больше али равна",       GE,            OPERATOR, 2, 0},
-    {"воротить",               RETURN,        KEYWORD,  1, 0}
+    {"воротить",               RETURN,        KEYWORD,  1, 0},
+    {"жар-птица выжгла "
+     "на земле русской",       OUT,           KEYWORD,  1, 0},
+    {"пойди туда — не знаю куда, "
+     "принеси то — не знаю что", IN,          KEYWORD,  1, 0},
+    {"вот и сказочке конец",   HLT,           KEYWORD,  0, 0}
 };
 
 const size_t TOKENS_COUNT = sizeof(tokens) / sizeof(tokens[0]);

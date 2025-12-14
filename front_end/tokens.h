@@ -35,7 +35,10 @@ enum tokenType{
     LT,
     GE,
     LE,
-    RETURN
+    RETURN,
+    HLT,
+    IN,
+    OUT
 };
 
 enum tokenClass{
