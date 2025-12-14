@@ -6,8 +6,8 @@
 
 enum tokenType{
     START,
-    CALL_FUNC,
     INIT_VARIABLE,
+    CALL_VARIABLE,
     NUMBER,
     NAME,
     ASSIGN,
@@ -28,12 +28,14 @@ enum tokenType{
     ELSE,
     ELSE_IF,
     INIT_FUNC,
+    CALL_FUNC,
     EQUAL,
     NOT_EQUAL,
     GT,
     LT,
     GE,
-    LE
+    LE,
+    RETURN
 };
 
 enum tokenClass{

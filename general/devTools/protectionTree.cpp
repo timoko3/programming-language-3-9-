@@ -30,6 +30,7 @@ const char* OPERATOR_NODE_COLOR      = "#ffca2aff";
 const char* ASSIGN_NODE_COLOR        = "#77d0e4ff";
 const char* NAME_NODE_COLOR          = "#e64250ff";
 const char* WHILE_NODE_COLOR         = "#d317d3ff";
+const char* IF_NODE_COLOR            = "#fe7300ff";
 const char* END_STATEMENT_NODE_COLOR = "#deda10ff";
 const char* END_BLOCK_NODE_COLOR     = "#95a3e1ff";
 
@@ -234,6 +235,7 @@ static void initGraphNodes(const treeNode_t* node, FILE* graphFilePtr){
             case ASSIGN:        curColor = ASSIGN_NODE_COLOR; break;
             case NAME:          curColor = NAME_NODE_COLOR; break;
             case WHILE:         curColor = WHILE_NODE_COLOR; break;
+            case IF:            curColor = IF_NODE_COLOR; break;
             case END_STATEMENT: curColor = END_STATEMENT_NODE_COLOR; break;
             case END_BLOCK:     curColor = END_BLOCK_NODE_COLOR; break;
             default: curColor = OPERATOR_NODE_COLOR; break;

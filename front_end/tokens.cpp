@@ -16,6 +16,7 @@ token_t tokens[]{
     {"повелеваю поделить",     DIVIDE,        OPERATOR, 2, 1},
     {"Жили-были",              START,         SPECIAL,  0, 0},
     {"Добрый молодец",         INIT_VARIABLE, KEYWORD,  1, 0},
+    {"сила",                   CALL_VARIABLE, KEYWORD,  1, 0},
     {"с силушкой богатырской", ASSIGN,        OPERATOR, 2, 0},
     {"так и было",             END_STATEMENT, SPECIAL,  0, 0},
     {"и я там был мед пиво "
@@ -46,8 +47,8 @@ token_t tokens[]{
      "не годится",             LT,            OPERATOR, 2, 0},
     {"по плечу",               LE,            OPERATOR, 2, 0},
     {"не по плечу",            GT,            OPERATOR, 2, 0},
-    {"больше али равна",       GE,            OPERATOR, 2, 0}
-
+    {"больше али равна",       GE,            OPERATOR, 2, 0},
+    {"воротить",               RETURN,        KEYWORD,  1, 0}
 };
 
 const size_t TOKENS_COUNT = sizeof(tokens) / sizeof(tokens[0]);

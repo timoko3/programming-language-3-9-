@@ -11,7 +11,7 @@
 #include <assert.h>
 #include <malloc.h>
 
-const char* CODE_FILE_NAME = "test.tale";
+const char* CODE_FILE_NAME = "factorial.tale";
 
 int main(){
     data_t code;
