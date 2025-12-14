@@ -23,9 +23,12 @@ static treeNode_t* getComma(treeNode_t* node, token_t** curToken);
 static treeNode_t* getEB(treeNode_t* node, token_t** curToken);
 static treeNode_t* getBlock(treeNode_t* node, token_t** curToken);
 static treeNode_t* getWhile(treeNode_t* node, token_t** curToken);
-static treeNode_t* getWhileArg(treeNode_t* node, token_t** curToken);
+static treeNode_t* getIfWhileArg(treeNode_t* node, token_t** curToken);
 static treeNode_t* getES(treeNode_t* node, token_t** curToken);
 static treeNode_t* getStatement(treeNode_t* node, token_t** curToken);
+static treeNode_t* getIf(treeNode_t* node, token_t** curToken);
+static treeNode_t* getEqual(treeNode_t* node, token_t** curToken);
+static treeNode_t* getComparison(treeNode_t* node, token_t** curToken);
 
 static treeNode_t* createTreeNodeFromToken(token_t* curToken, treeNode_t* left, treeNode_t* right);
 
@@ -145,6 +148,18 @@ static treeNode_t* getBlock(treeNode_t* node, token_t** curToken){
 
         last = stmt;
     }
+    else if((*curToken)->type == IF){
+        treeNode_t* stmt = getIf(node, curToken);
+
+        if(!result){
+            result = stmt;
+        }
+        else{
+            last->left = stmt;
+        }
+
+        last = stmt;
+    }
     else{
         treeNode_t* stmt = getStatement(node, curToken);
 
@@ -219,7 +234,7 @@ static treeNode_t* getWhile(treeNode_t* node, token_t** curToken){
         token_t tempToken = **curToken;
         (*curToken)++;        
 
-        val1 = getWhileArg(node, curToken);
+        val1 = getIfWhileArg(node, curToken);
 
         treeNode_t* val2 = getBlock(node, curToken);
 
@@ -231,16 +246,38 @@ static treeNode_t* getWhile(treeNode_t* node, token_t** curToken){
     return val1;
 }
 
-static treeNode_t* getWhileArg(treeNode_t* node, token_t** curToken){
+static treeNode_t* getIf(treeNode_t* node, token_t** curToken){
     assert(curToken);
 
-    LPRINTF("ЗАшел в WHILE_ARG. Текущий токен: %p", *curToken);
+    LPRINTF("Зашел в IF. Текущий токен: %p", *curToken);
+
+    treeNode_t* val1 = NULL;
+    if((*curToken)->type == IF){
+        token_t tempToken = **curToken;
+        (*curToken)++;        
+
+        val1 = getIfWhileArg(node, curToken);
+
+        treeNode_t* val2 = getBlock(node, curToken);
+
+        val1 = createTreeNodeFromToken(&tempToken, val1, val2);
+    }
+
+    LPRINTF("Вешел из IF. Текущий токен: %p", *curToken);
+
+    return val1;
+}
+
+static treeNode_t* getIfWhileArg(treeNode_t* node, token_t** curToken){
+    assert(curToken);
+
+    LPRINTF("Зашел в WHILE_ARG. Текущий токен: %p", *curToken);
 
     treeNode_t* result = NULL;
     if((*curToken)->type == BRACKL){
         (*curToken)++;
         while((*curToken)->type != BRACKR){
-            result = getE(node, curToken);
+            result = getEqual(node, curToken);
         }
         (*curToken)++;
     }
@@ -321,6 +358,44 @@ static treeNode_t* getM(treeNode_t* node, token_t** curToken){
     return val1;
 }
 
+static treeNode_t* getEqual(treeNode_t* node, token_t** curToken){
+    assert(curToken);
+
+    treeNode_t* val1 = getComparison(node, curToken);
+
+    while((*curToken)->type == EQUAL || (*curToken)->type == NOT_EQUAL){
+        token_t tempToken = **curToken;
+        (*curToken)++;
+
+        treeNode_t* val2 = getComparison(node, curToken);
+
+        val1 = createTreeNodeFromToken(&tempToken, val1, val2);
+    }
+
+
+    return val1; 
+}
+
+static treeNode_t* getComparison(treeNode_t* node, token_t** curToken){
+    assert(curToken);
+
+    treeNode_t* val1 = getE(node, curToken);
+
+    while((*curToken)->type == GT || 
+          (*curToken)->type == GE || 
+          (*curToken)->type == LT || 
+          (*curToken)->type == LE){
+        token_t tempToken = **curToken;
+        (*curToken)++;
+
+        treeNode_t* val2 = getE(node, curToken);
+
+        val1 = createTreeNodeFromToken(&tempToken, val1, val2);
+    }
+
+    return val1; 
+}
+
 static treeNode_t* getE(treeNode_t* node, token_t** curToken){
     assert(curToken);
 
@@ -370,7 +445,7 @@ static treeNode_t* getVar(treeNode_t* node, token_t** curToken){
     LPRINTF("Зашел в VAR. Текущий токен: %p", *curToken);
 
     treeNode_t* val1 = NULL;
-    if((*curToken)->type == VARIABLE){
+    if((*curToken)->type == INIT_VARIABLE){
         token_t tempToken = **curToken;
         (*curToken)++;
 

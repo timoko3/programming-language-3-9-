@@ -218,8 +218,8 @@ static void initGraphNodes(const treeNode_t* node, FILE* graphFilePtr){
             node->right,
             NUMBER_NODE_COLOR);
     }
-    else if(node->type == VARIABLE){
-        fprintf(graphFilePtr, "\tnode%d [label=\"{type = VARIABLE | parent = %p | address = %p | data = %s | {left = %p | right = %p}} \", fillcolor=\"%s\"];\n", 
+    else if(node->type == INIT_VARIABLE){
+        fprintf(graphFilePtr, "\tnode%d [label=\"{type = INIT_VARIABLE | parent = %p | address = %p | data = %s | {left = %p | right = %p}} \", fillcolor=\"%s\"];\n", 
             (int)(uintptr_t) node,
             node->parent, 
             node, 

@@ -56,7 +56,7 @@
 // //     assert(type);
 // //     treeNode_t* newNode = createNewNode(left, right);
 
-// //     newNode->type = VARIABLE;
+// //     newNode->type = INIT_VARIABLE;
 // //     newNode->data.str = myStrDup(type);
     
 // //     setParent(newNode);
@@ -86,7 +86,7 @@
 // //     if(node->type == NUMBER){
 // //         copy->data.num = node->data.num;
 // //     }
-// //     else if(node->type == VARIABLE){
+// //     else if(node->type == INIT_VARIABLE){
 // //         copy->data.var = myStrDup(node->data.var);
 // //     }
 // //     else if(node->type == OPERATOR){
@@ -112,7 +112,7 @@ bool freeExpressionNodeData(treeNode_t* node, bool withoutRoot, int depth){
 // bool checkNotHaveVariables(treeNode_t* curNode){
 //     assert(curNode);
 
-//     if(curNode->type == VARIABLE){
+//     if(curNode->type == INIT_VARIABLE){
 //         return false;
 //     }
 

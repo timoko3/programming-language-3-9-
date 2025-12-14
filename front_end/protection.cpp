@@ -35,7 +35,7 @@ const char* tokenTypeToStr(tokenType type){
     switch (type) {
         case START:         return "START";
         case CALL_FUNC:     return "CALL_FUNC";
-        case VARIABLE:      return "VARIABLE";
+        case INIT_VARIABLE:      return "INIT_VARIABLE";
         case NUMBER:        return "NUMBER";
         case NAME:          return "NAME";
         case ASSIGN:        return "ASSIGN";
@@ -56,6 +56,12 @@ const char* tokenTypeToStr(tokenType type){
         case ELSE_IF:       return "ELSE_IF";
         case ELSE:          return "ELSE";
         case INIT_FUNC:     return "INIT_FUNC";
+        case EQUAL:         return "EQUAL";
+        case NOT_EQUAL:     return "NOT_EQUAL";
+        case GE:            return "GE";
+        case GT:            return "GT";
+        case LE:            return "LE";
+        case LT:            return "LT";
         default:            return "UNKNOWN";
     }
 }
