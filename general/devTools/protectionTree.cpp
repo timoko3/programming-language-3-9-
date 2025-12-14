@@ -25,7 +25,8 @@ const char* FONT_COLOR          = "#001effff";
 const char* CUR_LEAF_COLOR      = "#f8ff1fff";
 
 const char* NUMBER_NODE_COLOR        = "#4ede8dff";
-const char* VARIABLE_NODE_COLOR      = "#ff298dff";
+const char* INIT_VARIABLE_NODE_COLOR = "#ff298dff";
+const char* CALL_VARIABLE_COLOR      = "#ff2222ff";
 const char* OPERATOR_NODE_COLOR      = "#ffca2aff";
 const char* ASSIGN_NODE_COLOR        = "#77d0e4ff";
 const char* NAME_NODE_COLOR          = "#e64250ff";
@@ -227,11 +228,12 @@ static void initGraphNodes(const treeNode_t* node, FILE* graphFilePtr){
             node->data.str, 
             node->left, 
             node->right,
-            VARIABLE_NODE_COLOR);
+            INIT_VARIABLE_NODE_COLOR);
     }
     else{
         const char* curColor;
         switch(node->type){
+            case CALL_VARIABLE: curColor = CALL_VARIABLE_COLOR; break;
             case ASSIGN:        curColor = ASSIGN_NODE_COLOR; break;
             case NAME:          curColor = NAME_NODE_COLOR; break;
             case WHILE:         curColor = WHILE_NODE_COLOR; break;
