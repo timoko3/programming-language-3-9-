@@ -23,9 +23,16 @@ const char* LEAF_COLOR          = "#70c07cff";
 const char* LEAF_BORDER_COLOR   = "#035068ff";
 const char* FONT_COLOR          = "#001effff";
 const char* CUR_LEAF_COLOR      = "#f8ff1fff";
-const char* NUMBER_NODE_COLOR   = "#4ede8dff";
-const char* VARIABLE_NODE_COLOR = "#ff298dff";
-const char* OPERATOR_NODE_COLOR = "#ffca2aff";
+
+const char* NUMBER_NODE_COLOR        = "#4ede8dff";
+const char* VARIABLE_NODE_COLOR      = "#ff298dff";
+const char* OPERATOR_NODE_COLOR      = "#ffca2aff";
+const char* ASSIGN_NODE_COLOR        = "#77d0e4ff";
+const char* NAME_NODE_COLOR          = "#e64250ff";
+const char* WHILE_NODE_COLOR         = "#d317d3ff";
+const char* END_STATEMENT_NODE_COLOR = "#deda10ff";
+const char* END_BLOCK_NODE_COLOR     = "#95a3e1ff";
+
 const char* NO_TYPE_COLOR       = "#f02828ff";
 
 const size_t START_SCALE_GRAPH_DUMP = 10;
@@ -222,6 +229,16 @@ static void initGraphNodes(const treeNode_t* node, FILE* graphFilePtr){
             VARIABLE_NODE_COLOR);
     }
     else{
+        const char* curColor;
+        switch(node->type){
+            case ASSIGN:        curColor = ASSIGN_NODE_COLOR; break;
+            case NAME:          curColor = NAME_NODE_COLOR; break;
+            case WHILE:         curColor = WHILE_NODE_COLOR; break;
+            case END_STATEMENT: curColor = END_STATEMENT_NODE_COLOR; break;
+            case END_BLOCK:     curColor = END_BLOCK_NODE_COLOR; break;
+            default: curColor = OPERATOR_NODE_COLOR; break;
+        }
+
         fprintf(graphFilePtr, "\tnode%d [label=\"{type = %s | parent = %p | address = %p | data = %s | {left = %p | right = %p}} \", fillcolor=\"%s\"];\n", 
             (int)(uintptr_t) node,
             tokenTypeToStr(node->type),
@@ -230,7 +247,7 @@ static void initGraphNodes(const treeNode_t* node, FILE* graphFilePtr){
             node->data.str, 
             node->left, 
             node->right,
-            OPERATOR_NODE_COLOR);
+            curColor);
     }
     // else if(node->type == NO_TYPE){
     //     fprintf(graphFilePtr, "\tnode%d [label=\"{type = NO | parent = %p | address = %p | data = no | {left = %p | right = %p}} \", fillcolor=\"%s\"];\n", 
