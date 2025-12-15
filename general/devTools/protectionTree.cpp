@@ -1,7 +1,7 @@
 #include "protectionTree.h"
 #include "../core/DSL.h"
 
-#include "../front_end/protection.h"
+#include "../general/tokens/protectionTokens.h"
 
 #include "../general/file.h"
 #include "../general/debug.h"

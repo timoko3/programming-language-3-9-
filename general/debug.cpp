@@ -10,11 +10,23 @@ const char* LOG_FILE_NAME = "logLanguage.txt";
 void lprintf(const char* text, ...){
     assert(text);
     
-    fileDescription logFile = {
-        LOG_FILE_NAME,
-        "ab+"
-    };    
+    static size_t amountCalls = 0;
+    amountCalls++;
 
+    fileDescription logFile;
+    if(amountCalls == 1){
+        logFile = {
+            LOG_FILE_NAME,
+            "wb+"
+        };  
+    }
+    else{
+        logFile = {
+            LOG_FILE_NAME,
+            "ab+"
+        };    
+    }
+    
     FILE* logFilePtr = myOpenFile(&logFile);
     if(!logFilePtr) return;
 

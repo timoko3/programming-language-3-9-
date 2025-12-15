@@ -6,13 +6,13 @@
 #include "../general/file.h"
 #include "../general/devTools/protectionTree.h"
 #include "../general/strFunc.h"
+#include "../general/tree/treeExpImp.h"
 
 #include <stdio.h>
 #include <assert.h>
 #include <malloc.h>
 
 const char* CODE_FILE_NAME = "factorial.tale";
-const char* TREE_FILE_NAME = "syntaxTree.txt";
 
 int main(){
     data_t code;

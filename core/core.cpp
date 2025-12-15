@@ -1,5 +1,7 @@
 #include "core.h"
 
+const char* TREE_FILE_NAME = "syntaxTree.txt";
+
 ASTdata_t ASTdata[]{
     {"собрать воедино",            ADD,             "+" },
     {"убавить",                    SUB,             "-" },

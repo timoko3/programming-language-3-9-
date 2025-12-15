@@ -1,6 +1,6 @@
 
 #include "syntaxAnalyze.h"
-#include "protection.h"
+#include "../general/tokens/protectionTokens.h"
 #include "../core/DSL.h"
 #include "../general/nametable.h"
 #include "../general/stack/stack.h"

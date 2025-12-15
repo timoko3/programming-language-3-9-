@@ -3,7 +3,7 @@
 
 #define logTree(expression, text, ...) htmlLog(expression, __FILE__, __FUNCTION__, __LINE__, text, ##__VA_ARGS__)
 
-#include "../tree.h"
+#include "../tree/tree.h"
 
 #include <stdio.h>
 

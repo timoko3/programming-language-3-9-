@@ -31,46 +31,6 @@ treeNode_t* treeDtor(tree_t* expression){
     return NULL;
 }
 
-void treeWrite(tree_t* tree, const char* treeFileName){
-    assert(tree);
-
-    fileDescription treeFile{
-        treeFileName,
-        "wb"
-    };
-
-    FILE* treeFilePtr = myOpenFile(&treeFile);
-    assert(treeFilePtr);
-
-    printPreOrder(tree->root, treeFilePtr);
-
-    fclose(treeFilePtr);
-}
-
-void printPreOrder(const treeNode_t* node, FILE* stream){
-    assert(node);
-    assert(stream);
-
-    fprintf(stream, "(");
-    fprintf(stream, " %s ", _NODE_WRITE_FILE(node));  /// можно менять
-    
-    if(node->left){
-        printPreOrder(node->left, stream);
-    }
-    else{
-        fprintf(stream, "nil ");
-    }
-
-    if(node->right){
-        printPreOrder(node->right, stream);
-    }
-    else{
-        fprintf(stream, "nil ");
-    }
-
-    fprintf(stream, ")");
-}
-
 void treeRead(const char* expressionFile){
     assert(expressionFile);
 
@@ -100,6 +60,19 @@ treeNode_t* createNewNode(treeNode_t* left, treeNode_t* right){
 
     newNode->left  = left;
     newNode->right = right;
+
+    return newNode;
+}
+
+treeNode_t* createNewNodeStr(char* value, treeNode_t* left, treeNode_t* right){
+    assert(value);
+
+    treeNode_t* newNode = createNewNode(left, right);
+
+    _NODE_VALUE_STR(newNode) = (char*) calloc(MAX_NODE_VALUE_SIZE, sizeof(char));
+    assert(_NODE_VALUE_STR(newNode));
+
+    myStrCpy(_NODE_VALUE_STR(newNode), value);
 
     return newNode;
 }

@@ -15,8 +15,6 @@ struct tokensSequence_t{
     size_t capacity;
 };
 
-const size_t MAX_VARIABLE_SIZE    = 512;
-
 tokensSequence_t* tokenSequenceCtor(tokensSequence_t* tokenSequence);
 tokensSequence_t* tokenSequenceDtor(tokensSequence_t* tokenSequence);
 tokensSequence_t* reallocateTokensSequence(tokensSequence_t* tokenSequence);

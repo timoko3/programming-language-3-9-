@@ -3,6 +3,8 @@
 
 #include <stddef.h>
 
+extern const char* TREE_FILE_NAME;
+
 enum ASTnodeType{
     START,
     INIT_VARIABLE,
@@ -51,6 +53,8 @@ struct ASTdata_t{
     ASTnodeType type;
     char*       writeFile;
 };
+
+const size_t MAX_VARIABLE_SIZE = 512;
 
 extern ASTdata_t ASTdata[];
 extern const size_t AST_DATA_COUNT;

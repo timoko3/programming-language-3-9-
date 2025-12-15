@@ -5,6 +5,8 @@
 
 #include <stdio.h>
 
+const size_t MAX_NODE_VALUE_SIZE = 512;
+
 struct tree_t{ 
     treeNode_t*   root;
     size_t        amountNodes;
@@ -14,10 +16,9 @@ treeNode_t* treeCtor(tree_t* expression);
 treeNode_t* treeDtor(tree_t* expression);
 
 // void treeRead(const char* expressionFileName);
-void treeWrite(tree_t* syntaxTree, const char* treeFileName);
-void printPreOrder(const treeNode_t* node, FILE* stream);
 
 treeNode_t* createNewNode(treeNode_t* left, treeNode_t* right);
+treeNode_t* createNewNodeStr(char* value, treeNode_t* left, treeNode_t* right);
 treeNode_t* copyNode(treeNode_t* node);
 bool setParent(treeNode_t* curNode);
 

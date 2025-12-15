@@ -1,8 +1,8 @@
 #ifndef SYNTAX_ANALYZE_H
 #define SYNTAX_ANALYZE_H
 
-#include "tokens.h"
-#include "../general/tree.h"
+#include "../general/tokens/tokens.h"
+#include "../general/tree/tree.h"
 
 treeNode_t* syntaxAnalyze(tree_t* syntaxTree, tokensSequence_t* tokensSequence);
 

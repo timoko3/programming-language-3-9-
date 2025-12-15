@@ -1,5 +1,5 @@
 #include "lexicalAnalyze.h"
-#include "protection.h"
+#include "../general/tokens/protectionTokens.h"
 
 #include "../general/file.h"
 #include "../general/strFunc.h"

@@ -1,6 +1,6 @@
 
 #include "tokens.h"
-#include "protection.h"
+#include "protectionTokens.h"
 
 #include "../general/debug.h"
 #include "../general/strFunc.h"

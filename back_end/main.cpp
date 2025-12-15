@@ -1,10 +1,18 @@
 #include "codeGeneration.h"
+#include "tree/treeExpImp.h"
+#include "../core/core.h"
+
+#include "../general/devTools/protectionTree.h"
 
 int main(){
     tree_t syntaxTree;
     treeCtor(&syntaxTree);
 
-    genAsmCode(&syntaxTree);
+    // genAsmCode(&syntaxTree);
+
+    treeRead(&syntaxTree, TREE_FILE_NAME);
+
+    logTree(&syntaxTree, "readed tree");
 
     treeDtor(&syntaxTree);
 }
