@@ -14,4 +14,9 @@
 #define _TOKEN_VALUE_NUM(token)  (token)->value.num
 #define _TOKEN_WRITE_FILE(token) (token)->writeFile
 
+#define _AST_NODE_TYPE(ASTnode)       (ASTnode)->type
+#define _AST_NODE_VALUE_STR(ASTnode)  (ASTnode)->value.str
+#define _AST_NODE_VALUE_NUM(ASTnode)  (ASTnode)->value.num
+#define _AST_NODE_WRITE_FILE(ASTnode) (ASTnode)->writeFile
+
 #endif /* DSL_H */

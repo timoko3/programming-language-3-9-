@@ -1,5 +1,6 @@
 #include "treeExpImp.h"
 
+#include "../core/core.h"
 #include "../core/DSL.h"
 #include "../file.h"
 #include "../debug.h"
@@ -7,9 +8,16 @@
 #include <assert.h>
 #include <malloc.h>
 #include <string.h>
+#include <ctype.h>
+#include <stdlib.h>
 
 static treeNode_t* readNode(char** curBufferPos);
 static char*       getNodeValue(char** curBufferPos);
+static void        assignTreeNodeData(treeNode_t* node);
+
+static void assignTreeNodeType(treeNode_t* node, ASTnodeData_t* curASTnodeData);
+static void assignTreeNodeLanguageStr(treeNode_t* node, char* str);
+static void assignTreeNodeLanguageNum(treeNode_t* node, char* str);
 
 static void skipSpaceAndCloseBracket(char** curBufferPos);
 static void SyntaxError(const char* file, int line, const char* func);
@@ -44,6 +52,8 @@ void treeRead(tree_t* tree, const char* treeFileName){
     char* curBufferPos = treeData.buffer;
 
     tree->root = readNode(&curBufferPos);
+
+    assignTreeNodeData(tree->root);
 
     free(treeData.buffer);
     free(treeData.strings);
@@ -124,6 +134,60 @@ static char* getNodeValue(char** curBufferPos){
     *curBufferPos += bufferPosShift;
 
     return nodeValue;
+}
+
+static void assignTreeNodeData(treeNode_t* node){
+    assert(node);
+
+    ASTnodeData_t* curASTnodeData =  findAstData(_NODE_WRITE_FILE(node));
+
+    if(curASTnodeData){
+        assignTreeNodeType(node, curASTnodeData);
+        assignTreeNodeLanguageStr(node, _AST_NODE_VALUE_STR(curASTnodeData));
+    }
+    else if(isdigit(_NODE_WRITE_FILE(node)[0]) || 
+            _NODE_WRITE_FILE(node)[0] == '-' && isdigit(_NODE_WRITE_FILE(node)[1])){
+        _NODE_TYPE(node) = NUMBER;
+        assignTreeNodeLanguageNum(node, _NODE_WRITE_FILE(node));
+    }
+    else{
+        _NODE_TYPE(node) = NAME;
+        assignTreeNodeLanguageStr(node, _NODE_WRITE_FILE(node));
+    }
+
+    if(_L(node)){
+        assignTreeNodeData(_L(node));
+    }
+
+    if(_R(node)){
+        assignTreeNodeData(_R(node));
+    }
+}
+
+static void assignTreeNodeType(treeNode_t* node, ASTnodeData_t* curASTnodeData){
+    assert(node);
+    assert(curASTnodeData);
+
+    _NODE_TYPE(node) = _AST_NODE_TYPE(curASTnodeData);
+}
+
+static void assignTreeNodeLanguageStr(treeNode_t* node, char* str){
+    assert(node);
+    assert(str);
+
+    _NODE_VALUE_STR(node) = (char*) calloc(MAX_NODE_VALUE_SIZE, sizeof(char));    // можно менять строку для записи
+    assert(_NODE_VALUE_STR(node));
+
+    myStrCpy(_NODE_VALUE_STR(node), str);
+}
+
+static void assignTreeNodeLanguageNum(treeNode_t* node, char* str){
+    assert(node);
+
+
+    int number = (int) atoi(str);
+
+    _NODE_VALUE_NUM(node) = number;
 }
 
 static void skipSpaceAndCloseBracket(char** curBufferPos){

@@ -48,7 +48,7 @@ union ASTVal_t{
     int num;
 };
 
-struct ASTdata_t{
+struct ASTnodeData_t{
     ASTVal_t    value;
     ASTnodeType type;
     char*       writeFile;
@@ -56,13 +56,15 @@ struct ASTdata_t{
 
 const size_t MAX_VARIABLE_SIZE = 512;
 
-extern ASTdata_t ASTdata[];
+extern ASTnodeData_t ASTdata[];
 extern const size_t AST_DATA_COUNT;
 // extern nodeDescriptor descriptors[];
 
 // struct nodeDescriptor{
-//     ASTdata_t* data;
+//     ASTnodeData_t* data;
 //     char*      asmBasicInstruction;
 // };
+
+ASTnodeData_t* findAstData(char* referenceStr);
 
 #endif /* CORE_H */

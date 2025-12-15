@@ -4,7 +4,7 @@
 #include "core.h"
 
 struct treeNode_t{
-    ASTdata_t*  data;
+    ASTnodeData_t*  data;
     treeNode_t* right;
     treeNode_t* left;
     treeNode_t* parent;

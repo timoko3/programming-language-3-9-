@@ -6,7 +6,7 @@
 
 #include "../core/core.h"
 
-typedef ASTdata_t   token_t;
+typedef ASTnodeData_t   token_t;
 typedef ASTnodeType tokenType;
 
 struct tokensSequence_t{

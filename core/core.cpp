@@ -1,8 +1,12 @@
 #include "core.h"
 
+#include "../general/strFunc.h"
+
+#include <assert.h>
+
 const char* TREE_FILE_NAME = "syntaxTree.txt";
 
-ASTdata_t ASTdata[]{
+ASTnodeData_t ASTdata[]{
     {"собрать воедино",            ADD,             "+" },
     {"убавить",                    SUB,             "-" },
     {"трижды",                     MUL3,            "no"},
@@ -56,3 +60,15 @@ const size_t AST_DATA_COUNT = sizeof(ASTdata) / sizeof(ASTdata[0]);
 // nodeDescriptor descriptors[]{
 
 // };
+
+ASTnodeData_t* findAstData(char* referenceStr){
+    assert(referenceStr);
+
+    for(size_t curASTnode = 0; curASTnode < AST_DATA_COUNT; curASTnode++){
+        if(isEqualStrings(ASTdata[curASTnode].writeFile, referenceStr)){
+            return &ASTdata[curASTnode];
+        }   
+    }
+
+    return NULL;
+}

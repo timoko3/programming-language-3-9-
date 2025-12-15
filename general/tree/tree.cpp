@@ -55,7 +55,7 @@ treeNode_t* createNewNode(treeNode_t* left, treeNode_t* right){
     assert(newNode);
     LPRINTF("Выделил память newNode = %p", newNode);
 
-    newNode->data = (ASTdata_t*)calloc(1, sizeof(ASTdata_t));
+    newNode->data = (ASTnodeData_t*)calloc(1, sizeof(ASTnodeData_t));
     assert(newNode->data);
 
     newNode->left  = left;
@@ -69,10 +69,10 @@ treeNode_t* createNewNodeStr(char* value, treeNode_t* left, treeNode_t* right){
 
     treeNode_t* newNode = createNewNode(left, right);
 
-    _NODE_VALUE_STR(newNode) = (char*) calloc(MAX_NODE_VALUE_SIZE, sizeof(char));
-    assert(_NODE_VALUE_STR(newNode));
+    _NODE_WRITE_FILE(newNode) = (char*) calloc(MAX_NODE_VALUE_SIZE, sizeof(char));    // можно менять строку для записи
+    assert(_NODE_WRITE_FILE(newNode));
 
-    myStrCpy(_NODE_VALUE_STR(newNode), value);
+    myStrCpy(_NODE_WRITE_FILE(newNode), value);
 
     return newNode;
 }
