@@ -30,6 +30,46 @@ treeNode_t* treeDtor(tree_t* expression){
     return NULL;
 }
 
+void treeWrite(tree_t* tree, const char* treeFileName){
+    assert(tree);
+
+    fileDescription treeFile{
+        treeFileName,
+        "wb"
+    };
+
+    FILE* treeFilePtr = myOpenFile(&treeFile);
+    assert(treeFilePtr);
+
+    printPreOrder(tree->root, treeFilePtr);
+
+    fclose(treeFilePtr);
+}
+
+void printPreOrder(const treeNode_t* node, FILE* stream){
+    assert(node);
+    assert(stream);
+
+    fprintf(stream, "(");
+    fprintf(stream, " %s ", node->writeFile);  /// можно менять
+    
+    if(node->left){
+        printPreOrder(node->left, stream);
+    }
+    else{
+        fprintf(stream, "nil ");
+    }
+
+    if(node->right){
+        printPreOrder(node->right, stream);
+    }
+    else{
+        fprintf(stream, "nil ");
+    }
+
+    fprintf(stream, ")");
+}
+
 void treeRead(const char* expressionFile){
     assert(expressionFile);
 

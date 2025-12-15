@@ -1,7 +1,7 @@
 
 #include "syntaxAnalyze.h"
 #include "protection.h"
-#include "nametable.h"
+#include "../general/nametable.h"
 #include "../general/stack/stack.h"
 
 #include "../general/debug.h"

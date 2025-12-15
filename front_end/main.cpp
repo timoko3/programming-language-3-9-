@@ -1,7 +1,6 @@
 
 #include "lexicalAnalyze.h"
 #include "syntaxAnalyze.h"
-#include "treeWrite.h"
 
 #include "../general/debug.h"
 #include "../general/file.h"
@@ -13,6 +12,7 @@
 #include <malloc.h>
 
 const char* CODE_FILE_NAME = "factorial.tale";
+const char* TREE_FILE_NAME = "syntaxTree.txt";
 
 int main(){
     data_t code;
@@ -38,7 +38,7 @@ int main(){
 
     logTree(&syntaxTree, "created synTree");
 
-    treeWrite(&syntaxTree);
+    treeWrite(&syntaxTree, TREE_FILE_NAME);
 
     treeDtor(&syntaxTree);
 
