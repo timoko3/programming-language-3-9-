@@ -213,11 +213,12 @@ static void initGraphNodes(const treeNode_t* node, FILE* graphFilePtr){
     assert(graphFilePtr);
 
     if(node->type == NUMBER){
-        fprintf(graphFilePtr, "\tnode%d [label=\"{type = NUMBER | parent = %p | address = %p | data = %d | toWriteFile = %s | {left = %p | right = %p}} \", fillcolor=\"%s\"];\n", 
+        fprintf(graphFilePtr, "\tnode%d [label=\"{type = NUMBER | parent = %p | address = %p | value = %d | toWriteFile = %s | {left = %p | right = %p}} \", fillcolor=\"%s\"];\n", 
             (int)(uintptr_t) node,
             node->parent, 
             node, 
-            node->data.num, 
+            node->value.num, 
+            node->value.num, 
             node->writeFile,
             node->left, 
             node->right,
@@ -240,24 +241,24 @@ static void initGraphNodes(const treeNode_t* node, FILE* graphFilePtr){
         }
 
         if(node->type != LT && node->type != LE && node->type != GT && node->type != GE){
-            fprintf(graphFilePtr, "\tnode%d [label=\"{type = %s | parent = %p | address = %p | data = %s | toWriteFile = %s | {left = %p | right = %p}} \", fillcolor=\"%s\"];\n", 
+            fprintf(graphFilePtr, "\tnode%d [label=\"{type = %s | parent = %p | address = %p | value = %s | toWriteFile = %s | {left = %p | right = %p}} \", fillcolor=\"%s\"];\n", 
                 (int)(uintptr_t) node,
                 tokenTypeToStr(node->type),
                 node->parent, 
                 node, 
-                node->data.str, 
+                node->value.str, 
                 node->writeFile,
                 node->left, 
                 node->right,
                 curColor);
         } 
         else{
-            fprintf(graphFilePtr, "\tnode%d [label=\"{type = %s | parent = %p | address = %p | data = %s | toWriteFile = \\%s | {left = %p | right = %p}} \", fillcolor=\"%s\"];\n", 
+            fprintf(graphFilePtr, "\tnode%d [label=\"{type = %s | parent = %p | address = %p | value = %s | toWriteFile = \\%s | {left = %p | right = %p}} \", fillcolor=\"%s\"];\n", 
                 (int)(uintptr_t) node,
                 tokenTypeToStr(node->type),
                 node->parent, 
                 node, 
-                node->data.str, 
+                node->value.str, 
                 node->writeFile,
                 node->left, 
                 node->right,
@@ -266,7 +267,7 @@ static void initGraphNodes(const treeNode_t* node, FILE* graphFilePtr){
 
     }
     // else if(node->type == NO_TYPE){
-    //     fprintf(graphFilePtr, "\tnode%d [label=\"{type = NO | parent = %p | address = %p | data = no | {left = %p | right = %p}} \", fillcolor=\"%s\"];\n", 
+    //     fprintf(graphFilePtr, "\tnode%d [label=\"{type = NO | parent = %p | address = %p | value = no | {left = %p | right = %p}} \", fillcolor=\"%s\"];\n", 
     //         (int)(uintptr_t) node,
     //         node->parent, 
     //         node, 

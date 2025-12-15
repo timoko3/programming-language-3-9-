@@ -1,7 +1,7 @@
 #ifndef TREE_H
 #define TREE_H
 
-#include "../expressionTree.h"
+#include "../core/expressionTree.h"
 
 #include <stdio.h>
 

@@ -18,13 +18,11 @@ void dumpTokenSequence(tokensSequence_t* tokenSequence){
     if(!logFilePtr) return;
 
     for(size_t curTokenInd = 0; curTokenInd < tokenSequence->size; curTokenInd++){
-        if(tokenSequence->data[curTokenInd].tClass != EMPTY_TOKEN){
-            if(tokenSequence->data[curTokenInd].type != NUMBER){
-                fprintf(logFilePtr, "token with index %lu, data: %s, type: %s, addr: %p\n", curTokenInd, *tokenStrData(&tokenSequence->data[curTokenInd]), tokenTypeToStr(tokenSequence->data[curTokenInd].type), &tokenSequence->data[curTokenInd]);
-            }
-            else if(tokenSequence->data[curTokenInd].type == NUMBER){
-                fprintf(logFilePtr, "token with index %lu, data: %d, type: %s, addr: %p\n", curTokenInd, *tokenNumData(&tokenSequence->data[curTokenInd]), tokenTypeToStr(tokenSequence->data[curTokenInd].type), &tokenSequence->data[curTokenInd]);
-            }
+        if(tokenSequence->data[curTokenInd].type != NUMBER){
+            fprintf(logFilePtr, "token with index %lu, data: %s, type: %s, addr: %p\n", curTokenInd, *tokenStrData(&tokenSequence->data[curTokenInd]), tokenTypeToStr(tokenSequence->data[curTokenInd].type), &tokenSequence->data[curTokenInd]);
+        }
+        else if(tokenSequence->data[curTokenInd].type == NUMBER){
+            fprintf(logFilePtr, "token with index %lu, data: %d, type: %s, addr: %p\n", curTokenInd, *tokenNumData(&tokenSequence->data[curTokenInd]), tokenTypeToStr(tokenSequence->data[curTokenInd].type), &tokenSequence->data[curTokenInd]);
         }
     }
     

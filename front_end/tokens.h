@@ -4,63 +4,10 @@
 
 #include <stddef.h>
 
-enum tokenType{
-    START,
-    INIT_VARIABLE,
-    CALL_VARIABLE,
-    NUMBER,
-    NAME,
-    ASSIGN,
-    EXPRESS,
-    BRACKL,
-    BRACKR,
-    ADD,
-    SUB,
-    MUL3,
-    MUL,
-    DIVIDE,
-    COMMA,
-    END_STATEMENT,
-    END_PROGRAM,
-    END_BLOCK,
-    WHILE,
-    IF,
-    ELSE,
-    ELSE_IF,
-    INIT_FUNC,
-    CALL_FUNC,
-    EQUAL,
-    NOT_EQUAL,
-    GT,
-    LT,
-    GE,
-    LE,
-    RETURN,
-    HLT,
-    IN,
-    OUT
-};
+#include "../core/core.h"
 
-enum tokenClass{
-    KEYWORD,
-    OPERATOR,
-    LITERAL,
-    IDENTIFIER,
-    SPECIAL,
-    EMPTY_TOKEN
-};
-
-union tokenVal_t{
-    char* str;
-    int num;
-};
-
-struct token_t{
-    tokenVal_t   nameString; 
-    tokenType    type;
-    tokenClass   tClass;
-    char*        fileWrite;
-};
+typedef ASTdata_t   token_t;
+typedef ASTnodeType tokenType;
 
 struct tokensSequence_t{
     token_t* data;
@@ -86,7 +33,6 @@ bool copyTokenContent(token_t* token, token_t* reference);
 
 bool createNumberToken(token_t* token, int tokenValue);
 bool createVariableToken(token_t* token, char* tokenValue);
-
 
 char** tokenStrData(token_t* token);
 int*   tokenNumData(token_t* token);

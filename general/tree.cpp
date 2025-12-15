@@ -1,4 +1,5 @@
 #include "tree.h"
+#include "DSL.h"
 
 // #define DEBUG
 
@@ -51,7 +52,7 @@ void printPreOrder(const treeNode_t* node, FILE* stream){
     assert(stream);
 
     fprintf(stream, "(");
-    fprintf(stream, " %s ", node->writeFile);  /// можно менять
+    fprintf(stream, " %s ", _NODE_WRITE_FILE(node));  /// можно менять
     
     if(node->left){
         printPreOrder(node->left, stream);
