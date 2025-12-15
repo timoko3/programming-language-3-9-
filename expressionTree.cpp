@@ -103,6 +103,7 @@ bool freeExpressionNodeData(treeNode_t* node, bool withoutRoot, int depth){
         if(node->type != NUMBER){
             free(node->data.str);
         }
+        free(node->writeFile);
         return true;
     }
 

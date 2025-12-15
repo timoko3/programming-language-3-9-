@@ -1,6 +1,7 @@
 
 #include "lexicalAnalyze.h"
 #include "syntaxAnalyze.h"
+#include "treeWrite.h"
 
 #include "../general/debug.h"
 #include "../general/file.h"
@@ -36,6 +37,8 @@ int main(){
     syntaxAnalyze(&syntaxTree, &tokensSequence);
 
     logTree(&syntaxTree, "created synTree");
+
+    treeWrite(&syntaxTree);
 
     treeDtor(&syntaxTree);
 

@@ -9,51 +9,51 @@
 #include <malloc.h>
 
 token_t tokens[]{
-    {"собрать воедино",        ADD,           OPERATOR, 2, 2},
-    {"убавить",                SUB,           OPERATOR, 2, 2},
-    {"трижды",                 MUL3,          OPERATOR, 1, 1},
-    {"преумножить",            MUL,           OPERATOR, 2, 0},
-    {"повелеваю поделить",     DIVIDE,        OPERATOR, 2, 1},
-    {"Жили-были",              START,         SPECIAL,  0, 0},
-    {"Добрый молодец",         INIT_VARIABLE, KEYWORD,  1, 0},
-    {"сила",                   CALL_VARIABLE, KEYWORD,  1, 0},
-    {"с силушкой богатырской", ASSIGN,        OPERATOR, 2, 0},
-    {"так и было",             END_STATEMENT, SPECIAL,  0, 0},
+    {"собрать воедино",        ADD,           OPERATOR, "+"},
+    {"убавить",                SUB,           OPERATOR, "-"},
+    {"трижды",                 MUL3,          OPERATOR, "no"},
+    {"преумножить",            MUL,           OPERATOR, "*"},
+    {"повелеваю поделить",     DIVIDE,        OPERATOR, "/"},
+    {"Жили-были",              START,         SPECIAL,  "no"},
+    {"Добрый молодец",         INIT_VARIABLE, KEYWORD,  "no"},
+    {"сила",                   CALL_VARIABLE, KEYWORD,  "no"},
+    {"с силушкой богатырской", ASSIGN,        OPERATOR, "="},
+    {"так и было",             END_STATEMENT, SPECIAL,  ";"},
     {"и я там был мед пиво "
         "пил по усам текло, " 
-        "а в рот не попало",   END_PROGRAM,   SPECIAL,  0, 0},
+        "а в рот не попало",   END_PROGRAM,   SPECIAL,  ";"},
     {"Скоро сказка "
      "сказывается, да не "
-     "скоро дело делается",    END_BLOCK,      SPECIAL,  0, 0},
+     "скоро дело делается",    END_BLOCK,      SPECIAL, "no"},
     {"Сивка-бурка вещая каурка "
      "стань передо мной "
-      "как лист перед травой", CALL_FUNC,     SPECIAL,  1, 0},
-    {"Покуда",                 WHILE,         KEYWORD,  2, 0},
-    {"ежели случилось, что",   IF,            KEYWORD,  2, 0},
+      "как лист перед травой", CALL_FUNC,     SPECIAL,  "no"},
+    {"Покуда",                 WHILE,         KEYWORD,  "while"},
+    {"ежели случилось, что",   IF,            KEYWORD,  "if"},
     
     {"А коли не "
-     "случилось, то",          ELSE,          KEYWORD,  1, 0},
-    {"А ежели случилось, что", ELSE_IF,       KEYWORD,  2, 0},
-    {"(",                      BRACKL,        SPECIAL,  0, 0},
-    {")",                      BRACKR,        SPECIAL,  0, 0},
-    {",",                      COMMA,         SPECIAL,  0, 0},
+     "случилось, то",          ELSE,          KEYWORD,  "no"},
+    {"А ежели случилось, что", ELSE_IF,       KEYWORD,  "no"},
+    {"(",                      BRACKL,        SPECIAL,  "no"},
+    {")",                      BRACKR,        SPECIAL,  "no"},
+    {",",                      COMMA,         SPECIAL,  ","},
     {"В некотором царстве, " 
      "в некотором " 
-     "государстве",            INIT_FUNC,     KEYWORD,  2, 0},
+     "государстве",            INIT_FUNC,     KEYWORD,  "no"},
     {"двое из ларца "
-     "одинаковых с лица",      EQUAL,         OPERATOR, 2, 0},
-    {"ни чета",                NOT_EQUAL,     OPERATOR, 2, 0},         // не одного поля ягода
+     "одинаковых с лица",      EQUAL,         OPERATOR, "=="},
+    {"ни чета",                NOT_EQUAL,     OPERATOR, "!="},         // не одного поля ягода
     {"и в подметки " 
-     "не годится",             LT,            OPERATOR, 2, 0},
-    {"по плечу",               LE,            OPERATOR, 2, 0},
-    {"не по плечу",            GT,            OPERATOR, 2, 0},
-    {"больше али равна",       GE,            OPERATOR, 2, 0},
-    {"воротить",               RETURN,        KEYWORD,  1, 0},
+     "не годится",             LT,            OPERATOR, "<"},
+    {"по плечу",               LE,            OPERATOR, "<="},
+    {"не по плечу",            GT,            OPERATOR, ">"},
+    {"больше али равна",       GE,            OPERATOR, ">="},
+    {"воротить",               RETURN,        KEYWORD,  "ret"},
     {"жар-птица выжгла "
-     "на земле русской",       OUT,           KEYWORD,  1, 0},
+     "на земле русской",       OUT,           KEYWORD,  "out"},
     {"пойди туда — не знаю куда, "
-     "принеси то — не знаю что", IN,          KEYWORD,  1, 0},
-    {"вот и сказочке конец",   HLT,           KEYWORD,  0, 0}
+     "принеси то — не знаю что", IN,          KEYWORD,  "in"},
+    {"вот и сказочке конец",   HLT,           KEYWORD,  "hlt"}
 };
 
 const size_t TOKENS_COUNT = sizeof(tokens) / sizeof(tokens[0]);
@@ -78,9 +78,12 @@ tokensSequence_t* tokenSequenceDtor(tokensSequence_t* tokenSequence){
     assert(tokenSequence);
 
     for(size_t curTokenInd = 0; curTokenInd < tokenSequence->size; curTokenInd++){
-        if(tokenSequence->data[curTokenInd].type != NUMBER){
+        if(*tokenStrData(&tokenSequence->data[curTokenInd])){
             LPRINTF("free[%p]", *tokenStrData(&tokenSequence->data[curTokenInd]));
             free(*tokenStrData(&tokenSequence->data[curTokenInd]));
+        }
+        if(*tokenStrWriteFile(&tokenSequence->data[curTokenInd])){
+            free(*tokenStrWriteFile(&tokenSequence->data[curTokenInd]));
         }
     }
 
@@ -116,6 +119,8 @@ void initTokensSequence(tokensSequence_t* tokensSequence, size_t startInd){
 
     for(size_t curTokenInd = startInd; curTokenInd < tokensSequence->capacity; curTokenInd++){
         tokensSequence->data[curTokenInd].tClass = EMPTY_TOKEN;
+        *tokenStrData(&tokensSequence->data[curTokenInd]) = NULL;
+        *tokenStrWriteFile(&tokensSequence->data[curTokenInd]) = NULL;
     }
 }
 
@@ -133,10 +138,14 @@ bool createNumberToken(token_t* token, int tokenValue){
     assert(token);
 
     *tokenNumData(token) = tokenValue;
+    *tokenStrData(token) = NULL;
     token->tClass        = LITERAL;
     token->type          = NUMBER;
-    token->paramCount    = 0;
-    token->priorityRank  = 0;
+    
+    *tokenStrWriteFile(token) = (char*) calloc(MAX_VARIABLE_SIZE, sizeof(char));
+    assert(*tokenStrWriteFile(token));
+
+    sprintf(*tokenStrWriteFile(token), "%d", tokenValue);
 
     LPRINTF("created number node");
     return true;
@@ -153,8 +162,11 @@ bool createVariableToken(token_t* token, char* tokenValue){
     myStrCpy(*tokenStrData(token),  tokenValue);    
     token->tClass       = IDENTIFIER;
     token->type         = NAME;
-    token->paramCount   = 0;
-    token->priorityRank = 0;
+
+    *tokenStrWriteFile(token) = (char*) calloc(MAX_VARIABLE_SIZE, sizeof(char));
+    assert(*tokenStrWriteFile(token));
+
+    myStrCpy(*tokenStrWriteFile(token),  tokenValue);  
 
     return true;
 }
@@ -190,8 +202,11 @@ bool copyTokenContent(token_t* token, token_t* reference){
 
     token->tClass       = reference->tClass;
     token->type         = reference->type;
-    token->paramCount   = reference->paramCount;
-    token->priorityRank = reference->priorityRank;
+
+    *tokenStrWriteFile(token) = (char*) calloc(MAX_VARIABLE_SIZE, sizeof(char));
+    assert(*tokenStrWriteFile(token));
+
+    myStrCpy(*tokenStrWriteFile(token),  reference->fileWrite);
 
     return true;
 }
@@ -206,4 +221,10 @@ int* tokenNumData(token_t* token){
     assert(token);
 
     return &token->nameString.num;
+}
+
+char** tokenStrWriteFile(token_t* token){
+    assert(token);
+
+    return &token->fileWrite;
 }

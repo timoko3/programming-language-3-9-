@@ -213,29 +213,21 @@ static void initGraphNodes(const treeNode_t* node, FILE* graphFilePtr){
     assert(graphFilePtr);
 
     if(node->type == NUMBER){
-        fprintf(graphFilePtr, "\tnode%d [label=\"{type = NUMBER | parent = %p | address = %p | data = %d | {left = %p | right = %p}} \", fillcolor=\"%s\"];\n", 
+        fprintf(graphFilePtr, "\tnode%d [label=\"{type = NUMBER | parent = %p | address = %p | data = %d | toWriteFile = %s | {left = %p | right = %p}} \", fillcolor=\"%s\"];\n", 
             (int)(uintptr_t) node,
             node->parent, 
             node, 
             node->data.num, 
+            node->writeFile,
             node->left, 
             node->right,
             NUMBER_NODE_COLOR);
-    }
-    else if(node->type == INIT_VARIABLE){
-        fprintf(graphFilePtr, "\tnode%d [label=\"{type = INIT_VARIABLE | parent = %p | address = %p | data = %s | {left = %p | right = %p}} \", fillcolor=\"%s\"];\n", 
-            (int)(uintptr_t) node,
-            node->parent, 
-            node, 
-            node->data.str, 
-            node->left, 
-            node->right,
-            INIT_VARIABLE_NODE_COLOR);
     }
     else{
         const char* curColor;
         switch(node->type){
             case CALL_VARIABLE: curColor = CALL_VARIABLE_COLOR; break;
+            case INIT_VARIABLE: curColor = INIT_VARIABLE_NODE_COLOR; break;
             case ASSIGN:        curColor = ASSIGN_NODE_COLOR; break;
             case NAME:          curColor = NAME_NODE_COLOR; break;
             case WHILE:         curColor = WHILE_NODE_COLOR; break;
@@ -247,15 +239,31 @@ static void initGraphNodes(const treeNode_t* node, FILE* graphFilePtr){
             default: curColor = OPERATOR_NODE_COLOR; break;
         }
 
-        fprintf(graphFilePtr, "\tnode%d [label=\"{type = %s | parent = %p | address = %p | data = %s | {left = %p | right = %p}} \", fillcolor=\"%s\"];\n", 
-            (int)(uintptr_t) node,
-            tokenTypeToStr(node->type),
-            node->parent, 
-            node, 
-            node->data.str, 
-            node->left, 
-            node->right,
-            curColor);
+        if(node->type != LT && node->type != LE && node->type != GT && node->type != GE){
+            fprintf(graphFilePtr, "\tnode%d [label=\"{type = %s | parent = %p | address = %p | data = %s | toWriteFile = %s | {left = %p | right = %p}} \", fillcolor=\"%s\"];\n", 
+                (int)(uintptr_t) node,
+                tokenTypeToStr(node->type),
+                node->parent, 
+                node, 
+                node->data.str, 
+                node->writeFile,
+                node->left, 
+                node->right,
+                curColor);
+        } 
+        else{
+            fprintf(graphFilePtr, "\tnode%d [label=\"{type = %s | parent = %p | address = %p | data = %s | toWriteFile = \\%s | {left = %p | right = %p}} \", fillcolor=\"%s\"];\n", 
+                (int)(uintptr_t) node,
+                tokenTypeToStr(node->type),
+                node->parent, 
+                node, 
+                node->data.str, 
+                node->writeFile,
+                node->left, 
+                node->right,
+                curColor);
+        }
+
     }
     // else if(node->type == NO_TYPE){
     //     fprintf(graphFilePtr, "\tnode%d [label=\"{type = NO | parent = %p | address = %p | data = no | {left = %p | right = %p}} \", fillcolor=\"%s\"];\n", 

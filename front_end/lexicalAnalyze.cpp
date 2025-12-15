@@ -50,7 +50,8 @@ tokensSequence_t* tokenize(char* curBufferPos, tokensSequence_t* tokensSequence)
             assert(tempSeqPtr);
 
             tokensSequence = tempSeqPtr;
-            if(tempToken.type != NUMBER) free(*tokenStrData(&tempToken));
+            if(*tokenStrData(&tempToken)) free(*tokenStrData(&tempToken));
+            if(*tokenStrWriteFile(&tempToken)) free(*tokenStrWriteFile(&tempToken));
         }
     }
 

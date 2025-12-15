@@ -13,6 +13,7 @@ typedef tokenType  nodeType;
 
 struct treeNode_t{
     nodeClass   nClass;
+    char*       writeFile;
     nodeType    type;
     treeVal_t   data;
     treeNode_t* right;

@@ -59,8 +59,7 @@ struct token_t{
     tokenVal_t   nameString; 
     tokenType    type;
     tokenClass   tClass;
-    size_t       paramCount;
-    int          priorityRank;
+    char*        fileWrite;
 };
 
 struct tokensSequence_t{
@@ -88,7 +87,9 @@ bool copyTokenContent(token_t* token, token_t* reference);
 bool createNumberToken(token_t* token, int tokenValue);
 bool createVariableToken(token_t* token, char* tokenValue);
 
+
 char** tokenStrData(token_t* token);
 int*   tokenNumData(token_t* token);
+char** tokenStrWriteFile(token_t* token);
 
 #endif /* TOKENS_H */

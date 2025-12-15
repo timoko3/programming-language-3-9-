@@ -97,6 +97,7 @@ static treeNode_t* getEB(treeNode_t* node, token_t** curToken, stack* nameTables
 
         if(val2){
             val1 = createTreeNodeFromToken(&tempToken, val1, val2);
+            myStrCpy(val1->writeFile, ";");
         }
     }
 
@@ -236,7 +237,7 @@ static treeNode_t* getStatement(treeNode_t* node, token_t** curToken, stack* nam
     if ((*curToken)->type == CALL_FUNC)       return getCallFunc(node, curToken, nameTables);
     if ((*curToken)->type == HLT)             return getHLT(node, curToken, nameTables);
     if ((*curToken)->type == OUT)             return getOut(node, curToken, nameTables);
-    // if ((*curToken)->type == IN)              return getIn(node, curToken, nameTables);
+    if ((*curToken)->type == IN)              return getIn(node, curToken, nameTables);
 
     return NULL;
 }
@@ -335,7 +336,7 @@ static treeNode_t* getCallFunc(treeNode_t* node, token_t** curToken, stack* name
         val1 = createTreeNodeFromToken(&tempToken, val1, NULL);
     }
     else{
-        val1 = getIn(node, curToken, nameTables);
+        val1 = getE(node, curToken, nameTables);
     }
 
     LPRINTF("Выхожу из CallFunc. Текущий токен: %p", *curToken);
@@ -348,11 +349,15 @@ static treeNode_t* getIn(treeNode_t* node, token_t** curToken, stack* nameTables
 
     treeNode_t* result = NULL;
     if((*curToken)->type == IN){
-        result = createTreeNodeFromToken(*curToken, NULL, NULL);
-        EXPECT(curToken, IN);
+        token_t tempToken = **curToken;
+        (*curToken)++;  
+
+        treeNode_t* val1 = getCallVar(node, curToken, nameTables);
+
+        result = createTreeNodeFromToken(&tempToken, val1, NULL);
     }
     else{
-        result = getE(node, curToken, nameTables);
+        SYNTAX_ERROR;
     }
 
     return result;
@@ -601,8 +606,7 @@ static treeNode_t* getInitVar(treeNode_t* node, token_t** curToken, stack* nameT
 
     treeNode_t* val1 = NULL;
     if((*curToken)->type == INIT_VARIABLE){ //временно
-        token_t tempToken = **curToken;
-        (*curToken)++;
+        EXPECT(curToken, INIT_VARIABLE);
 
         if(checkExistsName(nameTables, *tokenStrData(*curToken))){
             SYNTAX_ERROR;
@@ -610,8 +614,6 @@ static treeNode_t* getInitVar(treeNode_t* node, token_t** curToken, stack* nameT
         }
 
         val1 = getName(node, curToken, nameTables);
-
-        val1 = createTreeNodeFromToken(&tempToken, val1, NULL);
     }   
 
     LPRINTF("Выхожу из initVar. Текущий токен: %p", *curToken);
@@ -626,8 +628,7 @@ static treeNode_t* getCallVar(treeNode_t* node, token_t** curToken, stack* nameT
 
     treeNode_t* val1 = NULL;
     if((*curToken)->type == CALL_VARIABLE){
-        token_t tempToken = **curToken;
-        (*curToken)++;
+        EXPECT(curToken, CALL_VARIABLE);
         
         if(!checkExistsName(nameTables, *tokenStrData(*curToken))){
             SYNTAX_ERROR;
@@ -635,8 +636,6 @@ static treeNode_t* getCallVar(treeNode_t* node, token_t** curToken, stack* nameT
         }
 
         val1 = getName(node, curToken, nameTables);
-
-        val1 = createTreeNodeFromToken(&tempToken, val1, NULL);
     }   
 
     LPRINTF("Выхожу из callVar. Текущий токен: %p", *curToken);
@@ -707,6 +706,12 @@ static treeNode_t* createTreeNodeFromToken(token_t* curToken, treeNode_t* left, 
 
     newNode->nClass = curToken->tClass;
     newNode->type   = curToken->type;
+
+    newNode->writeFile = (char*) calloc(MAX_VARIABLE_SIZE, sizeof(char));
+    assert(newNode->writeFile);
+
+    myStrCpy(newNode->writeFile, *tokenStrWriteFile(curToken));
+
     if(curToken->type != NUMBER){
         newNode->data.str = (char*) calloc(MAX_VARIABLE_SIZE, sizeof(char));
         assert(newNode->data.str);
