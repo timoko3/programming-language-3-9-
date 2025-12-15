@@ -1,5 +1,5 @@
 #include "tree.h"
-#include "DSL.h"
+#include "../core/DSL.h"
 
 // #define DEBUG
 
@@ -95,6 +95,9 @@ treeNode_t* createNewNode(treeNode_t* left, treeNode_t* right){
     assert(newNode);
     LPRINTF("Выделил память newNode = %p", newNode);
 
+    newNode->data = (ASTdata_t*)calloc(1, sizeof(ASTdata_t));
+    assert(newNode->data);
+
     newNode->left  = left;
     newNode->right = right;
 
@@ -165,6 +168,10 @@ void freeNode(treeNode_t* node, bool withoutRoot = false){
     if(!freeExpressionNodeData(node, withoutRoot, depth)) return;
 
     LPRINTF("free: %p", node);
+
+    poisonMemory(node->data, sizeof(node->data));
+    free(node->data);
+
     poisonMemory(node, sizeof(*node));
     free(node);
     node = NULL;

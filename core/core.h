@@ -1,6 +1,8 @@
 #ifndef CORE_H
 #define CORE_H
 
+#include <stddef.h>
+
 enum ASTnodeType{
     START,
     INIT_VARIABLE,
@@ -35,7 +37,8 @@ enum ASTnodeType{
     RETURN,
     HLT,
     IN,
-    OUT
+    OUT,
+    MAIN
 };
 
 union ASTVal_t{
@@ -44,9 +47,18 @@ union ASTVal_t{
 };
 
 struct ASTdata_t{
-    char*       writeFile;
-    ASTnodeType type;
     ASTVal_t    value;
+    ASTnodeType type;
+    char*       writeFile;
 };
+
+extern ASTdata_t ASTdata[];
+extern const size_t AST_DATA_COUNT;
+// extern nodeDescriptor descriptors[];
+
+// struct nodeDescriptor{
+//     ASTdata_t* data;
+//     char*      asmBasicInstruction;
+// };
 
 #endif /* CORE_H */

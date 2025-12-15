@@ -15,9 +15,6 @@ struct tokensSequence_t{
     size_t capacity;
 };
 
-extern token_t tokens[];
-extern const size_t TOKENS_COUNT;
-
 const size_t MAX_VARIABLE_SIZE    = 512;
 
 tokensSequence_t* tokenSequenceCtor(tokensSequence_t* tokenSequence);

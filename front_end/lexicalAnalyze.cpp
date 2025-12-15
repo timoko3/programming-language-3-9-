@@ -11,6 +11,9 @@
 #include <ctype.h>
 #include <stdlib.h>
 
+#define TOKENS_COUNT AST_DATA_COUNT
+#define tokens       ASTdata
+
 static bool parseKeyword(char* curBufferPos, token_t* token);
 static bool parseNumber(char* curBufferPos, token_t* token, char** endPos);
 static bool parseVariable(char* curBufferPos, token_t* token, char** endPos);
@@ -64,9 +67,11 @@ static bool parseKeyword(char* curBufferPos, token_t* token){
     assert(curBufferPos);
     assert(token);
 
+    LPRINTF("*tokenStrData(&tokens[0]) = %s", *tokenStrData(&tokens[0]));
+
     for(size_t curTokenInd = 0; curTokenInd < TOKENS_COUNT; curTokenInd++){
         if(!strncmp(curBufferPos, *tokenStrData(&tokens[curTokenInd]), myStrLen(*tokenStrData(&tokens[curTokenInd])))){
-            LPRINTF("Needed token found tokens[curTokenInd].nameString = %s", tokens[curTokenInd].nameString);
+            LPRINTF("Needed token found tokens[curTokenInd].nameString = %s", *tokenStrData(&tokens[curTokenInd]));
 
             copyStrTokenContent(token, &tokens[curTokenInd]); 
             return true;

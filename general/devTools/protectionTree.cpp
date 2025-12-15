@@ -1,4 +1,5 @@
 #include "protectionTree.h"
+#include "../core/DSL.h"
 
 #include "../front_end/protection.h"
 
@@ -36,6 +37,7 @@ const char* END_STATEMENT_NODE_COLOR = "#deda10ff";
 const char* END_BLOCK_NODE_COLOR     = "#95a3e1ff";
 const char* IN_NODE_COLOR            = "#ffffffff";
 const char* OUT_NODE_COLOR           = "#00000091";
+const char* MAIN_NODE_COLOR          = "#f4249ad0";
 
 const char* NO_TYPE_COLOR       = "#f02828ff";
 
@@ -212,21 +214,21 @@ static void initGraphNodes(const treeNode_t* node, FILE* graphFilePtr){
     assert(node);
     assert(graphFilePtr);
 
-    if(node->type == NUMBER){
+    if(_NODE_TYPE(node) == NUMBER){
         fprintf(graphFilePtr, "\tnode%d [label=\"{type = NUMBER | parent = %p | address = %p | value = %d | toWriteFile = %s | {left = %p | right = %p}} \", fillcolor=\"%s\"];\n", 
             (int)(uintptr_t) node,
-            node->parent, 
+            _PAR(node), 
             node, 
-            node->value.num, 
-            node->value.num, 
-            node->writeFile,
-            node->left, 
-            node->right,
+            _NODE_VALUE_NUM(node), 
+            _NODE_WRITE_FILE(node),
+            _L(node), 
+            _R(node),
             NUMBER_NODE_COLOR);
     }
     else{
         const char* curColor;
-        switch(node->type){
+        switch(_NODE_TYPE(node)){
+            case MAIN:          curColor = MAIN_NODE_COLOR; break;
             case CALL_VARIABLE: curColor = CALL_VARIABLE_COLOR; break;
             case INIT_VARIABLE: curColor = INIT_VARIABLE_NODE_COLOR; break;
             case ASSIGN:        curColor = ASSIGN_NODE_COLOR; break;
@@ -240,48 +242,48 @@ static void initGraphNodes(const treeNode_t* node, FILE* graphFilePtr){
             default: curColor = OPERATOR_NODE_COLOR; break;
         }
 
-        if(node->type != LT && node->type != LE && node->type != GT && node->type != GE){
+        if(_NODE_TYPE(node) != LT && _NODE_TYPE(node) != LE && _NODE_TYPE(node) != GT && _NODE_TYPE(node) != GE){
             fprintf(graphFilePtr, "\tnode%d [label=\"{type = %s | parent = %p | address = %p | value = %s | toWriteFile = %s | {left = %p | right = %p}} \", fillcolor=\"%s\"];\n", 
                 (int)(uintptr_t) node,
-                tokenTypeToStr(node->type),
-                node->parent, 
+                tokenTypeToStr(_NODE_TYPE(node)),
+                _PAR(node), 
                 node, 
-                node->value.str, 
-                node->writeFile,
-                node->left, 
-                node->right,
+                _NODE_VALUE_STR(node), 
+                _NODE_WRITE_FILE(node),
+                _L(node), 
+                _R(node),
                 curColor);
         } 
         else{
             fprintf(graphFilePtr, "\tnode%d [label=\"{type = %s | parent = %p | address = %p | value = %s | toWriteFile = \\%s | {left = %p | right = %p}} \", fillcolor=\"%s\"];\n", 
                 (int)(uintptr_t) node,
-                tokenTypeToStr(node->type),
-                node->parent, 
+                tokenTypeToStr(_NODE_TYPE(node)),
+                _PAR(node), 
                 node, 
-                node->value.str, 
-                node->writeFile,
-                node->left, 
-                node->right,
+                _NODE_VALUE_STR(node), 
+                _NODE_WRITE_FILE(node),
+                _L(node), 
+                _R(node),
                 curColor);
         }
 
     }
-    // else if(node->type == NO_TYPE){
+    // else if(_NODE_TYPE(node) == NO_TYPE){
     //     fprintf(graphFilePtr, "\tnode%d [label=\"{type = NO | parent = %p | address = %p | value = no | {left = %p | right = %p}} \", fillcolor=\"%s\"];\n", 
     //         (int)(uintptr_t) node,
-    //         node->parent, 
+    //         _PAR(node), 
     //         node, 
-    //         node->left, 
-    //         node->right,
+    //         _L(node), 
+    //         _R(node),
     //         NO_TYPE_COLOR);
     // }
 
-    if(node->left){
-        initGraphNodes(node->left, graphFilePtr);
+    if(_L(node)){
+        initGraphNodes(_L(node), graphFilePtr);
     }
 
-    if(node->right){
-        initGraphNodes(node->right, graphFilePtr);
+    if(_R(node)){
+        initGraphNodes(_R(node), graphFilePtr);
     }
 }
 
@@ -290,18 +292,18 @@ static void printGraphNode(const treeNode_t* node, FILE* graphFilePtr){
     assert(graphFilePtr);
 
     
-    if(node->left){
+    if(_L(node)){
         fprintf(graphFilePtr, "node%d ", (int)(uintptr_t) node);
         fprintf(graphFilePtr, "->");
-        fprintf(graphFilePtr, "node%d [color=\"%s\", arrowsize=1.5, penwidth=7, weight=1000];\n", (int)(uintptr_t) node->left, TREE_BRANCH_COLOR);
-        printGraphNode(node->left, graphFilePtr);
+        fprintf(graphFilePtr, "node%d [color=\"%s\", arrowsize=1.5, penwidth=7, weight=1000];\n", (int)(uintptr_t) _L(node), TREE_BRANCH_COLOR);
+        printGraphNode(_L(node), graphFilePtr);
     }
 
-    if(node->right){
+    if(_R(node)){
         fprintf(graphFilePtr, "node%d", (int)(uintptr_t) node);
         fprintf(graphFilePtr, "->");
-        fprintf(graphFilePtr, "node%d [color=\"%s\", arrowsize=1.5, penwidth=7, weight=1000];\n", (int)(uintptr_t) node->right, TREE_BRANCH_COLOR);
-        printGraphNode(node->right, graphFilePtr);
+        fprintf(graphFilePtr, "node%d [color=\"%s\", arrowsize=1.5, penwidth=7, weight=1000];\n", (int)(uintptr_t) _R(node), TREE_BRANCH_COLOR);
+        printGraphNode(_R(node), graphFilePtr);
     }
 
     

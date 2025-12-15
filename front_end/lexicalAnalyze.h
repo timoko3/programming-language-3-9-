@@ -3,6 +3,7 @@
 #define LEXICAL_ANALYZE_H
 
 #include "tokens.h"
+#include "../core/core.h"
 
 tokensSequence_t* tokenize(char* curBufferPos, tokensSequence_t* tokensSequence);
 

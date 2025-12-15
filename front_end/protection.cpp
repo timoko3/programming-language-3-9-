@@ -31,6 +31,7 @@ void dumpTokenSequence(tokensSequence_t* tokenSequence){
 
 const char* tokenTypeToStr(tokenType type){
     switch (type) {
+        case MAIN:          return "MAIN";
         case START:         return "START";
         case CALL_FUNC:     return "CALL_FUNC";
         case INIT_VARIABLE: return "INIT_VARIABLE";

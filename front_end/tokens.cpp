@@ -8,55 +8,8 @@
 #include <assert.h>
 #include <malloc.h>
 
-token_t tokens[]{
-    {"собрать воедино",            ADD,             "+" },
-    {"убавить",                    SUB,             "-" },
-    {"трижды",                     MUL3,            "no"},
-    {"преумножить",                MUL,             "*" },
-    {"повелеваю поделить",         DIVIDE,          "/" },
-    {"Жили-были",                  START,           "no"},
-    {"Добрый молодец",             INIT_VARIABLE,   "no"},
-    {"сила",                       CALL_VARIABLE,   "no"},
-    {"с силушкой богатырской",     ASSIGN,          "=" },
-    {"так и было",                 END_STATEMENT,   ";" },
-    {"и я там был мед пиво "
-        "пил по усам текло, " 
-        "а в рот не попало",       END_PROGRAM,     ";" },
-    {"Скоро сказка "
-     "сказывается, да не "
-     "скоро дело делается",        END_BLOCK,      "no" },
-    {"Сивка-бурка вещая каурка "
-     "стань передо мной "
-      "как лист перед травой",     CALL_FUNC,      "no"   },
-    {"Покуда",                     WHILE,          "while"},
-    {"ежели случилось, что",       IF,             "if"   },
-    
-    {"А коли не "
-     "случилось, то",              ELSE,           "no"},
-    {"А ежели случилось, что",     ELSE_IF,        "no"},
-    {"(",                          BRACKL,         "no"},
-    {")",                          BRACKR,         "no"},
-    {",",                          COMMA,          "," },
-    {"В некотором царстве, " 
-     "в некотором " 
-     "государстве",                INIT_FUNC,      "no"},
-    {"двое из ларца "
-     "одинаковых с лица",          EQUAL,          "=="},
-    {"ни чета",                    NOT_EQUAL,      "!="},         // не одного поля ягода
-    {"и в подметки " 
-     "не годится",                 LT,             "<"  },
-    {"по плечу",                   LE,             "<=" },
-    {"не по плечу",                GT,             ">"  },
-    {"больше али равна",           GE,             ">=" },
-    {"воротить",                   RETURN,         "ret"},
-    {"жар-птица выжгла "
-     "на земле русской",           OUT,            "out"},
-    {"пойди туда — не знаю куда, "
-     "принеси то — не знаю что",   IN,             "in" },
-    {"вот и сказочке конец",       HLT,            "hlt"}
-};
-
-const size_t TOKENS_COUNT = sizeof(tokens) / sizeof(tokens[0]);
+#define TOKENS_COUNT AST_DATA_COUNT
+#define tokens       ASTdata
 
 tokensSequence_t* tokenSequenceCtor(tokensSequence_t* tokensSequence){
     assert(tokensSequence);
@@ -122,7 +75,7 @@ void initTokensSequence(tokensSequence_t* tokensSequence, size_t startInd){
 }
 
 token_t* getCurrentToken(const char* curOpStringName){
-    for(size_t curTokenInd = 0; curTokenInd < sizeof(tokens) / sizeof(token_t); curTokenInd++){
+    for(size_t curTokenInd = 0; curTokenInd < TOKENS_COUNT; curTokenInd++){
         if(isEqualStrings(curOpStringName, *tokenStrData(&tokens[curTokenInd]))){
             return &tokens[curTokenInd];
         }

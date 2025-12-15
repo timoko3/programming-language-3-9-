@@ -1,7 +1,7 @@
 
 #include "syntaxAnalyze.h"
 #include "protection.h"
-#include "DSL.h"
+#include "../core/DSL.h"
 #include "../general/nametable.h"
 #include "../general/stack/stack.h"
 
@@ -130,6 +130,7 @@ static treeNode_t* getBlock(treeNode_t* node, token_t** curToken, stack* nameTab
           _TOKEN_TYPE(*curToken) == RETURN ||
           _TOKEN_TYPE(*curToken) == OUT ||
           _TOKEN_TYPE(*curToken) == IN ||
+          _TOKEN_TYPE(*curToken) == MAIN ||
           _TOKEN_TYPE(*curToken) == HLT){
         treeNode_t* stmt = getES(node, curToken, nameTables);
         if (!stmt) break;
@@ -179,7 +180,8 @@ static treeNode_t* getES(treeNode_t* node, token_t** curToken, stack* nameTables
 static treeNode_t* getStatement(treeNode_t* node, token_t** curToken, stack* nameTables){
     assert(curToken);
 
-    if (_TOKEN_TYPE(*curToken) == INIT_FUNC)       return getFunc(node, curToken, nameTables);
+    if (_TOKEN_TYPE(*curToken) == INIT_FUNC || 
+        _TOKEN_TYPE(*curToken) == MAIN)            return getFunc(node, curToken, nameTables);
     if (_TOKEN_TYPE(*curToken) == WHILE)           return getWhile(node, curToken, nameTables);
     if (_TOKEN_TYPE(*curToken) == IF)              return getIf(node, curToken, nameTables);
     if (_TOKEN_TYPE(*curToken) == RETURN)          return getRet(node, curToken, nameTables);
