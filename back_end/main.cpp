@@ -8,11 +8,11 @@ int main(){
     tree_t syntaxTree;
     treeCtor(&syntaxTree);
 
-    // genAsmCode(&syntaxTree);
-
+    
     treeRead(&syntaxTree, TREE_FILE_NAME);
-
-    logTree(&syntaxTree, "readed tree");
-
+    // logTree(&syntaxTree, "readed tree");
+    
+    genAsmCode(&syntaxTree);
+    
     treeDtor(&syntaxTree);
 }

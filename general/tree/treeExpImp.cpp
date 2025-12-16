@@ -55,6 +55,8 @@ void treeRead(tree_t* tree, const char* treeFileName){
 
     assignTreeNodeData(tree->root);
 
+    setParent(tree->root);
+
     free(treeData.buffer);
     free(treeData.strings);
 }

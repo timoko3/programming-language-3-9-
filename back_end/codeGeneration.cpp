@@ -6,14 +6,14 @@
 
 #include <assert.h>
 
-const char* ASM_FILE_NAME = "program.asm";
+const char* ASM_FILE_NAME = "program.txt";
 
 void genAsmCode(tree_t* syntaxTree){
     assert(syntaxTree);
 
     fileDescription asmFile{
-        "wb",
-        ASM_FILE_NAME
+        ASM_FILE_NAME,
+        "wb"
     };
 
     FILE* asmFilePtr = myOpenFile(&asmFile);
@@ -22,11 +22,13 @@ void genAsmCode(tree_t* syntaxTree){
     codeGenContext context;
 
     _CONTEXT_FILE_PTR(&context) = asmFilePtr;
-    labelsTableCtor (_CONTEXT_LABELS(&context));
-    spuNameTableCtor(_CONTEXT_NAMES(&context));
+    context.names  = spuNameTableCtor(NULL);
+    context.labels = labelsTableCtor(NULL);
     _CONTEXT_LABELS_AMOUNT(&context) = 0;
 
     emitNode(syntaxTree->root, &context);
+
+    fclose(asmFilePtr);
 }
 
 

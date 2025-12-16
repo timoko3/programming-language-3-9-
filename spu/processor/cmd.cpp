@@ -34,6 +34,22 @@ bool myAbs(processor* spu){
     return unaryOperation(spu, absMath);
 }
 
+bool lt(processor* spu){
+    return binaryOperation(spu, ltMath);
+}
+
+bool le(processor* spu){
+    return binaryOperation(spu, leMath);
+}
+
+bool gt(processor* spu){
+    return binaryOperation(spu, gtMath);
+}
+
+bool ge(processor* spu){
+    return binaryOperation(spu, geMath);
+}
+
 bool jb(processor* spu){
     return jumpOperation(spu, ltMath);
 }
@@ -141,6 +157,24 @@ bool popm(processor* spu){
     spuPop(spu, &memCellNum);
 
     spuPopM(spu, &memCellNum);
+
+    return true;
+}
+
+bool pushmAddr(processor* spu){
+    cmdParam_t memCellNum = 0;
+    spuPop(spu, &memCellNum);
+
+    spuPushM(spu, &memCellNum);
+
+    return true;
+}
+
+bool pushmAddr(processor* spu){
+    cmdParam_t memCellNum = 0;
+    spuPop(spu, &memCellNum);
+
+    spuPohM(spu, &memCellNum);
 
     return true;
 }

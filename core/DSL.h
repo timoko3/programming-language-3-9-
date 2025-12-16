@@ -31,8 +31,8 @@
 #define _SPU_NAME_TABLE_CAPACITY(spuNameTable) (spuNameTable)->capacity
 #define _SPU_NAME_TABLE_DATA(spuNameTable) (spuNameTable)->data
 
-#define _SPU_NAME_DATA_STR(name) (name).description->nameString
-#define _SPU_NAME_DATA_TYPE(name) (name).description->type
+#define _SPU_NAME_DATA_STR(name) (name).str
+#define _SPU_NAME_DATA_TYPE(name) (name).type
 #define _SPU_NAME_ADDR(name) (name).addr
 
 #endif /* DSL_H */

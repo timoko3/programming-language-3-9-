@@ -30,7 +30,13 @@ enum cmdOpcodes{
     POPREG,
     PUSHM,
     POPM,
-    DRAW
+    PUSHMA,
+    POPMA,
+    DRAW,
+    LT,
+    LE,
+    GT,
+    GE
 };
 
 enum param_t{
@@ -56,8 +62,12 @@ static command_t commands[]{
     {DIV,      myDiv,      0, NO_PARAM,     "DIV"    },
     {SQRT,     mySqrt,     0, NO_PARAM,     "SQRT"   },
     {ABS,      myAbs,      0, NO_PARAM,     "ABS"    },
+
+    {LT,       lt,         0, NO_PARAM,     "LT"     },
+    {LE,       le,         0, NO_PARAM,     "LE"     },
+    {GT,       gt,         0, NO_PARAM,     "GT"     },
+    {GE,       ge,         0, NO_PARAM,     "GE"     },
     
-        
     {JMP,      jmp,        1, LABEL_PARAM,  "JMP"    },
     {JB,       jb,         1, LABEL_PARAM,  "JB"     },
     {JBE,      jbe,        1, LABEL_PARAM,  "JBE"    },
@@ -72,6 +82,9 @@ static command_t commands[]{
     {PUSHM,    pushm,      1, REG_PARAM,    "PUSHM"  },
     {POPM,     popm,       1, REG_PARAM,    "POPM"   },
 
+    {PUSHMA,   pushmAddr,  0, NO_PARAM,     "PUSHMA" },
+    {POPMA,    popmAddr,   0, NO_PARAM,     "PUSHMA" },
+    
     {IN,       in,         0, NO_PARAM,     "IN"     },
     {OUT,      out,        0, NO_PARAM,     "OUT"    },
     {HLT,      hlt,        0, NO_PARAM,     "HLT"    },
