@@ -1,9 +1,9 @@
 #ifndef PROCESSOR_H
 #define PROCESSOR_H
 
-#include "general/stack/stack.h"
-#include "general/strFunc.h" 
-#include "VM/ram.h"
+#include "../general/stack/stack.h"
+#include "../general/strFunc.h" 
+#include "../ram.h"
 
 typedef bool workStatus;
 

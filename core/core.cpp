@@ -5,7 +5,7 @@
 
 #include <assert.h>
 
-const char* TREE_FILE_NAME = "syntaxTree.txt";
+
 
 ASTnodeData_t ASTdata[]{
     {"собрать воедино",            ADD,             "+" },
@@ -53,6 +53,7 @@ ASTnodeData_t ASTdata[]{
     {"Сивка-бурка вещая каурка "
      "стань передо мной "
       "как лист перед травой",     CALL_FUNC,      "no" },
+    {"дубовый корень",             SQRT,           "sqrt"}
 };
 
 const size_t AST_DATA_COUNT = sizeof(ASTdata) / sizeof(ASTdata[0]);

@@ -1,7 +1,7 @@
 #include "processor.h"
-#include "cmd.h"
-#include "general/poison.h"
-#include "general/file.h" 
+#include "../cmd.h"
+#include "../general/poison.h"
+#include "../general/file.h" 
 
 #include <math.h>
 

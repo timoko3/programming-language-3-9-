@@ -16,6 +16,7 @@ struct spuNameTable_t{
 };
 
 spuNameTable_t* spuNameTableCtor(spuNameTable_t* spuNameTable);
+spuNameTable_t* spuNameTableDtor(spuNameTable_t* spuNameTable);
 int getVarAddr(spuNameTable_t* spuNameTable, const char* name);
 
 #endif  /* SPU_NAMES_H */

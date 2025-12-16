@@ -1,6 +1,6 @@
 #include "translator.h"
-#include "general/hash.h"
-#include "general/poison.h"
+#include "../general/hash.h"
+#include "../general/poison.h"
 
 #include <assert.h>
 #include <stdlib.h>
@@ -90,6 +90,10 @@ static bool listing(translator_t* translator){
     for(size_t curStringInd = 0; curStringInd < translator->input_buffer.count; curStringInd++){
         translator->curState.StringInd = curStringInd;
 
+        if(!translator->input_buffer.ptrs[translator->curState.StringInd].ptr){
+            return false;
+        }
+
         if(getLabel(translator)) continue;
 
         char curCmdName[COMMAND_NAME_MAX_SIZE] = {0};
@@ -127,10 +131,13 @@ static bool assemblePass(translator_t* translator){
     assert(translator);
 
     translator->opcode.size = 0;
-    printf("MEOW %d\n", translator->input_buffer.count);
     for(size_t curStringInd = 0; curStringInd < translator->input_buffer.count; curStringInd++){
         translator->curState.StringInd = curStringInd;
         $
+        if(!translator->input_buffer.ptrs[translator->curState.StringInd].ptr){
+            return false;
+        }
+
         if(getLabel(translator)) continue;
         $
         if (translator->input_buffer.ptrs[curStringInd].ptr[0] == '\n'){
@@ -162,6 +169,7 @@ static bool getLabel(translator_t* translator){
     assert(translator);
     $
     char curLabelName[LABEL_NAME_MAX_SIZE] = "";
+
     if(sscanf(translator->input_buffer.ptrs[translator->curState.StringInd].ptr, ":%s", curLabelName)){
         translator->curState.labelName = curLabelName;
         $
@@ -170,7 +178,7 @@ static bool getLabel(translator_t* translator){
         printf("\n");
         return true;
     }
-
+    $
     return false;
 }
 

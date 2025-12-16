@@ -17,8 +17,6 @@ spuNameTable_t* spuNameTableCtor(spuNameTable_t* spuNameTable){
     spuNameTable->data = (spuName_t*) calloc(1, sizeof(spuName_t));
     assert(spuNameTable->data);
 
-    
-
     spuNameTable->capacity = 1;
     spuNameTable->size = 0;
 
@@ -83,4 +81,16 @@ static spuNameTable_t* reallocateSpuNameTable(spuNameTable_t* spuNameTable){
     LPRINTF("ended reallocation");
 
     return spuNameTable;
+}
+
+spuNameTable_t* spuNameTableDtor(spuNameTable_t* spuNameTable){
+    assert(spuNameTable);
+
+    for(size_t curSpuNameInd = 0; curSpuNameInd < spuNameTable->size; curSpuNameInd++){
+        free(spuNameTable->data[curSpuNameInd].str);
+    }
+
+    free(spuNameTable->data);
+
+    return NULL;
 }

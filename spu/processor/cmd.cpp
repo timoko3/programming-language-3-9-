@@ -163,18 +163,18 @@ bool popm(processor* spu){
 
 bool pushmAddr(processor* spu){
     cmdParam_t memCellNum = 0;
-    spuPop(spu, &memCellNum);
+    spuGetArg(spu, &memCellNum);
 
     spuPushM(spu, &memCellNum);
 
     return true;
 }
 
-bool pushmAddr(processor* spu){
+bool popmAddr(processor* spu){
     cmdParam_t memCellNum = 0;
-    spuPop(spu, &memCellNum);
+    spuGetArg(spu, &memCellNum);
 
-    spuPohM(spu, &memCellNum);
+    spuPopM(spu, &memCellNum);
 
     return true;
 }
@@ -189,13 +189,24 @@ bool in(processor* spu){
     return true;
 }
 
+// bool out(processor* spu){
+//     printf("Все элементы стека:\n");
+
+//     cmdParam_t curElem = 0;
+//     while(spuPop(spu, &curElem) != false){
+//         printf("%d ", curElem);
+//     }
+//     printf("\n");
+//     return true;
+// }
+
 bool out(processor* spu){
     printf("Все элементы стека:\n");
 
     cmdParam_t curElem = 0;
-    while(spuPop(spu, &curElem) != false){
-        printf("%d ", curElem);
-    }
+    spuPop(spu, &curElem);
+    printf("%d ", curElem);
+    
     printf("\n");
     return true;
 }

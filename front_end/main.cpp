@@ -14,9 +14,14 @@
 
 const char* CODE_FILE_NAME = "factorial.tale";
 
-int main(){
+int main(int argc, char* argv[]){
+    const char* filename = CODE_FILE_NAME;
+    if(argc == 2){
+        filename = argv[1];
+    }
+
     data_t code;
-    parseStringsFile(&code, CODE_FILE_NAME);
+    parseStringsFile(&code, filename);
     char* curBufferPos = code.buffer;
 
     LPRINTF("isalpha('a') = %d, isalpha('и') = %d, isalpha(',') = %d", isalphaUtf8("a"), isalphaUtf8("и"), isalphaUtf8(","));

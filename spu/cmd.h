@@ -82,8 +82,8 @@ static command_t commands[]{
     {PUSHM,    pushm,      1, REG_PARAM,    "PUSHM"  },
     {POPM,     popm,       1, REG_PARAM,    "POPM"   },
 
-    {PUSHMA,   pushmAddr,  0, NO_PARAM,     "PUSHMA" },
-    {POPMA,    popmAddr,   0, NO_PARAM,     "PUSHMA" },
+    {PUSHMA,   pushmAddr,  1, NUMBER_PARAM, "PUSHMA" },
+    {POPMA,    popmAddr,   1, NUMBER_PARAM, "POPMA"  },
     
     {IN,       in,         0, NO_PARAM,     "IN"     },
     {OUT,      out,        0, NO_PARAM,     "OUT"    },

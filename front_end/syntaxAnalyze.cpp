@@ -520,9 +520,31 @@ static treeNode_t* getT(treeNode_t* node, token_t** curToken, stack* nameTables)
 
     LPRINTF("Зашел в T. Текущий токен: %p", *curToken);
 
-    treeNode_t* val1 = getOperand(node, curToken, nameTables);
+    treeNode_t* val1 = getSqrt(node, curToken, nameTables);
 
     while(_TOKEN_TYPE(*curToken) == MUL || _TOKEN_TYPE(*curToken) == DIVIDE){
+        token_t tempToken = **curToken;
+        (*curToken)++;
+
+        treeNode_t* val2 = getSqrt(node, curToken, nameTables);
+        assert(val2);
+
+        val1 = createTreeNodeFromToken(&tempToken, val1, val2);
+    }
+
+    LPRINTF("Выхожу из T. Текущий токен: %p", *curToken);
+
+    return val1;
+}
+
+static treeNode_t* getSqrt(treeNode_t* node, token_t** curToken, stack* nameTables){
+    assert(curToken);
+
+    LPRINTF("Зашел в SQRT. Текущий токен: %p", *curToken);
+
+    treeNode_t* val1 = getOperand(node, curToken, nameTables);
+
+    while(_TOKEN_TYPE(*curToken) == SQRT){
         token_t tempToken = **curToken;
         (*curToken)++;
 
@@ -532,7 +554,7 @@ static treeNode_t* getT(treeNode_t* node, token_t** curToken, stack* nameTables)
         val1 = createTreeNodeFromToken(&tempToken, val1, val2);
     }
 
-    LPRINTF("Выхожу из T. Текущий токен: %p", *curToken);
+    LPRINTF("Выхожу из SQRT. Текущий токен: %p", *curToken);
 
     return val1;
 }

@@ -1,9 +1,9 @@
 #ifndef TRANSLATOR_H
 #define TRANSLATOR_H
 
-#include "general/file.h"
-#include "general/strFunc.h"
-#include "cmd.h"
+#include "../general/file.h"
+#include "../general/strFunc.h"
+#include "../cmd.h"
 
 #define DEBUG_TRANSLATOR 0
 

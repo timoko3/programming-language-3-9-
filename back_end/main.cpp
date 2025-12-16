@@ -4,12 +4,17 @@
 
 #include "../general/devTools/protectionTree.h"
 
-int main(){
+const char* TREE_FILE_NAME = "syntaxTree.txt";
+int main(int argc, char* argv[]){
+    const char* filename = TREE_FILE_NAME;
+    if(argc == 2){
+        filename = argv[1];
+    }
+
     tree_t syntaxTree;
     treeCtor(&syntaxTree);
 
-    
-    treeRead(&syntaxTree, TREE_FILE_NAME);
+    treeRead(&syntaxTree, filename);
     // logTree(&syntaxTree, "readed tree");
     
     genAsmCode(&syntaxTree);
