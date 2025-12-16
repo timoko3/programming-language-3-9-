@@ -58,13 +58,8 @@ const size_t MAX_VARIABLE_SIZE = 512;
 
 extern ASTnodeData_t ASTdata[];
 extern const size_t AST_DATA_COUNT;
-// extern nodeDescriptor descriptors[];
 
-// struct nodeDescriptor{
-//     ASTnodeData_t* data;
-//     char*      asmBasicInstruction;
-// };
-
+void initDescriptors();
 ASTnodeData_t* findAstData(char* referenceStr);
 
 #endif /* CORE_H */

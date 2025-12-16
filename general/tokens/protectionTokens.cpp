@@ -65,6 +65,7 @@ const char* tokenTypeToStr(tokenType type){
         case OUT:           return "OUT";
         case IN:            return "IN";
         case HLT:           return "HLT";
+        case RETURN:        return "RETURN";
         default:            return "UNKNOWN";
     }
 }

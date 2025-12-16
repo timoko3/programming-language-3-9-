@@ -19,4 +19,20 @@
 #define _AST_NODE_VALUE_NUM(ASTnode)  (ASTnode)->value.num
 #define _AST_NODE_WRITE_FILE(ASTnode) (ASTnode)->writeFile
 
+#define _EMIT_RULE_TYPE(emitRule) (emitRule)->type
+#define _EMIT_RULE_EMITTER(emitRule) (emitRule)->emitter
+
+#define _CONTEXT_FILE_PTR(context)       (context)->filePtr
+#define _CONTEXT_NAMES(context)          (context)->names
+#define _CONTEXT_LABELS(context)         (context)->labels
+#define _CONTEXT_LABELS_AMOUNT(context)  (context)->labelsAmount
+
+#define _SPU_NAME_TABLE_SIZE(spuNameTable) (spuNameTable)->size
+#define _SPU_NAME_TABLE_CAPACITY(spuNameTable) (spuNameTable)->capacity
+#define _SPU_NAME_TABLE_DATA(spuNameTable) (spuNameTable)->data
+
+#define _SPU_NAME_DATA_STR(name) (name).description->nameString
+#define _SPU_NAME_DATA_TYPE(name) (name).description->type
+#define _SPU_NAME_ADDR(name) (name).addr
+
 #endif /* DSL_H */

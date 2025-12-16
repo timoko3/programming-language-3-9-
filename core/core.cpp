@@ -1,4 +1,5 @@
 #include "core.h"
+#include "DSL.h"
 
 #include "../general/strFunc.h"
 
@@ -9,35 +10,17 @@ const char* TREE_FILE_NAME = "syntaxTree.txt";
 ASTnodeData_t ASTdata[]{
     {"собрать воедино",            ADD,             "+" },
     {"убавить",                    SUB,             "-" },
-    {"трижды",                     MUL3,            "no"},
     {"преумножить",                MUL,             "*" },
     {"повелеваю поделить",         DIVIDE,          "/" },
-    {"Жили-были",                  START,           "no"},
-    {"Добрый молодец",             INIT_VARIABLE,   "no"},
-    {"сила",                       CALL_VARIABLE,   "no"},
+
     {"с силушкой богатырской",     ASSIGN,          "=" },
     {"так и было",                 END_STATEMENT,   ";" },
     {"и я там был мед пиво "
         "пил по усам текло, " 
         "а в рот не попало",       END_PROGRAM,     ";" },
-    {"Скоро сказка "
-     "сказывается, да не "
-     "скоро дело делается",        END_BLOCK,      "no" },
-    {"Сивка-бурка вещая каурка "
-     "стань передо мной "
-      "как лист перед травой",     CALL_FUNC,      "no"   },
     {"Покуда",                     WHILE,          "while"},
     {"ежели случилось, что",       IF,             "if"   },
-    
-    {"А коли не "
-     "случилось, то",              ELSE,           "no"},
-    {"А ежели случилось, что",     ELSE_IF,        "no"},
-    {"(",                          BRACKL,         "no"},
-    {")",                          BRACKR,         "no"},
     {",",                          COMMA,          "," },
-    {"В некотором царстве, " 
-     "в некотором " 
-     "государстве",                INIT_FUNC,      "no"},
     {"двое из ларца "
      "одинаковых с лица",          EQUAL,          "=="},
     {"ни чета",                    NOT_EQUAL,      "!="},         // не одного поля ягода
@@ -52,14 +35,27 @@ ASTnodeData_t ASTdata[]{
     {"пойди туда — не знаю куда, "
      "принеси то — не знаю что",   IN,             "in" },
     {"вот и сказочке конец",       HLT,            "hlt"},
-    {"царь-батюшка",               MAIN,           "main"}
+    {"царь-батюшка",               MAIN,           "main"},
+    {"Жили-были",                  START,           "no"},
+    {"Добрый молодец",             INIT_VARIABLE,   "no"},
+    {"сила",                       CALL_VARIABLE,   "no"},
+    {"В некотором царстве, " 
+     "в некотором " 
+     "государстве",                INIT_FUNC,      "no"},
+    {"А коли не "
+     "случилось, то",              ELSE,           "no"},
+    {"А ежели случилось, что",     ELSE_IF,        "no"},
+    {"(",                          BRACKL,         "no"},
+    {")",                          BRACKR,         "no"},
+    {"Скоро сказка "
+     "сказывается, да не "
+     "скоро дело делается",        END_BLOCK,      "no" },
+    {"Сивка-бурка вещая каурка "
+     "стань передо мной "
+      "как лист перед травой",     CALL_FUNC,      "no" },
 };
 
 const size_t AST_DATA_COUNT = sizeof(ASTdata) / sizeof(ASTdata[0]);
-
-// nodeDescriptor descriptors[]{
-
-// };
 
 ASTnodeData_t* findAstData(char* referenceStr){
     assert(referenceStr);

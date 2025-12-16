@@ -3,6 +3,16 @@
 
 #include "../general/tree/tree.h"
 
+#include "labels.h"
+#include "spuNames.h"
+
+struct codeGenContext{
+    FILE*           filePtr;
+    spuNameTable_t* names; 
+    labelsTable_t*  labels; 
+    int             labelsAmount;
+};
+
 void genAsmCode(tree_t* syntaxTree);
 
 #endif /* CODE_GENERATION_H */

@@ -58,7 +58,7 @@ ranksep = 1
 	node4960 [label="{type = DIVIDE | parent = (nil) | address = 0x503000001360 | value = повелеваю поделить | toWriteFile = / | {left = 0x5030000013c0 | right = 0x503000001420}} ", fillcolor="#ffca2aff"];
 	node5056 [label="{type = NUMBER | parent = (nil) | address = 0x5030000013c0 | value = 9 | toWriteFile = 9 | {left = (nil) | right = (nil)}} ", fillcolor="#4ede8dff"];
 	node5152 [label="{type = NUMBER | parent = (nil) | address = 0x503000001420 | value = 3 | toWriteFile = 3 | {left = (nil) | right = (nil)}} ", fillcolor="#4ede8dff"];
-	node5248 [label="{type = UNKNOWN | parent = (nil) | address = 0x503000001480 | value = воротить | toWriteFile = ret | {left = 0x5030000014e0 | right = (nil)}} ", fillcolor="#ffca2aff"];
+	node5248 [label="{type = RETURN | parent = (nil) | address = 0x503000001480 | value = воротить | toWriteFile = ret | {left = 0x5030000014e0 | right = (nil)}} ", fillcolor="#ffca2aff"];
 	node5344 [label="{type = NAME | parent = (nil) | address = 0x5030000014e0 | value = АлешаПопович | toWriteFile = АлешаПопович | {left = (nil) | right = (nil)}} ", fillcolor="#e64250ff"];
 node64 ->node160 [color="#785946ff", arrowsize=1.5, penwidth=7, weight=1000];
 node160->node256 [color="#785946ff", arrowsize=1.5, penwidth=7, weight=1000];
