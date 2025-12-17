@@ -1,8 +1,10 @@
 #include "emitters.h"
-#include "labels.h"
 
 #include "../core/core.h"
 #include "../core/DSL.h"
+
+#include "../general/debug.h"
+#include "../general/strFunc.h"
 
 #include <stdio.h>
 
@@ -56,8 +58,6 @@ static emitRule emittersTable[] = {
     {MAIN,          emitPlug  }
 };
 
-static int cycleLabelNumber = 0;
-
 const size_t EMIT_TABLE_SIZE = sizeof(emittersTable) / sizeof(emitRule);
 
 emitter_t getEmitter(ASTnodeType type){
@@ -70,7 +70,7 @@ emitter_t getEmitter(ASTnodeType type){
     return NULL;
 }   
 
-void emitNode(treeNode_t* node, codeGenContext* context){   ///ASSIGN закостылена из-за формата дерева
+void emitNode(treeNode_t* node, codeGenContext* context){ 
     assert(node);
     assert(context);
 
@@ -232,14 +232,18 @@ void emitInitFunc(treeNode_t* node, codeGenContext* context){
     assert(node);
     assert(context);
 
-    fprintf(_CONTEXT_FILE_PTR(context), "\n:%s\n", "factorial");
+    char* labelName = transliterate( _NODE_VALUE_STR(node));
+    fprintf(_CONTEXT_FILE_PTR(context), "\n:%s\n", labelName);
+    free(labelName);
 }
 
 void emitCallFunc(treeNode_t* node, codeGenContext* context){
     assert(node);
     assert(context);
 
-    fprintf(_CONTEXT_FILE_PTR(context), "CALL :%s\n", "factorial");
+    char* labelName = transliterate( _NODE_VALUE_STR(node));
+    fprintf(_CONTEXT_FILE_PTR(context), "CALL :%s\n", labelName);
+    free(labelName);
 }
 
 void emitVar(treeNode_t* node, codeGenContext* context){
@@ -266,47 +270,43 @@ void emitWhile(treeNode_t* node, codeGenContext* context){
     assert(node);
     assert(context);
 
-    int label1 = getLabelName(context->labels, _NODE_VALUE_STR(node));
-    fprintf(_CONTEXT_FILE_PTR(context), "\n:%d\n", label1);
+    label_t label1 = createLabel(_CONTEXT_LABELS(context), LABEL_PREFIX_WHILE_BEGIN);
+    fprintf(_CONTEXT_FILE_PTR(context), "\n:%s_%d\n", _LABEL_DATA_PREFIX(&label1), _LABEL_DATA_ID(&label1));
 
-    int label2 = getLabelName(context->labels, _NODE_VALUE_STR(node));
+    label_t label2 = createLabel(_CONTEXT_LABELS(context), LABEL_PREFIX_JBE_WHILE_END);;
 
     if(_L(node)){
         emitNode(_L(node), context);
     }
 
-    int label3 = getLabelName(context->labels, _NODE_VALUE_STR(node));
-
     fprintf(_CONTEXT_FILE_PTR(context), "PUSH 0\n");
-    fprintf(_CONTEXT_FILE_PTR(context), "JBE :%d\n", cycleLabelNumber);
+    fprintf(_CONTEXT_FILE_PTR(context), "JBE :%s_%d\n", _LABEL_DATA_PREFIX(&label2), _LABEL_DATA_ID(&label2));
 
     if(_R(node)){
         emitNode(_R(node), context);
     }    
 
-    fprintf(_CONTEXT_FILE_PTR(context), "JMP :%d\n", label1);
+    fprintf(_CONTEXT_FILE_PTR(context), "JMP :%s_%d\n", _LABEL_DATA_PREFIX(&label1), _LABEL_DATA_ID(&label1));
 
-    fprintf(_CONTEXT_FILE_PTR(context), ":%d\n\n", label2);
-
-    cycleLabelNumber++;
+    fprintf(_CONTEXT_FILE_PTR(context), ":%s_%d\n\n", _LABEL_DATA_PREFIX(&label2), _LABEL_DATA_ID(&label2));
 }
 
 void emitIf(treeNode_t* node, codeGenContext* context){
     assert(node);
     assert(context);
 
-    int label1 = cycleLabelNumber++;
+    label_t label1 = createLabel(_CONTEXT_LABELS(context), LABEL_PREFIX_IF_FALSE_JMP);
 
     if(_L(node)){
         emitNode(_L(node), context);
     }
 
     fprintf(_CONTEXT_FILE_PTR(context), "PUSH 0\n");
-    fprintf(_CONTEXT_FILE_PTR(context), "JAE :%d\n", label1);
+    fprintf(_CONTEXT_FILE_PTR(context), "JBE :%s_%d\n", _LABEL_DATA_PREFIX(&label1), _LABEL_DATA_ID(&label1));
 
     if(_R(node)){
         emitNode(_R(node), context);
     }    
 
-    fprintf(_CONTEXT_FILE_PTR(context), ":%d\n\n", label1);
+    fprintf(_CONTEXT_FILE_PTR(context), ":%s_%d\n\n", _LABEL_DATA_PREFIX(&label1), _LABEL_DATA_ID(&label1));
 }

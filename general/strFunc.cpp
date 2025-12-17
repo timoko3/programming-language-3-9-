@@ -8,6 +8,85 @@
 #include <malloc.h>
 #include <ctype.h>
 #include <stdint.h>
+#include <string.h>
+
+struct transliterationTable_t{
+    char* russian;
+    char* translit;
+};
+
+transliterationTable_t transliterationTable[]{
+    {"а", "a"},
+    {"б", "b"},
+    {"в", "v"},
+    {"г", "g"},
+    {"д", "d"},
+    {"е", "e"},
+    {"ё", "yo"},
+    {"ж", "zh"},
+    {"з", "z"},
+    {"и", "i"},
+    {"й", "j"},
+    {"к", "k"},
+    {"л", "l"},
+    {"м", "m"},
+    {"н", "n"},
+    {"о", "o"},
+    {"п", "p"},
+    {"р", "r"},
+    {"с", "s"},
+    {"т", "t"},
+    {"у", "u"},
+    {"ф", "f"},
+    {"х", "h"},
+    {"ц", "c"},
+    {"ч", "ch"},
+    {"ш", "sh"},
+    {"щ", "shch"},
+    {"ь", ""},
+    {"ъ", ""},
+    {"ы", "y"},
+    {"э", "e"},
+    {"ю", "yu"},
+    {"я", "ya"},
+        
+    {"А", "A"},
+    {"Б", "B"},
+    {"В", "V"},
+    {"Г", "G"},
+    {"Д", "D"},
+    {"Е", "E"},
+    {"Ё", "Yo"},
+    {"Ж", "Zh"},
+    {"З", "Z"},
+    {"И", "I"},
+    {"Й", "J"},
+    {"К", "K"},
+    {"Л", "L"},
+    {"М", "M"},
+    {"Н", "N"},
+    {"О", "O"},
+    {"П", "P"},
+    {"Р", "R"},
+    {"С", "S"},
+    {"Т", "T"},
+    {"У", "U"},
+    {"Ф", "F"},
+    {"Х", "H"},
+    {"Ц", "C"},
+    {"Ч", "Ch"},
+    {"Ш", "Sh"},
+    {"Щ", "Shch"},
+    {"Ь", ""},
+    {"Ъ", ""},
+    {"Ы", "Y"},
+    {"Э", "E"},
+    {"Ю", "Yu"},
+    {"Я", "Ya"},
+
+};
+
+const size_t SIZE_TRANSLITERATION_TABLE = sizeof(transliterationTable) / sizeof(transliterationTable[0]);
 
 static size_t utf8Decode(const char* str, uint32_t* codePoint);
 static bool isAlphaCodepoint(uint32_t c);
@@ -119,12 +198,61 @@ bool isNo(char* answer){
     return isEqualStrings(answer, "нет");
 }
 
+char* transliterate(char* str){
+    assert(str);
+
+    char* resultStr = (char*) calloc(4 * utf8StrLen(str), sizeof(char));
+    assert(resultStr);
+
+    char* curStrPos = str;
+    while(*curStrPos != '\0'){
+        bool found = false;
+        for(size_t curLetterInd = 0; curLetterInd < SIZE_TRANSLITERATION_TABLE; curLetterInd++){
+            if(!strncmp(curStrPos, transliterationTable[curLetterInd].russian, myStrLen(transliterationTable->russian))){
+
+                strcat(resultStr, transliterationTable[curLetterInd].translit);
+                found = true;
+                LPRINTF("curStrPos: %s ", curStrPos);
+            }
+        }
+        if(!found){
+            size_t symLen = getUtf8CharLength(*curStrPos);
+            strncat(resultStr, curStrPos, symLen);
+        }   
+
+        utf8Shift(1, &curStrPos);
+    }
+
+    return resultStr;
+}
+
 void utf8Shift(int amountSymShift, char** pos){
     assert(pos);
 
     for(size_t symSkipped = 0; symSkipped < (size_t) amountSymShift; symSkipped++){
         *pos += getUtf8CharLength(**pos);
     }
+}
+
+size_t utf8StrLen(char* str){
+    assert(str);
+
+    LPRINTF("started len");
+
+    size_t len = 0;
+
+    char* curPos = str;
+    while(*curPos != '\0'){
+        LPRINTF("count len: %lu, curStrPos = %s", len, curPos);
+
+        len += getUtf8CharLength(*curPos);
+
+        utf8Shift(1, &curPos);
+    }
+
+    LPRINTF("ended len");
+
+    return len;
 }
 
 int getUtf8CharLength(char c){

@@ -28,6 +28,7 @@ void genAsmCode(tree_t* syntaxTree){
     emitNode(syntaxTree->root, &context);
 
     spuNameTableDtor(context.names);
+    labelsTableDtor(context.labels);
 
     fclose(asmFilePtr);
 }

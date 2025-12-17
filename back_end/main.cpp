@@ -4,12 +4,20 @@
 
 #include "../general/devTools/protectionTree.h"
 
+#include "../general/strFunc.h"
+#include <stdio.h>
+
 const char* TREE_FILE_NAME = "syntaxTree.txt";
 int main(int argc, char* argv[]){
     const char* filename = TREE_FILE_NAME;
     if(argc == 2){
         filename = argv[1];
     }
+
+    char* transliteratedStr = transliterate("вычисление факториала");
+    printf("translit: %s", transliteratedStr);
+
+    free(transliteratedStr);
 
     tree_t syntaxTree;
     treeCtor(&syntaxTree);

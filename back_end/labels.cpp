@@ -7,8 +7,12 @@
 
 #include <malloc.h>
 #include <assert.h>
+#include <string.h>
 
-static int createLabel(labelsTable_t* labelsTable, const char* name);
+const char* LABEL_PREFIX_JBE_WHILE_END = "whileEndJump";
+const char* LABEL_PREFIX_WHILE_BEGIN   = "whileBegin";
+const char* LABEL_PREFIX_IF_FALSE_JMP  = "ifFalseJmp";
+
 static labelsTable_t* reallocateLabelsTable(labelsTable_t* labelsTable);
 
 labelsTable_t* labelsTableCtor(labelsTable_t* labelsTable){
@@ -23,27 +27,21 @@ labelsTable_t* labelsTableCtor(labelsTable_t* labelsTable){
     return labelsTable;
 }
 
-int getLabelName(labelsTable_t* labelsTable, const char* name){
+labelsTable_t* labelsTableDtor(labelsTable_t* labelsTable){
     assert(labelsTable);
-    assert(name);
 
-    LPRINTF("spuNameTable=%p data=%p size=%zu cap=%zu",
-        labelsTable,
-        labelsTable->data,
-        labelsTable->size,
-        labelsTable->capacity);
-
-    for(size_t curLabelInd = 0; curLabelInd < _LABEL_TABLE_SIZE(labelsTable); curLabelInd++){
-
-        if(isEqualStrings(_LABEL_DATA_NAME(&labelsTable->data[curLabelInd]), name) ){
-            return _LABEL_DATA_NUM(&labelsTable->data[curLabelInd]);
-        }
+    for(size_t curLabelInd = 0; curLabelInd < labelsTable->size; curLabelInd++){
+        free(_LABEL_DATA_PREFIX(&labelsTable->data[curLabelInd]));
     }
 
-    return createLabel(labelsTable, name);
+    free(_LABEL_TABLE_DATA(labelsTable));
+
+    free(labelsTable);
+
+    return NULL;
 }
 
-static int createLabel(labelsTable_t* labelsTable, const char* name){
+label_t createLabel(labelsTable_t* labelsTable, const char* name){
     assert(labelsTable);
     assert(name);
 
@@ -57,12 +55,12 @@ static int createLabel(labelsTable_t* labelsTable, const char* name){
 
     LPRINTF("WRITE slot addr=%p", &labelsTable->data[curSize]);
 
-    _LABEL_DATA_NAME(&labelsTable->data[curSize])  = myStrDup(name);
-    _LABEL_DATA_NUM(&labelsTable->data[curSize]) = num;
+    _LABEL_DATA_PREFIX(&labelsTable->data[curSize])  = myStrDup(name);
+    _LABEL_DATA_ID(&labelsTable->data[curSize]) = num;
 
     _LABEL_TABLE_SIZE(labelsTable)++;
 
-    return _LABEL_DATA_NUM(&labelsTable->data[curSize]);
+    return labelsTable->data[curSize];
 }
 
 static labelsTable_t* reallocateLabelsTable(labelsTable_t* labelsTable){
@@ -83,14 +81,5 @@ static labelsTable_t* reallocateLabelsTable(labelsTable_t* labelsTable){
     return labelsTable;
 }
 
-labelsTable_t* spuNameTableDtor(labelsTable_t* labelsTable){
-    assert(labelsTable);
 
-    for(size_t curLabelInd = 0; curLabelInd < labelsTable->size; curLabelInd++){
-        free(_LABEL_DATA_NAME(&labelsTable->data[curLabelInd]));
-    }
 
-    free(_LABEL_TABLE_DATA(labelsTable));
-
-    return NULL;
-}

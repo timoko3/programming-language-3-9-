@@ -23,6 +23,20 @@ spuNameTable_t* spuNameTableCtor(spuNameTable_t* spuNameTable){
     return spuNameTable;
 }
 
+spuNameTable_t* spuNameTableDtor(spuNameTable_t* spuNameTable){
+    assert(spuNameTable);
+
+    for(size_t curSpuNameInd = 0; curSpuNameInd < spuNameTable->size; curSpuNameInd++){
+        free(spuNameTable->data[curSpuNameInd].str);
+    }
+
+    free(spuNameTable->data);
+
+    free(spuNameTable);
+
+    return NULL;
+}
+
 int getVarAddr(spuNameTable_t* spuNameTable, const char* name){
     assert(spuNameTable);
     assert(name);
@@ -83,14 +97,3 @@ static spuNameTable_t* reallocateSpuNameTable(spuNameTable_t* spuNameTable){
     return spuNameTable;
 }
 
-spuNameTable_t* spuNameTableDtor(spuNameTable_t* spuNameTable){
-    assert(spuNameTable);
-
-    for(size_t curSpuNameInd = 0; curSpuNameInd < spuNameTable->size; curSpuNameInd++){
-        free(spuNameTable->data[curSpuNameInd].str);
-    }
-
-    free(spuNameTable->data);
-
-    return NULL;
-}
