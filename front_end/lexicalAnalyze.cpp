@@ -84,7 +84,7 @@ static bool parseNumber(char* curBufferPos, token_t* token, char** endPos){
     assert(curBufferPos);
     assert(token);
 
-    if (isdigit(*curBufferPos)) {
+    if (*curBufferPos == '-' || *curBufferPos == '+' || isdigit(*curBufferPos)) {
         int number = (int) strtol(curBufferPos, endPos, 10);
         LPRINTF("Found number: %d", number);
         createNumberToken(token, number);

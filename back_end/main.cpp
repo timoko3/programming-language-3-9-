@@ -14,11 +14,6 @@ int main(int argc, char* argv[]){
         filename = argv[1];
     }
 
-    char* transliteratedStr = transliterate("вычисление факториала");
-    printf("translit: %s", transliteratedStr);
-
-    free(transliteratedStr);
-
     tree_t syntaxTree;
     treeCtor(&syntaxTree);
 

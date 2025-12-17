@@ -11,9 +11,9 @@ const int    ASSEMBLE_FAILURE       = -1;
 
 const size_t COMMAND_NAME_MAX_SIZE  = 50;
 const size_t REGISTER_NAME_MAX_SIZE = 5;
-const size_t LABEL_NAME_MAX_SIZE    = 20;
+const size_t LABEL_NAME_MAX_SIZE    = 100;
 
-const size_t N_LABELS     = 20;
+const size_t N_LABELS     = 100;
 const int    LABEL_POISON = 46878756;
 
 typedef int value;

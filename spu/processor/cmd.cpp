@@ -76,22 +76,22 @@ bool jne(processor* spu){
 
 bool draw(processor* spu){
     $
-    cmdParam_t fieldSideSize = 0;
+    ram_t fieldSideSize = 0;
 
     spuPop(spu, &fieldSideSize);
-    printf("fieldSize = %d\n", fieldSideSize);
-    for(cmdParam_t curMemCellInd = 0; curMemCellInd < fieldSideSize * fieldSideSize; curMemCellInd++){
+    printf("fieldSize = %lg\n", fieldSideSize);
+    for(int curMemCellInd = 0; curMemCellInd < fieldSideSize * fieldSideSize; curMemCellInd++){
         spuPushM(spu, &curMemCellInd);
-        cmdParam_t curMemCellVal = 0;
+        ram_t curMemCellVal = 0;
         spuPop(spu, &curMemCellVal);
 
-        if((curMemCellInd % fieldSideSize) == 0) printf("\n");
+        if(((int) curMemCellInd % (int) fieldSideSize) == 0) printf("\n");
         
-        if(curMemCellVal != 0){
-            printf(SET_STYLE_BOLD_FONT_GREEN "%d " RESET, curMemCellVal);
+        if(!areEqualDouble(curMemCellVal, 0)){
+            printf(SET_STYLE_BOLD_FONT_GREEN "%lg " RESET, curMemCellVal);
         }
         else{
-            printf(SET_STYLE_BOLD_FONT_RED "%d " RESET, curMemCellVal);
+            printf(SET_STYLE_BOLD_FONT_RED "%lg " RESET, curMemCellVal);
         }
     }
 
@@ -99,9 +99,9 @@ bool draw(processor* spu){
 }
 
 bool jmp(processor* spu){
-    int pos = 0;
+    stackData_t pos = 0;
     spuGetArg(spu, &pos);
-    spuJump(spu, pos);
+    spuJump(spu, (int) pos);
 
     return true;
 }
@@ -110,70 +110,82 @@ bool push(processor* spu){
     cmdParam_t numPush = 0;
 
     spuGetArg(spu, &numPush);
-    spuPush(spu, numPush);
+    spuPush(spu, (cmdParam_t) numPush);
 
     return true;
 }
 
 bool pushreg(processor* spu){
-    cmdParam_t regNum = 0;
+    cmdParam_t regNumDouble = 0;
 
-    spuGetArg(spu,  &regNum);
+    spuGetArg(spu,  &regNumDouble);
+
+    int regNum = (int) regNumDouble;
     spuPushReg(spu, &regNum);
 
     return true;
 }
 
 bool popreg(processor* spu){
-    cmdParam_t regNum = 0;
+    cmdParam_t regNumDouble = 0;
 
-    spuGetArg(spu,  &regNum);
+    spuGetArg(spu,  &regNumDouble);
+
+    int regNum = (int) regNumDouble;
     spuPopReg(spu, &regNum);
 
     return true;
 }
 
 bool pushm(processor* spu){
-    cmdParam_t regNum = 0;
+    cmdParam_t regNumDouble = 0;
 
-    spuGetArg(spu, &regNum);
+    spuGetArg(spu, &regNumDouble);
+
+    int regNum = (int) regNumDouble;
     spuPushReg(spu, &regNum);
 
-    cmdParam_t memCellNum = 0;
-    spuPop(spu, &memCellNum);
+    cmdParam_t memCellNumDouble = 0;
+    spuPop(spu, &memCellNumDouble);
 
+    int memCellNum = (int) memCellNumDouble;
     spuPushM(spu, &memCellNum);
 
     return true;
 }
 
 bool popm(processor* spu){
-    cmdParam_t regNum = 0;
+    cmdParam_t regNumDouble = 0;
 
-    spuGetArg(spu, &regNum);
+    spuGetArg(spu, &regNumDouble);
+
+    int regNum = (int) regNumDouble;
     spuPushReg(spu, &regNum);
 
-    cmdParam_t memCellNum = 0;
-    spuPop(spu, &memCellNum);
+    cmdParam_t memCellNumDouble = 0;
+    spuPop(spu, &memCellNumDouble);
 
+    int memCellNum = (int) memCellNumDouble;
     spuPopM(spu, &memCellNum);
 
     return true;
 }
 
 bool pushmAddr(processor* spu){
-    cmdParam_t memCellNum = 0;
-    spuGetArg(spu, &memCellNum);
+    cmdParam_t memCellNumDouble = 0;
+    spuGetArg(spu, &memCellNumDouble);
 
+    int memCellNum = (int) memCellNumDouble;
     spuPushM(spu, &memCellNum);
 
     return true;
 }
 
 bool popmAddr(processor* spu){
-    cmdParam_t memCellNum = 0;
-    spuGetArg(spu, &memCellNum);
+    cmdParam_t memCellNumDouble = 0;
+    spuGetArg(spu, &memCellNumDouble);
 
+    int memCellNum = (int) memCellNumDouble;
     spuPopM(spu, &memCellNum);
 
     return true;
@@ -183,29 +195,18 @@ bool in(processor* spu){
     printf("Введите число:\n");
 
     cmdParam_t elem = 0;
-    scanf("%d", &elem);
+    scanf("%lg", &elem);
     spuPush(spu, elem);
 
     return true;
 }
 
-// bool out(processor* spu){
-//     printf("Все элементы стека:\n");
-
-//     cmdParam_t curElem = 0;
-//     while(spuPop(spu, &curElem) != false){
-//         printf("%d ", curElem);
-//     }
-//     printf("\n");
-//     return true;
-// }
-
 bool out(processor* spu){
-    printf("Все элементы стека:\n");
+    printf("Верхний элемент стека:\n");
 
     cmdParam_t curElem = 0;
     spuPop(spu, &curElem);
-    printf("%d ", curElem);
+    printf("%lg ", curElem);
     
     printf("\n");
     return true;
@@ -254,7 +255,7 @@ static bool jumpOperation(processor* spu, binaryHandler handler){
     cmdParam_t result = 0;
     bool check = handler(arg1, arg2, &result);
 
-    if(result){
+    if(!areEqualDouble(result, 0)){
         jmp(spu);
     }
 

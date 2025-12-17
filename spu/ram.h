@@ -3,7 +3,7 @@
 
 #include <stddef.h>
 
-typedef int ram_t;
+typedef double ram_t;
 
 const size_t RAM_CAPACITY = 100;
 

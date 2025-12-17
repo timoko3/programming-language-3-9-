@@ -9,7 +9,7 @@
 
 static void simplePrintStack(stack* stk);
 static void printByteCode(int* byteCode, size_t byteCodeSize, size_t pc);
-static void printRegs(int* regs);
+static void printRegs(regParam_t* regs);
 static void printRam(ram_t* ram);
 
 processorStatus processorCtor(processor* spu, ram_t* ram){
@@ -20,7 +20,7 @@ processorStatus processorCtor(processor* spu, ram_t* ram){
     stackCtor(&spu->funcRetAddr, 10);
     spu->pc = 0;
     spu->isWork = true;
-    spu->regs = (int*) calloc(N_REGISTERS, sizeof(int));
+    spu->regs = (regParam_t*) calloc(N_REGISTERS, sizeof(regParam_t));
     assert(spu->regs);
     spu->RAM  = ram;
 
@@ -65,7 +65,7 @@ bool runProcessor(processor* spu){
 bool executeCommand(processor* spu){
     assert(spu);
     
-    // processorDump(spu);
+    processorDump(spu);
     
     if(spu->isWork == false){
         return false;
@@ -109,7 +109,7 @@ bool spuPop(processor* spu, stackData_t* data){
     return true;
 }
 
-bool spuJump(processor* spu, stackData_t pos){
+bool spuJump(processor* spu, cmdParam_t pos){
     assert(spu);
 
     spu->pc = (size_t) pos; 
@@ -120,22 +120,22 @@ bool spuJump(processor* spu, stackData_t pos){
 bool spuGetArg(processor* spu, stackData_t* index){ 
     assert(spu);
 
-    *index = (size_t) spu->opcode.ptr[spu->pc + 1];
+    *index = (double) spu->opcode.ptr[spu->pc + 1];
 
     return true;
 }  
 
-bool spuPushReg(processor* spu, stackData_t* regNumber){
+bool spuPushReg(processor* spu, int* regNumber){
     assert(spu);
     assert(regNumber);
 
-    int curRegValue = spu->regs[*regNumber];
+    regParam_t curRegValue = spu->regs[*regNumber];
     stackPush(&spu->stk, curRegValue);
 
     return true;
 }
 
-bool spuPopReg(processor* spu, stackData_t* regNumber){
+bool spuPopReg(processor* spu, int* regNumber){
     assert(spu);
     assert(regNumber);
 
@@ -144,7 +144,7 @@ bool spuPopReg(processor* spu, stackData_t* regNumber){
     return true;
 }
 
-bool spuPushM(processor* spu, stackData_t* memCellNum){
+bool spuPushM(processor* spu, int* memCellNum){
     assert(spu);
     assert(memCellNum);
 
@@ -156,7 +156,7 @@ bool spuPushM(processor* spu, stackData_t* memCellNum){
     return true;
 }
 
-bool spuPopM(processor* spu, stackData_t* memCellNum){
+bool spuPopM(processor* spu, int* memCellNum){
     assert(spu);
     assert(memCellNum);
 
@@ -179,9 +179,9 @@ bool spuHlt(processor* spu){
 bool spuCall(processor* spu){
     assert(spu);
 
-    stackPush(&(spu->funcRetAddr), (stackData_t) spu->pc + 2);
+    stackPush(&(spu->funcRetAddr), (cmdParam_t) spu->pc + 2);
 
-    stackData_t pos = 0;
+    cmdParam_t pos = 0;
     spuGetArg(spu, &pos);
 
     spuJump(spu, pos);
@@ -192,7 +192,7 @@ bool spuCall(processor* spu){
 bool spuRet(processor* spu){
     assert(spu);
 
-    stackData_t retAddr = 0;
+    regParam_t retAddr = 0;
     stackPop(&(spu->funcRetAddr), &retAddr);
     spu->pc = (size_t) retAddr;
 
@@ -236,11 +236,11 @@ static void simplePrintStack(stack* stk){
     for(size_t curStackElem = 0; curStackElem < stk->capacity; curStackElem++){
         if((curStackElem % 4) == 0) printf("\n\t\t");
 
-        if(stk->data[curStackElem] == POISON_NUMBER){
+        if(fabs(stk->data[curStackElem] - POISON_NUMBER) < 1e-9){
             printf(SET_STYLE_ITALICS_FONT_TURQUOISE "POISON " RESET);
         }
         else {
-            printf("%d ", stk->data[curStackElem]);
+            printf("%lg ", stk->data[curStackElem]);
         }
     }
 }
@@ -264,14 +264,14 @@ static void printByteCode(int* byteCode, size_t byteCodeSize, size_t pc){
     }
 }
 
-static void printRegs(int* regs){
+static void printRegs(regParam_t* regs){
     assert(regs);
     
     printf("\n\t\t");
     printf("AX  BX  CX  DX  EX  FX  GX  HX  IX  JX\n");
     printf("\n\t\t");
     for(size_t curReg = 0; curReg < N_REGISTERS; curReg++){
-        printf("%-3d ", regs[curReg]);
+        printf("%-3lg ", regs[curReg]);
     }
 }
 
@@ -280,6 +280,6 @@ static void printRam(ram_t* ram){
 
     for(size_t curMemCell = 0; curMemCell < RAM_CAPACITY; curMemCell++){
         if(((curMemCell % 32) == 0)) printf("\n\t\t");
-        printf(SET_STYLE_ITALICS_FONT_GREEN "%d " RESET, ram[curMemCell]);
+        printf(SET_STYLE_ITALICS_FONT_GREEN "%lg " RESET, ram[curMemCell]);
     }
 }

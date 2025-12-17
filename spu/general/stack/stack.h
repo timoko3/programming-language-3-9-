@@ -17,9 +17,9 @@
 #define NDEBUG
 #endif
 
-typedef int stackData_t;
+typedef double stackData_t;
 
-const int POISON_NUMBER = INT_MAX / 10;
+const double POISON_NUMBER = INT_MAX / 10;
 const size_t STACK_MAX_CAPACITY = 1e9;
 
 #if DEBUG_LEVEL > 1

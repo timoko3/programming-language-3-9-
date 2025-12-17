@@ -93,7 +93,8 @@ void emitNode(treeNode_t* node, codeGenContext* context){
         return;
     }
     else if(_NODE_TYPE(node) == IF){
-
+        emitIf(node, context);
+        return;
     }
 
     if(_NODE_TYPE(node) == ASSIGN){
@@ -251,15 +252,14 @@ void emitVar(treeNode_t* node, codeGenContext* context){
     assert(context);   
 
     int addr = getVarAddr(context->names, _NODE_VALUE_STR(node));
-    if(_NODE_TYPE(_PAR(node)) == ASSIGN || _NODE_TYPE(_PAR(node)) == IN){
-        fprintf(_CONTEXT_FILE_PTR(context), "POPMA %d\n", addr);
-    }
-    else if(!(_NODE_TYPE(_PAR(node)) == NAME) && !(_NODE_TYPE(_PAR(node)) == OUT)){
-        fprintf(_CONTEXT_FILE_PTR(context), "PUSHMA %d\n", addr);
-    }
-    else if((_NODE_TYPE(_PAR(node)) == OUT)){
-        fprintf(_CONTEXT_FILE_PTR(context), "PUSHMA %d\n", addr);
-    }
+
+    treeNode_t* parent = _PAR(node);
+    if((parent && _NODE_TYPE(parent) == ASSIGN && node == _L(parent)) || 
+        (parent && _NODE_TYPE(parent) == IN)){
+            fprintf(_CONTEXT_FILE_PTR(context), "POPMA %d\n", addr);
+            return;
+        }
+    fprintf(_CONTEXT_FILE_PTR(context), "PUSHMA %d\n", addr);
 }
 
 void emitPlug(treeNode_t* node, codeGenContext* context){
@@ -280,7 +280,7 @@ void emitWhile(treeNode_t* node, codeGenContext* context){
     }
 
     fprintf(_CONTEXT_FILE_PTR(context), "PUSH 0\n");
-    fprintf(_CONTEXT_FILE_PTR(context), "JBE :%s_%d\n", _LABEL_DATA_PREFIX(&label2), _LABEL_DATA_ID(&label2));
+    fprintf(_CONTEXT_FILE_PTR(context), "JE :%s_%d\n", _LABEL_DATA_PREFIX(&label2), _LABEL_DATA_ID(&label2));
 
     if(_R(node)){
         emitNode(_R(node), context);
@@ -302,7 +302,7 @@ void emitIf(treeNode_t* node, codeGenContext* context){
     }
 
     fprintf(_CONTEXT_FILE_PTR(context), "PUSH 0\n");
-    fprintf(_CONTEXT_FILE_PTR(context), "JBE :%s_%d\n", _LABEL_DATA_PREFIX(&label1), _LABEL_DATA_ID(&label1));
+    fprintf(_CONTEXT_FILE_PTR(context), "JE :%s_%d\n", _LABEL_DATA_PREFIX(&label1), _LABEL_DATA_ID(&label1));
 
     if(_R(node)){
         emitNode(_R(node), context);

@@ -133,30 +133,30 @@ static bool assemblePass(translator_t* translator){
     translator->opcode.size = 0;
     for(size_t curStringInd = 0; curStringInd < translator->input_buffer.count; curStringInd++){
         translator->curState.StringInd = curStringInd;
-        $
+        
         if(!translator->input_buffer.ptrs[translator->curState.StringInd].ptr){
             return false;
         }
 
         if(getLabel(translator)) continue;
-        $
+        
         if (translator->input_buffer.ptrs[curStringInd].ptr[0] == '\n'){
-            $
+            
             continue;
         }
-        $
+        
         char curCmdName[COMMAND_NAME_MAX_SIZE] = {0};
         sscanf(translator->input_buffer.ptrs[curStringInd].ptr, "%s", curCmdName);
-        $
+        
         translator->curState.cmdName = curCmdName;
         printf("curCmdName: %s\n", curCmdName);
         ON_DEBUG(printf("curCmdName: %s\n", curCmdName))
         if(!encodeCommand(translator)) break; 
-        $
+        
         ON_DEBUG(printf("byteCodeBuffer now: %d\n", translator->opcode.ptr[translator->opcode.size - 1]))
-        $
+        
         addCommandParameter(translator);
-        $
+        
         printf("curStringInd: %lu\n", curStringInd);
         printf("count: %lu\n", translator->input_buffer.count);
         ON_DEBUG(printf("\n"))
@@ -167,18 +167,18 @@ static bool assemblePass(translator_t* translator){
 
 static bool getLabel(translator_t* translator){
     assert(translator);
-    $
+    
     char curLabelName[LABEL_NAME_MAX_SIZE] = "";
 
     if(sscanf(translator->input_buffer.ptrs[translator->curState.StringInd].ptr, ":%s", curLabelName)){
         translator->curState.labelName = curLabelName;
-        $
+        
         setLabel(translator);
         (translator->curState.labelInd)++;
         printf("\n");
         return true;
     }
-    $
+    
     return false;
 }
 

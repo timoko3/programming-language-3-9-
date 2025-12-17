@@ -19,7 +19,7 @@ bool mulMath(cmdParam_t param1, cmdParam_t param2, cmdParam_t* result){
 }
 
 bool divMath(cmdParam_t param1, cmdParam_t param2, cmdParam_t* result){  
-    if(param2 == 0){
+    if(areEqualDouble(param2, 0)){
         printf("Деление на 0 невозможно\n");
         return false;
     }
@@ -35,7 +35,7 @@ bool sqrtMath(cmdParam_t param, cmdParam_t* result){
         return false;
     }
     
-    *result = (cmdParam_t) sqrt(param);
+    *result = sqrt(param);
 
     return true;
 }
@@ -66,11 +66,15 @@ bool geMath(cmdParam_t param1, cmdParam_t param2, cmdParam_t* result){
 }
 
 bool eqMath(cmdParam_t param1, cmdParam_t param2, cmdParam_t* result){
-    *result = (param1 == param2);
+    *result = (areEqualDouble(param1, param2));
     return true;
 }
 
 bool neMath(cmdParam_t param1, cmdParam_t param2, cmdParam_t* result){
-    *result = (param1 != param2);
+    *result = (!areEqualDouble(param1, param2));
     return true;
+}
+
+bool areEqualDouble(cmdParam_t a, cmdParam_t b){
+    return fabs(a - b) < 1e-9;
 }

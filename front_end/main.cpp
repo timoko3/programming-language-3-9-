@@ -13,11 +13,16 @@
 #include <malloc.h>
 
 const char* CODE_FILE_NAME = "factorial.tale";
+const char* TREE_FILE_NAME = "syntaxTree.txt";
 
 int main(int argc, char* argv[]){
     const char* filename = CODE_FILE_NAME;
+    const char* treeFile = TREE_FILE_NAME;
     if(argc == 2){
         filename = argv[1];
+    }
+    if(argc == 3){
+        treeFile = argv[2];
     }
 
     data_t code;
@@ -43,7 +48,7 @@ int main(int argc, char* argv[]){
 
     logTree(&syntaxTree, "created synTree");
 
-    treeWrite(&syntaxTree, TREE_FILE_NAME);
+    treeWrite(&syntaxTree, treeFile);
 
     treeDtor(&syntaxTree);
 

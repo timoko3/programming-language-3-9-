@@ -7,10 +7,12 @@
 
 typedef bool workStatus;
 
+typedef double regParam_t;
+
 struct processor{
     stack stk;
     stack funcRetAddr;
-    int* regs;
+    regParam_t* regs;
     size_t pc; 
     buffer_t opcode;
     workStatus isWork;
@@ -26,10 +28,10 @@ bool spuPush(processor* spu, stackData_t data);
 bool spuPop(processor* spu, stackData_t* data);
 bool spuJump(processor* spu, stackData_t data);
 bool spuGetArg(processor* spu, stackData_t* data);
-bool spuPushReg(processor* spu, stackData_t* regNumber);
-bool spuPopReg(processor* spu, stackData_t* regNumber);
-bool spuPushM(processor* spu, stackData_t* memCellNum);
-bool spuPopM(processor* spu, stackData_t* memCellNum);
+bool spuPushReg(processor* spu, int* regNumber);
+bool spuPopReg(processor* spu, int* regNumber);
+bool spuPushM(processor* spu, int* memCellNum);
+bool spuPopM(processor* spu, int* memCellNum);
 bool spuHlt(processor* spu);
 bool spuCall(processor* spu);
 bool spuRet(processor* spu);

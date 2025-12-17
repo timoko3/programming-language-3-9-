@@ -3,7 +3,7 @@
 
 #include "processor.h"
 
-typedef int cmdParam_t;
+typedef double cmdParam_t;
 
 typedef bool (*handler_t)(processor* spu);
 
@@ -39,6 +39,7 @@ bool pushm(processor* spu);
 bool popm(processor* spu);
 bool pushmAddr(processor* spu);
 bool popmAddr(processor* spu);
+
 bool in(processor* spu);
 bool out(processor* spu);
 bool hlt(processor* spu);

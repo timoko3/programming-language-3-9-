@@ -11,8 +11,8 @@
 #include <string.h>
 
 struct transliterationTable_t{
-    char* russian;
-    char* translit;
+    const char* russian;
+    const char* translit;
 };
 
 transliterationTable_t transliterationTable[]{
@@ -365,9 +365,9 @@ static bool isAlphaCodepoint(uint32_t c){
 }
 
 static bool isSpecialVarSymCodepoint(uint32_t c){
-    if(c == 0x2D){
-        return true;
-    }    
+    // if(c == 0x2D){
+    //     return true;
+    // }    
 
     return false;
 }
