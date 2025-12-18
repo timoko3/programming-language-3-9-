@@ -595,6 +595,9 @@ static treeNode_t* getOperand(treeNode_t* node, token_t** curToken, stack* nameT
         EXPECT(curToken, CALL_VARIABLE);
         result = getName(node, curToken, nameTables);
     }
+    else if(_TOKEN_TYPE(*curToken) == CALL_FUNC){
+        result = getCallFunc(node, curToken, nameTables);
+    }
 
     return result;
 }
