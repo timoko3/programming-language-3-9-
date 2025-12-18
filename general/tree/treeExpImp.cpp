@@ -20,8 +20,8 @@ static void assignTreeNodeLanguageStr(treeNode_t* node, char* str);
 static void assignTreeNodeLanguageNum(treeNode_t* node, char* str);
 
 static void skipSpaceAndCloseBracket(char** curBufferPos);
-static void SyntaxError(const char* file, int line, const char* func);
-static void expect(char** curBufferPos, char expected, const char* file, int line, const char* func);
+// static void SyntaxError(const char* file, int line, const char* func);
+// static void expect(char** curBufferPos, char expected, const char* file, int line, const char* func);
 
 #define SYNTAX_ERROR SyntaxError(__FILE__, __LINE__, __FUNCTION__)
 #define EXPECT(curBufferPos, expected) expect(curBufferPos, expected, __FILE__, __LINE__, __FUNCTION__)
@@ -128,12 +128,12 @@ static char* getNodeValue(char** curBufferPos){
 
     char* nodeValue = (char*) calloc(MAX_NODE_VALUE_SIZE, sizeof(char));
 
-    size_t bufferPosShift = 0;
+    int bufferPosShift = 0;
     sscanf(*curBufferPos, "%s%n", nodeValue, &bufferPosShift);
 
     LPRINTF("getNodeValue nodeValue = %s, len nodeValue = %lu", nodeValue, bufferPosShift);
 
-    *curBufferPos += bufferPosShift;
+    *curBufferPos += (size_t) bufferPosShift;
 
     return nodeValue;
 }
@@ -148,7 +148,7 @@ static void assignTreeNodeData(treeNode_t* node){
         assignTreeNodeLanguageStr(node, _AST_NODE_VALUE_STR(curASTnodeData));
     }
     else if(isdigit(_NODE_WRITE_FILE(node)[0]) || 
-            _NODE_WRITE_FILE(node)[0] == '-' && isdigit(_NODE_WRITE_FILE(node)[1])){
+            (_NODE_WRITE_FILE(node)[0] == '-' && isdigit(_NODE_WRITE_FILE(node)[1]))){
         _NODE_TYPE(node) = NUMBER;
         assignTreeNodeLanguageNum(node, _NODE_WRITE_FILE(node));
     }
@@ -187,7 +187,7 @@ static void assignTreeNodeLanguageNum(treeNode_t* node, char* str){
     assert(node);
 
 
-    int number = (int) atoi(str);
+    int number = atoi(str);
 
     _NODE_VALUE_NUM(node) = number;
 }
@@ -205,20 +205,20 @@ static void skipSpaceAndCloseBracket(char** curBufferPos){
     }
 }  
 
-static void expect(char** curBufferPos, char expected, const char* file, int line, const char* func){
-    assert(curBufferPos);
-    assert(file);
-    assert(func);
+// static void expect(char** curBufferPos, char expected, const char* file, int line, const char* func){
+//     assert(curBufferPos);
+//     assert(file);
+//     assert(func);
 
-    if (**curBufferPos != expected){
-        SYNTAX_ERROR;
-    }
-    (*curBufferPos)++;
-}
+//     if (**curBufferPos != expected){
+//         SYNTAX_ERROR;
+//     }
+//     (*curBufferPos)++;
+// }
 
-static void SyntaxError(const char* file, int line, const char* func){
-    assert(file);
-    assert(func);
+// static void SyntaxError(const char* file, int line, const char* func){
+//     assert(file);
+//     assert(func);
 
-    printf("Синтаксическая ошибка!! %s:%d:%s", file, line, func);
-}
+//     printf("Синтаксическая ошибка!! %s:%d:%s", file, line, func);
+// }

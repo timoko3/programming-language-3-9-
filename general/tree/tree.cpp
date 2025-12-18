@@ -3,10 +3,10 @@
 
 // #define DEBUG
 
-#include "strFunc.h"
-#include "debug.h"
-#include "poison.h"
-#include "file.h"
+#include "../strFunc.h"
+#include "../debug.h"
+#include "../poison.h"
+#include "../file.h"
 
 #include <assert.h>
 #include <malloc.h>
@@ -31,23 +31,23 @@ treeNode_t* treeDtor(tree_t* expression){
     return NULL;
 }
 
-void treeRead(const char* expressionFile){
-    assert(expressionFile);
+// void treeRead(const char* expressionFile){
+//     assert(expressionFile);
 
-    data_t treeData;
-    parseStringsFile(&treeData, expressionFile);
+//     data_t treeData;
+//     parseStringsFile(&treeData, expressionFile);
 
-    LPRINTF("expression buffer: %s\n", treeData.buffer);
+//     LPRINTF("expression buffer: %s\n", treeData.buffer);
 
-    // for(size_t curStringInd = 0; curStringInd < treeData.nStrings; curStringInd++){
-    //     LPRINTF("treeRead main cycle iteration: %lu", curStringInd + 1);
-    //     differentiatorReadConfigParam(treeData.strings[curStringInd]);
-    // }
+//     // for(size_t curStringInd = 0; curStringInd < treeData.nStrings; curStringInd++){
+//     //     LPRINTF("treeRead main cycle iteration: %lu", curStringInd + 1);
+//     //     differentiatorReadConfigParam(treeData.strings[curStringInd]);
+//     // }
     
-    free(treeData.buffer);
-    free(treeData.strings);
+//     free(treeData.buffer);
+//     free(treeData.strings);
 
-}
+// }
 
 treeNode_t* createNewNode(treeNode_t* left, treeNode_t* right){
 

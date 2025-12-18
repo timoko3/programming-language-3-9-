@@ -7,7 +7,7 @@
 #define ON_DEBUG_LEVEL_4(expression) if(DEBUG_LEVEL > 3){expression};
 
 
-const void* POISON_NUMBER = NULL;
+void* POISON_NUMBER = NULL;
 // in .h
 struct stackErrorDescription errors[]{ 
     {PROCESS_OK,                    "Все хорошо\n"},

@@ -214,7 +214,7 @@ static treeNode_t* getOut(treeNode_t* node, token_t** curToken, stack* nameTable
     return result;
 }
 
-static treeNode_t* getHLT(treeNode_t* node, token_t** curToken, stack* nameTables){
+static treeNode_t* getHLT(treeNode_t* /*node*/, token_t** curToken, stack* /*nameTables*/){
     assert(curToken);
 
     LPRINTF("Зашел в HLT. Текущий токен: %p", *curToken);
@@ -643,7 +643,7 @@ static treeNode_t* getCallVar(treeNode_t* node, token_t** curToken, stack* nameT
     return val1;
 }
 
-static treeNode_t* getName(treeNode_t* node, token_t** curToken, stack* nameTables){
+static treeNode_t* getName(treeNode_t* /*node*/, token_t** curToken, stack* nameTables){
     assert(curToken);
 
     LPRINTF("Зашел в NAME. Текущий токен: %p", *curToken);
@@ -660,7 +660,7 @@ static treeNode_t* getName(treeNode_t* node, token_t** curToken, stack* nameTabl
     return name;
 }
 
-static treeNode_t* getN(treeNode_t* node, token_t** curToken, stack* nameTables){
+static treeNode_t* getN(treeNode_t* /*node*/, token_t** curToken, stack* /*nameTables*/){
     assert(curToken);
 
     LPRINTF("Зашел в N. Текущий токен: %p", *curToken);
@@ -708,7 +708,7 @@ static void expect(token_t** curToken, ASTnodeType expected, const char* file, i
     assert(func);
 
     if (_TOKEN_TYPE(*curToken) != expected){
-        SYNTAX_ERROR;
+        SyntaxError(file, line, func);
     }
     (*curToken)++;
 }

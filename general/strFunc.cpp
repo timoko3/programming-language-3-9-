@@ -255,12 +255,12 @@ size_t utf8StrLen(char* str){
     return len;
 }
 
-int getUtf8CharLength(char c){
+size_t getUtf8CharLength(char c){
     if     ((c & 0x80) == 0x00) return 1;
     else if((c & 0xE0) == 0xC0) return 2;
     else if((c & 0xF0) == 0xE0) return 3;
     else if((c & 0xF8) == 0xF0) return 4;
-    return -1;
+    return 0;
 }
 
 void skipWhitespace(char** bufferPos){
@@ -308,7 +308,7 @@ bool isSpecialVarSymUtf8(const char* str){
 static size_t utf8Decode(const char* str, uint32_t* codePoint){
     assert(str);
 
-    unsigned char byte0 = str[0];
+    unsigned char byte0 = (unsigned char) str[0];
 
     if(byte0 < 0x80) {
         *codePoint = byte0;
@@ -365,9 +365,9 @@ static bool isAlphaCodepoint(uint32_t c){
 }
 
 static bool isSpecialVarSymCodepoint(uint32_t c){
-    // if(c == 0x2D){
-    //     return true;
-    // }    
+    if(c == 0x5F){
+        return true;
+    }    
 
     return false;
 }

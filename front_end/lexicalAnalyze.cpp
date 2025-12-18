@@ -105,9 +105,9 @@ static bool parseVariable(char* curBufferPos, token_t* token, char** endPos){
         
         LPRINTF("start getting varible name");
         while(isApprovedVariableSym(curBufferPos)){
-            int symAmountBytes = getUtf8CharLength(*curBufferPos);
-            for(int curByte = 0; curByte < symAmountBytes; curByte++){
-                LPRINTF("getUtf8CharLength(*curBufferPos) = %d, curBufferShift = %d", getUtf8CharLength(*curBufferPos), curBufferShift);
+            size_t symAmountBytes = getUtf8CharLength(*curBufferPos);
+            for(size_t curByte = 0; curByte < symAmountBytes; curByte++){
+                LPRINTF("getUtf8CharLength(*curBufferPos) = %lu, curBufferShift = %d", getUtf8CharLength(*curBufferPos), curBufferShift);
                 curTokenValue[curBufferShift] = *curBufferPos;
                 curBufferPos++;
                 curBufferShift++;
