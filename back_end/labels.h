@@ -7,7 +7,6 @@ extern const char* LABEL_PREFIX_JBE_WHILE_END;
 extern const char* LABEL_PREFIX_WHILE_BEGIN;
 extern const char* LABEL_PREFIX_IF_FALSE_JMP; 
 
-
 struct label_t{
     char* prefix;
     int id;

@@ -5,8 +5,6 @@
 
 #include <assert.h>
 
-
-
 ASTnodeData_t ASTdata[]{
     {"собрать воедино",            ADD,             "+" },
     {"убавить",                    SUB,             "-" },
@@ -35,7 +33,7 @@ ASTnodeData_t ASTdata[]{
     {"пойди туда — не знаю куда, "
      "принеси то — не знаю что",   IN,             "in" },
     {"вот и сказочке конец",       HLT,            "hlt"},
-    {"царь-батюшка",               MAIN,           "main"},
+    {"царьБатюшка",                MAIN,           "main"},
     {"Жили-были",                  START,           "no"},
     {"Добрый молодец",             INIT_VARIABLE,   "no"},
     {"сила",                       CALL_VARIABLE,   "no"},
