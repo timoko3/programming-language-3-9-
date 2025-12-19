@@ -278,9 +278,13 @@ void emitRet(treeNode_t* node, codeGenContext* context){
 
     LPRINTF("зашел в emitRet, node = %p", node);
 
+    fprintf(_CONTEXT_FILE_PTR(context), "POPREG DX \n");
+
     fprintf(_CONTEXT_FILE_PTR(context), "PUSHREG BX \n");
     fprintf(_CONTEXT_FILE_PTR(context), "POPREG  AX \n");
     fprintf(_CONTEXT_FILE_PTR(context), "POPREG  BX \n");
+
+    fprintf(_CONTEXT_FILE_PTR(context), "PUSHREG DX \n");
 
     fprintf(_CONTEXT_FILE_PTR(context), "RET\n");
 
