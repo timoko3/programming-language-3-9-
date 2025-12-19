@@ -1,176 +1,230 @@
-[DEBUG] general/tree/treeExpImp.cpp:91:readNode(): entered readNode curBufferPos = ( ; ( main nil ( ; ( = ( защитник nil nil )( 5 nil nil ))( тест ( защитник nil nil )nil )))( тест ( защитник nil nil )( ; ( = ( ваня nil nil )( 1 nil nil ))( = ( ваня nil nil )( * ( ваня nil nil )( тест ( защитник nil nil )nil ))))))
+[DEBUG] general/tree/treeExpImp.cpp:91:readNode(): entered readNode curBufferPos = ( ; ( main nil ( ; ( = ( защитник nil nil )( 5 nil nil ))( тест ( защитник nil nil )nil )))( тест ( защитник nil nil )( ; ( = ( ваня nil nil )( 1 nil nil ))( ; ( = ( защитник nil nil )( + ( защитник nil nil )( 1 nil nil )))( = ( ваня nil nil )( * ( ваня nil nil )( тест ( защитник nil nil )nil )))))))
 [DEBUG] general/tree/treeExpImp.cpp:101:readNode(): скобочка
 
-[DEBUG] general/tree/treeExpImp.cpp:127:getNodeValue(): entered getNodeValue curBufferPos = ; ( main nil ( ; ( = ( защитник nil nil )( 5 nil nil ))( тест ( защитник nil nil )nil )))( тест ( защитник nil nil )( ; ( = ( ваня nil nil )( 1 nil nil ))( = ( ваня nil nil )( * ( ваня nil nil )( тест ( защитник nil nil )nil ))))))
+[DEBUG] general/tree/treeExpImp.cpp:127:getNodeValue(): entered getNodeValue curBufferPos = ; ( main nil ( ; ( = ( защитник nil nil )( 5 nil nil ))( тест ( защитник nil nil )nil )))( тест ( защитник nil nil )( ; ( = ( ваня nil nil )( 1 nil nil ))( ; ( = ( защитник nil nil )( + ( защитник nil nil )( 1 nil nil )))( = ( ваня nil nil )( * ( ваня nil nil )( тест ( защитник nil nil )nil )))))))
 [DEBUG] general/tree/treeExpImp.cpp:134:getNodeValue(): getNodeValue nodeValue = ;, len nodeValue = 1
 [DEBUG] general/tree/tree.cpp:56:createNewNode(): Выделил память newNode = 0x503000000040
-[DEBUG] general/tree/treeExpImp.cpp:91:readNode(): entered readNode curBufferPos =  ( main nil ( ; ( = ( защитник nil nil )( 5 nil nil ))( тест ( защитник nil nil )nil )))( тест ( защитник nil nil )( ; ( = ( ваня nil nil )( 1 nil nil ))( = ( ваня nil nil )( * ( ваня nil nil )( тест ( защитник nil nil )nil ))))))
+[DEBUG] general/tree/treeExpImp.cpp:91:readNode(): entered readNode curBufferPos =  ( main nil ( ; ( = ( защитник nil nil )( 5 nil nil ))( тест ( защитник nil nil )nil )))( тест ( защитник nil nil )( ; ( = ( ваня nil nil )( 1 nil nil ))( ; ( = ( защитник nil nil )( + ( защитник nil nil )( 1 nil nil )))( = ( ваня nil nil )( * ( ваня nil nil )( тест ( защитник nil nil )nil )))))))
 [DEBUG] general/tree/treeExpImp.cpp:101:readNode(): скобочка
 
-[DEBUG] general/tree/treeExpImp.cpp:127:getNodeValue(): entered getNodeValue curBufferPos = main nil ( ; ( = ( защитник nil nil )( 5 nil nil ))( тест ( защитник nil nil )nil )))( тест ( защитник nil nil )( ; ( = ( ваня nil nil )( 1 nil nil ))( = ( ваня nil nil )( * ( ваня nil nil )( тест ( защитник nil nil )nil ))))))
+[DEBUG] general/tree/treeExpImp.cpp:127:getNodeValue(): entered getNodeValue curBufferPos = main nil ( ; ( = ( защитник nil nil )( 5 nil nil ))( тест ( защитник nil nil )nil )))( тест ( защитник nil nil )( ; ( = ( ваня nil nil )( 1 nil nil ))( ; ( = ( защитник nil nil )( + ( защитник nil nil )( 1 nil nil )))( = ( ваня nil nil )( * ( ваня nil nil )( тест ( защитник nil nil )nil )))))))
 [DEBUG] general/tree/treeExpImp.cpp:134:getNodeValue(): getNodeValue nodeValue = main, len nodeValue = 4
 [DEBUG] general/tree/tree.cpp:56:createNewNode(): Выделил память newNode = 0x5030000000a0
-[DEBUG] general/tree/treeExpImp.cpp:91:readNode(): entered readNode curBufferPos =  nil ( ; ( = ( защитник nil nil )( 5 nil nil ))( тест ( защитник nil nil )nil )))( тест ( защитник nil nil )( ; ( = ( ваня nil nil )( 1 nil nil ))( = ( ваня nil nil )( * ( ваня nil nil )( тест ( защитник nil nil )nil ))))))
+[DEBUG] general/tree/treeExpImp.cpp:91:readNode(): entered readNode curBufferPos =  nil ( ; ( = ( защитник nil nil )( 5 nil nil ))( тест ( защитник nil nil )nil )))( тест ( защитник nil nil )( ; ( = ( ваня nil nil )( 1 nil nil ))( ; ( = ( защитник nil nil )( + ( защитник nil nil )( 1 nil nil )))( = ( ваня nil nil )( * ( ваня nil nil )( тест ( защитник nil nil )nil )))))))
 [DEBUG] general/tree/treeExpImp.cpp:111:readNode(): readNode case nil
-[DEBUG] general/tree/treeExpImp.cpp:91:readNode(): entered readNode curBufferPos =  ( ; ( = ( защитник nil nil )( 5 nil nil ))( тест ( защитник nil nil )nil )))( тест ( защитник nil nil )( ; ( = ( ваня nil nil )( 1 nil nil ))( = ( ваня nil nil )( * ( ваня nil nil )( тест ( защитник nil nil )nil ))))))
+[DEBUG] general/tree/treeExpImp.cpp:91:readNode(): entered readNode curBufferPos =  ( ; ( = ( защитник nil nil )( 5 nil nil ))( тест ( защитник nil nil )nil )))( тест ( защитник nil nil )( ; ( = ( ваня nil nil )( 1 nil nil ))( ; ( = ( защитник nil nil )( + ( защитник nil nil )( 1 nil nil )))( = ( ваня nil nil )( * ( ваня nil nil )( тест ( защитник nil nil )nil )))))))
 [DEBUG] general/tree/treeExpImp.cpp:101:readNode(): скобочка
 
-[DEBUG] general/tree/treeExpImp.cpp:127:getNodeValue(): entered getNodeValue curBufferPos = ; ( = ( защитник nil nil )( 5 nil nil ))( тест ( защитник nil nil )nil )))( тест ( защитник nil nil )( ; ( = ( ваня nil nil )( 1 nil nil ))( = ( ваня nil nil )( * ( ваня nil nil )( тест ( защитник nil nil )nil ))))))
+[DEBUG] general/tree/treeExpImp.cpp:127:getNodeValue(): entered getNodeValue curBufferPos = ; ( = ( защитник nil nil )( 5 nil nil ))( тест ( защитник nil nil )nil )))( тест ( защитник nil nil )( ; ( = ( ваня nil nil )( 1 nil nil ))( ; ( = ( защитник nil nil )( + ( защитник nil nil )( 1 nil nil )))( = ( ваня nil nil )( * ( ваня nil nil )( тест ( защитник nil nil )nil )))))))
 [DEBUG] general/tree/treeExpImp.cpp:134:getNodeValue(): getNodeValue nodeValue = ;, len nodeValue = 1
 [DEBUG] general/tree/tree.cpp:56:createNewNode(): Выделил память newNode = 0x503000000100
-[DEBUG] general/tree/treeExpImp.cpp:91:readNode(): entered readNode curBufferPos =  ( = ( защитник nil nil )( 5 nil nil ))( тест ( защитник nil nil )nil )))( тест ( защитник nil nil )( ; ( = ( ваня nil nil )( 1 nil nil ))( = ( ваня nil nil )( * ( ваня nil nil )( тест ( защитник nil nil )nil ))))))
+[DEBUG] general/tree/treeExpImp.cpp:91:readNode(): entered readNode curBufferPos =  ( = ( защитник nil nil )( 5 nil nil ))( тест ( защитник nil nil )nil )))( тест ( защитник nil nil )( ; ( = ( ваня nil nil )( 1 nil nil ))( ; ( = ( защитник nil nil )( + ( защитник nil nil )( 1 nil nil )))( = ( ваня nil nil )( * ( ваня nil nil )( тест ( защитник nil nil )nil )))))))
 [DEBUG] general/tree/treeExpImp.cpp:101:readNode(): скобочка
 
-[DEBUG] general/tree/treeExpImp.cpp:127:getNodeValue(): entered getNodeValue curBufferPos = = ( защитник nil nil )( 5 nil nil ))( тест ( защитник nil nil )nil )))( тест ( защитник nil nil )( ; ( = ( ваня nil nil )( 1 nil nil ))( = ( ваня nil nil )( * ( ваня nil nil )( тест ( защитник nil nil )nil ))))))
+[DEBUG] general/tree/treeExpImp.cpp:127:getNodeValue(): entered getNodeValue curBufferPos = = ( защитник nil nil )( 5 nil nil ))( тест ( защитник nil nil )nil )))( тест ( защитник nil nil )( ; ( = ( ваня nil nil )( 1 nil nil ))( ; ( = ( защитник nil nil )( + ( защитник nil nil )( 1 nil nil )))( = ( ваня nil nil )( * ( ваня nil nil )( тест ( защитник nil nil )nil )))))))
 [DEBUG] general/tree/treeExpImp.cpp:134:getNodeValue(): getNodeValue nodeValue = =, len nodeValue = 1
 [DEBUG] general/tree/tree.cpp:56:createNewNode(): Выделил память newNode = 0x503000000160
-[DEBUG] general/tree/treeExpImp.cpp:91:readNode(): entered readNode curBufferPos =  ( защитник nil nil )( 5 nil nil ))( тест ( защитник nil nil )nil )))( тест ( защитник nil nil )( ; ( = ( ваня nil nil )( 1 nil nil ))( = ( ваня nil nil )( * ( ваня nil nil )( тест ( защитник nil nil )nil ))))))
+[DEBUG] general/tree/treeExpImp.cpp:91:readNode(): entered readNode curBufferPos =  ( защитник nil nil )( 5 nil nil ))( тест ( защитник nil nil )nil )))( тест ( защитник nil nil )( ; ( = ( ваня nil nil )( 1 nil nil ))( ; ( = ( защитник nil nil )( + ( защитник nil nil )( 1 nil nil )))( = ( ваня nil nil )( * ( ваня nil nil )( тест ( защитник nil nil )nil )))))))
 [DEBUG] general/tree/treeExpImp.cpp:101:readNode(): скобочка
 
-[DEBUG] general/tree/treeExpImp.cpp:127:getNodeValue(): entered getNodeValue curBufferPos = защитник nil nil )( 5 nil nil ))( тест ( защитник nil nil )nil )))( тест ( защитник nil nil )( ; ( = ( ваня nil nil )( 1 nil nil ))( = ( ваня nil nil )( * ( ваня nil nil )( тест ( защитник nil nil )nil ))))))
+[DEBUG] general/tree/treeExpImp.cpp:127:getNodeValue(): entered getNodeValue curBufferPos = защитник nil nil )( 5 nil nil ))( тест ( защитник nil nil )nil )))( тест ( защитник nil nil )( ; ( = ( ваня nil nil )( 1 nil nil ))( ; ( = ( защитник nil nil )( + ( защитник nil nil )( 1 nil nil )))( = ( ваня nil nil )( * ( ваня nil nil )( тест ( защитник nil nil )nil )))))))
 [DEBUG] general/tree/treeExpImp.cpp:134:getNodeValue(): getNodeValue nodeValue = защитник, len nodeValue = 16
 [DEBUG] general/tree/tree.cpp:56:createNewNode(): Выделил память newNode = 0x5030000001c0
-[DEBUG] general/tree/treeExpImp.cpp:91:readNode(): entered readNode curBufferPos =  nil nil )( 5 nil nil ))( тест ( защитник nil nil )nil )))( тест ( защитник nil nil )( ; ( = ( ваня nil nil )( 1 nil nil ))( = ( ваня nil nil )( * ( ваня nil nil )( тест ( защитник nil nil )nil ))))))
+[DEBUG] general/tree/treeExpImp.cpp:91:readNode(): entered readNode curBufferPos =  nil nil )( 5 nil nil ))( тест ( защитник nil nil )nil )))( тест ( защитник nil nil )( ; ( = ( ваня nil nil )( 1 nil nil ))( ; ( = ( защитник nil nil )( + ( защитник nil nil )( 1 nil nil )))( = ( ваня nil nil )( * ( ваня nil nil )( тест ( защитник nil nil )nil )))))))
 [DEBUG] general/tree/treeExpImp.cpp:111:readNode(): readNode case nil
-[DEBUG] general/tree/treeExpImp.cpp:91:readNode(): entered readNode curBufferPos =  nil )( 5 nil nil ))( тест ( защитник nil nil )nil )))( тест ( защитник nil nil )( ; ( = ( ваня nil nil )( 1 nil nil ))( = ( ваня nil nil )( * ( ваня nil nil )( тест ( защитник nil nil )nil ))))))
+[DEBUG] general/tree/treeExpImp.cpp:91:readNode(): entered readNode curBufferPos =  nil )( 5 nil nil ))( тест ( защитник nil nil )nil )))( тест ( защитник nil nil )( ; ( = ( ваня nil nil )( 1 nil nil ))( ; ( = ( защитник nil nil )( + ( защитник nil nil )( 1 nil nil )))( = ( ваня nil nil )( * ( ваня nil nil )( тест ( защитник nil nil )nil )))))))
 [DEBUG] general/tree/treeExpImp.cpp:111:readNode(): readNode case nil
-[DEBUG] general/tree/treeExpImp.cpp:91:readNode(): entered readNode curBufferPos =  )( 5 nil nil ))( тест ( защитник nil nil )nil )))( тест ( защитник nil nil )( ; ( = ( ваня nil nil )( 1 nil nil ))( = ( ваня nil nil )( * ( ваня nil nil )( тест ( защитник nil nil )nil ))))))
+[DEBUG] general/tree/treeExpImp.cpp:91:readNode(): entered readNode curBufferPos =  )( 5 nil nil ))( тест ( защитник nil nil )nil )))( тест ( защитник nil nil )( ; ( = ( ваня nil nil )( 1 nil nil ))( ; ( = ( защитник nil nil )( + ( защитник nil nil )( 1 nil nil )))( = ( ваня nil nil )( * ( ваня nil nil )( тест ( защитник nil nil )nil )))))))
 [DEBUG] general/tree/treeExpImp.cpp:101:readNode(): скобочка
 
-[DEBUG] general/tree/treeExpImp.cpp:127:getNodeValue(): entered getNodeValue curBufferPos = 5 nil nil ))( тест ( защитник nil nil )nil )))( тест ( защитник nil nil )( ; ( = ( ваня nil nil )( 1 nil nil ))( = ( ваня nil nil )( * ( ваня nil nil )( тест ( защитник nil nil )nil ))))))
+[DEBUG] general/tree/treeExpImp.cpp:127:getNodeValue(): entered getNodeValue curBufferPos = 5 nil nil ))( тест ( защитник nil nil )nil )))( тест ( защитник nil nil )( ; ( = ( ваня nil nil )( 1 nil nil ))( ; ( = ( защитник nil nil )( + ( защитник nil nil )( 1 nil nil )))( = ( ваня nil nil )( * ( ваня nil nil )( тест ( защитник nil nil )nil )))))))
 [DEBUG] general/tree/treeExpImp.cpp:134:getNodeValue(): getNodeValue nodeValue = 5, len nodeValue = 1
 [DEBUG] general/tree/tree.cpp:56:createNewNode(): Выделил память newNode = 0x503000000220
-[DEBUG] general/tree/treeExpImp.cpp:91:readNode(): entered readNode curBufferPos =  nil nil ))( тест ( защитник nil nil )nil )))( тест ( защитник nil nil )( ; ( = ( ваня nil nil )( 1 nil nil ))( = ( ваня nil nil )( * ( ваня nil nil )( тест ( защитник nil nil )nil ))))))
+[DEBUG] general/tree/treeExpImp.cpp:91:readNode(): entered readNode curBufferPos =  nil nil ))( тест ( защитник nil nil )nil )))( тест ( защитник nil nil )( ; ( = ( ваня nil nil )( 1 nil nil ))( ; ( = ( защитник nil nil )( + ( защитник nil nil )( 1 nil nil )))( = ( ваня nil nil )( * ( ваня nil nil )( тест ( защитник nil nil )nil )))))))
 [DEBUG] general/tree/treeExpImp.cpp:111:readNode(): readNode case nil
-[DEBUG] general/tree/treeExpImp.cpp:91:readNode(): entered readNode curBufferPos =  nil ))( тест ( защитник nil nil )nil )))( тест ( защитник nil nil )( ; ( = ( ваня nil nil )( 1 nil nil ))( = ( ваня nil nil )( * ( ваня nil nil )( тест ( защитник nil nil )nil ))))))
+[DEBUG] general/tree/treeExpImp.cpp:91:readNode(): entered readNode curBufferPos =  nil ))( тест ( защитник nil nil )nil )))( тест ( защитник nil nil )( ; ( = ( ваня nil nil )( 1 nil nil ))( ; ( = ( защитник nil nil )( + ( защитник nil nil )( 1 nil nil )))( = ( ваня nil nil )( * ( ваня nil nil )( тест ( защитник nil nil )nil )))))))
 [DEBUG] general/tree/treeExpImp.cpp:111:readNode(): readNode case nil
-[DEBUG] general/tree/treeExpImp.cpp:91:readNode(): entered readNode curBufferPos =  ))( тест ( защитник nil nil )nil )))( тест ( защитник nil nil )( ; ( = ( ваня nil nil )( 1 nil nil ))( = ( ваня nil nil )( * ( ваня nil nil )( тест ( защитник nil nil )nil ))))))
+[DEBUG] general/tree/treeExpImp.cpp:91:readNode(): entered readNode curBufferPos =  ))( тест ( защитник nil nil )nil )))( тест ( защитник nil nil )( ; ( = ( ваня nil nil )( 1 nil nil ))( ; ( = ( защитник nil nil )( + ( защитник nil nil )( 1 nil nil )))( = ( ваня nil nil )( * ( ваня nil nil )( тест ( защитник nil nil )nil )))))))
 [DEBUG] general/tree/treeExpImp.cpp:101:readNode(): скобочка
 
-[DEBUG] general/tree/treeExpImp.cpp:127:getNodeValue(): entered getNodeValue curBufferPos = тест ( защитник nil nil )nil )))( тест ( защитник nil nil )( ; ( = ( ваня nil nil )( 1 nil nil ))( = ( ваня nil nil )( * ( ваня nil nil )( тест ( защитник nil nil )nil ))))))
+[DEBUG] general/tree/treeExpImp.cpp:127:getNodeValue(): entered getNodeValue curBufferPos = тест ( защитник nil nil )nil )))( тест ( защитник nil nil )( ; ( = ( ваня nil nil )( 1 nil nil ))( ; ( = ( защитник nil nil )( + ( защитник nil nil )( 1 nil nil )))( = ( ваня nil nil )( * ( ваня nil nil )( тест ( защитник nil nil )nil )))))))
 [DEBUG] general/tree/treeExpImp.cpp:134:getNodeValue(): getNodeValue nodeValue = тест, len nodeValue = 8
 [DEBUG] general/tree/tree.cpp:56:createNewNode(): Выделил память newNode = 0x503000000280
-[DEBUG] general/tree/treeExpImp.cpp:91:readNode(): entered readNode curBufferPos =  ( защитник nil nil )nil )))( тест ( защитник nil nil )( ; ( = ( ваня nil nil )( 1 nil nil ))( = ( ваня nil nil )( * ( ваня nil nil )( тест ( защитник nil nil )nil ))))))
+[DEBUG] general/tree/treeExpImp.cpp:91:readNode(): entered readNode curBufferPos =  ( защитник nil nil )nil )))( тест ( защитник nil nil )( ; ( = ( ваня nil nil )( 1 nil nil ))( ; ( = ( защитник nil nil )( + ( защитник nil nil )( 1 nil nil )))( = ( ваня nil nil )( * ( ваня nil nil )( тест ( защитник nil nil )nil )))))))
 [DEBUG] general/tree/treeExpImp.cpp:101:readNode(): скобочка
 
-[DEBUG] general/tree/treeExpImp.cpp:127:getNodeValue(): entered getNodeValue curBufferPos = защитник nil nil )nil )))( тест ( защитник nil nil )( ; ( = ( ваня nil nil )( 1 nil nil ))( = ( ваня nil nil )( * ( ваня nil nil )( тест ( защитник nil nil )nil ))))))
+[DEBUG] general/tree/treeExpImp.cpp:127:getNodeValue(): entered getNodeValue curBufferPos = защитник nil nil )nil )))( тест ( защитник nil nil )( ; ( = ( ваня nil nil )( 1 nil nil ))( ; ( = ( защитник nil nil )( + ( защитник nil nil )( 1 nil nil )))( = ( ваня nil nil )( * ( ваня nil nil )( тест ( защитник nil nil )nil )))))))
 [DEBUG] general/tree/treeExpImp.cpp:134:getNodeValue(): getNodeValue nodeValue = защитник, len nodeValue = 16
 [DEBUG] general/tree/tree.cpp:56:createNewNode(): Выделил память newNode = 0x5030000002e0
-[DEBUG] general/tree/treeExpImp.cpp:91:readNode(): entered readNode curBufferPos =  nil nil )nil )))( тест ( защитник nil nil )( ; ( = ( ваня nil nil )( 1 nil nil ))( = ( ваня nil nil )( * ( ваня nil nil )( тест ( защитник nil nil )nil ))))))
+[DEBUG] general/tree/treeExpImp.cpp:91:readNode(): entered readNode curBufferPos =  nil nil )nil )))( тест ( защитник nil nil )( ; ( = ( ваня nil nil )( 1 nil nil ))( ; ( = ( защитник nil nil )( + ( защитник nil nil )( 1 nil nil )))( = ( ваня nil nil )( * ( ваня nil nil )( тест ( защитник nil nil )nil )))))))
 [DEBUG] general/tree/treeExpImp.cpp:111:readNode(): readNode case nil
-[DEBUG] general/tree/treeExpImp.cpp:91:readNode(): entered readNode curBufferPos =  nil )nil )))( тест ( защитник nil nil )( ; ( = ( ваня nil nil )( 1 nil nil ))( = ( ваня nil nil )( * ( ваня nil nil )( тест ( защитник nil nil )nil ))))))
+[DEBUG] general/tree/treeExpImp.cpp:91:readNode(): entered readNode curBufferPos =  nil )nil )))( тест ( защитник nil nil )( ; ( = ( ваня nil nil )( 1 nil nil ))( ; ( = ( защитник nil nil )( + ( защитник nil nil )( 1 nil nil )))( = ( ваня nil nil )( * ( ваня nil nil )( тест ( защитник nil nil )nil )))))))
 [DEBUG] general/tree/treeExpImp.cpp:111:readNode(): readNode case nil
-[DEBUG] general/tree/treeExpImp.cpp:91:readNode(): entered readNode curBufferPos =  )nil )))( тест ( защитник nil nil )( ; ( = ( ваня nil nil )( 1 nil nil ))( = ( ваня nil nil )( * ( ваня nil nil )( тест ( защитник nil nil )nil ))))))
+[DEBUG] general/tree/treeExpImp.cpp:91:readNode(): entered readNode curBufferPos =  )nil )))( тест ( защитник nil nil )( ; ( = ( ваня nil nil )( 1 nil nil ))( ; ( = ( защитник nil nil )( + ( защитник nil nil )( 1 nil nil )))( = ( ваня nil nil )( * ( ваня nil nil )( тест ( защитник nil nil )nil )))))))
 [DEBUG] general/tree/treeExpImp.cpp:111:readNode(): readNode case nil
-[DEBUG] general/tree/treeExpImp.cpp:91:readNode(): entered readNode curBufferPos =  )))( тест ( защитник nil nil )( ; ( = ( ваня nil nil )( 1 nil nil ))( = ( ваня nil nil )( * ( ваня nil nil )( тест ( защитник nil nil )nil ))))))
+[DEBUG] general/tree/treeExpImp.cpp:91:readNode(): entered readNode curBufferPos =  )))( тест ( защитник nil nil )( ; ( = ( ваня nil nil )( 1 nil nil ))( ; ( = ( защитник nil nil )( + ( защитник nil nil )( 1 nil nil )))( = ( ваня nil nil )( * ( ваня nil nil )( тест ( защитник nil nil )nil )))))))
 [DEBUG] general/tree/treeExpImp.cpp:101:readNode(): скобочка
 
-[DEBUG] general/tree/treeExpImp.cpp:127:getNodeValue(): entered getNodeValue curBufferPos = тест ( защитник nil nil )( ; ( = ( ваня nil nil )( 1 nil nil ))( = ( ваня nil nil )( * ( ваня nil nil )( тест ( защитник nil nil )nil ))))))
+[DEBUG] general/tree/treeExpImp.cpp:127:getNodeValue(): entered getNodeValue curBufferPos = тест ( защитник nil nil )( ; ( = ( ваня nil nil )( 1 nil nil ))( ; ( = ( защитник nil nil )( + ( защитник nil nil )( 1 nil nil )))( = ( ваня nil nil )( * ( ваня nil nil )( тест ( защитник nil nil )nil )))))))
 [DEBUG] general/tree/treeExpImp.cpp:134:getNodeValue(): getNodeValue nodeValue = тест, len nodeValue = 8
 [DEBUG] general/tree/tree.cpp:56:createNewNode(): Выделил память newNode = 0x503000000340
-[DEBUG] general/tree/treeExpImp.cpp:91:readNode(): entered readNode curBufferPos =  ( защитник nil nil )( ; ( = ( ваня nil nil )( 1 nil nil ))( = ( ваня nil nil )( * ( ваня nil nil )( тест ( защитник nil nil )nil ))))))
+[DEBUG] general/tree/treeExpImp.cpp:91:readNode(): entered readNode curBufferPos =  ( защитник nil nil )( ; ( = ( ваня nil nil )( 1 nil nil ))( ; ( = ( защитник nil nil )( + ( защитник nil nil )( 1 nil nil )))( = ( ваня nil nil )( * ( ваня nil nil )( тест ( защитник nil nil )nil )))))))
 [DEBUG] general/tree/treeExpImp.cpp:101:readNode(): скобочка
 
-[DEBUG] general/tree/treeExpImp.cpp:127:getNodeValue(): entered getNodeValue curBufferPos = защитник nil nil )( ; ( = ( ваня nil nil )( 1 nil nil ))( = ( ваня nil nil )( * ( ваня nil nil )( тест ( защитник nil nil )nil ))))))
+[DEBUG] general/tree/treeExpImp.cpp:127:getNodeValue(): entered getNodeValue curBufferPos = защитник nil nil )( ; ( = ( ваня nil nil )( 1 nil nil ))( ; ( = ( защитник nil nil )( + ( защитник nil nil )( 1 nil nil )))( = ( ваня nil nil )( * ( ваня nil nil )( тест ( защитник nil nil )nil )))))))
 [DEBUG] general/tree/treeExpImp.cpp:134:getNodeValue(): getNodeValue nodeValue = защитник, len nodeValue = 16
 [DEBUG] general/tree/tree.cpp:56:createNewNode(): Выделил память newNode = 0x5030000003a0
-[DEBUG] general/tree/treeExpImp.cpp:91:readNode(): entered readNode curBufferPos =  nil nil )( ; ( = ( ваня nil nil )( 1 nil nil ))( = ( ваня nil nil )( * ( ваня nil nil )( тест ( защитник nil nil )nil ))))))
+[DEBUG] general/tree/treeExpImp.cpp:91:readNode(): entered readNode curBufferPos =  nil nil )( ; ( = ( ваня nil nil )( 1 nil nil ))( ; ( = ( защитник nil nil )( + ( защитник nil nil )( 1 nil nil )))( = ( ваня nil nil )( * ( ваня nil nil )( тест ( защитник nil nil )nil )))))))
 [DEBUG] general/tree/treeExpImp.cpp:111:readNode(): readNode case nil
-[DEBUG] general/tree/treeExpImp.cpp:91:readNode(): entered readNode curBufferPos =  nil )( ; ( = ( ваня nil nil )( 1 nil nil ))( = ( ваня nil nil )( * ( ваня nil nil )( тест ( защитник nil nil )nil ))))))
+[DEBUG] general/tree/treeExpImp.cpp:91:readNode(): entered readNode curBufferPos =  nil )( ; ( = ( ваня nil nil )( 1 nil nil ))( ; ( = ( защитник nil nil )( + ( защитник nil nil )( 1 nil nil )))( = ( ваня nil nil )( * ( ваня nil nil )( тест ( защитник nil nil )nil )))))))
 [DEBUG] general/tree/treeExpImp.cpp:111:readNode(): readNode case nil
-[DEBUG] general/tree/treeExpImp.cpp:91:readNode(): entered readNode curBufferPos =  )( ; ( = ( ваня nil nil )( 1 nil nil ))( = ( ваня nil nil )( * ( ваня nil nil )( тест ( защитник nil nil )nil ))))))
+[DEBUG] general/tree/treeExpImp.cpp:91:readNode(): entered readNode curBufferPos =  )( ; ( = ( ваня nil nil )( 1 nil nil ))( ; ( = ( защитник nil nil )( + ( защитник nil nil )( 1 nil nil )))( = ( ваня nil nil )( * ( ваня nil nil )( тест ( защитник nil nil )nil )))))))
 [DEBUG] general/tree/treeExpImp.cpp:101:readNode(): скобочка
 
-[DEBUG] general/tree/treeExpImp.cpp:127:getNodeValue(): entered getNodeValue curBufferPos = ; ( = ( ваня nil nil )( 1 nil nil ))( = ( ваня nil nil )( * ( ваня nil nil )( тест ( защитник nil nil )nil ))))))
+[DEBUG] general/tree/treeExpImp.cpp:127:getNodeValue(): entered getNodeValue curBufferPos = ; ( = ( ваня nil nil )( 1 nil nil ))( ; ( = ( защитник nil nil )( + ( защитник nil nil )( 1 nil nil )))( = ( ваня nil nil )( * ( ваня nil nil )( тест ( защитник nil nil )nil )))))))
 [DEBUG] general/tree/treeExpImp.cpp:134:getNodeValue(): getNodeValue nodeValue = ;, len nodeValue = 1
 [DEBUG] general/tree/tree.cpp:56:createNewNode(): Выделил память newNode = 0x503000000400
-[DEBUG] general/tree/treeExpImp.cpp:91:readNode(): entered readNode curBufferPos =  ( = ( ваня nil nil )( 1 nil nil ))( = ( ваня nil nil )( * ( ваня nil nil )( тест ( защитник nil nil )nil ))))))
+[DEBUG] general/tree/treeExpImp.cpp:91:readNode(): entered readNode curBufferPos =  ( = ( ваня nil nil )( 1 nil nil ))( ; ( = ( защитник nil nil )( + ( защитник nil nil )( 1 nil nil )))( = ( ваня nil nil )( * ( ваня nil nil )( тест ( защитник nil nil )nil )))))))
 [DEBUG] general/tree/treeExpImp.cpp:101:readNode(): скобочка
 
-[DEBUG] general/tree/treeExpImp.cpp:127:getNodeValue(): entered getNodeValue curBufferPos = = ( ваня nil nil )( 1 nil nil ))( = ( ваня nil nil )( * ( ваня nil nil )( тест ( защитник nil nil )nil ))))))
+[DEBUG] general/tree/treeExpImp.cpp:127:getNodeValue(): entered getNodeValue curBufferPos = = ( ваня nil nil )( 1 nil nil ))( ; ( = ( защитник nil nil )( + ( защитник nil nil )( 1 nil nil )))( = ( ваня nil nil )( * ( ваня nil nil )( тест ( защитник nil nil )nil )))))))
 [DEBUG] general/tree/treeExpImp.cpp:134:getNodeValue(): getNodeValue nodeValue = =, len nodeValue = 1
 [DEBUG] general/tree/tree.cpp:56:createNewNode(): Выделил память newNode = 0x503000000460
-[DEBUG] general/tree/treeExpImp.cpp:91:readNode(): entered readNode curBufferPos =  ( ваня nil nil )( 1 nil nil ))( = ( ваня nil nil )( * ( ваня nil nil )( тест ( защитник nil nil )nil ))))))
+[DEBUG] general/tree/treeExpImp.cpp:91:readNode(): entered readNode curBufferPos =  ( ваня nil nil )( 1 nil nil ))( ; ( = ( защитник nil nil )( + ( защитник nil nil )( 1 nil nil )))( = ( ваня nil nil )( * ( ваня nil nil )( тест ( защитник nil nil )nil )))))))
 [DEBUG] general/tree/treeExpImp.cpp:101:readNode(): скобочка
 
-[DEBUG] general/tree/treeExpImp.cpp:127:getNodeValue(): entered getNodeValue curBufferPos = ваня nil nil )( 1 nil nil ))( = ( ваня nil nil )( * ( ваня nil nil )( тест ( защитник nil nil )nil ))))))
+[DEBUG] general/tree/treeExpImp.cpp:127:getNodeValue(): entered getNodeValue curBufferPos = ваня nil nil )( 1 nil nil ))( ; ( = ( защитник nil nil )( + ( защитник nil nil )( 1 nil nil )))( = ( ваня nil nil )( * ( ваня nil nil )( тест ( защитник nil nil )nil )))))))
 [DEBUG] general/tree/treeExpImp.cpp:134:getNodeValue(): getNodeValue nodeValue = ваня, len nodeValue = 8
 [DEBUG] general/tree/tree.cpp:56:createNewNode(): Выделил память newNode = 0x5030000004c0
-[DEBUG] general/tree/treeExpImp.cpp:91:readNode(): entered readNode curBufferPos =  nil nil )( 1 nil nil ))( = ( ваня nil nil )( * ( ваня nil nil )( тест ( защитник nil nil )nil ))))))
+[DEBUG] general/tree/treeExpImp.cpp:91:readNode(): entered readNode curBufferPos =  nil nil )( 1 nil nil ))( ; ( = ( защитник nil nil )( + ( защитник nil nil )( 1 nil nil )))( = ( ваня nil nil )( * ( ваня nil nil )( тест ( защитник nil nil )nil )))))))
 [DEBUG] general/tree/treeExpImp.cpp:111:readNode(): readNode case nil
-[DEBUG] general/tree/treeExpImp.cpp:91:readNode(): entered readNode curBufferPos =  nil )( 1 nil nil ))( = ( ваня nil nil )( * ( ваня nil nil )( тест ( защитник nil nil )nil ))))))
+[DEBUG] general/tree/treeExpImp.cpp:91:readNode(): entered readNode curBufferPos =  nil )( 1 nil nil ))( ; ( = ( защитник nil nil )( + ( защитник nil nil )( 1 nil nil )))( = ( ваня nil nil )( * ( ваня nil nil )( тест ( защитник nil nil )nil )))))))
 [DEBUG] general/tree/treeExpImp.cpp:111:readNode(): readNode case nil
-[DEBUG] general/tree/treeExpImp.cpp:91:readNode(): entered readNode curBufferPos =  )( 1 nil nil ))( = ( ваня nil nil )( * ( ваня nil nil )( тест ( защитник nil nil )nil ))))))
+[DEBUG] general/tree/treeExpImp.cpp:91:readNode(): entered readNode curBufferPos =  )( 1 nil nil ))( ; ( = ( защитник nil nil )( + ( защитник nil nil )( 1 nil nil )))( = ( ваня nil nil )( * ( ваня nil nil )( тест ( защитник nil nil )nil )))))))
 [DEBUG] general/tree/treeExpImp.cpp:101:readNode(): скобочка
 
-[DEBUG] general/tree/treeExpImp.cpp:127:getNodeValue(): entered getNodeValue curBufferPos = 1 nil nil ))( = ( ваня nil nil )( * ( ваня nil nil )( тест ( защитник nil nil )nil ))))))
+[DEBUG] general/tree/treeExpImp.cpp:127:getNodeValue(): entered getNodeValue curBufferPos = 1 nil nil ))( ; ( = ( защитник nil nil )( + ( защитник nil nil )( 1 nil nil )))( = ( ваня nil nil )( * ( ваня nil nil )( тест ( защитник nil nil )nil )))))))
 [DEBUG] general/tree/treeExpImp.cpp:134:getNodeValue(): getNodeValue nodeValue = 1, len nodeValue = 1
 [DEBUG] general/tree/tree.cpp:56:createNewNode(): Выделил память newNode = 0x503000000520
-[DEBUG] general/tree/treeExpImp.cpp:91:readNode(): entered readNode curBufferPos =  nil nil ))( = ( ваня nil nil )( * ( ваня nil nil )( тест ( защитник nil nil )nil ))))))
+[DEBUG] general/tree/treeExpImp.cpp:91:readNode(): entered readNode curBufferPos =  nil nil ))( ; ( = ( защитник nil nil )( + ( защитник nil nil )( 1 nil nil )))( = ( ваня nil nil )( * ( ваня nil nil )( тест ( защитник nil nil )nil )))))))
 [DEBUG] general/tree/treeExpImp.cpp:111:readNode(): readNode case nil
-[DEBUG] general/tree/treeExpImp.cpp:91:readNode(): entered readNode curBufferPos =  nil ))( = ( ваня nil nil )( * ( ваня nil nil )( тест ( защитник nil nil )nil ))))))
+[DEBUG] general/tree/treeExpImp.cpp:91:readNode(): entered readNode curBufferPos =  nil ))( ; ( = ( защитник nil nil )( + ( защитник nil nil )( 1 nil nil )))( = ( ваня nil nil )( * ( ваня nil nil )( тест ( защитник nil nil )nil )))))))
 [DEBUG] general/tree/treeExpImp.cpp:111:readNode(): readNode case nil
-[DEBUG] general/tree/treeExpImp.cpp:91:readNode(): entered readNode curBufferPos =  ))( = ( ваня nil nil )( * ( ваня nil nil )( тест ( защитник nil nil )nil ))))))
+[DEBUG] general/tree/treeExpImp.cpp:91:readNode(): entered readNode curBufferPos =  ))( ; ( = ( защитник nil nil )( + ( защитник nil nil )( 1 nil nil )))( = ( ваня nil nil )( * ( ваня nil nil )( тест ( защитник nil nil )nil )))))))
 [DEBUG] general/tree/treeExpImp.cpp:101:readNode(): скобочка
 
-[DEBUG] general/tree/treeExpImp.cpp:127:getNodeValue(): entered getNodeValue curBufferPos = = ( ваня nil nil )( * ( ваня nil nil )( тест ( защитник nil nil )nil ))))))
-[DEBUG] general/tree/treeExpImp.cpp:134:getNodeValue(): getNodeValue nodeValue = =, len nodeValue = 1
+[DEBUG] general/tree/treeExpImp.cpp:127:getNodeValue(): entered getNodeValue curBufferPos = ; ( = ( защитник nil nil )( + ( защитник nil nil )( 1 nil nil )))( = ( ваня nil nil )( * ( ваня nil nil )( тест ( защитник nil nil )nil )))))))
+[DEBUG] general/tree/treeExpImp.cpp:134:getNodeValue(): getNodeValue nodeValue = ;, len nodeValue = 1
 [DEBUG] general/tree/tree.cpp:56:createNewNode(): Выделил память newNode = 0x503000000580
-[DEBUG] general/tree/treeExpImp.cpp:91:readNode(): entered readNode curBufferPos =  ( ваня nil nil )( * ( ваня nil nil )( тест ( защитник nil nil )nil ))))))
+[DEBUG] general/tree/treeExpImp.cpp:91:readNode(): entered readNode curBufferPos =  ( = ( защитник nil nil )( + ( защитник nil nil )( 1 nil nil )))( = ( ваня nil nil )( * ( ваня nil nil )( тест ( защитник nil nil )nil )))))))
 [DEBUG] general/tree/treeExpImp.cpp:101:readNode(): скобочка
 
-[DEBUG] general/tree/treeExpImp.cpp:127:getNodeValue(): entered getNodeValue curBufferPos = ваня nil nil )( * ( ваня nil nil )( тест ( защитник nil nil )nil ))))))
-[DEBUG] general/tree/treeExpImp.cpp:134:getNodeValue(): getNodeValue nodeValue = ваня, len nodeValue = 8
+[DEBUG] general/tree/treeExpImp.cpp:127:getNodeValue(): entered getNodeValue curBufferPos = = ( защитник nil nil )( + ( защитник nil nil )( 1 nil nil )))( = ( ваня nil nil )( * ( ваня nil nil )( тест ( защитник nil nil )nil )))))))
+[DEBUG] general/tree/treeExpImp.cpp:134:getNodeValue(): getNodeValue nodeValue = =, len nodeValue = 1
 [DEBUG] general/tree/tree.cpp:56:createNewNode(): Выделил память newNode = 0x5030000005e0
-[DEBUG] general/tree/treeExpImp.cpp:91:readNode(): entered readNode curBufferPos =  nil nil )( * ( ваня nil nil )( тест ( защитник nil nil )nil ))))))
-[DEBUG] general/tree/treeExpImp.cpp:111:readNode(): readNode case nil
-[DEBUG] general/tree/treeExpImp.cpp:91:readNode(): entered readNode curBufferPos =  nil )( * ( ваня nil nil )( тест ( защитник nil nil )nil ))))))
-[DEBUG] general/tree/treeExpImp.cpp:111:readNode(): readNode case nil
-[DEBUG] general/tree/treeExpImp.cpp:91:readNode(): entered readNode curBufferPos =  )( * ( ваня nil nil )( тест ( защитник nil nil )nil ))))))
+[DEBUG] general/tree/treeExpImp.cpp:91:readNode(): entered readNode curBufferPos =  ( защитник nil nil )( + ( защитник nil nil )( 1 nil nil )))( = ( ваня nil nil )( * ( ваня nil nil )( тест ( защитник nil nil )nil )))))))
 [DEBUG] general/tree/treeExpImp.cpp:101:readNode(): скобочка
 
-[DEBUG] general/tree/treeExpImp.cpp:127:getNodeValue(): entered getNodeValue curBufferPos = * ( ваня nil nil )( тест ( защитник nil nil )nil ))))))
-[DEBUG] general/tree/treeExpImp.cpp:134:getNodeValue(): getNodeValue nodeValue = *, len nodeValue = 1
-[DEBUG] general/tree/tree.cpp:56:createNewNode(): Выделил память newNode = 0x503000000640
-[DEBUG] general/tree/treeExpImp.cpp:91:readNode(): entered readNode curBufferPos =  ( ваня nil nil )( тест ( защитник nil nil )nil ))))))
-[DEBUG] general/tree/treeExpImp.cpp:101:readNode(): скобочка
-
-[DEBUG] general/tree/treeExpImp.cpp:127:getNodeValue(): entered getNodeValue curBufferPos = ваня nil nil )( тест ( защитник nil nil )nil ))))))
-[DEBUG] general/tree/treeExpImp.cpp:134:getNodeValue(): getNodeValue nodeValue = ваня, len nodeValue = 8
-[DEBUG] general/tree/tree.cpp:56:createNewNode(): Выделил память newNode = 0x5030000006a0
-[DEBUG] general/tree/treeExpImp.cpp:91:readNode(): entered readNode curBufferPos =  nil nil )( тест ( защитник nil nil )nil ))))))
-[DEBUG] general/tree/treeExpImp.cpp:111:readNode(): readNode case nil
-[DEBUG] general/tree/treeExpImp.cpp:91:readNode(): entered readNode curBufferPos =  nil )( тест ( защитник nil nil )nil ))))))
-[DEBUG] general/tree/treeExpImp.cpp:111:readNode(): readNode case nil
-[DEBUG] general/tree/treeExpImp.cpp:91:readNode(): entered readNode curBufferPos =  )( тест ( защитник nil nil )nil ))))))
-[DEBUG] general/tree/treeExpImp.cpp:101:readNode(): скобочка
-
-[DEBUG] general/tree/treeExpImp.cpp:127:getNodeValue(): entered getNodeValue curBufferPos = тест ( защитник nil nil )nil ))))))
-[DEBUG] general/tree/treeExpImp.cpp:134:getNodeValue(): getNodeValue nodeValue = тест, len nodeValue = 8
-[DEBUG] general/tree/tree.cpp:56:createNewNode(): Выделил память newNode = 0x503000000700
-[DEBUG] general/tree/treeExpImp.cpp:91:readNode(): entered readNode curBufferPos =  ( защитник nil nil )nil ))))))
-[DEBUG] general/tree/treeExpImp.cpp:101:readNode(): скобочка
-
-[DEBUG] general/tree/treeExpImp.cpp:127:getNodeValue(): entered getNodeValue curBufferPos = защитник nil nil )nil ))))))
+[DEBUG] general/tree/treeExpImp.cpp:127:getNodeValue(): entered getNodeValue curBufferPos = защитник nil nil )( + ( защитник nil nil )( 1 nil nil )))( = ( ваня nil nil )( * ( ваня nil nil )( тест ( защитник nil nil )nil )))))))
 [DEBUG] general/tree/treeExpImp.cpp:134:getNodeValue(): getNodeValue nodeValue = защитник, len nodeValue = 16
+[DEBUG] general/tree/tree.cpp:56:createNewNode(): Выделил память newNode = 0x503000000640
+[DEBUG] general/tree/treeExpImp.cpp:91:readNode(): entered readNode curBufferPos =  nil nil )( + ( защитник nil nil )( 1 nil nil )))( = ( ваня nil nil )( * ( ваня nil nil )( тест ( защитник nil nil )nil )))))))
+[DEBUG] general/tree/treeExpImp.cpp:111:readNode(): readNode case nil
+[DEBUG] general/tree/treeExpImp.cpp:91:readNode(): entered readNode curBufferPos =  nil )( + ( защитник nil nil )( 1 nil nil )))( = ( ваня nil nil )( * ( ваня nil nil )( тест ( защитник nil nil )nil )))))))
+[DEBUG] general/tree/treeExpImp.cpp:111:readNode(): readNode case nil
+[DEBUG] general/tree/treeExpImp.cpp:91:readNode(): entered readNode curBufferPos =  )( + ( защитник nil nil )( 1 nil nil )))( = ( ваня nil nil )( * ( ваня nil nil )( тест ( защитник nil nil )nil )))))))
+[DEBUG] general/tree/treeExpImp.cpp:101:readNode(): скобочка
+
+[DEBUG] general/tree/treeExpImp.cpp:127:getNodeValue(): entered getNodeValue curBufferPos = + ( защитник nil nil )( 1 nil nil )))( = ( ваня nil nil )( * ( ваня nil nil )( тест ( защитник nil nil )nil )))))))
+[DEBUG] general/tree/treeExpImp.cpp:134:getNodeValue(): getNodeValue nodeValue = +, len nodeValue = 1
+[DEBUG] general/tree/tree.cpp:56:createNewNode(): Выделил память newNode = 0x5030000006a0
+[DEBUG] general/tree/treeExpImp.cpp:91:readNode(): entered readNode curBufferPos =  ( защитник nil nil )( 1 nil nil )))( = ( ваня nil nil )( * ( ваня nil nil )( тест ( защитник nil nil )nil )))))))
+[DEBUG] general/tree/treeExpImp.cpp:101:readNode(): скобочка
+
+[DEBUG] general/tree/treeExpImp.cpp:127:getNodeValue(): entered getNodeValue curBufferPos = защитник nil nil )( 1 nil nil )))( = ( ваня nil nil )( * ( ваня nil nil )( тест ( защитник nil nil )nil )))))))
+[DEBUG] general/tree/treeExpImp.cpp:134:getNodeValue(): getNodeValue nodeValue = защитник, len nodeValue = 16
+[DEBUG] general/tree/tree.cpp:56:createNewNode(): Выделил память newNode = 0x503000000700
+[DEBUG] general/tree/treeExpImp.cpp:91:readNode(): entered readNode curBufferPos =  nil nil )( 1 nil nil )))( = ( ваня nil nil )( * ( ваня nil nil )( тест ( защитник nil nil )nil )))))))
+[DEBUG] general/tree/treeExpImp.cpp:111:readNode(): readNode case nil
+[DEBUG] general/tree/treeExpImp.cpp:91:readNode(): entered readNode curBufferPos =  nil )( 1 nil nil )))( = ( ваня nil nil )( * ( ваня nil nil )( тест ( защитник nil nil )nil )))))))
+[DEBUG] general/tree/treeExpImp.cpp:111:readNode(): readNode case nil
+[DEBUG] general/tree/treeExpImp.cpp:91:readNode(): entered readNode curBufferPos =  )( 1 nil nil )))( = ( ваня nil nil )( * ( ваня nil nil )( тест ( защитник nil nil )nil )))))))
+[DEBUG] general/tree/treeExpImp.cpp:101:readNode(): скобочка
+
+[DEBUG] general/tree/treeExpImp.cpp:127:getNodeValue(): entered getNodeValue curBufferPos = 1 nil nil )))( = ( ваня nil nil )( * ( ваня nil nil )( тест ( защитник nil nil )nil )))))))
+[DEBUG] general/tree/treeExpImp.cpp:134:getNodeValue(): getNodeValue nodeValue = 1, len nodeValue = 1
 [DEBUG] general/tree/tree.cpp:56:createNewNode(): Выделил память newNode = 0x503000000760
-[DEBUG] general/tree/treeExpImp.cpp:91:readNode(): entered readNode curBufferPos =  nil nil )nil ))))))
+[DEBUG] general/tree/treeExpImp.cpp:91:readNode(): entered readNode curBufferPos =  nil nil )))( = ( ваня nil nil )( * ( ваня nil nil )( тест ( защитник nil nil )nil )))))))
 [DEBUG] general/tree/treeExpImp.cpp:111:readNode(): readNode case nil
-[DEBUG] general/tree/treeExpImp.cpp:91:readNode(): entered readNode curBufferPos =  nil )nil ))))))
+[DEBUG] general/tree/treeExpImp.cpp:91:readNode(): entered readNode curBufferPos =  nil )))( = ( ваня nil nil )( * ( ваня nil nil )( тест ( защитник nil nil )nil )))))))
 [DEBUG] general/tree/treeExpImp.cpp:111:readNode(): readNode case nil
-[DEBUG] general/tree/treeExpImp.cpp:91:readNode(): entered readNode curBufferPos =  )nil ))))))
+[DEBUG] general/tree/treeExpImp.cpp:91:readNode(): entered readNode curBufferPos =  )))( = ( ваня nil nil )( * ( ваня nil nil )( тест ( защитник nil nil )nil )))))))
+[DEBUG] general/tree/treeExpImp.cpp:101:readNode(): скобочка
+
+[DEBUG] general/tree/treeExpImp.cpp:127:getNodeValue(): entered getNodeValue curBufferPos = = ( ваня nil nil )( * ( ваня nil nil )( тест ( защитник nil nil )nil )))))))
+[DEBUG] general/tree/treeExpImp.cpp:134:getNodeValue(): getNodeValue nodeValue = =, len nodeValue = 1
+[DEBUG] general/tree/tree.cpp:56:createNewNode(): Выделил память newNode = 0x5030000007c0
+[DEBUG] general/tree/treeExpImp.cpp:91:readNode(): entered readNode curBufferPos =  ( ваня nil nil )( * ( ваня nil nil )( тест ( защитник nil nil )nil )))))))
+[DEBUG] general/tree/treeExpImp.cpp:101:readNode(): скобочка
+
+[DEBUG] general/tree/treeExpImp.cpp:127:getNodeValue(): entered getNodeValue curBufferPos = ваня nil nil )( * ( ваня nil nil )( тест ( защитник nil nil )nil )))))))
+[DEBUG] general/tree/treeExpImp.cpp:134:getNodeValue(): getNodeValue nodeValue = ваня, len nodeValue = 8
+[DEBUG] general/tree/tree.cpp:56:createNewNode(): Выделил память newNode = 0x503000000820
+[DEBUG] general/tree/treeExpImp.cpp:91:readNode(): entered readNode curBufferPos =  nil nil )( * ( ваня nil nil )( тест ( защитник nil nil )nil )))))))
 [DEBUG] general/tree/treeExpImp.cpp:111:readNode(): readNode case nil
-[DEBUG] back_end/emmiters.cpp:139:emitName(): offset: 0
-[DEBUG] back_end/emmiters.cpp:142:emitName(): Случай NAME глобальная переменная
-[DEBUG] back_end/spuNames.cpp:65:getGlobalVarAddr(): spuNameTable=0x5030000007c0 data=0x5030000007f0 size=0 cap=1
-[DEBUG] back_end/emmiters.cpp:139:emitName(): offset: 0
-[DEBUG] back_end/emmiters.cpp:152:emitName(): Случай NAME вызов функции
-[DEBUG] back_end/emmiters.cpp:139:emitName(): offset: 0
-[DEBUG] back_end/emmiters.cpp:147:emitName(): Случай NAME локальяная переменная
-[DEBUG] back_end/spuNames.cpp:47:getLocalVarAddr(): зашел в getLocalVar
-[DEBUG] back_end/spuNames.cpp:100:createLocaleVarAddr(): stackFrameOffset = 0
-[DEBUG] back_end/spuNames.cpp:132:reallocateSpuNameTable(): start reallocation
-[DEBUG] back_end/spuNames.cpp:142:reallocateSpuNameTable(): ended reallocation
+[DEBUG] general/tree/treeExpImp.cpp:91:readNode(): entered readNode curBufferPos =  nil )( * ( ваня nil nil )( тест ( защитник nil nil )nil )))))))
+[DEBUG] general/tree/treeExpImp.cpp:111:readNode(): readNode case nil
+[DEBUG] general/tree/treeExpImp.cpp:91:readNode(): entered readNode curBufferPos =  )( * ( ваня nil nil )( тест ( защитник nil nil )nil )))))))
+[DEBUG] general/tree/treeExpImp.cpp:101:readNode(): скобочка
+
+[DEBUG] general/tree/treeExpImp.cpp:127:getNodeValue(): entered getNodeValue curBufferPos = * ( ваня nil nil )( тест ( защитник nil nil )nil )))))))
+[DEBUG] general/tree/treeExpImp.cpp:134:getNodeValue(): getNodeValue nodeValue = *, len nodeValue = 1
+[DEBUG] general/tree/tree.cpp:56:createNewNode(): Выделил память newNode = 0x503000000880
+[DEBUG] general/tree/treeExpImp.cpp:91:readNode(): entered readNode curBufferPos =  ( ваня nil nil )( тест ( защитник nil nil )nil )))))))
+[DEBUG] general/tree/treeExpImp.cpp:101:readNode(): скобочка
+
+[DEBUG] general/tree/treeExpImp.cpp:127:getNodeValue(): entered getNodeValue curBufferPos = ваня nil nil )( тест ( защитник nil nil )nil )))))))
+[DEBUG] general/tree/treeExpImp.cpp:134:getNodeValue(): getNodeValue nodeValue = ваня, len nodeValue = 8
+[DEBUG] general/tree/tree.cpp:56:createNewNode(): Выделил память newNode = 0x5030000008e0
+[DEBUG] general/tree/treeExpImp.cpp:91:readNode(): entered readNode curBufferPos =  nil nil )( тест ( защитник nil nil )nil )))))))
+[DEBUG] general/tree/treeExpImp.cpp:111:readNode(): readNode case nil
+[DEBUG] general/tree/treeExpImp.cpp:91:readNode(): entered readNode curBufferPos =  nil )( тест ( защитник nil nil )nil )))))))
+[DEBUG] general/tree/treeExpImp.cpp:111:readNode(): readNode case nil
+[DEBUG] general/tree/treeExpImp.cpp:91:readNode(): entered readNode curBufferPos =  )( тест ( защитник nil nil )nil )))))))
+[DEBUG] general/tree/treeExpImp.cpp:101:readNode(): скобочка
+
+[DEBUG] general/tree/treeExpImp.cpp:127:getNodeValue(): entered getNodeValue curBufferPos = тест ( защитник nil nil )nil )))))))
+[DEBUG] general/tree/treeExpImp.cpp:134:getNodeValue(): getNodeValue nodeValue = тест, len nodeValue = 8
+[DEBUG] general/tree/tree.cpp:56:createNewNode(): Выделил память newNode = 0x503000000940
+[DEBUG] general/tree/treeExpImp.cpp:91:readNode(): entered readNode curBufferPos =  ( защитник nil nil )nil )))))))
+[DEBUG] general/tree/treeExpImp.cpp:101:readNode(): скобочка
+
+[DEBUG] general/tree/treeExpImp.cpp:127:getNodeValue(): entered getNodeValue curBufferPos = защитник nil nil )nil )))))))
+[DEBUG] general/tree/treeExpImp.cpp:134:getNodeValue(): getNodeValue nodeValue = защитник, len nodeValue = 16
+[DEBUG] general/tree/tree.cpp:56:createNewNode(): Выделил память newNode = 0x5030000009a0
+[DEBUG] general/tree/treeExpImp.cpp:91:readNode(): entered readNode curBufferPos =  nil nil )nil )))))))
+[DEBUG] general/tree/treeExpImp.cpp:111:readNode(): readNode case nil
+[DEBUG] general/tree/treeExpImp.cpp:91:readNode(): entered readNode curBufferPos =  nil )nil )))))))
+[DEBUG] general/tree/treeExpImp.cpp:111:readNode(): readNode case nil
+[DEBUG] general/tree/treeExpImp.cpp:91:readNode(): entered readNode curBufferPos =  )nil )))))))
+[DEBUG] general/tree/treeExpImp.cpp:111:readNode(): readNode case nil
+[DEBUG] general/devTools/protectionTree.cpp:178:treeGraphDump(): addr root: 0x503000000040
+[DEBUG] back_end/emmiters.cpp:180:emitNumber(): зашел в emitNumber, node = 0x503000000220
+[DEBUG] back_end/emmiters.cpp:184:emitNumber(): вышел из emitNumber, node = 0x503000000220
+[DEBUG] back_end/emmiters.cpp:155:emitName(): offset: 0
+[DEBUG] back_end/emmiters.cpp:157:emitName(): зашел в emitName, node = 0x5030000001c0
+[DEBUG] back_end/emmiters.cpp:160:emitName(): Случай NAME глобальная переменная
+[DEBUG] back_end/emmiters.cpp:415:emitGlobalVar(): зашел в emitGlobalVar, node = 0x5030000001c0
+[DEBUG] back_end/spuNames.cpp:65:getGlobalVarAddr(): spuNameTable=0x503000000a00 data=0x503000000a30 size=0 cap=1
+[DEBUG] back_end/spuNames.cpp:93:createGlobalVarAddr(): Создал новую глобальную переменную
+[DEBUG] back_end/emmiters.cpp:355:emitCallFunc(): зашел в emitCallFunc, node = 0x503000000280
+[DEBUG] back_end/emmiters.cpp:155:emitName(): offset: 0
+[DEBUG] back_end/emmiters.cpp:157:emitName(): зашел в emitName, node = 0x5030000002e0
+[DEBUG] back_end/emmiters.cpp:160:emitName(): Случай NAME глобальная переменная
+[DEBUG] back_end/emmiters.cpp:415:emitGlobalVar(): зашел в emitGlobalVar, node = 0x5030000002e0
+[DEBUG] back_end/spuNames.cpp:65:getGlobalVarAddr(): spuNameTable=0x503000000a00 data=0x503000000a30 size=1 cap=1
+[DEBUG] back_end/spuNames.cpp:74:getGlobalVarAddr(): сущетвует такая переменная в getGloballVar
+[DEBUG] back_end/emmiters.cpp:427:emitGlobalVar(): вышел из emitGlobalVar, node = 0x5030000002e0
 [DEBUG] general/strFunc.cpp:240:utf8StrLen(): started len
 [DEBUG] general/strFunc.cpp:246:utf8StrLen(): count len: 0, curStrPos = тест
 [DEBUG] general/strFunc.cpp:246:utf8StrLen(): count len: 2, curStrPos = ест
@@ -181,31 +235,8 @@
 [DEBUG] general/strFunc.cpp:215:transliterate(): curStrPos: ест 
 [DEBUG] general/strFunc.cpp:215:transliterate(): curStrPos: ст 
 [DEBUG] general/strFunc.cpp:215:transliterate(): curStrPos: т 
-[DEBUG] back_end/emmiters.cpp:139:emitName(): offset: 1
-[DEBUG] back_end/emmiters.cpp:142:emitName(): Случай NAME глобальная переменная
-[DEBUG] back_end/spuNames.cpp:65:getGlobalVarAddr(): spuNameTable=0x5030000007c0 data=0x504000000010 size=2 cap=2
-[DEBUG] back_end/emmiters.cpp:139:emitName(): offset: 1
-[DEBUG] back_end/emmiters.cpp:165:emitName(): Случай NAME инициализая функции
-[DEBUG] back_end/emmiters.cpp:139:emitName(): offset: 1
-[DEBUG] back_end/emmiters.cpp:147:emitName(): Случай NAME локальяная переменная
-[DEBUG] back_end/spuNames.cpp:47:getLocalVarAddr(): зашел в getLocalVar
-[DEBUG] back_end/spuNames.cpp:52:getLocalVarAddr(): сущетвует такая переменная в getLocalVar
-[DEBUG] back_end/emmiters.cpp:139:emitName(): offset: 1
-[DEBUG] back_end/emmiters.cpp:147:emitName(): Случай NAME локальяная переменная
-[DEBUG] back_end/spuNames.cpp:47:getLocalVarAddr(): зашел в getLocalVar
-[DEBUG] back_end/spuNames.cpp:100:createLocaleVarAddr(): stackFrameOffset = 1
-[DEBUG] back_end/spuNames.cpp:132:reallocateSpuNameTable(): start reallocation
-[DEBUG] back_end/spuNames.cpp:142:reallocateSpuNameTable(): ended reallocation
-[DEBUG] back_end/emmiters.cpp:139:emitName(): offset: 2
-[DEBUG] back_end/emmiters.cpp:147:emitName(): Случай NAME локальяная переменная
-[DEBUG] back_end/spuNames.cpp:47:getLocalVarAddr(): зашел в getLocalVar
-[DEBUG] back_end/spuNames.cpp:52:getLocalVarAddr(): сущетвует такая переменная в getLocalVar
-[DEBUG] back_end/emmiters.cpp:139:emitName(): offset: 2
-[DEBUG] back_end/emmiters.cpp:152:emitName(): Случай NAME вызов функции
-[DEBUG] back_end/emmiters.cpp:139:emitName(): offset: 2
-[DEBUG] back_end/emmiters.cpp:147:emitName(): Случай NAME локальяная переменная
-[DEBUG] back_end/spuNames.cpp:47:getLocalVarAddr(): зашел в getLocalVar
-[DEBUG] back_end/spuNames.cpp:52:getLocalVarAddr(): сущетвует такая переменная в getLocalVar
+[DEBUG] back_end/emmiters.cpp:378:emitCallFunc(): вышел из emitCallFunc, node = 0x503000000280
+[DEBUG] back_end/emmiters.cpp:340:emitInitFunc(): зашел в emitInitFunc, node = 0x503000000340
 [DEBUG] general/strFunc.cpp:240:utf8StrLen(): started len
 [DEBUG] general/strFunc.cpp:246:utf8StrLen(): count len: 0, curStrPos = тест
 [DEBUG] general/strFunc.cpp:246:utf8StrLen(): count len: 2, curStrPos = ест
@@ -216,14 +247,59 @@
 [DEBUG] general/strFunc.cpp:215:transliterate(): curStrPos: ест 
 [DEBUG] general/strFunc.cpp:215:transliterate(): curStrPos: ст 
 [DEBUG] general/strFunc.cpp:215:transliterate(): curStrPos: т 
-[DEBUG] back_end/emmiters.cpp:139:emitName(): offset: 2
-[DEBUG] back_end/emmiters.cpp:147:emitName(): Случай NAME локальяная переменная
+[DEBUG] back_end/emmiters.cpp:348:emitInitFunc(): вышел из emitInitFunc, node = 0x503000000340
+[DEBUG] back_end/emmiters.cpp:155:emitName(): offset: 0
+[DEBUG] back_end/emmiters.cpp:157:emitName(): зашел в emitName, node = 0x5030000003a0
+[DEBUG] back_end/emmiters.cpp:165:emitName(): Случай NAME локальяная переменная
+[DEBUG] back_end/emmiters.cpp:386:emitLocaleVar(): зашел в emitLocaleVar, node = 0x5030000003a0
+[DEBUG] back_end/spuNames.cpp:47:getLocalVarAddr(): зашел в getLocalVar
+[DEBUG] back_end/spuNames.cpp:103:createLocaleVarAddr(): stackFrameOffset = 0
+[DEBUG] back_end/spuNames.cpp:137:reallocateSpuNameTable(): start reallocation
+[DEBUG] back_end/spuNames.cpp:147:reallocateSpuNameTable(): ended reallocation
+[DEBUG] back_end/spuNames.cpp:112:createLocaleVarAddr(): Создал новую локальную переменную
+[DEBUG] back_end/emmiters.cpp:180:emitNumber(): зашел в emitNumber, node = 0x503000000520
+[DEBUG] back_end/emmiters.cpp:184:emitNumber(): вышел из emitNumber, node = 0x503000000520
+[DEBUG] back_end/emmiters.cpp:155:emitName(): offset: 1
+[DEBUG] back_end/emmiters.cpp:157:emitName(): зашел в emitName, node = 0x5030000004c0
+[DEBUG] back_end/emmiters.cpp:165:emitName(): Случай NAME локальяная переменная
+[DEBUG] back_end/emmiters.cpp:386:emitLocaleVar(): зашел в emitLocaleVar, node = 0x5030000004c0
+[DEBUG] back_end/spuNames.cpp:47:getLocalVarAddr(): зашел в getLocalVar
+[DEBUG] back_end/spuNames.cpp:103:createLocaleVarAddr(): stackFrameOffset = 1
+[DEBUG] back_end/spuNames.cpp:137:reallocateSpuNameTable(): start reallocation
+[DEBUG] back_end/spuNames.cpp:147:reallocateSpuNameTable(): ended reallocation
+[DEBUG] back_end/spuNames.cpp:112:createLocaleVarAddr(): Создал новую локальную переменную
+[DEBUG] back_end/emmiters.cpp:155:emitName(): offset: 2
+[DEBUG] back_end/emmiters.cpp:157:emitName(): зашел в emitName, node = 0x503000000700
+[DEBUG] back_end/emmiters.cpp:165:emitName(): Случай NAME локальяная переменная
+[DEBUG] back_end/emmiters.cpp:386:emitLocaleVar(): зашел в emitLocaleVar, node = 0x503000000700
 [DEBUG] back_end/spuNames.cpp:47:getLocalVarAddr(): зашел в getLocalVar
 [DEBUG] back_end/spuNames.cpp:52:getLocalVarAddr(): сущетвует такая переменная в getLocalVar
-[DEBUG] back_end/emmiters.cpp:139:emitName(): offset: 2
-[DEBUG] back_end/emmiters.cpp:147:emitName(): Случай NAME локальяная переменная
+[DEBUG] back_end/emmiters.cpp:408:emitLocaleVar(): вышел из emitLocaleVar, node = 0x503000000700
+[DEBUG] back_end/emmiters.cpp:180:emitNumber(): зашел в emitNumber, node = 0x503000000760
+[DEBUG] back_end/emmiters.cpp:184:emitNumber(): вышел из emitNumber, node = 0x503000000760
+[DEBUG] back_end/emmiters.cpp:191:emitAdd(): зашел в emitAdd, node = 0x5030000006a0
+[DEBUG] back_end/emmiters.cpp:195:emitAdd(): вышел из emitAdd, node = 0x5030000006a0
+[DEBUG] back_end/emmiters.cpp:155:emitName(): offset: 2
+[DEBUG] back_end/emmiters.cpp:157:emitName(): зашел в emitName, node = 0x503000000640
+[DEBUG] back_end/emmiters.cpp:165:emitName(): Случай NAME локальяная переменная
+[DEBUG] back_end/emmiters.cpp:386:emitLocaleVar(): зашел в emitLocaleVar, node = 0x503000000640
 [DEBUG] back_end/spuNames.cpp:47:getLocalVarAddr(): зашел в getLocalVar
 [DEBUG] back_end/spuNames.cpp:52:getLocalVarAddr(): сущетвует такая переменная в getLocalVar
+[DEBUG] back_end/emmiters.cpp:155:emitName(): offset: 2
+[DEBUG] back_end/emmiters.cpp:157:emitName(): зашел в emitName, node = 0x5030000008e0
+[DEBUG] back_end/emmiters.cpp:165:emitName(): Случай NAME локальяная переменная
+[DEBUG] back_end/emmiters.cpp:386:emitLocaleVar(): зашел в emitLocaleVar, node = 0x5030000008e0
+[DEBUG] back_end/spuNames.cpp:47:getLocalVarAddr(): зашел в getLocalVar
+[DEBUG] back_end/spuNames.cpp:52:getLocalVarAddr(): сущетвует такая переменная в getLocalVar
+[DEBUG] back_end/emmiters.cpp:408:emitLocaleVar(): вышел из emitLocaleVar, node = 0x5030000008e0
+[DEBUG] back_end/emmiters.cpp:355:emitCallFunc(): зашел в emitCallFunc, node = 0x503000000940
+[DEBUG] back_end/emmiters.cpp:155:emitName(): offset: 2
+[DEBUG] back_end/emmiters.cpp:157:emitName(): зашел в emitName, node = 0x5030000009a0
+[DEBUG] back_end/emmiters.cpp:165:emitName(): Случай NAME локальяная переменная
+[DEBUG] back_end/emmiters.cpp:386:emitLocaleVar(): зашел в emitLocaleVar, node = 0x5030000009a0
+[DEBUG] back_end/spuNames.cpp:47:getLocalVarAddr(): зашел в getLocalVar
+[DEBUG] back_end/spuNames.cpp:52:getLocalVarAddr(): сущетвует такая переменная в getLocalVar
+[DEBUG] back_end/emmiters.cpp:408:emitLocaleVar(): вышел из emitLocaleVar, node = 0x5030000009a0
 [DEBUG] general/strFunc.cpp:240:utf8StrLen(): started len
 [DEBUG] general/strFunc.cpp:246:utf8StrLen(): count len: 0, curStrPos = тест
 [DEBUG] general/strFunc.cpp:246:utf8StrLen(): count len: 2, curStrPos = ест
@@ -234,21 +310,62 @@
 [DEBUG] general/strFunc.cpp:215:transliterate(): curStrPos: ест 
 [DEBUG] general/strFunc.cpp:215:transliterate(): curStrPos: ст 
 [DEBUG] general/strFunc.cpp:215:transliterate(): curStrPos: т 
-[DEBUG] back_end/emmiters.cpp:139:emitName(): offset: 2
-[DEBUG] back_end/emmiters.cpp:142:emitName(): Случай NAME глобальная переменная
-[DEBUG] back_end/spuNames.cpp:65:getGlobalVarAddr(): spuNameTable=0x5030000007c0 data=0x508000000020 size=3 cap=4
-[DEBUG] back_end/emmiters.cpp:139:emitName(): offset: 2
-[DEBUG] back_end/emmiters.cpp:142:emitName(): Случай NAME глобальная переменная
-[DEBUG] back_end/spuNames.cpp:65:getGlobalVarAddr(): spuNameTable=0x5030000007c0 data=0x508000000020 size=3 cap=4
-[DEBUG] back_end/emmiters.cpp:139:emitName(): offset: 2
-[DEBUG] back_end/emmiters.cpp:142:emitName(): Случай NAME глобальная переменная
-[DEBUG] back_end/spuNames.cpp:65:getGlobalVarAddr(): spuNameTable=0x5030000007c0 data=0x508000000020 size=4 cap=4
-[DEBUG] back_end/emmiters.cpp:139:emitName(): offset: 2
-[DEBUG] back_end/emmiters.cpp:152:emitName(): Случай NAME вызов функции
-[DEBUG] back_end/emmiters.cpp:139:emitName(): offset: 2
-[DEBUG] back_end/emmiters.cpp:147:emitName(): Случай NAME локальяная переменная
+[DEBUG] back_end/emmiters.cpp:378:emitCallFunc(): вышел из emitCallFunc, node = 0x503000000940
+[DEBUG] back_end/emmiters.cpp:213:emitMul(): зашел в emitMul, node = 0x503000000880
+[DEBUG] back_end/emmiters.cpp:217:emitMul(): вышел из emitMul, node = 0x503000000880
+[DEBUG] back_end/emmiters.cpp:155:emitName(): offset: 2
+[DEBUG] back_end/emmiters.cpp:157:emitName(): зашел в emitName, node = 0x503000000820
+[DEBUG] back_end/emmiters.cpp:165:emitName(): Случай NAME локальяная переменная
+[DEBUG] back_end/emmiters.cpp:386:emitLocaleVar(): зашел в emitLocaleVar, node = 0x503000000820
 [DEBUG] back_end/spuNames.cpp:47:getLocalVarAddr(): зашел в getLocalVar
 [DEBUG] back_end/spuNames.cpp:52:getLocalVarAddr(): сущетвует такая переменная в getLocalVar
+[DEBUG] back_end/emmiters.cpp:155:emitName(): offset: 2
+[DEBUG] back_end/emmiters.cpp:157:emitName(): зашел в emitName, node = 0x5030000003a0
+[DEBUG] back_end/emmiters.cpp:160:emitName(): Случай NAME глобальная переменная
+[DEBUG] back_end/emmiters.cpp:415:emitGlobalVar(): зашел в emitGlobalVar, node = 0x5030000003a0
+[DEBUG] back_end/spuNames.cpp:65:getGlobalVarAddr(): spuNameTable=0x503000000a00 data=0x508000000020 size=3 cap=4
+[DEBUG] back_end/spuNames.cpp:74:getGlobalVarAddr(): сущетвует такая переменная в getGloballVar
+[DEBUG] back_end/emmiters.cpp:427:emitGlobalVar(): вышел из emitGlobalVar, node = 0x5030000003a0
+[DEBUG] back_end/emmiters.cpp:180:emitNumber(): зашел в emitNumber, node = 0x503000000520
+[DEBUG] back_end/emmiters.cpp:184:emitNumber(): вышел из emitNumber, node = 0x503000000520
+[DEBUG] back_end/emmiters.cpp:155:emitName(): offset: 2
+[DEBUG] back_end/emmiters.cpp:157:emitName(): зашел в emitName, node = 0x5030000004c0
+[DEBUG] back_end/emmiters.cpp:160:emitName(): Случай NAME глобальная переменная
+[DEBUG] back_end/emmiters.cpp:415:emitGlobalVar(): зашел в emitGlobalVar, node = 0x5030000004c0
+[DEBUG] back_end/spuNames.cpp:65:getGlobalVarAddr(): spuNameTable=0x503000000a00 data=0x508000000020 size=3 cap=4
+[DEBUG] back_end/spuNames.cpp:93:createGlobalVarAddr(): Создал новую глобальную переменную
+[DEBUG] back_end/emmiters.cpp:155:emitName(): offset: 2
+[DEBUG] back_end/emmiters.cpp:157:emitName(): зашел в emitName, node = 0x503000000700
+[DEBUG] back_end/emmiters.cpp:160:emitName(): Случай NAME глобальная переменная
+[DEBUG] back_end/emmiters.cpp:415:emitGlobalVar(): зашел в emitGlobalVar, node = 0x503000000700
+[DEBUG] back_end/spuNames.cpp:65:getGlobalVarAddr(): spuNameTable=0x503000000a00 data=0x508000000020 size=4 cap=4
+[DEBUG] back_end/spuNames.cpp:74:getGlobalVarAddr(): сущетвует такая переменная в getGloballVar
+[DEBUG] back_end/emmiters.cpp:427:emitGlobalVar(): вышел из emitGlobalVar, node = 0x503000000700
+[DEBUG] back_end/emmiters.cpp:180:emitNumber(): зашел в emitNumber, node = 0x503000000760
+[DEBUG] back_end/emmiters.cpp:184:emitNumber(): вышел из emitNumber, node = 0x503000000760
+[DEBUG] back_end/emmiters.cpp:191:emitAdd(): зашел в emitAdd, node = 0x5030000006a0
+[DEBUG] back_end/emmiters.cpp:195:emitAdd(): вышел из emitAdd, node = 0x5030000006a0
+[DEBUG] back_end/emmiters.cpp:155:emitName(): offset: 2
+[DEBUG] back_end/emmiters.cpp:157:emitName(): зашел в emitName, node = 0x503000000640
+[DEBUG] back_end/emmiters.cpp:160:emitName(): Случай NAME глобальная переменная
+[DEBUG] back_end/emmiters.cpp:415:emitGlobalVar(): зашел в emitGlobalVar, node = 0x503000000640
+[DEBUG] back_end/spuNames.cpp:65:getGlobalVarAddr(): spuNameTable=0x503000000a00 data=0x508000000020 size=4 cap=4
+[DEBUG] back_end/spuNames.cpp:74:getGlobalVarAddr(): сущетвует такая переменная в getGloballVar
+[DEBUG] back_end/emmiters.cpp:155:emitName(): offset: 2
+[DEBUG] back_end/emmiters.cpp:157:emitName(): зашел в emitName, node = 0x5030000008e0
+[DEBUG] back_end/emmiters.cpp:160:emitName(): Случай NAME глобальная переменная
+[DEBUG] back_end/emmiters.cpp:415:emitGlobalVar(): зашел в emitGlobalVar, node = 0x5030000008e0
+[DEBUG] back_end/spuNames.cpp:65:getGlobalVarAddr(): spuNameTable=0x503000000a00 data=0x508000000020 size=4 cap=4
+[DEBUG] back_end/spuNames.cpp:74:getGlobalVarAddr(): сущетвует такая переменная в getGloballVar
+[DEBUG] back_end/emmiters.cpp:427:emitGlobalVar(): вышел из emitGlobalVar, node = 0x5030000008e0
+[DEBUG] back_end/emmiters.cpp:355:emitCallFunc(): зашел в emitCallFunc, node = 0x503000000940
+[DEBUG] back_end/emmiters.cpp:155:emitName(): offset: 2
+[DEBUG] back_end/emmiters.cpp:157:emitName(): зашел в emitName, node = 0x5030000009a0
+[DEBUG] back_end/emmiters.cpp:160:emitName(): Случай NAME глобальная переменная
+[DEBUG] back_end/emmiters.cpp:415:emitGlobalVar(): зашел в emitGlobalVar, node = 0x5030000009a0
+[DEBUG] back_end/spuNames.cpp:65:getGlobalVarAddr(): spuNameTable=0x503000000a00 data=0x508000000020 size=4 cap=4
+[DEBUG] back_end/spuNames.cpp:74:getGlobalVarAddr(): сущетвует такая переменная в getGloballVar
+[DEBUG] back_end/emmiters.cpp:427:emitGlobalVar(): вышел из emitGlobalVar, node = 0x5030000009a0
 [DEBUG] general/strFunc.cpp:240:utf8StrLen(): started len
 [DEBUG] general/strFunc.cpp:246:utf8StrLen(): count len: 0, curStrPos = тест
 [DEBUG] general/strFunc.cpp:246:utf8StrLen(): count len: 2, curStrPos = ест
@@ -259,12 +376,19 @@
 [DEBUG] general/strFunc.cpp:215:transliterate(): curStrPos: ест 
 [DEBUG] general/strFunc.cpp:215:transliterate(): curStrPos: ст 
 [DEBUG] general/strFunc.cpp:215:transliterate(): curStrPos: т 
-[DEBUG] back_end/emmiters.cpp:139:emitName(): offset: 2
-[DEBUG] back_end/emmiters.cpp:142:emitName(): Случай NAME глобальная переменная
-[DEBUG] back_end/spuNames.cpp:65:getGlobalVarAddr(): spuNameTable=0x5030000007c0 data=0x508000000020 size=4 cap=4
-[DEBUG] back_end/emmiters.cpp:139:emitName(): offset: 2
-[DEBUG] back_end/emmiters.cpp:142:emitName(): Случай NAME глобальная переменная
-[DEBUG] back_end/spuNames.cpp:65:getGlobalVarAddr(): spuNameTable=0x5030000007c0 data=0x508000000020 size=4 cap=4
+[DEBUG] back_end/emmiters.cpp:378:emitCallFunc(): вышел из emitCallFunc, node = 0x503000000940
+[DEBUG] back_end/emmiters.cpp:213:emitMul(): зашел в emitMul, node = 0x503000000880
+[DEBUG] back_end/emmiters.cpp:217:emitMul(): вышел из emitMul, node = 0x503000000880
+[DEBUG] back_end/emmiters.cpp:155:emitName(): offset: 2
+[DEBUG] back_end/emmiters.cpp:157:emitName(): зашел в emitName, node = 0x503000000820
+[DEBUG] back_end/emmiters.cpp:160:emitName(): Случай NAME глобальная переменная
+[DEBUG] back_end/emmiters.cpp:415:emitGlobalVar(): зашел в emitGlobalVar, node = 0x503000000820
+[DEBUG] back_end/spuNames.cpp:65:getGlobalVarAddr(): spuNameTable=0x503000000a00 data=0x508000000020 size=4 cap=4
+[DEBUG] back_end/spuNames.cpp:74:getGlobalVarAddr(): сущетвует такая переменная в getGloballVar
+[DEBUG] back_end/emmiters.cpp:155:emitName(): offset: 2
+[DEBUG] back_end/emmiters.cpp:157:emitName(): зашел в emitName, node = 0x503000000340
+[DEBUG] back_end/emmiters.cpp:170:emitName(): Случай NAME не переменная
+[DEBUG] back_end/emmiters.cpp:173:emitName(): вышел из emitName, node = 0x503000000340
 [DEBUG] core/expressionTree.cpp:12:freeExpressionNodeData(): entered freeExpressionNodeData func with node 0x5030000001c0, withoutRoot = 0, depth = 5
 [DEBUG] general/tree/tree.cpp:143:freeNode(): free: 0x5030000001c0
 [DEBUG] general/tree/tree.cpp:152:freeNode(): end freeing memory
@@ -298,20 +422,38 @@
 [DEBUG] core/expressionTree.cpp:12:freeExpressionNodeData(): entered freeExpressionNodeData func with node 0x503000000460, withoutRoot = 0, depth = 4
 [DEBUG] general/tree/tree.cpp:143:freeNode(): free: 0x503000000460
 [DEBUG] general/tree/tree.cpp:152:freeNode(): end freeing memory
-[DEBUG] core/expressionTree.cpp:12:freeExpressionNodeData(): entered freeExpressionNodeData func with node 0x5030000005e0, withoutRoot = 0, depth = 5
-[DEBUG] general/tree/tree.cpp:143:freeNode(): free: 0x5030000005e0
+[DEBUG] core/expressionTree.cpp:12:freeExpressionNodeData(): entered freeExpressionNodeData func with node 0x503000000640, withoutRoot = 0, depth = 6
+[DEBUG] general/tree/tree.cpp:143:freeNode(): free: 0x503000000640
 [DEBUG] general/tree/tree.cpp:152:freeNode(): end freeing memory
-[DEBUG] core/expressionTree.cpp:12:freeExpressionNodeData(): entered freeExpressionNodeData func with node 0x5030000006a0, withoutRoot = 0, depth = 6
-[DEBUG] general/tree/tree.cpp:143:freeNode(): free: 0x5030000006a0
+[DEBUG] core/expressionTree.cpp:12:freeExpressionNodeData(): entered freeExpressionNodeData func with node 0x503000000700, withoutRoot = 0, depth = 7
+[DEBUG] general/tree/tree.cpp:143:freeNode(): free: 0x503000000700
 [DEBUG] general/tree/tree.cpp:152:freeNode(): end freeing memory
 [DEBUG] core/expressionTree.cpp:12:freeExpressionNodeData(): entered freeExpressionNodeData func with node 0x503000000760, withoutRoot = 0, depth = 7
 [DEBUG] general/tree/tree.cpp:143:freeNode(): free: 0x503000000760
 [DEBUG] general/tree/tree.cpp:152:freeNode(): end freeing memory
-[DEBUG] core/expressionTree.cpp:12:freeExpressionNodeData(): entered freeExpressionNodeData func with node 0x503000000700, withoutRoot = 0, depth = 6
-[DEBUG] general/tree/tree.cpp:143:freeNode(): free: 0x503000000700
+[DEBUG] core/expressionTree.cpp:12:freeExpressionNodeData(): entered freeExpressionNodeData func with node 0x5030000006a0, withoutRoot = 0, depth = 6
+[DEBUG] general/tree/tree.cpp:143:freeNode(): free: 0x5030000006a0
 [DEBUG] general/tree/tree.cpp:152:freeNode(): end freeing memory
-[DEBUG] core/expressionTree.cpp:12:freeExpressionNodeData(): entered freeExpressionNodeData func with node 0x503000000640, withoutRoot = 0, depth = 5
-[DEBUG] general/tree/tree.cpp:143:freeNode(): free: 0x503000000640
+[DEBUG] core/expressionTree.cpp:12:freeExpressionNodeData(): entered freeExpressionNodeData func with node 0x5030000005e0, withoutRoot = 0, depth = 5
+[DEBUG] general/tree/tree.cpp:143:freeNode(): free: 0x5030000005e0
+[DEBUG] general/tree/tree.cpp:152:freeNode(): end freeing memory
+[DEBUG] core/expressionTree.cpp:12:freeExpressionNodeData(): entered freeExpressionNodeData func with node 0x503000000820, withoutRoot = 0, depth = 6
+[DEBUG] general/tree/tree.cpp:143:freeNode(): free: 0x503000000820
+[DEBUG] general/tree/tree.cpp:152:freeNode(): end freeing memory
+[DEBUG] core/expressionTree.cpp:12:freeExpressionNodeData(): entered freeExpressionNodeData func with node 0x5030000008e0, withoutRoot = 0, depth = 7
+[DEBUG] general/tree/tree.cpp:143:freeNode(): free: 0x5030000008e0
+[DEBUG] general/tree/tree.cpp:152:freeNode(): end freeing memory
+[DEBUG] core/expressionTree.cpp:12:freeExpressionNodeData(): entered freeExpressionNodeData func with node 0x5030000009a0, withoutRoot = 0, depth = 8
+[DEBUG] general/tree/tree.cpp:143:freeNode(): free: 0x5030000009a0
+[DEBUG] general/tree/tree.cpp:152:freeNode(): end freeing memory
+[DEBUG] core/expressionTree.cpp:12:freeExpressionNodeData(): entered freeExpressionNodeData func with node 0x503000000940, withoutRoot = 0, depth = 7
+[DEBUG] general/tree/tree.cpp:143:freeNode(): free: 0x503000000940
+[DEBUG] general/tree/tree.cpp:152:freeNode(): end freeing memory
+[DEBUG] core/expressionTree.cpp:12:freeExpressionNodeData(): entered freeExpressionNodeData func with node 0x503000000880, withoutRoot = 0, depth = 6
+[DEBUG] general/tree/tree.cpp:143:freeNode(): free: 0x503000000880
+[DEBUG] general/tree/tree.cpp:152:freeNode(): end freeing memory
+[DEBUG] core/expressionTree.cpp:12:freeExpressionNodeData(): entered freeExpressionNodeData func with node 0x5030000007c0, withoutRoot = 0, depth = 5
+[DEBUG] general/tree/tree.cpp:143:freeNode(): free: 0x5030000007c0
 [DEBUG] general/tree/tree.cpp:152:freeNode(): end freeing memory
 [DEBUG] core/expressionTree.cpp:12:freeExpressionNodeData(): entered freeExpressionNodeData func with node 0x503000000580, withoutRoot = 0, depth = 4
 [DEBUG] general/tree/tree.cpp:143:freeNode(): free: 0x503000000580

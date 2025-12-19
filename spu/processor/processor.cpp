@@ -26,6 +26,7 @@ processorStatus processorCtor(processor* spu, ram_t* ram){
     assert(spu->regs);
 
     spu->regs[0] = STACK_FRAME_BASE;
+    spu->regs[1] = STACK_FRAME_BASE;
 
     spu->RAM  = ram;
 

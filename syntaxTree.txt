@@ -1,1 +1,1 @@
-( ; ( main nil ( ; ( = ( защитник nil nil )( 5 nil nil ))( тест ( защитник nil nil )nil )))( тест ( защитник nil nil )( ; ( = ( ваня nil nil )( 1 nil nil ))( = ( ваня nil nil )( * ( ваня nil nil )( тест ( защитник nil nil )nil ))))))
+( ; ( main nil ( ; ( = ( защитник nil nil )( 5 nil nil ))( тест ( защитник nil nil )nil )))( тест ( защитник nil nil )( ; ( = ( ваня nil nil )( 1 nil nil ))( ; ( = ( защитник nil nil )( + ( защитник nil nil )( 1 nil nil )))( = ( ваня nil nil )( * ( ваня nil nil )( тест ( защитник nil nil )nil )))))))

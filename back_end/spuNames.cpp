@@ -71,6 +71,7 @@ int getGlobalVarAddr(spuNameTable_t* spuNameTable, const char* name){
     for(size_t curNameInd = 0; curNameInd < _SPU_NAME_TABLE_SIZE(spuNameTable); curNameInd++){
         if(isEqualStrings(_SPU_NAME_DATA_STR(spuNameTable->data[curNameInd]), name) && 
            _SPU_NAME_SCOPE(spuNameTable->data[curNameInd]) == GLOBAL){
+            LPRINTF("сущетвует такая переменная в getGloballVar");
             return _SPU_NAME_ADDR(spuNameTable->data[curNameInd]);
         }
     }
@@ -89,6 +90,8 @@ static int createGlobalVarAddr(spuNameTable_t* spuNameTable, const char* name){
     
     _SPU_NAME_SCOPE(spuNameTable->data[curSize]) = GLOBAL;
 
+    LPRINTF("Создал новую глобальную переменную");
+
     return addr;
 }
 
@@ -105,6 +108,8 @@ static int createLocaleVarAddr(spuNameTable_t* spuNameTable, const char* name, s
     
     _SPU_NAME_SCOPE(spuNameTable->data[curSize]) = LOCALE;
     (*stackFrameOffset)++;
+
+    LPRINTF("Создал новую локальную переменную");
 
     return addr;
 }
