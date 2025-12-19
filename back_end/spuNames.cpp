@@ -8,7 +8,10 @@
 #include <malloc.h>
 #include <assert.h>
 
-static int createVarAddr(spuNameTable_t* spuNameTable, const char* name);
+static int createGlobalVarAddr(spuNameTable_t* spuNameTable, const char* name);
+static int createLocaleVarAddr(spuNameTable_t* spuNameTable, const char* name, size_t* stackFrameOffset);
+static void createVarAddr(spuNameTable_t* spuNameTable, const char* name, int addr);
+
 static spuNameTable_t* reallocateSpuNameTable(spuNameTable_t* spuNameTable);
 
 spuNameTable_t* spuNameTableCtor(spuNameTable_t* spuNameTable){
@@ -37,7 +40,25 @@ spuNameTable_t* spuNameTableDtor(spuNameTable_t* spuNameTable){
     return NULL;
 }
 
-int getVarAddr(spuNameTable_t* spuNameTable, const char* name){
+int getLocalVarAddr(spuNameTable_t* spuNameTable, const char* name, size_t* stackFrameOffset){
+    assert(spuNameTable);
+    assert(name);
+
+    LPRINTF("зашел в getLocalVar");
+
+    for(size_t curNameInd = 0; curNameInd < _SPU_NAME_TABLE_SIZE(spuNameTable); curNameInd++){
+        if(isEqualStrings(_SPU_NAME_DATA_STR(spuNameTable->data[curNameInd]), name) && 
+           _SPU_NAME_SCOPE(spuNameTable->data[curNameInd]) == LOCALE){
+            LPRINTF("сущетвует такая переменная в getLocalVar");
+            
+            return _SPU_NAME_ADDR(spuNameTable->data[curNameInd]);
+        }
+    }
+
+    return createLocaleVarAddr(spuNameTable, name, stackFrameOffset); 
+} 
+
+int getGlobalVarAddr(spuNameTable_t* spuNameTable, const char* name){ 
     assert(spuNameTable);
     assert(name);
 
@@ -48,15 +69,47 @@ int getVarAddr(spuNameTable_t* spuNameTable, const char* name){
         spuNameTable->capacity);
 
     for(size_t curNameInd = 0; curNameInd < _SPU_NAME_TABLE_SIZE(spuNameTable); curNameInd++){
-        if(isEqualStrings(_SPU_NAME_DATA_STR(spuNameTable->data[curNameInd]), name) ){
+        if(isEqualStrings(_SPU_NAME_DATA_STR(spuNameTable->data[curNameInd]), name) && 
+           _SPU_NAME_SCOPE(spuNameTable->data[curNameInd]) == GLOBAL){
             return _SPU_NAME_ADDR(spuNameTable->data[curNameInd]);
         }
     }
 
-    return createVarAddr(spuNameTable, name);
+    return createGlobalVarAddr(spuNameTable, name);
 }
 
-static int createVarAddr(spuNameTable_t* spuNameTable, const char* name){
+static int createGlobalVarAddr(spuNameTable_t* spuNameTable, const char* name){
+    assert(spuNameTable);
+    assert(name);
+
+    int addr = _SPU_NAME_TABLE_SIZE(spuNameTable);
+    size_t curSize = _SPU_NAME_TABLE_SIZE(spuNameTable);
+
+    createVarAddr(spuNameTable, name, addr);
+    
+    _SPU_NAME_SCOPE(spuNameTable->data[curSize]) = GLOBAL;
+
+    return addr;
+}
+
+static int createLocaleVarAddr(spuNameTable_t* spuNameTable, const char* name, size_t* stackFrameOffset){
+    assert(spuNameTable);
+    assert(name);
+    assert(stackFrameOffset);
+    
+    LPRINTF("stackFrameOffset = %lu", *stackFrameOffset);
+    int addr = *stackFrameOffset;
+    size_t curSize = _SPU_NAME_TABLE_SIZE(spuNameTable);
+    
+    createVarAddr(spuNameTable, name, addr);
+    
+    _SPU_NAME_SCOPE(spuNameTable->data[curSize]) = LOCALE;
+    (*stackFrameOffset)++;
+
+    return addr;
+}
+
+static void createVarAddr(spuNameTable_t* spuNameTable, const char* name, int addr){
     assert(spuNameTable);
     assert(name);
 
@@ -64,19 +117,13 @@ static int createVarAddr(spuNameTable_t* spuNameTable, const char* name){
         reallocateSpuNameTable(spuNameTable);
     }
 
-    int addr = _SPU_NAME_TABLE_SIZE(spuNameTable);
-
     size_t curSize = _SPU_NAME_TABLE_SIZE(spuNameTable);
-
-    LPRINTF("WRITE slot addr=%p", &spuNameTable->data[curSize]);
 
     _SPU_NAME_DATA_STR(spuNameTable->data[curSize])  = myStrDup(name);
     _SPU_NAME_DATA_TYPE(spuNameTable->data[curSize]) = VARIABLE;
     _SPU_NAME_ADDR(spuNameTable->data[curSize])      = addr;
 
     _SPU_NAME_TABLE_SIZE(spuNameTable)++;
-
-    return addr;
 }
 
 static spuNameTable_t* reallocateSpuNameTable(spuNameTable_t* spuNameTable){

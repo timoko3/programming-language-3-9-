@@ -94,7 +94,6 @@ static command_t commands[]{
     {DRAW,     draw,       0, NO_PARAM,     "DRAW"   }
 };
 
-
 const size_t N_REGISTERS   = 10;
 const size_t PREAMBLE_SIZE = 2;
 const int SIGNATURE        = 999;

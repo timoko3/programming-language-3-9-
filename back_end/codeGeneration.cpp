@@ -24,6 +24,7 @@ void genAsmCode(tree_t* syntaxTree){
     _CONTEXT_FILE_PTR(&context) = asmFilePtr;
     context.names  = spuNameTableCtor(NULL);
     context.labels = labelsTableCtor(NULL);
+    context.stackFrameOffset = 0;
 
     emitNode(syntaxTree->root, &context);
 

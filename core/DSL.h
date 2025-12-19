@@ -22,10 +22,10 @@
 #define _EMIT_RULE_TYPE(emitRule) (emitRule)->type
 #define _EMIT_RULE_EMITTER(emitRule) (emitRule)->emitter
 
-#define _CONTEXT_FILE_PTR(context)       (context)->filePtr
-#define _CONTEXT_NAMES(context)          (context)->names
-#define _CONTEXT_LABELS(context)         (context)->labels
-// #define _CONTEXT_LABELS_AMOUNT(context)  (context)->labelsAmount
+#define _CONTEXT_FILE_PTR(context)         (context)->filePtr
+#define _CONTEXT_NAMES(context)            (context)->names
+#define _CONTEXT_LABELS(context)           (context)->labels
+#define _CONTEXT_STACK_FRAME_OFFSET(context) (context)->stackFrameOffset
 
 #define _SPU_NAME_TABLE_SIZE(spuNameTable) (spuNameTable)->size
 #define _SPU_NAME_TABLE_CAPACITY(spuNameTable) (spuNameTable)->capacity
@@ -34,6 +34,7 @@
 #define _SPU_NAME_DATA_STR(name) (name).str
 #define _SPU_NAME_DATA_TYPE(name) (name).type
 #define _SPU_NAME_ADDR(name) (name).addr
+#define _SPU_NAME_SCOPE(name) (name).scope
 
 #define _LABEL_DATA_PREFIX(label) (label)->prefix
 #define _LABEL_DATA_ID(label)  (label)->id

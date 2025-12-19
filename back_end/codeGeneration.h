@@ -10,6 +10,8 @@ struct codeGenContext{
     FILE*           filePtr;
     spuNameTable_t* names; 
     labelsTable_t*  labels; 
+    size_t          stackFrameBase;
+    size_t          stackFrameOffset;
 };
 
 void genAsmCode(tree_t* syntaxTree);

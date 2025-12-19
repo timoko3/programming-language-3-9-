@@ -8,6 +8,7 @@
 
 #include <stdio.h>
 
+void emitName     (treeNode_t* node, codeGenContext* context, variableScope scope);
 void emitNumber   (treeNode_t* node, codeGenContext* context);
 void emitAdd      (treeNode_t* node, codeGenContext* context);
 void emitSub      (treeNode_t* node, codeGenContext* context);
@@ -16,7 +17,8 @@ void emitDiv      (treeNode_t* node, codeGenContext* context);
 void emitIn       (treeNode_t* node, codeGenContext* context);
 void emitOut      (treeNode_t* node, codeGenContext* context);
 void emitHlt      (treeNode_t* node, codeGenContext* context);
-void emitVar      (treeNode_t* node, codeGenContext* context);
+void emitGlobalVar(treeNode_t* node, codeGenContext* context);
+void emitLocaleVar(treeNode_t* node, codeGenContext* context);
 void emitRet      (treeNode_t* node, codeGenContext* context);
 void emitInitFunc (treeNode_t* node, codeGenContext* context);
 void emitCallFunc (treeNode_t* node, codeGenContext* context);
@@ -70,13 +72,14 @@ emitter_t getEmitter(ASTnodeType type){
     return NULL;
 }   
 
-void emitNode(treeNode_t* node, codeGenContext* context){ 
+void emitNode(treeNode_t* node, codeGenContext* context, variableScope scope){ 
     assert(node);
     assert(context);
 
-    if(_NODE_TYPE(node) == NAME && _L(node) && _R(node)){
-        emitInitFunc(node, context);
+    if(_NODE_TYPE(node) == NAME){
+        emitName(node, context, scope);
     }
+
 
     if(_NODE_TYPE(node) == WHILE){
         emitWhile(node, context);
@@ -84,11 +87,17 @@ void emitNode(treeNode_t* node, codeGenContext* context){
     }
     else if(_NODE_TYPE(node) == IN){
         emitIn(node, context);
-        emitVar(node->left, context);
+        if (scope == GLOBAL)
+            emitGlobalVar(node->left, context);
+        else
+            emitLocaleVar(node->left, context);
         return;
     }
     else if(_NODE_TYPE(node) == OUT){
-        emitVar(node->left, context);
+        if (scope == GLOBAL)
+            emitGlobalVar(node->left, context);
+        else
+            emitLocaleVar(node->left, context);
         emitOut(node, context);
         return;
     }
@@ -99,18 +108,18 @@ void emitNode(treeNode_t* node, codeGenContext* context){
 
     if(_NODE_TYPE(node) == ASSIGN){
         if(_R(node)){
-            emitNode(_R(node), context);
+            emitNode(_R(node), context, scope);
         }
         if(_L(node)){
-            emitNode(_L(node), context);
+            emitNode(_L(node), context, scope);
         }
     }
-    else{
+    else {
         if(_L(node)){
-            emitNode(_L(node), context);
+            emitNode(_L(node), context, scope);
         }
         if(_R(node)){
-            emitNode(_R(node), context);
+            emitNode(_R(node), context, scope);
         }
     }
 
@@ -121,13 +130,49 @@ void emitNode(treeNode_t* node, codeGenContext* context){
     else if(_NODE_TYPE(node) == NUMBER){
         emitNumber(node, context);
     }
-    else if(_NODE_TYPE(node) == NAME){
-        if(!_R(node) && !_L(node)){
-            emitVar(node, context);
+}
+
+void emitName(treeNode_t* node, codeGenContext* context, variableScope scope){
+    assert(node);
+    assert(context);
+
+    LPRINTF("offset: %lu", _CONTEXT_STACK_FRAME_OFFSET(context));
+
+    if(!_L(node) && !_R(node) && scope == GLOBAL){
+        LPRINTF("Случай NAME глобальная переменная");
+        emitGlobalVar(node, context);
+        return;
+    }
+    else if(!_L(node) && !_R(node) && scope == LOCALE){
+        LPRINTF("Случай NAME локальяная переменная");
+        emitLocaleVar(node, context);
+        return;
+    }
+    else if(_L(node) && !_R(node)){
+        LPRINTF("Случай NAME вызов функции");
+
+        if(_L(node)){
+            emitNode(_L(node), context, LOCALE);
         }
-        else if(!_R(node)){
-            emitCallFunc(node, context);
+        if(_R(node)){
+            emitNode(_R(node), context, LOCALE);
         }
+
+        emitCallFunc(node, context);    
+        return;
+    }
+    else if(_L(node) && _R(node)){
+        LPRINTF("Случай NAME инициализая функции");
+
+        if(_L(node)){
+            emitNode(_L(node), context, LOCALE);
+        }
+        if(_R(node)){
+            emitNode(_R(node), context, LOCALE);
+        }
+
+        emitInitFunc(node, context);
+        return;
     }
 }
 
@@ -198,7 +243,13 @@ void emitRet(treeNode_t* node, codeGenContext* context){
     assert(node);
     assert(context);
 
+    fprintf(_CONTEXT_FILE_PTR(context), "PUSHREG BX \n");
+    fprintf(_CONTEXT_FILE_PTR(context), "POPREG  AX \n");
+    fprintf(_CONTEXT_FILE_PTR(context), "POPREG  BX \n");
+
     fprintf(_CONTEXT_FILE_PTR(context), "RET\n");
+
+    _CONTEXT_STACK_FRAME_OFFSET(context) = 0;
 }
 
 void emitGt(treeNode_t* node, codeGenContext* context){
@@ -242,16 +293,48 @@ void emitCallFunc(treeNode_t* node, codeGenContext* context){
     assert(node);
     assert(context);
 
+    fprintf(_CONTEXT_FILE_PTR(context), "\nPUSHREG AX \n");
+    fprintf(_CONTEXT_FILE_PTR(context), "POPREG BX  \n");
+    fprintf(_CONTEXT_FILE_PTR(context), "PUSHREG BX \n");
+    fprintf(_CONTEXT_FILE_PTR(context), "PUSH %lu   \n", _CONTEXT_STACK_FRAME_OFFSET(context));
+    fprintf(_CONTEXT_FILE_PTR(context), "ADD        \n");
+    fprintf(_CONTEXT_FILE_PTR(context), "POPREG AX  \n");
+    fprintf(_CONTEXT_FILE_PTR(context), "PUSHREG BX \n\n");
+
     char* labelName = transliterate( _NODE_VALUE_STR(node));
     fprintf(_CONTEXT_FILE_PTR(context), "CALL :%s\n", labelName);
+    
     free(labelName);
 }
 
-void emitVar(treeNode_t* node, codeGenContext* context){
+//заобертить 
+void emitLocaleVar(treeNode_t* node, codeGenContext* context){
+    assert(node);
+    assert(context);
+
+    int relativeAddr = getLocalVarAddr(_CONTEXT_NAMES(context), _NODE_VALUE_STR(node), &_CONTEXT_STACK_FRAME_OFFSET(context));
+
+    fprintf(_CONTEXT_FILE_PTR(context), "\nPUSHREG AX\n");
+    fprintf(_CONTEXT_FILE_PTR(context), "PUSH   %lu\n", relativeAddr);
+    fprintf(_CONTEXT_FILE_PTR(context), "ADD       \n");
+    fprintf(_CONTEXT_FILE_PTR(context), "POPREG CX \n\n");
+
+    treeNode_t* parent = _PAR(node);
+    if((parent && _NODE_TYPE(parent) == ASSIGN && node == _L(parent)) || 
+        (parent && _NODE_TYPE(parent) == IN)){
+
+
+            fprintf(_CONTEXT_FILE_PTR(context), "POPM [CX]\n");
+            return;
+        }
+    fprintf(_CONTEXT_FILE_PTR(context), "PUSHM [CX]\n");
+}
+
+void emitGlobalVar(treeNode_t* node, codeGenContext* context){
     assert(node);
     assert(context);   
 
-    int addr = getVarAddr(context->names, _NODE_VALUE_STR(node));
+    int addr = getGlobalVarAddr(context->names, _NODE_VALUE_STR(node));
 
     treeNode_t* parent = _PAR(node);
     if((parent && _NODE_TYPE(parent) == ASSIGN && node == _L(parent)) || 
@@ -260,6 +343,7 @@ void emitVar(treeNode_t* node, codeGenContext* context){
             return;
         }
     fprintf(_CONTEXT_FILE_PTR(context), "PUSHMA %d\n", addr);
+
 }
 
 void emitPlug(treeNode_t* node, codeGenContext* context){

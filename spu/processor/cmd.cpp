@@ -1,6 +1,8 @@
 #include "cmd_spu.h"
 #include "cmd_math.h"
 
+#include "../general/debug.h"
+
 #define $ fprintf(stderr, "MEOW in %s:%d\n", __FILE__, __LINE__);
 
 static bool unaryOperation(processor* spu, unaryHandler handler);
@@ -141,7 +143,7 @@ bool pushm(processor* spu){
     cmdParam_t regNumDouble = 0;
 
     spuGetArg(spu, &regNumDouble);
-
+    
     int regNum = (int) regNumDouble;
     spuPushReg(spu, &regNum);
 

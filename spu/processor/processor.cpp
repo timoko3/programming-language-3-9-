@@ -5,6 +5,8 @@
 
 #include <math.h>
 
+const double STACK_FRAME_BASE = 25;
+
 #define $ fprintf(stderr, "MEOW in %s:%d\n", __FILE__, __LINE__);
 
 static void simplePrintStack(stack* stk);
@@ -22,6 +24,9 @@ processorStatus processorCtor(processor* spu, ram_t* ram){
     spu->isWork = true;
     spu->regs = (regParam_t*) calloc(N_REGISTERS, sizeof(regParam_t));
     assert(spu->regs);
+
+    spu->regs[0] = STACK_FRAME_BASE;
+
     spu->RAM  = ram;
 
     return SPU_PROCESS_OK;

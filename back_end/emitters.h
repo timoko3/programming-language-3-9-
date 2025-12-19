@@ -8,7 +8,7 @@
 
 typedef void (*emitter_t) (treeNode_t*, codeGenContext*);
 
-void emitNode(treeNode_t* node, codeGenContext* context);
+void emitNode(treeNode_t* node, codeGenContext* context, variableScope scope = GLOBAL);
 emitter_t getEmitter(ASTnodeType type);
 
 #endif /* EMITTERS_H*/
