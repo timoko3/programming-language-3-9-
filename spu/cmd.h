@@ -36,7 +36,9 @@ enum cmdOpcodes{
     LT,
     LE,
     GT,
-    GE
+    GE,
+    EQUAL,
+    NEQUAL
 };
 
 enum param_t{
@@ -67,6 +69,9 @@ static command_t commands[]{
     {LE,       le,         0, NO_PARAM,     "LE"     },
     {GT,       gt,         0, NO_PARAM,     "GT"     },
     {GE,       ge,         0, NO_PARAM,     "GE"     },
+    {EQUAL,    eq,         0, NO_PARAM,     "EQ"     },
+    {NEQUAL,   neq,        0, NO_PARAM,     "NEQ"    },
+    
     
     {JMP,      jmp,        1, LABEL_PARAM,  "JMP"    },
     {JB,       jb,         1, LABEL_PARAM,  "JB"     },

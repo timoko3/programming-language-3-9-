@@ -27,6 +27,8 @@ void emitGt       (treeNode_t* node, codeGenContext* context);
 void emitLt       (treeNode_t* node, codeGenContext* context);
 void emitGe       (treeNode_t* node, codeGenContext* context);
 void emitLe       (treeNode_t* node, codeGenContext* context);
+void emitEqual    (treeNode_t* node, codeGenContext* context);
+void emitNEqual   (treeNode_t* node, codeGenContext* context);
 void emitWhile    (treeNode_t* node, codeGenContext* context, variableScope scope);
 void emitIf       (treeNode_t* node, codeGenContext* context, variableScope scope);
 void emitSqrt     (treeNode_t* node, codeGenContext* context);
@@ -50,6 +52,8 @@ static emitRule emittersTable[] = {
     {LT,            emitLt    },
     {GE,            emitGe    },
     {LE,            emitLe    },
+    {EQUAL,         emitEqual },
+    {NOT_EQUAL,     emitNEqual},
     {SQRT,          emitSqrt  },
     {IF,            emitPlug  },
     {WHILE,         emitPlug  },
@@ -337,6 +341,28 @@ void emitLe(treeNode_t* node, codeGenContext* context){
     LPRINTF("вышел из emitLe, node = %p", node);
 }
 
+void emitEqual(treeNode_t* node, codeGenContext* context){
+    assert(node);
+    assert(context);
+
+    LPRINTF("зашел в emitEqual, node = %p", node);
+
+    fprintf(_CONTEXT_FILE_PTR(context), "EQ\n");
+
+    LPRINTF("вышел из emitEqual, node = %p", node);
+}
+
+void emitNEqual(treeNode_t* node, codeGenContext* context){
+    assert(node);
+    assert(context);
+
+    LPRINTF("зашел в emitNEqual, node = %p", node);
+
+    fprintf(_CONTEXT_FILE_PTR(context), "NEQ\n");
+
+    LPRINTF("вышел из emitNEqual, node = %p", node);
+}
+
 void emitInitFunc(treeNode_t* node, codeGenContext* context){
     assert(node);
     assert(context);
@@ -358,12 +384,9 @@ void emitCallFunc(treeNode_t* node, codeGenContext* context,  variableScope scop
 
     LPRINTF("зашел в emitCallFunc, node = %p", node);
 
-    static size_t regShift = 0;
-    regShift++;
-
     if(_L(node)){
         emitNode(_L(node), context, scope);
-        fprintf(_CONTEXT_FILE_PTR(context), "\nPOPREG %cX\n", 'D' + regShift);
+        fprintf(_CONTEXT_FILE_PTR(context), "\nPOPREG DX\n");
     }
 
     fprintf(_CONTEXT_FILE_PTR(context), "\nPUSHREG BX\n");
@@ -375,10 +398,7 @@ void emitCallFunc(treeNode_t* node, codeGenContext* context,  variableScope scop
     fprintf(_CONTEXT_FILE_PTR(context), "ADD \n");
     fprintf(_CONTEXT_FILE_PTR(context), "POPREG AX\n");
 
-    while(regShift > 0){
-        fprintf(_CONTEXT_FILE_PTR(context), "\nPUSHREG %cX\n", 'D' + regShift);
-        regShift--;
-    }
+    fprintf(_CONTEXT_FILE_PTR(context), "\nPUSHREG DX\n");
 
     char* labelName = transliterate( _NODE_VALUE_STR(node));
     fprintf(_CONTEXT_FILE_PTR(context), "CALL :%s\n", labelName);

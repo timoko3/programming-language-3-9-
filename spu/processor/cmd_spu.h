@@ -19,10 +19,12 @@ bool myDiv(processor* spu);
 bool mySqrt(processor* spu);
 bool myAbs(processor* spu);
 
-bool lt(processor* spu);
-bool le(processor* spu);
-bool gt(processor* spu);
-bool ge(processor* spu);
+bool lt (processor* spu);
+bool le (processor* spu);
+bool gt (processor* spu);
+bool ge (processor* spu);
+bool eq (processor* spu);
+bool neq(processor* spu);
 
 bool jmp(processor* spu);
 bool jb(processor* spu);

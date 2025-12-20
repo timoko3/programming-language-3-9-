@@ -52,6 +52,14 @@ bool ge(processor* spu){
     return binaryOperation(spu, geMath);
 }
 
+bool eq(processor* spu){
+    return binaryOperation(spu, eqMath);
+}
+
+bool neq(processor* spu){
+    return binaryOperation(spu, neMath);
+}
+
 bool jb(processor* spu){
     return jumpOperation(spu, ltMath);
 }
