@@ -10,6 +10,7 @@ struct treeNode_t{
     treeNode_t* parent;
 };
 
+bool checkSubTreeCountable(treeNode_t* curNode);
 bool freeExpressionNodeData(treeNode_t* node, bool withoutRoot, int depth);
 
 #endif /* EXPRESSION_TREE_H */

@@ -49,6 +49,16 @@ treeNode_t* treeDtor(tree_t* expression){
 
 // }
 
+treeNode_t* createNewNodeNumber(double value, treeNode_t* left, treeNode_t* right){
+    treeNode_t* newNode = createNewNode(left, right);
+
+    _NODE_TYPE(newNode) = NUMBER;
+
+    _NODE_VALUE_NUM(newNode) = value;
+
+    return newNode;
+}
+
 treeNode_t* createNewNode(treeNode_t* left, treeNode_t* right){
 
     treeNode_t* newNode = (treeNode_t*) calloc(1, sizeof(treeNode_t));
@@ -118,7 +128,7 @@ bool setParent(treeNode_t* curNode){
     return true;
 }
 
-void freeNode(treeNode_t* node, bool withoutRoot = false){
+void freeNode(treeNode_t* node, bool withoutRoot){
     if(!node){
         LPRINTF("передана нулева нода");
         return;

@@ -18,11 +18,12 @@ treeNode_t* treeDtor(tree_t* expression);
 // void treeRead(const char* expressionFileName);
 
 treeNode_t* createNewNode(treeNode_t* left, treeNode_t* right);
+treeNode_t* createNewNodeNumber(double value, treeNode_t* left, treeNode_t* right);
 treeNode_t* createNewNodeStr(char* value, treeNode_t* left, treeNode_t* right);
 treeNode_t* copyNode(treeNode_t* node);
 bool setParent(treeNode_t* curNode);
 
-void freeNode(treeNode_t* node, bool withoutRoot);
+void freeNode(treeNode_t* node, bool withoutRoot = false);
 void freeLeftSubtree(treeNode_t* node,  bool withoutRoot);
 void freeRightSubtree(treeNode_t* node, bool withoutRoot);
 

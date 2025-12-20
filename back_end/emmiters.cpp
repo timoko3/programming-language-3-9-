@@ -358,9 +358,12 @@ void emitCallFunc(treeNode_t* node, codeGenContext* context,  variableScope scop
 
     LPRINTF("зашел в emitCallFunc, node = %p", node);
 
+    static size_t regShift = 0;
+    regShift++;
+
     if(_L(node)){
         emitNode(_L(node), context, scope);
-        fprintf(_CONTEXT_FILE_PTR(context), "\nPOPREG DX\n");
+        fprintf(_CONTEXT_FILE_PTR(context), "\nPOPREG %cX\n", 'D' + regShift);
     }
 
     fprintf(_CONTEXT_FILE_PTR(context), "\nPUSHREG BX\n");
@@ -372,7 +375,10 @@ void emitCallFunc(treeNode_t* node, codeGenContext* context,  variableScope scop
     fprintf(_CONTEXT_FILE_PTR(context), "ADD \n");
     fprintf(_CONTEXT_FILE_PTR(context), "POPREG AX\n");
 
-    fprintf(_CONTEXT_FILE_PTR(context), "\nPUSHREG DX\n");
+    while(regShift > 0){
+        fprintf(_CONTEXT_FILE_PTR(context), "\nPUSHREG %cX\n", 'D' + regShift);
+        regShift--;
+    }
 
     char* labelName = transliterate( _NODE_VALUE_STR(node));
     fprintf(_CONTEXT_FILE_PTR(context), "CALL :%s\n", labelName);
