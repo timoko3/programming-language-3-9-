@@ -51,7 +51,9 @@ ASTnodeData_t ASTdata[]{
     {"Сивка-бурка вещая каурка "
      "стань передо мной "
       "как лист перед травой",     CALL_FUNC,      "no" },
-    {"побороть корень зла",        SQRT,           "sqrt"}
+    {"побороть корень зла",        SQRT,           "sqrt"},
+    {"ляпота",                     POPM,           "popm"},
+    {"закругляемся",               DRAW,           "draw"}
 };
 
 const size_t AST_DATA_COUNT = sizeof(ASTdata) / sizeof(ASTdata[0]);

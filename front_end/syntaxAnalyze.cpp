@@ -39,6 +39,8 @@ static treeNode_t* getHLT        (treeNode_t* node, token_t** curToken, stack* n
 static treeNode_t* getOut        (treeNode_t* node, token_t** curToken, stack* nameTables);
 static treeNode_t* getIn         (treeNode_t* node, token_t** curToken, stack* nameTables);
 static treeNode_t* getSqrt       (treeNode_t* node, token_t** curToken, stack* nameTables);
+static treeNode_t* getPopm       (treeNode_t* node, token_t** curToken, stack* nameTables);
+static treeNode_t* getDraw       (treeNode_t* node, token_t** curToken, stack* nameTables);
 
 static treeNode_t* createTreeNodeFromToken(token_t* curToken, treeNode_t* left, treeNode_t* right);
 
@@ -132,6 +134,8 @@ static treeNode_t* getBlock(treeNode_t* node, token_t** curToken, stack* nameTab
           _TOKEN_TYPE(*curToken) == RETURN ||
           _TOKEN_TYPE(*curToken) == OUT ||
           _TOKEN_TYPE(*curToken) == IN ||
+          _TOKEN_TYPE(*curToken) == POPM ||
+          _TOKEN_TYPE(*curToken) == DRAW ||
           _TOKEN_TYPE(*curToken) == MAIN ||
           _TOKEN_TYPE(*curToken) == HLT){
         treeNode_t* stmt = getES(node, curToken, nameTables);
@@ -193,6 +197,8 @@ static treeNode_t* getStatement(treeNode_t* node, token_t** curToken, stack* nam
     if (_TOKEN_TYPE(*curToken) == HLT)             return getHLT(node, curToken, nameTables);
     if (_TOKEN_TYPE(*curToken) == OUT)             return getOut(node, curToken, nameTables);
     if (_TOKEN_TYPE(*curToken) == IN)              return getIn(node, curToken, nameTables);
+    if (_TOKEN_TYPE(*curToken) == POPM)            return getPopm(node, curToken, nameTables);
+    if (_TOKEN_TYPE(*curToken) == DRAW)            return getDraw(node, curToken, nameTables);
 
     return NULL;
 }
@@ -210,6 +216,40 @@ static treeNode_t* getOut(treeNode_t* node, token_t** curToken, stack* nameTable
     treeNode_t* result = createTreeNodeFromToken(&tempToken, val1, NULL);
 
     LPRINTF("Вышел из OUT. Текущий токен: %p", *curToken);
+
+    return result;
+}
+
+static treeNode_t* getPopm(treeNode_t* node, token_t** curToken, stack* nameTables){
+    assert(curToken);
+
+    LPRINTF("Зашел в PopM. Текущий токен: %p", *curToken);
+
+    token_t tempToken = **curToken;
+    EXPECT(curToken, POPM);
+
+    treeNode_t* val1 = getCallFunc(node, curToken, nameTables);
+
+    treeNode_t* result = createTreeNodeFromToken(&tempToken, val1, NULL);
+
+    LPRINTF("Вышел из Draw. Текущий токен: %p", *curToken);
+
+    return result;
+}
+
+static treeNode_t* getDraw(treeNode_t* node, token_t** curToken, stack* nameTables){
+    assert(curToken);
+
+    LPRINTF("Зашел в Draw. Текущий токен: %p", *curToken);
+
+    token_t tempToken = **curToken;
+    EXPECT(curToken, DRAW);
+
+    treeNode_t* val1   = getCallFunc(node, curToken, nameTables);
+
+    treeNode_t* result = createTreeNodeFromToken(&tempToken, val1, NULL);
+
+    LPRINTF("Вышел из Draw. Текущий токен: %p", *curToken);
 
     return result;
 }

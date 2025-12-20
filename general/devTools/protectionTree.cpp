@@ -38,6 +38,7 @@ const char* END_BLOCK_NODE_COLOR     = "#95a3e1ff";
 const char* IN_NODE_COLOR            = "#ffffffff";
 const char* OUT_NODE_COLOR           = "#00000091";
 const char* MAIN_NODE_COLOR          = "#f4249ad0";
+const char* DRAW_NODE_COLOR          = "#00f9f1d0";
 
 const char* NO_TYPE_COLOR       = "#f02828ff";
 
@@ -239,6 +240,7 @@ static void initGraphNodes(const treeNode_t* node, FILE* graphFilePtr){
             case END_BLOCK:     curColor = END_BLOCK_NODE_COLOR; break;
             case IN:            curColor = IN_NODE_COLOR; break;
             case OUT:           curColor = OUT_NODE_COLOR; break;
+            case DRAW:          curColor = DRAW_NODE_COLOR; break;
             default: curColor = OPERATOR_NODE_COLOR; break;
         }
 

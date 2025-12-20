@@ -5,7 +5,7 @@
 
 typedef double ram_t;
 
-const size_t RAM_CAPACITY = 100;
+const size_t RAM_CAPACITY = 10000;
 
 ram_t* ramCtor();
 bool ramDtor(ram_t* ram);

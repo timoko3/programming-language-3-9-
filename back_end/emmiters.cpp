@@ -32,6 +32,8 @@ void emitNEqual   (treeNode_t* node, codeGenContext* context);
 void emitWhile    (treeNode_t* node, codeGenContext* context, variableScope scope);
 void emitIf       (treeNode_t* node, codeGenContext* context, variableScope scope);
 void emitSqrt     (treeNode_t* node, codeGenContext* context);
+void emitPopm     (treeNode_t* node, codeGenContext* context);
+void emitDraw     (treeNode_t* node, codeGenContext* context);
 
 typedef void (*emitter_t) (treeNode_t*, codeGenContext*);
 
@@ -61,7 +63,9 @@ static emitRule emittersTable[] = {
     {OUT,           emitPlug  },
     {ASSIGN,        emitPlug  },
     {END_STATEMENT, emitPlug  },
-    {MAIN,          emitPlug  }
+    {MAIN,          emitPlug  },
+    {POPM,          emitPopm  },
+    {DRAW,          emitDraw  }
 };
 
 const size_t EMIT_TABLE_SIZE = sizeof(emittersTable) / sizeof(emitRule);
@@ -502,8 +506,8 @@ void emitIf(treeNode_t* node, codeGenContext* context, variableScope scope){
         emitNode(_L(node), context, scope);
     }
 
-    fprintf(_CONTEXT_FILE_PTR(context), "PUSH 0\n");
-    fprintf(_CONTEXT_FILE_PTR(context), "JE :%s_%d\n", _LABEL_DATA_PREFIX(&label1), _LABEL_DATA_ID(&label1));
+    fprintf(_CONTEXT_FILE_PTR(context), "\n\nPUSH 0\n");
+    fprintf(_CONTEXT_FILE_PTR(context), "JE :%s_%d\n\n", _LABEL_DATA_PREFIX(&label1), _LABEL_DATA_ID(&label1));
 
     if(_R(node)){
         emitNode(_R(node), context, scope);
@@ -512,4 +516,29 @@ void emitIf(treeNode_t* node, codeGenContext* context, variableScope scope){
     fprintf(_CONTEXT_FILE_PTR(context), ":%s_%d\n\n", _LABEL_DATA_PREFIX(&label1), _LABEL_DATA_ID(&label1));
 
     LPRINTF("вышел из emitIf, node = %p", node);
+}
+
+void emitPopm(treeNode_t* node, codeGenContext* context){
+    assert(node);
+    assert(context);
+
+    LPRINTF("зашел в emitPopm, node = %p", node);
+    
+    fprintf(_CONTEXT_FILE_PTR(context), "\n\nPUSHREG FX \n");
+
+    fprintf(_CONTEXT_FILE_PTR(context), "PUSH 33\n");
+    fprintf(_CONTEXT_FILE_PTR(context), "PUSHM [FX]\n\n");
+
+    LPRINTF("вышел из emitPopm, node = %p", node);    
+}
+
+void emitDraw(treeNode_t* node, codeGenContext* context){
+    assert(node);
+    assert(context);
+
+    LPRINTF("зашел в emitDraw, node = %p", node);    
+
+    fprintf(_CONTEXT_FILE_PTR(context), "DRAW\n");
+
+    LPRINTF("вышел из emitDraw, node = %p", node);    
 }
