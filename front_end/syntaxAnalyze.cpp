@@ -277,7 +277,7 @@ static treeNode_t* getRet(treeNode_t* node, token_t** curToken, stack* nameTable
     token_t tempToken = **curToken;
     (*curToken)++;     
 
-    val1 = getCallFunc(node, curToken, nameTables);
+    val1 = getE(node, curToken, nameTables);
 
     val1 = createTreeNodeFromToken(&tempToken, val1, NULL);
 

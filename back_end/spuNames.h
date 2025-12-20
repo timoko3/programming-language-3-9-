@@ -3,11 +3,6 @@
 
 #include "../general/nametable.h"
 
-enum variableScope{
-    LOCALE,
-    GLOBAL
-};
-
 struct spuName_t{
     char*         str;
     nameType      type;

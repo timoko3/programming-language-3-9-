@@ -21,8 +21,8 @@ void genTaleCode(tree_t* syntaxTree, const char* taleFileName){
 
     fprintf(taleFilePtr, "Жили-были\n");
 
-    taleEmitNode(syntaxTree->root, taleFilePtr);
-
+    taleEmitNode(syntaxTree->root, taleFilePtr, GLOBAL);
+    
     fprintf(taleFilePtr, "\nи я там был мед пиво пил по усам текло, а в рот не попало\n");
 
     fclose(taleFilePtr);

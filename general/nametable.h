@@ -5,6 +5,11 @@
 
 #include <stddef.h>
 
+enum variableScope{
+    LOCALE,
+    GLOBAL
+};
+
 enum nameType{
     VARIABLE,
     FUNCTION
