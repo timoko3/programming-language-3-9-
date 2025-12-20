@@ -3,8 +3,6 @@
 
 #include "../general/nametable.h"
 
-const size_t global
-
 enum variableScope{
     LOCALE,
     GLOBAL

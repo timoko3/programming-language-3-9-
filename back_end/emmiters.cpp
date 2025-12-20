@@ -286,7 +286,7 @@ void emitRet(treeNode_t* node, codeGenContext* context){
 
     LPRINTF("зашел в emitRet, node = %p", node);
 
-    fprintf(_CONTEXT_FILE_PTR(context), "POPREG DX \n");
+    fprintf(_CONTEXT_FILE_PTR(context), "\nPOPREG DX  ;блок RET\n");
 
     fprintf(_CONTEXT_FILE_PTR(context), "PUSHREG BX \n");
     fprintf(_CONTEXT_FILE_PTR(context), "POPREG  AX \n");
@@ -422,7 +422,7 @@ void emitLocaleVar(treeNode_t* node, codeGenContext* context){
 
     int relativeAddr = getLocalVarAddr(_CONTEXT_NAMES(context), _NODE_VALUE_STR(node), &_CONTEXT_STACK_FRAME_OFFSET(context));
 
-    fprintf(_CONTEXT_FILE_PTR(context), "\nPUSHREG AX\n");
+    fprintf(_CONTEXT_FILE_PTR(context), "\nPUSHREG AX  ; начало блока локальной переменной\n");
     fprintf(_CONTEXT_FILE_PTR(context), "PUSH   %d\n", relativeAddr);
     fprintf(_CONTEXT_FILE_PTR(context), "ADD       \n");
 
@@ -432,12 +432,13 @@ void emitLocaleVar(treeNode_t* node, codeGenContext* context){
     treeNode_t* parent = _PAR(node);
     if (parent &&((_NODE_TYPE(parent) == ASSIGN && node == _L(parent)) ||
                   (_NODE_TYPE(parent) == IN) ||
-                  (_NODE_TYPE(parent) == NAME && _R(parent))))
+                  (_NODE_TYPE(parent) == NAME && _R(parent)) ||
+                  (_NODE_TYPE(parent) == POPM)))
     {
-    fprintf(_CONTEXT_FILE_PTR(context), "POPM [CX]\n");
+    fprintf(_CONTEXT_FILE_PTR(context), "POPM [CX] ;записываю локальную переменную в ячейка памяти\n");
     return;
 }
-    fprintf(_CONTEXT_FILE_PTR(context), "PUSHM [CX]\n");
+    fprintf(_CONTEXT_FILE_PTR(context), "PUSHM [CX]  ;достаю локальную переменную из ячейки памяти\n");
 
     LPRINTF("вышел из emitLocaleVar, node = %p", node);
 }
@@ -453,10 +454,10 @@ void emitGlobalVar(treeNode_t* node, codeGenContext* context){
     treeNode_t* parent = _PAR(node);
     if((parent && _NODE_TYPE(parent) == ASSIGN && node == _L(parent)) || 
         (parent && _NODE_TYPE(parent) == IN)){
-            fprintf(_CONTEXT_FILE_PTR(context), "POPMA %d\n", addr);
+            fprintf(_CONTEXT_FILE_PTR(context), "POPMA %d   ;записывая глобольняю перменную в ячейку памяти\n", addr);
             return;
         }
-    fprintf(_CONTEXT_FILE_PTR(context), "PUSHMA %d\n", addr);
+    fprintf(_CONTEXT_FILE_PTR(context), "PUSHMA %d  ;беру глобальную перменную из ячейки памяти\n", addr);
 
     LPRINTF("вышел из emitGlobalVar, node = %p", node);
 }
@@ -480,16 +481,16 @@ void emitWhile(treeNode_t* node, codeGenContext* context, variableScope scope){
         emitNode(_L(node), context, scope);
     }
 
-    fprintf(_CONTEXT_FILE_PTR(context), "PUSH 0\n");
-    fprintf(_CONTEXT_FILE_PTR(context), "JE :%s_%d\n", _LABEL_DATA_PREFIX(&label2), _LABEL_DATA_ID(&label2));
+    fprintf(_CONTEXT_FILE_PTR(context), "PUSH 0 ;конец условия цикла\n");
+    fprintf(_CONTEXT_FILE_PTR(context), "JE :%s_%d ;начало тела цикла\n", _LABEL_DATA_PREFIX(&label2), _LABEL_DATA_ID(&label2));
 
     if(_R(node)){
         emitNode(_R(node), context, scope);
     }    
 
-    fprintf(_CONTEXT_FILE_PTR(context), "JMP :%s_%d\n", _LABEL_DATA_PREFIX(&label1), _LABEL_DATA_ID(&label1));
+    fprintf(_CONTEXT_FILE_PTR(context), "JMP :%s_%d  ;для зацикливания\n", _LABEL_DATA_PREFIX(&label1), _LABEL_DATA_ID(&label1));
 
-    fprintf(_CONTEXT_FILE_PTR(context), ":%s_%d\n\n", _LABEL_DATA_PREFIX(&label2), _LABEL_DATA_ID(&label2));
+    fprintf(_CONTEXT_FILE_PTR(context), ":%s_%d ;выход из цикла\n\n", _LABEL_DATA_PREFIX(&label2), _LABEL_DATA_ID(&label2));
 
     LPRINTF("вышел из emitWhile, node = %p", node);
 }
@@ -506,14 +507,14 @@ void emitIf(treeNode_t* node, codeGenContext* context, variableScope scope){
         emitNode(_L(node), context, scope);
     }
 
-    fprintf(_CONTEXT_FILE_PTR(context), "\n\nPUSH 0\n");
-    fprintf(_CONTEXT_FILE_PTR(context), "JE :%s_%d\n\n", _LABEL_DATA_PREFIX(&label1), _LABEL_DATA_ID(&label1));
+    fprintf(_CONTEXT_FILE_PTR(context), "\nPUSH 0  ;конец условия if-а\n");
+    fprintf(_CONTEXT_FILE_PTR(context), "JE :%s_%d  ;тело if-а\n", _LABEL_DATA_PREFIX(&label1), _LABEL_DATA_ID(&label1));
 
     if(_R(node)){
         emitNode(_R(node), context, scope);
     }    
 
-    fprintf(_CONTEXT_FILE_PTR(context), ":%s_%d\n\n", _LABEL_DATA_PREFIX(&label1), _LABEL_DATA_ID(&label1));
+    fprintf(_CONTEXT_FILE_PTR(context), ":%s_%d  ;выход из if-а\n\n", _LABEL_DATA_PREFIX(&label1), _LABEL_DATA_ID(&label1));
 
     LPRINTF("вышел из emitIf, node = %p", node);
 }
@@ -524,10 +525,10 @@ void emitPopm(treeNode_t* node, codeGenContext* context){
 
     LPRINTF("зашел в emitPopm, node = %p", node);
     
-    fprintf(_CONTEXT_FILE_PTR(context), "\n\nPUSHREG FX \n");
+    fprintf(_CONTEXT_FILE_PTR(context), "\n\nPOPREG FX   ;блок рисования в памяти\n");
 
-    fprintf(_CONTEXT_FILE_PTR(context), "PUSH 33\n");
-    fprintf(_CONTEXT_FILE_PTR(context), "PUSHM [FX]\n\n");
+    fprintf(_CONTEXT_FILE_PTR(context), "PUSH 5\n");
+    fprintf(_CONTEXT_FILE_PTR(context), "POPM [FX]   ;конец блока рисования в памяти\n\n");
 
     LPRINTF("вышел из emitPopm, node = %p", node);    
 }

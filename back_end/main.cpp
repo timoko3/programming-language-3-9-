@@ -18,7 +18,7 @@ int main(int argc, char* argv[]){
     treeCtor(&syntaxTree);
 
     treeRead(&syntaxTree, filename);
-    logTree(&syntaxTree, "readed tree");
+    // logTree(&syntaxTree, "readed tree");
     
     genAsmCode(&syntaxTree);
     

@@ -71,7 +71,7 @@ bool runProcessor(processor* spu){
 bool executeCommand(processor* spu){
     assert(spu);
     
-    processorDump(spu);
+    // processorDump(spu);
     
     if(spu->isWork == false){
         return false;

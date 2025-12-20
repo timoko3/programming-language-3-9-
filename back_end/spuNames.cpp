@@ -8,6 +8,8 @@
 #include <malloc.h>
 #include <assert.h>
 
+const size_t GLOBAL_VARIABLE_SHIFT = 950;
+
 static int createGlobalVarAddr(spuNameTable_t* spuNameTable, const char* name);
 static int createLocaleVarAddr(spuNameTable_t* spuNameTable, const char* name, size_t* stackFrameOffset);
 static void createVarAddr(spuNameTable_t* spuNameTable, const char* name, int addr);
@@ -83,7 +85,7 @@ static int createGlobalVarAddr(spuNameTable_t* spuNameTable, const char* name){
     assert(spuNameTable);
     assert(name);
 
-    int addr = _SPU_NAME_TABLE_SIZE(spuNameTable);
+    int addr = _SPU_NAME_TABLE_SIZE(spuNameTable) + GLOBAL_VARIABLE_SHIFT;
     size_t curSize = _SPU_NAME_TABLE_SIZE(spuNameTable);
 
     createVarAddr(spuNameTable, name, addr);
