@@ -46,7 +46,7 @@ int main(int argc, char* argv[]){
     
     syntaxAnalyze(&syntaxTree, &tokensSequence);
 
-    logTree(&syntaxTree, "created synTree");
+    // logTree(&syntaxTree, "created synTree");
 
     treeWrite(&syntaxTree, treeFile);
 
