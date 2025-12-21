@@ -211,7 +211,7 @@ static treeNode_t* getOut(treeNode_t* node, token_t** curToken, stack* nameTable
     token_t tempToken = **curToken;
     EXPECT(curToken, OUT);
 
-    treeNode_t* val1 = getCallFunc(node, curToken, nameTables);
+    treeNode_t* val1 = getE(node, curToken, nameTables);
 
     treeNode_t* result = createTreeNodeFromToken(&tempToken, val1, NULL);
 
@@ -228,7 +228,7 @@ static treeNode_t* getPopm(treeNode_t* node, token_t** curToken, stack* nameTabl
     token_t tempToken = **curToken;
     EXPECT(curToken, POPM);
 
-    treeNode_t* val1 = getCallFunc(node, curToken, nameTables);
+    treeNode_t* val1 = getE(node, curToken, nameTables);
 
     treeNode_t* result = createTreeNodeFromToken(&tempToken, val1, NULL);
 
@@ -245,7 +245,7 @@ static treeNode_t* getDraw(treeNode_t* node, token_t** curToken, stack* nameTabl
     token_t tempToken = **curToken;
     EXPECT(curToken, DRAW);
 
-    treeNode_t* val1   = getCallFunc(node, curToken, nameTables);
+    treeNode_t* val1   = getE(node, curToken, nameTables);
 
     treeNode_t* result = createTreeNodeFromToken(&tempToken, val1, NULL);
 
@@ -329,9 +329,6 @@ static treeNode_t* getCallFunc(treeNode_t* node, token_t** curToken, stack* name
         val1 = getFuncArg(node, curToken, nameTables);
 
         val1 = createTreeNodeFromToken(&tempToken, val1, NULL);
-    }
-    else{
-        val1 = getE(node, curToken, nameTables);
     }
 
     LPRINTF("Выхожу из CallFunc. Текущий токен: %p", *curToken);
@@ -487,7 +484,7 @@ static treeNode_t* getM(treeNode_t* node, token_t** curToken, stack* nameTables)
         token_t tempToken = **curToken;
         (*curToken)++;
 
-        treeNode_t* val2 = getCallFunc(node, curToken, nameTables);
+        treeNode_t* val2 = getE(node, curToken, nameTables);
         assert(val2);
 
         val1 = createTreeNodeFromToken(&tempToken, val1, val2);
