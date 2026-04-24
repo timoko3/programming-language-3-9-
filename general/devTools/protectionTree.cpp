@@ -13,7 +13,7 @@
 
 static const char* GRAPH_DUMP_DOT_FILE_NAME = "logs/graphDumps/graphDump.dot";
 static const char* CONVERT_TO_IMAGE_COMMAND = "dot -Tpng logs/graphDumps/graphDump.dot -o logs/graphDumps/graph%d.png";
-const size_t CONVERSION_COMMAND_SIZE = 61;
+const size_t CONVERSION_COMMAND_SIZE = 100;
 
 const char* LOG_HTML_FILE_NAME = "logs/logLanguage.html";
 

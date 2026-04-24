@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/usr/bin/env bash
 
 CXX="g++"
 TARGET="front_end.out"
