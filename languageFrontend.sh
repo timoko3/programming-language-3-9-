@@ -6,6 +6,7 @@ STD="-std=c++17"
 
 SOURCES=(
     main.cpp
+    compiler.cpp
     front_end/*.cpp
     general/*.cpp
     general/tree/*.cpp
