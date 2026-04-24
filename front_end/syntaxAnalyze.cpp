@@ -1,12 +1,12 @@
 
 #include "syntaxAnalyze.h"
-#include "../general/tokens/protectionTokens.h"
-#include "../core/DSL.h"
-#include "../general/nametable.h"
-#include "../general/stack/stack.h"
+#include "general/tokens/protectionTokens.h"
+#include "core/DSL.h"
+#include "general/nametable.h"
+#include "general/stack/stack.h"
 
-#include "../general/debug.h"
-#include "../general/strFunc.h"
+#include "general/debug.h"
+#include "general/strFunc.h"
 
 #include <assert.h>
 #include <malloc.h>

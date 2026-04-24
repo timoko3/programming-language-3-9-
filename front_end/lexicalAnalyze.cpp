@@ -1,9 +1,9 @@
 #include "lexicalAnalyze.h"
-#include "../general/tokens/protectionTokens.h"
+#include "general/tokens/protectionTokens.h"
 
-#include "../general/file.h"
-#include "../general/strFunc.h"
-#include "../general/debug.h"
+#include "general/file.h"
+#include "general/strFunc.h"
+#include "general/debug.h"
 
 #include <assert.h>
 #include <malloc.h>
@@ -27,7 +27,11 @@ tokensSequence_t* tokenize(char* curBufferPos, tokensSequence_t* tokensSequence)
     while(*curBufferPos != '\0'){
         LPRINTF("cycle iteration of reading token");
         LPRINTF("remaining string with curBufferPos: %s", curBufferPos);
+
+        #ifdef DEBUG
         dumpTokenSequence(tokensSequence);
+        #endif /* DEBUG */
+        
         skipSpaces(&curBufferPos);
         if (*curBufferPos == '\0') break;
 

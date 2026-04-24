@@ -1,18 +1,18 @@
 
-#include "lexicalAnalyze.h"
-#include "syntaxAnalyze.h"
+#include "front_end/lexicalAnalyze.h"
+#include "front_end/syntaxAnalyze.h"
 
-#include "../general/debug.h"
-#include "../general/file.h"
-#include "../general/devTools/protectionTree.h"
-#include "../general/strFunc.h"
-#include "../general/tree/treeExpImp.h"
+#include "general/debug.h"
+#include "general/file.h"
+#include "general/devTools/protectionTree.h"
+#include "general/strFunc.h"
+#include "general/tree/treeExpImp.h"
 
 #include <stdio.h>
 #include <assert.h>
 #include <malloc.h>
 
-const char* CODE_FILE_NAME = "factorial.tale";
+const char* CODE_FILE_NAME = "examples/factorial.tale";
 const char* TREE_FILE_NAME = "syntaxTree.txt";
 
 int main(int argc, char* argv[]){
@@ -45,8 +45,6 @@ int main(int argc, char* argv[]){
     treeCtor(&syntaxTree);
     
     syntaxAnalyze(&syntaxTree, &tokensSequence);
-
-    logTree(&syntaxTree, "created synTree");
 
     treeWrite(&syntaxTree, treeFile);
 
