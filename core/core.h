@@ -55,6 +55,7 @@ struct ASTnodeData_t{
     ASTVal_t    value;
     ASTnodeType type;
     char*       writeFile;
+    char*       nasmSyntax;
 };
 
 const size_t MAX_VARIABLE_SIZE = 512;

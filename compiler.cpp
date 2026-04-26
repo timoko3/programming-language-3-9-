@@ -37,7 +37,7 @@ void compilerFrontend(char* sourceFileName, char* destFileName){
 
     treeWrite(&AST, destFileName);
 
-    // treeGraphDump(&AST);
+    treeGraphDump(&AST);
 
     treeDtor(&AST);
 
@@ -45,4 +45,19 @@ void compilerFrontend(char* sourceFileName, char* destFileName){
     free(code.buffer);
 
     tokenSequenceDtor(&tokensSequence);
+}
+
+void compilerBackendX86(char* sourceFileName, char* destFileName){
+    assert(sourceFileName);
+    assert(destFileName);
+
+    tree_t AST;
+    treeCtor(&AST);
+
+    treeRead(&AST, sourceFileName);
+    // logTree(&syntaxTree, "readed tree");
+    
+    genAsmCode(&AST);
+    
+    treeDtor(&AST);   
 }

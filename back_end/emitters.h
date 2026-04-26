@@ -3,8 +3,8 @@
 
 #include "codeGeneration.h"
 
-#include "../core/core.h"
-#include "../core/expressionTree.h"
+#include "core/core.h"
+#include "core/expressionTree.h"
 
 typedef void (*emitter_t) (treeNode_t*, codeGenContext*);
 
