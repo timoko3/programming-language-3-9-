@@ -27,12 +27,13 @@ bool hashTableCtor(hashTable_t* hashTable, size_t capacity){
     return true;
 }
 
-bool hashTableInsert(hashTable_t* hashTable, char* str){
+bool hashTableInsert(hashTable_t* hashTable, char* str, int* insertCellNum){
     assert(hashTable);
     assert(str);
+    assert(insertCellNum);
     
     size_t cellNumber = HASH_TABLE_FUNCTION(hashTable) (str) % HASH_TABLE_CAPACITY(hashTable);
-
+    *insertCellNum = cellNumber;
     LPRINTF("cellNumber = %llu", cellNumber);
 
     hashTableCell_t* curCell = &(HASH_TABLE_CELLS(hashTable)[cellNumber]);

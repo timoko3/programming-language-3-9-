@@ -22,7 +22,7 @@ struct hashTable_t{
 };
 
 bool hashTableCtor(hashTable_t* hashTable, size_t capacity);
-bool hashTableInsert(hashTable_t* hashTable, char* str);
+bool hashTableInsert(hashTable_t* hashTable, char* str, int* insertCellNum);
 bool hashTableFind(hashTable_t* hashTable, char* str, int* findCellNum);
 bool hashTableDtor(hashTable_t* hashTable);
 

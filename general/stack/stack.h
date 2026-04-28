@@ -74,6 +74,10 @@ stackError stackCtor(stack* stk, size_t capacity);
 stackError stackPush(stack* stk, stackData_t value);
 stackError stackPop(stack* stk, stackData_t* stackElem);
 stackError stackDtor(stack* stk);
+
+stackError stackGetTop   (stack* stk, stackData_t* stackElem);
+stackError stackGetBottom(stack* stk, stackData_t* stackElem);
+
 void stackDump(stack* stk, const char* function, const char* file, const int line);
 
 #endif /* STACK_H */

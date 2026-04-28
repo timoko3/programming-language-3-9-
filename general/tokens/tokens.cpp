@@ -125,7 +125,7 @@ bool createNumberToken(token_t* token, int tokenValue){
 //     return true;
 // }
 
-bool createNameTokenNdbg(token_t* token, char* tokenValue, ASTnodeType type){
+bool createNameTokenNdbg(token_t* token, char* tokenValue, char* writeFile, ASTnodeType type){
     assert(token);
     assert(tokenValue);
 
@@ -139,7 +139,7 @@ bool createNameTokenNdbg(token_t* token, char* tokenValue, ASTnodeType type){
     *tokenStrWriteFile(token) = (char*) calloc(MAX_VARIABLE_SIZE, sizeof(char));
     assert(*tokenStrWriteFile(token));
 
-    myStrCpy(*tokenStrWriteFile(token),  tokenValue);  
+    myStrCpy(*tokenStrWriteFile(token),  writeFile);  
 
     return true;
 }
