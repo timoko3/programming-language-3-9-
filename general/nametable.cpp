@@ -1,117 +1,117 @@
-#include "nametable.h"
+// #include "nametable.h"
 
-#include "../general/debug.h"
-#include "../general/strFunc.h"
+// #include "../general/debug.h"
+// #include "../general/strFunc.h"
 
-nametable_t* nameTableCtor(nametable_t* nametable){
+// nametable_t* nameTableCtor(nametable_t* nametable){
 
-    nametable->data = (name_t*) calloc(1, sizeof(name_t));
-    assert(nametable->data);
+//     nametable->data = (name_t*) calloc(1, sizeof(name_t));
+//     assert(nametable->data);
 
-    nametable->capacity = 1;
-    nametable->size = 0;
+//     nametable->capacity = 1;
+//     nametable->size = 0;
 
-    LPRINTF("successfully allocated memory for nameTable");
+//     LPRINTF("successfully allocated memory for nameTable");
 
-    return nametable;
-}
+//     return nametable;
+// }
 
-nametable_t* nameTableDtor(nametable_t* nametable){
-    assert(nametable);
+// nametable_t* nameTableDtor(nametable_t* nametable){
+//     assert(nametable);
 
-    for(size_t curNameInd = 0; curNameInd < nametable->size; curNameInd++){
-        free(nametable->data[curNameInd].nameString);
-    }
+//     for(size_t curNameInd = 0; curNameInd < nametable->size; curNameInd++){
+//         free(nametable->data[curNameInd].nameString);
+//     }
 
-    free(nametable->data);
+//     free(nametable->data);
 
-    return NULL;
-}
+//     return NULL;
+// }
 
-void nameTableAddElem(stack* nametables, char* stringName, nameType type){
-    assert(nametables);
-    assert(stringName);
+// void nameTableAddElem(stack* nametables, char* stringName, nameType type){
+//     assert(nametables);
+//     assert(stringName);
 
-    nametable_t* curNameTable;
+//     nametable_t* curNameTable;
 
-    stackPop(nametables, (void**)&curNameTable);
+//     stackPop(nametables, (void**)&curNameTable);
 
-    if(curNameTable->size >= curNameTable->capacity){
-        reallocateNameTable(curNameTable);
-    }
+//     if(curNameTable->size >= curNameTable->capacity){
+//         reallocateNameTable(curNameTable);
+//     }
     
-    curNameTable->data[curNameTable->size].nameString = (char*) calloc(myStrLen(stringName) + 1, sizeof(char));
-    assert(curNameTable->data[curNameTable->size].nameString);
+//     curNameTable->data[curNameTable->size].nameString = (char*) calloc(myStrLen(stringName) + 1, sizeof(char));
+//     assert(curNameTable->data[curNameTable->size].nameString);
 
-    myStrCpy(curNameTable->data[curNameTable->size].nameString, stringName);
-    curNameTable->data[curNameTable->size].type = type;
+//     myStrCpy(curNameTable->data[curNameTable->size].nameString, stringName);
+//     curNameTable->data[curNameTable->size].type = type;
 
-    (curNameTable->size)++;
+//     (curNameTable->size)++;
     
-    stackPush(nametables, curNameTable);
-}
+//     stackPush(nametables, curNameTable);
+// }
 
-bool checkExistsName(stack* nametables, char* name){
-    assert(nametables);
+// bool checkExistsName(stack* nametables, char* name){
+//     assert(nametables);
 
-    nametable_t* curNameTable;
+//     nametable_t* curNameTable;
 
-    stackPop(nametables, (void**) &curNameTable);
+//     stackPop(nametables, (void**) &curNameTable);
     
-    bool found = 0;
-    for(size_t curNameInd = 0; curNameInd < curNameTable->size; curNameInd++){
-        if(isEqualStrings(curNameTable->data[curNameInd].nameString, name)){
-            found = true;
-            break;
-        }
-    }
+//     bool found = 0;
+//     for(size_t curNameInd = 0; curNameInd < curNameTable->size; curNameInd++){
+//         if(isEqualStrings(curNameTable->data[curNameInd].nameString, name)){
+//             found = true;
+//             break;
+//         }
+//     }
 
-    if (!found && nametables->size > 0) {
-        found = checkExistsName(nametables, name);
-    }
+//     if (!found && nametables->size > 0) {
+//         found = checkExistsName(nametables, name);
+//     }
 
-    stackPush(nametables, curNameTable);
+//     stackPush(nametables, curNameTable);
 
-    return found;
-}
+//     return found;
+// }
 
-nametable_t* reallocateNameTable(nametable_t* nametable){
-    assert(nametable);
+// nametable_t* reallocateNameTable(nametable_t* nametable){
+//     assert(nametable);
 
-    LPRINTF("start reallocation");
+//     LPRINTF("start reallocation");
 
-    size_t startSize = nametable->capacity;
+//     size_t startSize = nametable->capacity;
 
-    name_t* temp = (name_t*) realloc(nametable->data, nametable->capacity * 2 * sizeof(name_t));
-    assert(temp);
+//     name_t* temp = (name_t*) realloc(nametable->data, nametable->capacity * 2 * sizeof(name_t));
+//     assert(temp);
 
-    nametable->data = temp;
-    nametable->capacity *= 2;
+//     nametable->data = temp;
+//     nametable->capacity *= 2;
 
-    initTokensSequence(nametable, startSize);
+//     initTokensSequence(nametable, startSize);
 
-    LPRINTF("ended reallocation");
+//     LPRINTF("ended reallocation");
 
-    return nametable;
-}
+//     return nametable;
+// }
 
-void initTokensSequence(nametable_t* nametable, size_t startInd){
-    assert(nametable);
+// void initTokensSequence(nametable_t* nametable, size_t startInd){
+//     assert(nametable);
 
-    for(size_t curNameTableInd = startInd; curNameTableInd < nametable->capacity; curNameTableInd++){
-        nametable->data[curNameTableInd].nameString = NULL;
-    }
-}
+//     for(size_t curNameTableInd = startInd; curNameTableInd < nametable->capacity; curNameTableInd++){
+//         nametable->data[curNameTableInd].nameString = NULL;
+//     }
+// }
 
-void dumpNameTable(nametable_t* nameTable, FILE* stream){
-    assert(nameTable);
-    assert(stream);
+// void dumpNameTable(nametable_t* nameTable, FILE* stream){
+//     assert(nameTable);
+//     assert(stream);
 
-    fprintf(stream, "nameTableSize = %lu\n",     nameTable->size);
-    fprintf(stream, "nameTableCapacity = %lu\n", nameTable->capacity);
+//     fprintf(stream, "nameTableSize = %lu\n",     nameTable->size);
+//     fprintf(stream, "nameTableCapacity = %lu\n", nameTable->capacity);
 
-    for(size_t i = 0; i < nameTable->capacity; i++){
-        fprintf(stream, "nameTableCapacityElem = %lu\n");
-    }
-}
+//     for(size_t i = 0; i < nameTable->capacity; i++){
+//         fprintf(stream, "nameTableCapacityElem = %lu\n");
+//     }
+// }
 
