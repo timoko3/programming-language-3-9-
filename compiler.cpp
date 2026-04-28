@@ -12,7 +12,7 @@
 #include <assert.h>
 #include <malloc.h>
 
-void compilerFrontend(char* sourceFileName, char* destFileName){
+void compilerFrontend(char* sourceFileName, char* destFileName, bool debugSymbols = false){
     assert(sourceFileName);
     assert(destFileName);
 
@@ -26,7 +26,7 @@ void compilerFrontend(char* sourceFileName, char* destFileName){
     tokenSequenceCtor(&tokensSequence);
 
     LPRINTF("tokenization start");
-    tokenize(curBufferPos, &tokensSequence);
+    tokenize(curBufferPos, &tokensSequence, debugSymbols);
     LPRINTF("tokenization ended");
 
     tree_t AST;

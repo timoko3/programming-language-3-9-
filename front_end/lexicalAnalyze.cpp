@@ -22,11 +22,11 @@ const size_t MAX_LOCAL_VAR_AMOUNT = 1024;
 
 static bool parseKeyword(char* curBufferPos, token_t* token);
 static bool parseNumber(char* curBufferPos, token_t* token, char** endPos);
-static bool parseName(char* curBufferPos, token_t* token, char** endPos, ASTnodeType type, hashTable_t* nameTable, int blockNumber);
+static bool parseName(char* curBufferPos, token_t* token, char** endPos, ASTnodeType type, hashTable_t* nameTable, int blockNumber, bool debugSymbols);
 
 static tokensSequence_t* appendToken(tokensSequence_t* tokensSequence, token_t* newToken);
 
-tokensSequence_t* tokenize(char* curBufferPos, tokensSequence_t* tokensSequence){
+tokensSequence_t* tokenize(char* curBufferPos, tokensSequence_t* tokensSequence, bool debugSymbols){
     assert(curBufferPos);
     assert(tokensSequence);
     
@@ -89,13 +89,13 @@ tokensSequence_t* tokenize(char* curBufferPos, tokensSequence_t* tokensSequence)
                 _TOKEN_TYPE(tokenSequenceTail(tokensSequence)) == CALL_VARIABLE || 
                 _TOKEN_TYPE(tokenSequenceTail(tokensSequence)) == COMMA ||
                 _TOKEN_TYPE(tokenSequenceTail(tokensSequence)) == BRACKL) && 
-                parseName(curBufferPos, &tempToken, &curBufferPos, VARIABLE, topNameTable, blockNumber)){
+                parseName(curBufferPos, &tempToken, &curBufferPos, VARIABLE, topNameTable, blockNumber, debugSymbols)){
             LPRINTF("variable case");
             tokenFound = true;
         }
         else if((_TOKEN_TYPE(tokenSequenceTail(tokensSequence)) == INIT_FUNC ||
                 _TOKEN_TYPE(tokenSequenceTail(tokensSequence)) == CALL_FUNC) && 
-                parseName(curBufferPos, &tempToken, &curBufferPos, FUNCTION, nameTable, blockNumber)){
+                parseName(curBufferPos, &tempToken, &curBufferPos, FUNCTION, nameTable, blockNumber, debugSymbols)){
             LPRINTF("function case");
             tokenFound = true;
         }
@@ -152,7 +152,7 @@ static bool parseNumber(char* curBufferPos, token_t* token, char** endPos){
     return false;
 }
 
-static bool parseName(char* curBufferPos, token_t* token, char** endPos, ASTnodeType type, hashTable_t* nameTable, int blockNumber){
+static bool parseName(char* curBufferPos, token_t* token, char** endPos, ASTnodeType type, hashTable_t* nameTable, int blockNumber, bool debugSymbols){
     assert(curBufferPos);
     assert(token);
     assert(endPos);
@@ -185,10 +185,14 @@ static bool parseName(char* curBufferPos, token_t* token, char** endPos, ASTnode
 
         LPRINTF("foundCellNum: %d", curCellNum);
 
-
-        char writeFileName[MAX_VARIABLE_SIZE] = "";
-        sprintf(writeFileName, "%.3s%d%d", tokenTypeToStr(type), blockNumber, curCellNum);
-        createNameTokenNdbg(token, curTokenValue, writeFileName, type);
+        if(!debugSymbols){
+            char writeFileName[MAX_VARIABLE_SIZE] = "";
+            sprintf(writeFileName, "%.3s%d%d", tokenTypeToStr(type), blockNumber, curCellNum);
+            createNameToken(token, curTokenValue, writeFileName, type);
+        }
+        else{
+            createNameToken(token, curTokenValue, curTokenValue, type);
+        }
         
         *endPos = curBufferPos;
         return true;

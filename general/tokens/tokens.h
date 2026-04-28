@@ -31,7 +31,7 @@ bool copyTokenContent(token_t* token, token_t* reference);
 bool createNumberToken(token_t* token, int tokenValue);
 // bool createVariableTokenDbgCase(token_t* token, char* tokenValue);
 
-bool createNameTokenNdbg(token_t* token, char* tokenValue, char* writeFile, ASTnodeType type);
+bool createNameToken(token_t* token, char* tokenValue, char* writeFile, ASTnodeType type);
 
 char** tokenStrData(token_t* token);
 int*   tokenNumData(token_t* token);

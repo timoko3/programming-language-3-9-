@@ -60,6 +60,7 @@ treeNode_t* syntaxAnalyze(tree_t* syntaxTree, tokensSequence_t* tokensSequence){
     token_t* curToken = tokensSequence->data;
 
     syntaxTree->root = getG(syntaxTree->root, &curToken);
+    setParent(syntaxTree->root);
 
     return syntaxTree->root;
 }

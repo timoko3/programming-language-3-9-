@@ -125,7 +125,7 @@ bool createNumberToken(token_t* token, int tokenValue){
 //     return true;
 // }
 
-bool createNameTokenNdbg(token_t* token, char* tokenValue, char* writeFile, ASTnodeType type){
+bool createNameToken(token_t* token, char* tokenValue, char* writeFile, ASTnodeType type){
     assert(token);
     assert(tokenValue);
 
