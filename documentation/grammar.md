@@ -1,7 +1,4 @@
-program = start_program {func } end_program
-
-start_program = "Жили-были" ;
-end_program   = "и я там был мед пиво пил по усам текло, а в рот не попало" ;
+program = start_program { func } end_program
 
 func =
     func_header
@@ -54,9 +51,6 @@ if_stmt =
     "пойди туда — не знаю куда, принеси то — не знаю что"
     condition
     block
-    if_end ;
-
-if_end =
     "так и было" ;
 
 while_end =
@@ -98,3 +92,6 @@ args =
 
 NAME   = letter { letter | digit } ;
 NUMBER = digit { digit } ;
+
+start_program = "Жили-были" ;
+end_program   = "и я там был мед пиво пил по усам текло, а в рот не попало" ;

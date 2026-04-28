@@ -1,10 +1,10 @@
 #include "emitters.h"
 
-#include "../core/core.h"
-#include "../core/DSL.h"
+#include "core/core.h"
+#include "core/DSL.h"
 
-#include "../general/debug.h"
-#include "../general/strFunc.h"
+#include "general/debug.h"
+#include "general/strFunc.h"
 
 #include <stdio.h>
 

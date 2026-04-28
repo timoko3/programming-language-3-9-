@@ -47,17 +47,17 @@ void compilerFrontend(char* sourceFileName, char* destFileName){
     tokenSequenceDtor(&tokensSequence);
 }
 
-void compilerBackendX86(char* sourceFileName, char* destFileName){
-    assert(sourceFileName);
-    assert(destFileName);
+// void compilerBackendX86(char* sourceFileName, char* destFileName){
+//     assert(sourceFileName);
+//     assert(destFileName);
 
-    tree_t AST;
-    treeCtor(&AST);
+//     tree_t AST;
+//     treeCtor(&AST);
 
-    treeRead(&AST, sourceFileName);
-    // logTree(&syntaxTree, "readed tree");
+//     treeRead(&AST, sourceFileName);
+//     // logTree(&syntaxTree, "readed tree");
     
-    genAsmCode(&AST);
+//     genAsmCode(&AST);
     
-    treeDtor(&AST);   
-}
+//     treeDtor(&AST);   
+// }

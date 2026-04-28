@@ -481,6 +481,7 @@ static treeNode_t* getM(treeNode_t* node, token_t** curToken, stack* nameTables)
     if(_TOKEN_TYPE(*curToken) == CALL_VARIABLE) val1 = getCallVar(node, curToken, nameTables);
 
     if(_TOKEN_TYPE(*curToken) == ASSIGN){
+        assert(0);
         token_t tempToken = **curToken;
         (*curToken)++;
 

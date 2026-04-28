@@ -8,10 +8,11 @@ extern const char* LABEL_PREFIX_WHILE_BEGIN;
 extern const char* LABEL_PREFIX_IF_FALSE_JMP; 
 
 struct label_t{
-    char* prefix;
+    char* prefix; // name
     int id;
 };
 
+// stack, list
 struct labelsTable_t{
     label_t* data;
     size_t   size;

@@ -6,6 +6,7 @@
 #include <malloc.h>
 #include <limits.h>
 #include <stdlib.h>
+#include <stdint.h>
 
 #include "../genConsoleColors/consoleColors.h"
 
@@ -26,7 +27,7 @@ const size_t STACK_MAX_CAPACITY = 1e9;
 
 #if DEBUG_LEVEL > 1
 const size_t  CANARY_PROTECTION_SIZE   = 1;  
-const stackData_t CANARY_PROTECTION_NUMBER = INT_MAX / 20;
+const stackData_t CANARY_PROTECTION_NUMBER = (stackData_t)(uintptr_t) (INT_MAX / 20);
 #endif /* DEBUG */
 
 #if DEBUG_LEVEL > 0

@@ -8,12 +8,13 @@
 #include <stdio.h>
 
 const char* TREE_FILE_NAME = "syntaxTree.txt";
+
 int main(int argc, char* argv[]){
     const char* filename = TREE_FILE_NAME;
     if(argc == 2){
         filename = argv[1];
     }
-
+    
     tree_t syntaxTree;
     treeCtor(&syntaxTree);
 
