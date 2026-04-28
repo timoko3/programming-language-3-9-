@@ -41,20 +41,20 @@ listStatus verifyList(list_t* list, const char* function, const char* file, cons
     } 
     else{
         if(list->elem == NULL){  
-            assignErrorStruct(list, NULL_POINTER);
+            assignErrorStruct(list, NULL_POINTER_LIST);
             LPRINTF("data — нулевой указатель\n");
         }
         else if(list->capacity == 0){
-            assignErrorStruct(list, CAPACITY_IS_ZERO);
+            assignErrorStruct(list, CAPACITY_IS_ZERO_LIST);
         }
         else if(list->size > list->capacity){
-            assignErrorStruct(list, SIZE_EXCEEDS_CAPACITY);
+            assignErrorStruct(list, SIZE_EXCEEDS_CAPACITY_LIST);
         }
         else if(!indexValidityCheck(list)){
-            assignErrorStruct(list, NON_VALID_INDEXES);
+            assignErrorStruct(list, NON_VALID_INDEXES_LIST);
         }
         else if(malloc_usable_size(list->elem) != (sizeof(listElem_t) * list->capacity)){
-            assignErrorStruct(list, BAD_MEMORY_ALLOCATION);
+            assignErrorStruct(list, BAD_MEMORY_ALLOCATION_LIST);
         }
 
         else if(!connectivityCheck(list)){
@@ -62,8 +62,8 @@ listStatus verifyList(list_t* list, const char* function, const char* file, cons
         }
 
         else{
-            assignErrorStruct(list, PROCESS_OK);
-            return PROCESS_OK;
+            assignErrorStruct(list, PROCESS_OK_LIST);
+            return PROCESS_OK_LIST;
         }
     }
 
@@ -158,7 +158,7 @@ void htmlLog(list_t* list, const char* callFileName, const char* callFuncName, i
     fprintf(logFilePtr, "<div class=\"dump-card\">\n");
 
     const char* caseClass = "info";
-    if (list->status.type != PROCESS_OK) caseClass = "error";
+    if (list->status.type != PROCESS_OK_LIST) caseClass = "error";
 
     fprintf(logFilePtr, "<div class=\"dump-header\">"
                         "<div>"
@@ -408,7 +408,7 @@ void listGraphDump(list_t* list){
         }
     }
 
-    if(list->status.type == NON_VALID_INDEXES){
+    if(list->status.type == NON_VALID_INDEXES_LIST){
         for(size_t curCellInd = 0; curCellInd < list->capacity; curCellInd++){
             if(*next(list, (int) curCellInd) > (int) list->capacity){
                 fprintf(graphFilePtr, "\tnode%d [label=\"phys   Ind = %d\","

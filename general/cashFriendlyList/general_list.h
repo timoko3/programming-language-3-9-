@@ -12,13 +12,13 @@ typedef char* listVal_t;
 const listVal_t LIST_POISON = "\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0";
 
 enum listStatus{
-    PROCESS_OK,
-    NULL_POINTER,
-    CAPACITY_EXCEEDS_LIMIT,
-    BAD_MEMORY_ALLOCATION,
-    CAPACITY_IS_ZERO,
-    SIZE_EXCEEDS_CAPACITY,
-    NON_VALID_INDEXES,
+    PROCESS_OK_LIST,
+    NULL_POINTER_LIST,
+    CAPACITY_EXCEEDS_LIMIT_LIST,
+    BAD_MEMORY_ALLOCATION_LIST,
+    CAPACITY_IS_ZERO_LIST,
+    SIZE_EXCEEDS_CAPACITY_LIST,
+    NON_VALID_INDEXES_LIST,
     LIST_NOT_CONNECTED
 };
 
@@ -28,13 +28,13 @@ struct listStatusDescription{
 };
 
 static struct listStatusDescription listStatuses[]{ 
-    {PROCESS_OK,                    "Все хорошо\n"},
-    {CAPACITY_EXCEEDS_LIMIT,        "Значение capacity превышает максимально возможное\n"}, 
-    {NULL_POINTER,                  "Указатели не должны быть нулевыми\n"},
-    {CAPACITY_IS_ZERO,              "Capacity равно 0\n"}, 
-    {BAD_MEMORY_ALLOCATION,         "Некорректное выделение памяти\n"},
-    {SIZE_EXCEEDS_CAPACITY,         "Размер списка превышает объем выделяемой памяти\n"},
-    {NON_VALID_INDEXES,             "prev или next имеют значение не принадлежащее списку\n"},
+    {PROCESS_OK_LIST,                    "Все хорошо\n"},
+    {CAPACITY_EXCEEDS_LIMIT_LIST,        "Значение capacity превышает максимально возможное\n"}, 
+    {NULL_POINTER_LIST,                  "Указатели не должны быть нулевыми\n"},
+    {CAPACITY_IS_ZERO_LIST,              "Capacity равно 0\n"}, 
+    {BAD_MEMORY_ALLOCATION_LIST,         "Некорректное выделение памяти\n"},
+    {SIZE_EXCEEDS_CAPACITY_LIST,         "Размер списка превышает объем выделяемой памяти\n"},
+    {NON_VALID_INDEXES_LIST,             "prev или next имеют значение не принадлежащее списку\n"},
     {LIST_NOT_CONNECTED,            "Список не соединен или соединен не верно\n"}
 };
 

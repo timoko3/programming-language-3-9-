@@ -233,7 +233,7 @@ static stackError verifyStack(stack* stk, const char* function, const char* file
     } 
     else{
         if(stk->data == NULL){  
-            assignErrorStruct(stk, NULL_POINTER);
+            assignErrorStruct(stk, NULL_POINTER_LIST);
             printf("data — нулевой указатель\n");
         }
 

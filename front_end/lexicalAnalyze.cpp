@@ -22,7 +22,7 @@ const size_t MAX_LOCAL_VAR_AMOUNT = 4000;
 
 static bool parseKeyword(char* curBufferPos, token_t* token);
 static bool parseNumber(char* curBufferPos, token_t* token, char** endPos);
-static bool parseName(char* curBufferPos, token_t* token, char** endPos);
+static bool parseName(char* curBufferPos, token_t* token, char** endPos, ASTnodeType type, hashTable_t* nameTable);
 
 static tokensSequence_t* appendToken(tokensSequence_t* tokensSequence, token_t* newToken);
 
@@ -171,7 +171,7 @@ static bool parseName(char* curBufferPos, token_t* token, char** endPos, ASTnode
             hashTableInsert(nameTable, curTokenValue, &curCellNum);
         }
         char writeFileName[MAX_VARIABLE_SIZE] = "";
-        itoa(curCellNum, writeFileName, 10);
+        sprintf(writeFileName, "%d", curCellNum);
         createNameTokenNdbg(token, curTokenValue, writeFileName, type);
         
         *endPos = curBufferPos;

@@ -1,27 +1,27 @@
-#include "list.h"
+// #include "list.h"
 
-#include <stdio.h>
+// #include <stdio.h>
 
 
-int main(void){
-    list_t list1;
-    list1.capacity = 7;
+// int main(void){
+//     list_t list1;
+//     list1.capacity = 7;
 
-    listCtor(&list1);
+//     listCtor(&list1);
 
-    listInsertToTail(&list1, 10);
-    listInsertToTail(&list1, 20);
-    listInsertToTail(&list1, 30);
-    listInsertToTail(&list1, 40);
-    // *next(&list1, 2) = 300;
-    listInsertToTail(&list1, 50);
-    listInsertToTail(&list1, 45);
+//     listInsertToTail(&list1, 10);
+//     listInsertToTail(&list1, 20);
+//     listInsertToTail(&list1, 30);
+//     listInsertToTail(&list1, 40);
+//     // *next(&list1, 2) = 300;
+//     listInsertToTail(&list1, 50);
+//     listInsertToTail(&list1, 45);
 
-    listDelete(&list1, 3);
+//     listDelete(&list1, 3);
 
-    listOptimize(&list1);
+//     listOptimize(&list1);
 
-    listInsertToTail(&list1, 59);
+//     listInsertToTail(&list1, 59);
     
-    listDtor(&list1);
-}
+//     listDtor(&list1);
+// }

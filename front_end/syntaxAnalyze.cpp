@@ -59,7 +59,7 @@ treeNode_t* syntaxAnalyze(tree_t* syntaxTree, tokensSequence_t* tokensSequence){
 
     token_t* curToken = tokensSequence->data;
 
-    syntaxTree->root = getG(syntaxTree->root, &curToken, &nameTablesStack);
+    syntaxTree->root = getG(syntaxTree->root, &curToken);
 
     return syntaxTree->root;
 }
@@ -238,7 +238,7 @@ static treeNode_t* getDraw(treeNode_t* node, token_t** curToken){
     return result;
 }
 
-static treeNode_t* getHLT(treeNode_t* /*node*/, token_t** curToken, stack* /*nameTables*/){
+static treeNode_t* getHLT(treeNode_t* /*node*/, token_t** curToken){
     assert(curToken);
 
     LPRINTF("Зашел в HLT. Текущий токен: %p", *curToken);
@@ -684,7 +684,7 @@ static treeNode_t* getName(treeNode_t* /*node*/, token_t** curToken){
     return name;
 }
 
-static treeNode_t* getN(treeNode_t* /*node*/, token_t** curToken, stack* /*nameTables*/){
+static treeNode_t* getN(treeNode_t* /*node*/, token_t** curToken){
     assert(curToken);
 
     LPRINTF("Зашел в N. Текущий токен: %p", *curToken);

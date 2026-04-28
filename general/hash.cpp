@@ -149,49 +149,49 @@ hash_t murMurHash(hashData_t str){
 
 }
 
-hash_t crcOptimizedHash(hashData_t str){
-    assert(str);
+// hash_t crcOptimizedHash(hashData_t str){
+//     assert(str);
 
-    uint32_t crc = 0xFFFFFFFF;
+//     uint32_t crc = 0xFFFFFFFF;
     
-    for(size_t i = 0; str[i] != '\0'; i++){
-        crc = _mm_crc32_u8(crc, (uint8_t)str[i]);
-    }
+//     for(size_t i = 0; str[i] != '\0'; i++){
+//         crc = _mm_crc32_u8(crc, (uint8_t)str[i]);
+//     }
 
-    return (hash_t) (~crc);
-}
+//     return (hash_t) (~crc);
+// }
 
-hash_t crcUnwrapOptimizedHash(hashData_t str){
-    assert(str);
+// hash_t crcUnwrapOptimizedHash(hashData_t str){
+//     assert(str);
 
-    uint32_t crc = 0xFFFFFFFF;
+//     uint32_t crc = 0xFFFFFFFF;
 
-    const unsigned char* strU = (const unsigned char*)str;
+//     const unsigned char* strU = (const unsigned char*)str;
 
-    size_t i = 0;
-    while(true){
-        uint64_t chunk;
-        memcpy(&chunk, strU, sizeof(chunk));
+//     size_t i = 0;
+//     while(true){
+//         uint64_t chunk;
+//         memcpy(&chunk, strU, sizeof(chunk));
 
-        if(hasZeroU64(chunk)){
-            break;
-        }
+//         if(hasZeroU64(chunk)){
+//             break;
+//         }
 
-        crc = _mm_crc32_u64(crc, (uint64_t)chunk);
-        strU += 8;
-    }
+//         crc = _mm_crc32_u64(crc, (uint64_t)chunk);
+//         strU += 8;
+//     }
     
 
-    while(*strU){
-        crc = _mm_crc32_u8(crc, (uint8_t)*strU);
-        strU++;
-    }
+//     while(*strU){
+//         crc = _mm_crc32_u8(crc, (uint8_t)*strU);
+//         strU++;
+//     }
 
-    return (hash_t) (~crc);
-}
+//     return (hash_t) (~crc);
+// }
 
-static inline int hasZeroU64(uint64_t x){
-    return ((x - 0x0101010101010101ULL) & 
-           ~x & 
-           0x8080808080808080ULL) != 0;
-}
+// static inline int hasZeroU64(uint64_t x){
+//     return ((x - 0x0101010101010101ULL) & 
+//            ~x & 
+//            0x8080808080808080ULL) != 0;
+// }

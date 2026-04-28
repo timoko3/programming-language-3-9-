@@ -13,10 +13,13 @@ SOURCES=(
     general/tokens/*.cpp
     general/devTools/*.cpp
     general/stack/*.cpp
+    general/hashTable/*.cpp
+    general/cashFriendlyList/*.cpp
+    general/cashFriendlyList/optimizedStrcmp.o
     core/*.cpp
 )
 
-INCLUDES="-I. -I./general -I./derivative -I./devTools"
+INCLUDES="-I. -I./general -I./derivative -I./devTools -I./core"
 
 CXXFLAGS=(
     -ggdb3 $STD -O0

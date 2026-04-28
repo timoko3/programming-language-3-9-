@@ -12,7 +12,7 @@ extern "C" {
     int optimizedStrcmp(char* str1, char* str2);
 }
 
-#define verify(list) if(verifyList(list, __FUNCTION__, __FILE__, __LINE__) != PROCESS_OK) return list->status.type
+#define verify(list) if(verifyList(list, __FUNCTION__, __FILE__, __LINE__) != PROCESS_OK_LIST) return list->status.type
 
 const int SEARCH_NOT_FOUND_VALUE = -1;
 
@@ -32,8 +32,8 @@ listStatus listCtor(list_t* list){
     
     listInit(list, 0);
     
-    list->status.type = PROCESS_OK;
-    return PROCESS_OK;
+    list->status.type = PROCESS_OK_LIST;
+    return PROCESS_OK_LIST;
 }
 
 listStatus listDtor(list_t* list){
@@ -53,7 +53,7 @@ listStatus listDtor(list_t* list){
     poisonMemory(&*freeInd(list),    sizeof(*freeInd(list)));
     poisonMemory(&list->status,      sizeof(list->status));
 
-    return PROCESS_OK;
+    return PROCESS_OK_LIST;
 }
 
 listStatus listInsertAfter(list_t* list, int insIndex, listVal_t insValue){
@@ -89,7 +89,7 @@ listStatus listInsertAfter(list_t* list, int insIndex, listVal_t insValue){
     log(list, "after %s %d", "insertAfter", insIndex);
     #endif /* DEBUG */
 
-    return PROCESS_OK;
+    return PROCESS_OK_LIST;
 }
 
 listStatus listInsertBefore(list_t* list, int insIndex, listVal_t insValue){
@@ -98,7 +98,7 @@ listStatus listInsertBefore(list_t* list, int insIndex, listVal_t insValue){
     insIndex = *prev(list, insIndex);
     listInsertAfter(list, insIndex, insValue);
 
-    return PROCESS_OK;
+    return PROCESS_OK_LIST;
 }
 
 listStatus listInsertToTail(list_t* list, listVal_t insValue){
@@ -106,7 +106,7 @@ listStatus listInsertToTail(list_t* list, listVal_t insValue){
     
     listInsertBefore(list, 0, insValue);
 
-    return PROCESS_OK;
+    return PROCESS_OK_LIST;
 }
 
 listStatus lisInsertToHead(list_t* list, listVal_t insValue){
@@ -114,7 +114,7 @@ listStatus lisInsertToHead(list_t* list, listVal_t insValue){
     
     listInsertAfter(list, 0, insValue);
 
-    return PROCESS_OK;
+    return PROCESS_OK_LIST;
 }
 
 listStatus listDelete(list_t* list, int deleteIndex){
@@ -144,7 +144,7 @@ listStatus listDelete(list_t* list, int deleteIndex){
     log(list, "after %s %d", "delete", deleteIndex);
     #endif /* DEBUG */
 
-    return PROCESS_OK;
+    return PROCESS_OK_LIST;
 }
 
 listStatus listFind(list_t* list, listVal_t findValue, int* findIndex){
@@ -165,7 +165,7 @@ listStatus listFind(list_t* list, listVal_t findValue, int* findIndex){
         curElem = list->elem[curElem].next;
     }
 
-    return PROCESS_OK;
+    return PROCESS_OK_LIST;
 }
 
 static listStatus listInit(list_t* list, size_t startIndex){
@@ -196,7 +196,7 @@ static listStatus listInit(list_t* list, size_t startIndex){
 
     initCount++;
 
-    return PROCESS_OK;
+    return PROCESS_OK_LIST;
 }
 
 listStatus listLinearize(list_t* list){
@@ -227,7 +227,7 @@ listStatus listLinearize(list_t* list){
     log(list, "after %s", "linearization");
     #endif /* DEBUG */ 
 
-    return PROCESS_OK;
+    return PROCESS_OK_LIST;
 }
 
 listStatus listFreeUnusedMem(list_t* list){
@@ -259,7 +259,7 @@ listStatus listFreeUnusedMem(list_t* list){
     log(list, "after %s", "linearization");
     #endif /* DEBUG */ 
 
-    return PROCESS_OK;
+    return PROCESS_OK_LIST;
 }
 
 listStatus listOptimize(list_t* list){
@@ -268,7 +268,7 @@ listStatus listOptimize(list_t* list){
     listLinearize(list);
     listFreeUnusedMem(list);
 
-    return PROCESS_OK;
+    return PROCESS_OK_LIST;
 }
 
 static void placeNodeRight(list_t* list, 
@@ -318,6 +318,6 @@ static listStatus reallocateList(list_t* list){
     log(list, "after %s %d", "reallocation", (listVal_t) reallocationCount);
     #endif /* DEBUG */
 
-    return PROCESS_OK;
+    return PROCESS_OK_LIST;
 }
 
