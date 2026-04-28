@@ -48,7 +48,9 @@ enum ASTnodeType{
     MAIN,
     SQRT,
     POPM,
-    DRAW
+    DRAW,
+    VARIABLE,
+    FUNCTION
 };
 
 union ASTVal_t{

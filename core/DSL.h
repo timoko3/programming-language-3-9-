@@ -43,4 +43,13 @@
 #define _LABEL_TABLE_SIZE(labelTable) (labelTable)->size
 #define _LABEL_TABLE_CAPACITY(labelTable) (labelTable)->capacity
 
+#define HASH_TABLE_CAPACITY(hashTable)         hashTable->capacity
+#define HASH_TABLE_AMOUNT_ELEMENTS(hashTable)  hashTable->amountElements
+#define HASH_TABLE_FUNCTION(hashTable)         hashTable->hashFunction
+#define HASH_TABLE_CELLS(hashTable)            hashTable->cells
+
+#define HASH_TABLE_CELL_VALUE(hashTableCell)   hashTableCell->value
+#define HASH_TABLE_CELL_HASH(hashTableCell)    hashTableCell->hash
+
+
 #endif /* DSL_H */

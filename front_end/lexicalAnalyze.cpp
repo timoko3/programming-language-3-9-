@@ -4,6 +4,7 @@
 #include "general/file.h"
 #include "general/strFunc.h"
 #include "general/debug.h"
+#include "general/hashTable/hashTable.h"
 
 #include <assert.h>
 #include <malloc.h>
@@ -16,7 +17,7 @@
 
 static bool parseKeyword(char* curBufferPos, token_t* token);
 static bool parseNumber(char* curBufferPos, token_t* token, char** endPos);
-static bool parseVariable(char* curBufferPos, token_t* token, char** endPos);
+static bool parseName(char* curBufferPos, token_t* token, char** endPos);
 
 static tokensSequence_t* appendToken(tokensSequence_t* tokensSequence, token_t* newToken);
 
@@ -47,10 +48,11 @@ tokensSequence_t* tokenize(char* curBufferPos, tokensSequence_t* tokensSequence)
             LPRINTF("number case");
             tokenFound = true;
         }
-        else if(parseVariable(curBufferPos, &tempToken, &curBufferPos)){
-            LPRINTF("variable case");
+        else if(parseName(curBufferPos, &tempToken, &curBufferPos)){
+            LPRINTF("name case");
             tokenFound = true;
         }
+        
 
         if(tokenFound){
             tokensSequence_t* tempSeqPtr = appendToken(tokensSequence, &tempToken);
@@ -98,7 +100,7 @@ static bool parseNumber(char* curBufferPos, token_t* token, char** endPos){
     return false;
 }
 
-static bool parseVariable(char* curBufferPos, token_t* token, char** endPos){
+static bool parseName(char* curBufferPos, token_t* token, char** endPos){
     assert(curBufferPos);
     assert(token);
     assert(endPos);
@@ -117,6 +119,7 @@ static bool parseVariable(char* curBufferPos, token_t* token, char** endPos){
                 curBufferShift++;
             }
         }
+
         
         createVariableToken(token, curTokenValue);
         
