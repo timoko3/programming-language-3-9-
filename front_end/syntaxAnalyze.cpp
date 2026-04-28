@@ -12,7 +12,7 @@
 #include <malloc.h>
 
 static treeNode_t* getG          (treeNode_t* node, token_t** curToken, stack* nameTables);
-static treeNode_t* getM          (treeNode_t* node, token_t** curToken, stack* nameTables);
+static treeNode_t* getAssignVar          (treeNode_t* node, token_t** curToken, stack* nameTables);
 static treeNode_t* getE          (treeNode_t* node, token_t** curToken, stack* nameTables);
 static treeNode_t* getT          (treeNode_t* node, token_t** curToken, stack* nameTables);
 static treeNode_t* getP          (treeNode_t* node, token_t** curToken, stack* nameTables);
@@ -130,6 +130,7 @@ static treeNode_t* getBlock(treeNode_t* node, token_t** curToken, stack* nameTab
           _TOKEN_TYPE(*curToken) == IF ||
           _TOKEN_TYPE(*curToken) == INIT_VARIABLE ||
           _TOKEN_TYPE(*curToken) == CALL_VARIABLE ||
+          _TOKEN_TYPE(*curToken) == ASSIGN ||
           _TOKEN_TYPE(*curToken) == CALL_FUNC ||
           _TOKEN_TYPE(*curToken) == RETURN ||
           _TOKEN_TYPE(*curToken) == OUT ||
@@ -192,7 +193,7 @@ static treeNode_t* getStatement(treeNode_t* node, token_t** curToken, stack* nam
     if (_TOKEN_TYPE(*curToken) == IF)              return getIf(node, curToken, nameTables);
     if (_TOKEN_TYPE(*curToken) == RETURN)          return getRet(node, curToken, nameTables);
     if (_TOKEN_TYPE(*curToken) == INIT_VARIABLE ||
-        _TOKEN_TYPE(*curToken) == CALL_VARIABLE)   return getM(node, curToken, nameTables);
+        _TOKEN_TYPE(*curToken) == CALL_VARIABLE)   return getAssignVar(node, curToken, nameTables);
     if (_TOKEN_TYPE(*curToken) == CALL_FUNC)       return getCallFunc(node, curToken, nameTables);
     if (_TOKEN_TYPE(*curToken) == HLT)             return getHLT(node, curToken, nameTables);
     if (_TOKEN_TYPE(*curToken) == OUT)             return getOut(node, curToken, nameTables);
@@ -471,7 +472,7 @@ static treeNode_t* getComma(treeNode_t* node, token_t** curToken, stack* nameTab
     return val1;
 }
 
-static treeNode_t* getM(treeNode_t* node, token_t** curToken, stack* nameTables){
+static treeNode_t* getAssignVar(treeNode_t* node, token_t** curToken, stack* nameTables){
     assert(curToken);
 
     LPRINTF("Зашел в M. Текущий токен: %p", *curToken);
@@ -480,16 +481,15 @@ static treeNode_t* getM(treeNode_t* node, token_t** curToken, stack* nameTables)
     if(_TOKEN_TYPE(*curToken) == INIT_VARIABLE) val1 = getInitVar(node, curToken, nameTables);
     if(_TOKEN_TYPE(*curToken) == CALL_VARIABLE) val1 = getCallVar(node, curToken, nameTables);
 
-    if(_TOKEN_TYPE(*curToken) == ASSIGN){
-        assert(0);
-        token_t tempToken = **curToken;
-        (*curToken)++;
+    EXPECT(curToken, ASSIGN);
 
-        treeNode_t* val2 = getE(node, curToken, nameTables);
-        assert(val2);
+    token_t tempToken = **curToken;
+    (*curToken)++;
 
-        val1 = createTreeNodeFromToken(&tempToken, val1, val2);
-    }
+    treeNode_t* val2 = getE(node, curToken, nameTables);
+    assert(val2);
+
+    val1 = createTreeNodeFromToken(&tempToken, val1, val2);
 
     LPRINTF("Выхожу из M. Текущий токен: %p", *curToken);
 
