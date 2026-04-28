@@ -4,7 +4,7 @@
 
 #include <stddef.h>
 
-#include "../core/core.h"
+#include "core/core.h"
 
 typedef ASTnodeData_t   token_t;
 typedef ASTnodeType tokenType;

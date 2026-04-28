@@ -39,6 +39,8 @@ const char* IN_NODE_COLOR            = "#ffffffff";
 const char* OUT_NODE_COLOR           = "#00000091";
 const char* MAIN_NODE_COLOR          = "#f4249ad0";
 const char* DRAW_NODE_COLOR          = "#00f9f1d0";
+const char* VARIABLE_NODE_COLOR      = "#ff0044";
+const char* FUNCTION_NODE_COLOR      = "#ff1fff";
 
 const char* NO_TYPE_COLOR       = "#f02828ff";
 
@@ -229,19 +231,21 @@ static void initGraphNodes(const treeNode_t* node, FILE* graphFilePtr){
     else{
         const char* curColor;
         switch(_NODE_TYPE(node)){
-            case MAIN:          curColor = MAIN_NODE_COLOR; break;
-            case CALL_VARIABLE: curColor = CALL_VARIABLE_COLOR; break;
+            case MAIN:          curColor = MAIN_NODE_COLOR;          break;
+            case CALL_VARIABLE: curColor = CALL_VARIABLE_COLOR;      break;
             case INIT_VARIABLE: curColor = INIT_VARIABLE_NODE_COLOR; break;
-            case ASSIGN:        curColor = ASSIGN_NODE_COLOR; break;
-            case NAME:          curColor = NAME_NODE_COLOR; break;
-            case WHILE:         curColor = WHILE_NODE_COLOR; break;
-            case IF:            curColor = IF_NODE_COLOR; break;
+            case ASSIGN:        curColor = ASSIGN_NODE_COLOR;        break;
+            case NAME:          curColor = NAME_NODE_COLOR;          break;
+            case WHILE:         curColor = WHILE_NODE_COLOR;         break;
+            case IF:            curColor = IF_NODE_COLOR;            break;
             case END_STATEMENT: curColor = END_STATEMENT_NODE_COLOR; break;
-            case END_BLOCK:     curColor = END_BLOCK_NODE_COLOR; break;
-            case IN:            curColor = IN_NODE_COLOR; break;
-            case OUT:           curColor = OUT_NODE_COLOR; break;
-            case DRAW:          curColor = DRAW_NODE_COLOR; break;
-            default: curColor = OPERATOR_NODE_COLOR; break;
+            case END_BLOCK:     curColor = END_BLOCK_NODE_COLOR;     break;
+            case IN:            curColor = IN_NODE_COLOR;            break;
+            case OUT:           curColor = OUT_NODE_COLOR;           break;
+            case DRAW:          curColor = DRAW_NODE_COLOR;          break;
+            case FUNCTION:      curColor = FUNCTION_NODE_COLOR;      break;
+            case VARIABLE:      curColor = VARIABLE_NODE_COLOR;      break;
+            default: curColor = OPERATOR_NODE_COLOR;                 break;
         }
 
         if(_NODE_TYPE(node) != LT && _NODE_TYPE(node) != LE && _NODE_TYPE(node) != GT && _NODE_TYPE(node) != GE){

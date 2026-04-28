@@ -1,11 +1,9 @@
+#include "general/tokens/protectionTokens.h"
 #include "lexicalAnalyze.h"
-
-#define DEBUG
 
 #include "general/file.h"
 #include "general/strFunc.h"
 #include "general/debug.h"
-#include "general/tokens/protectionTokens.h"
 
 #include "core/DSL.h"
 
@@ -18,13 +16,13 @@
 #define TOKENS_COUNT AST_DATA_COUNT
 #define tokens       ASTdata
 
-const size_t MAX_FUNCS_AMOUNT     = 4000;
-const size_t MAX_LOCAL_VAR_AMOUNT = 4000;
+const size_t MAX_FUNCS_AMOUNT     = 1024;
+const size_t MAX_LOCAL_VAR_AMOUNT = 1024;
 
 
 static bool parseKeyword(char* curBufferPos, token_t* token);
 static bool parseNumber(char* curBufferPos, token_t* token, char** endPos);
-static bool parseName(char* curBufferPos, token_t* token, char** endPos, ASTnodeType type, hashTable_t* nameTable);
+static bool parseName(char* curBufferPos, token_t* token, char** endPos, ASTnodeType type, hashTable_t* nameTable, int blockNumber);
 
 static tokensSequence_t* appendToken(tokensSequence_t* tokensSequence, token_t* newToken);
 
@@ -42,6 +40,7 @@ tokensSequence_t* tokenize(char* curBufferPos, tokensSequence_t* tokensSequence)
 
     stackPush(&nameTablesStack, nameTable);
 
+    int blockNumber = 0;
     while(*curBufferPos != '\0'){
         LPRINTF("cycle iteration of reading token");
         LPRINTF("remaining string with curBufferPos: %s", curBufferPos);
@@ -64,6 +63,10 @@ tokensSequence_t* tokenize(char* curBufferPos, tokensSequence_t* tokensSequence)
 
                 hashTableCtor(newNameTable, MAX_LOCAL_VAR_AMOUNT);
                 stackPush(&nameTablesStack, newNameTable);
+
+                if(_TOKEN_TYPE((&tempToken)) == INIT_FUNC){
+                    blockNumber++;
+                }
             }
             else if(_TOKEN_TYPE((&tempToken)) == END_BLOCK){
                 hashTable_t* rubbishHashTable = NULL;
@@ -86,13 +89,13 @@ tokensSequence_t* tokenize(char* curBufferPos, tokensSequence_t* tokensSequence)
                 _TOKEN_TYPE(tokenSequenceTail(tokensSequence)) == CALL_VARIABLE || 
                 _TOKEN_TYPE(tokenSequenceTail(tokensSequence)) == COMMA ||
                 _TOKEN_TYPE(tokenSequenceTail(tokensSequence)) == BRACKL) && 
-                parseName(curBufferPos, &tempToken, &curBufferPos, VARIABLE, topNameTable)){
+                parseName(curBufferPos, &tempToken, &curBufferPos, VARIABLE, topNameTable, blockNumber)){
             LPRINTF("variable case");
             tokenFound = true;
         }
         else if((_TOKEN_TYPE(tokenSequenceTail(tokensSequence)) == INIT_FUNC ||
                 _TOKEN_TYPE(tokenSequenceTail(tokensSequence)) == CALL_FUNC) && 
-                parseName(curBufferPos, &tempToken, &curBufferPos, FUNCTION, nameTable)){
+                parseName(curBufferPos, &tempToken, &curBufferPos, FUNCTION, nameTable, blockNumber)){
             LPRINTF("function case");
             tokenFound = true;
         }
@@ -149,7 +152,7 @@ static bool parseNumber(char* curBufferPos, token_t* token, char** endPos){
     return false;
 }
 
-static bool parseName(char* curBufferPos, token_t* token, char** endPos, ASTnodeType type, hashTable_t* nameTable){
+static bool parseName(char* curBufferPos, token_t* token, char** endPos, ASTnodeType type, hashTable_t* nameTable, int blockNumber){
     assert(curBufferPos);
     assert(token);
     assert(endPos);
@@ -184,7 +187,7 @@ static bool parseName(char* curBufferPos, token_t* token, char** endPos, ASTnode
 
 
         char writeFileName[MAX_VARIABLE_SIZE] = "";
-        sprintf(writeFileName, "%d", curCellNum);
+        sprintf(writeFileName, "%.3s%d%d", tokenTypeToStr(type), blockNumber, curCellNum);
         createNameTokenNdbg(token, curTokenValue, writeFileName, type);
         
         *endPos = curBufferPos;

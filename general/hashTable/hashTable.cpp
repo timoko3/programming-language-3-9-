@@ -1,7 +1,6 @@
 #include "hashTable.h"
 #include "DSL.h"
 
-#define DEBUG
 #include "general/debug.h"
 #include "general/poison.h"
 

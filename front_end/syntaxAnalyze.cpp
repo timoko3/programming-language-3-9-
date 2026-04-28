@@ -674,7 +674,8 @@ static treeNode_t* getName(treeNode_t* /*node*/, token_t** curToken){
     LPRINTF("Зашел в NAME. Текущий токен: %p", *curToken);
 
     treeNode_t* name = NULL;
-    if(_TOKEN_TYPE(*curToken) == NAME){
+    if(_TOKEN_TYPE(*curToken) == VARIABLE || 
+       _TOKEN_TYPE(*curToken) == FUNCTION){
         name = createTreeNodeFromToken(*curToken, NULL, NULL);
         (*curToken)++;
     }
