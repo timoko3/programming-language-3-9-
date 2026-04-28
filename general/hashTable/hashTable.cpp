@@ -11,8 +11,6 @@
 
 const size_t LIST_START_CAPACITY          = 3;
 
-const int SEARCH_NOT_FOUND_VALUE          = -1;
-
 bool hashTableCtor(hashTable_t* hashTable, size_t capacity){
     HASH_TABLE_CAPACITY(hashTable)        = capacity; 
     HASH_TABLE_AMOUNT_ELEMENTS(hashTable) = 0; 
@@ -32,7 +30,6 @@ bool hashTableCtor(hashTable_t* hashTable, size_t capacity){
 bool hashTableInsert(hashTable_t* hashTable, char* str){
     assert(hashTable);
     assert(str);
-
     
     size_t cellNumber = HASH_TABLE_FUNCTION(hashTable) (str) % HASH_TABLE_CAPACITY(hashTable);
 

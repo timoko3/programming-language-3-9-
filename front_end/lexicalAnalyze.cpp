@@ -4,7 +4,6 @@
 #include "general/file.h"
 #include "general/strFunc.h"
 #include "general/debug.h"
-#include "general/hashTable/hashTable.h"
 
 #include "core/DSL.h"
 
@@ -17,7 +16,9 @@
 #define TOKENS_COUNT AST_DATA_COUNT
 #define tokens       ASTdata
 
-const size_t MAX_NAMES_AMOUNT    = 1000;
+const size_t MAX_FUNCS_AMOUNT     = 1000;
+const size_t MAX_LOCAL_VAR_AMOUNT = 1000;
+
 
 static bool parseKeyword(char* curBufferPos, token_t* token);
 static bool parseNumber(char* curBufferPos, token_t* token, char** endPos);
@@ -29,8 +30,13 @@ tokensSequence_t* tokenize(char* curBufferPos, tokensSequence_t* tokensSequence)
     assert(curBufferPos);
     assert(tokensSequence);
     
-    hashTable_t hashTable;
-    hashTableCtor(&hashTable, 1000);
+    stack nameTablesStack;
+    stackCtor(&nameTablesStack, 1);
+
+    hashTable_t* nameTable = (hashTable_t*) calloc(1, sizeof(hashTable_t));
+    assert(newNameTable);
+
+    stackPush(&nameTablesStack, nameTable);
 
     while(*curBufferPos != '\0'){
         LPRINTF("cycle iteration of reading token");
@@ -47,6 +53,22 @@ tokensSequence_t* tokenize(char* curBufferPos, tokensSequence_t* tokensSequence)
         bool tokenFound = false;
 
         if(parseKeyword(curBufferPos, &tempToken)){
+            if(_TOKEN_TYPE((&tempToken)) == INIT_FUNC ||
+               _TOKEN_TYPE((&tempToken)) == WHILE     ||
+               _TOKEN_TYPE((&tempToken)) == IF  ){
+                hashTable_t* newNameTable = (hashTable_t*) calloc(1, sizeof(hashTable_t));
+                assert(newNameTable);
+
+                hashTableCtor(newNameTable, MAX_LOCAL_VAR_AMOUNT);
+                stackPush(&nameTablesStack, newNameTable);
+            }
+            else if(_TOKEN_TYPE((&tempToken)) == END_BLOCK){
+                hashTable_t* rubbishHashTable = NULL;
+                stackPop(&nameTablesStack, (void**) &rubbishHashTable);
+                hashTableDtor(rubbishHashTable);
+            }
+
+
             LPRINTF("keyword case");
             curBufferPos += strlen(*tokenStrData(&tempToken));   
             tokenFound = true;
@@ -57,18 +79,16 @@ tokensSequence_t* tokenize(char* curBufferPos, tokensSequence_t* tokensSequence)
         }
         else if((_TOKEN_TYPE(tokenSequenceTail(tokensSequence)) == INIT_VARIABLE ||
                 _TOKEN_TYPE(tokenSequenceTail(tokensSequence)) == INIT_VARIABLE) && 
-                parseName(curBufferPos, &tempToken, &curBufferPos, VARIABLE)){
+                parseName(curBufferPos, &tempToken, &curBufferPos, VARIABLE, &nameTable)){
             LPRINTF("variable case");
             tokenFound = true;
         }
         else if((_TOKEN_TYPE(tokenSequenceTail(tokensSequence)) == INIT_FUNC ||
                 _TOKEN_TYPE(tokenSequenceTail(tokensSequence)) == CALL_FUNC) && 
-                parseName(curBufferPos, &tempToken, &curBufferPos, FUNCTION)){
+                parseName(curBufferPos, &tempToken, &curBufferPos, FUNCTION, &nameTable)){
             LPRINTF("function case");
             tokenFound = true;
         }
-
-        
 
         if(tokenFound){
             tokensSequence_t* tempSeqPtr = appendToken(tokensSequence, &tempToken);
@@ -79,8 +99,10 @@ tokensSequence_t* tokenize(char* curBufferPos, tokensSequence_t* tokensSequence)
             if(*tokenStrWriteFile(&tempToken)) free(*tokenStrWriteFile(&tempToken));
         }
     }
+    
+    hashTableDtor(nameTable);
 
-    hashTableDtor(&hashTable);
+    stackDtor(&nameTablesStack);
 
     LPRINTF("ended tokenization cycle");
 
@@ -118,10 +140,11 @@ static bool parseNumber(char* curBufferPos, token_t* token, char** endPos){
     return false;
 }
 
-static bool parseName(char* curBufferPos, token_t* token, char** endPos, ASTnodeType type){
+static bool parseName(char* curBufferPos, token_t* token, char** endPos, ASTnodeType type, hashTable_t* nameTable){
     assert(curBufferPos);
     assert(token);
     assert(endPos);
+    assert(nameTable);
 
     if(!isspace(*curBufferPos)) {
         char curTokenValue[MAX_VARIABLE_SIZE] = "";
@@ -138,6 +161,12 @@ static bool parseName(char* curBufferPos, token_t* token, char** endPos, ASTnode
             }
         }
 
+        int findCellNum = 0;
+        hashTableFind(nameTable, curTokenValue, &findCellNum);
+        if(findCellNum == SEARCH_NOT_FOUND_VALUE) return false;
+        else{
+            hashTableInsert(nameTable, curTokenValue);
+        }
         createNameTokenNdbg(token, curTokenValue, type);
         
         *endPos = curBufferPos;

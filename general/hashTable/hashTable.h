@@ -6,6 +6,8 @@
 
 #include <stddef.h>
 
+const int SEARCH_NOT_FOUND_VALUE          = -1;
+
 typedef hash_t (*hashFunction_t) (hashData_t str);
 
 struct hashTableCell_t{
