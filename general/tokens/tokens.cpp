@@ -74,6 +74,12 @@ void initTokensSequence(tokensSequence_t* tokensSequence, size_t startInd){
     }
 }
 
+token_t* tokenSequenceTail(tokensSequence_t* tokenSequence){
+    assert(tokenSequence);
+
+    return &(tokenSequence->data[tokenSequence->size]);
+}
+
 token_t* getCurrentToken(const char* curOpStringName){
     for(size_t curTokenInd = 0; curTokenInd < TOKENS_COUNT; curTokenInd++){
         if(isEqualStrings(curOpStringName, *tokenStrData(&tokens[curTokenInd]))){
@@ -100,16 +106,35 @@ bool createNumberToken(token_t* token, int tokenValue){
     return true;
 }
 
-bool createVariableToken(token_t* token, char* tokenValue){
+// bool createVariableTokenDbgCase(token_t* token, char* tokenValue){
+//     assert(token);
+//     assert(tokenValue);
+
+//     *tokenStrData(token) = (char*) calloc(MAX_VARIABLE_SIZE, sizeof(char));
+//     assert(*tokenStrData(token));
+//     LPRINTF("create variable token memory allocated");
+
+//     myStrCpy(*tokenStrData(token),  tokenValue);    
+//     token->type         = NAME;
+
+//     *tokenStrWriteFile(token) = (char*) calloc(MAX_VARIABLE_SIZE, sizeof(char));
+//     assert(*tokenStrWriteFile(token));
+
+//     myStrCpy(*tokenStrWriteFile(token),  tokenValue);  
+
+//     return true;
+// }
+
+bool createNameTokenNdbg(token_t* token, char* tokenValue, ASTnodeType type){
     assert(token);
     assert(tokenValue);
 
     *tokenStrData(token) = (char*) calloc(MAX_VARIABLE_SIZE, sizeof(char));
     assert(*tokenStrData(token));
-    LPRINTF("create variable token memory allocated");
+    LPRINTF("create name token memory allocated");
 
     myStrCpy(*tokenStrData(token),  tokenValue);    
-    token->type         = NAME;
+    token->type         = type;
 
     *tokenStrWriteFile(token) = (char*) calloc(MAX_VARIABLE_SIZE, sizeof(char));
     assert(*tokenStrWriteFile(token));

@@ -6,6 +6,8 @@
 #include "general/debug.h"
 #include "general/hashTable/hashTable.h"
 
+#include "core/DSL.h"
+
 #include <assert.h>
 #include <malloc.h>
 #include <string.h>
@@ -14,6 +16,8 @@
 
 #define TOKENS_COUNT AST_DATA_COUNT
 #define tokens       ASTdata
+
+const size_t MAX_NAMES_AMOUNT    = 1000;
 
 static bool parseKeyword(char* curBufferPos, token_t* token);
 static bool parseNumber(char* curBufferPos, token_t* token, char** endPos);
@@ -24,6 +28,9 @@ static tokensSequence_t* appendToken(tokensSequence_t* tokensSequence, token_t* 
 tokensSequence_t* tokenize(char* curBufferPos, tokensSequence_t* tokensSequence){
     assert(curBufferPos);
     assert(tokensSequence);
+    
+    hashTable_t hashTable;
+    hashTableCtor(&hashTable, 1000);
 
     while(*curBufferPos != '\0'){
         LPRINTF("cycle iteration of reading token");
@@ -48,10 +55,19 @@ tokensSequence_t* tokenize(char* curBufferPos, tokensSequence_t* tokensSequence)
             LPRINTF("number case");
             tokenFound = true;
         }
-        else if(parseName(curBufferPos, &tempToken, &curBufferPos)){
-            LPRINTF("name case");
+        else if((_TOKEN_TYPE(tokenSequenceTail(tokensSequence)) == INIT_VARIABLE ||
+                _TOKEN_TYPE(tokenSequenceTail(tokensSequence)) == INIT_VARIABLE) && 
+                parseName(curBufferPos, &tempToken, &curBufferPos, VARIABLE)){
+            LPRINTF("variable case");
             tokenFound = true;
         }
+        else if((_TOKEN_TYPE(tokenSequenceTail(tokensSequence)) == INIT_FUNC ||
+                _TOKEN_TYPE(tokenSequenceTail(tokensSequence)) == CALL_FUNC) && 
+                parseName(curBufferPos, &tempToken, &curBufferPos, FUNCTION)){
+            LPRINTF("function case");
+            tokenFound = true;
+        }
+
         
 
         if(tokenFound){
@@ -63,6 +79,8 @@ tokensSequence_t* tokenize(char* curBufferPos, tokensSequence_t* tokensSequence)
             if(*tokenStrWriteFile(&tempToken)) free(*tokenStrWriteFile(&tempToken));
         }
     }
+
+    hashTableDtor(&hashTable);
 
     LPRINTF("ended tokenization cycle");
 
@@ -100,7 +118,7 @@ static bool parseNumber(char* curBufferPos, token_t* token, char** endPos){
     return false;
 }
 
-static bool parseName(char* curBufferPos, token_t* token, char** endPos){
+static bool parseName(char* curBufferPos, token_t* token, char** endPos, ASTnodeType type){
     assert(curBufferPos);
     assert(token);
     assert(endPos);
@@ -120,8 +138,7 @@ static bool parseName(char* curBufferPos, token_t* token, char** endPos){
             }
         }
 
-        
-        createVariableToken(token, curTokenValue);
+        createNameTokenNdbg(token, curTokenValue, type);
         
         *endPos = curBufferPos;
         return true;

@@ -20,6 +20,8 @@ tokensSequence_t* tokenSequenceDtor(tokensSequence_t* tokenSequence);
 tokensSequence_t* reallocateTokensSequence(tokensSequence_t* tokenSequence);
 void initTokensSequence(tokensSequence_t* tokensSequence, size_t startInd = 0);
 
+token_t* tokenSequenceTail(tokensSequence_t* tokenSequence);
+
 token_t* getCurrentToken(const char* curOpStringName);
 
 bool copyNumTokenContent(token_t* token, token_t* reference);
@@ -27,7 +29,9 @@ bool copyStrTokenContent(token_t* token, token_t* reference);
 bool copyTokenContent(token_t* token, token_t* reference);
 
 bool createNumberToken(token_t* token, int tokenValue);
-bool createVariableToken(token_t* token, char* tokenValue);
+// bool createVariableTokenDbgCase(token_t* token, char* tokenValue);
+
+bool createNameTokenNdbg(token_t* token, char* tokenValue, ASTnodeType type);
 
 char** tokenStrData(token_t* token);
 int*   tokenNumData(token_t* token);
