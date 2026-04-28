@@ -37,4 +37,6 @@ void nameTableAddElem(stack* nametables,
 
 bool checkExistsName(stack* nametables, char* name);
 
+void dumpNameTable(nametable_t* nameTable, FILE* stream);
+
 #endif /* NAME_TABLE_H */

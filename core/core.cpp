@@ -34,9 +34,9 @@ ASTnodeData_t ASTdata[]{
      "принеси то — не знаю что",   IN,             "in"   },
     {"вот и сказочке конец",       HLT,            "hlt"  },
     {"царьБатюшка",                MAIN,           "main" },
-    {"Жили-были",                  START,           "no"  },
-    {"Добрый молодец",             INIT_VARIABLE,   "no"  },
-    {"сила",                       CALL_VARIABLE,   "no"  },
+    {"Жили-были",                  START,          "no"   },
+    {"Добрый молодец",             INIT_VARIABLE,  "no"   },
+    {"сила",                       CALL_VARIABLE,  "no"   },
     {"В некотором царстве, " 
      "в некотором " 
      "государстве",                INIT_FUNC,      "no"   },

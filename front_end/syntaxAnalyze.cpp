@@ -12,7 +12,7 @@
 #include <malloc.h>
 
 static treeNode_t* getG          (treeNode_t* node, token_t** curToken, stack* nameTables);
-static treeNode_t* getAssignVar          (treeNode_t* node, token_t** curToken, stack* nameTables);
+static treeNode_t* getAssignVar  (treeNode_t* node, token_t** curToken, stack* nameTables);
 static treeNode_t* getE          (treeNode_t* node, token_t** curToken, stack* nameTables);
 static treeNode_t* getT          (treeNode_t* node, token_t** curToken, stack* nameTables);
 static treeNode_t* getP          (treeNode_t* node, token_t** curToken, stack* nameTables);
@@ -483,7 +483,8 @@ static treeNode_t* getAssignVar(treeNode_t* node, token_t** curToken, stack* nam
 
     EXPECT(curToken, ASSIGN);
 
-    token_t tempToken = **curToken;
+    (*curToken)--;
+    token_t tempToken = (**curToken);
     (*curToken)++;
 
     treeNode_t* val2 = getE(node, curToken, nameTables);

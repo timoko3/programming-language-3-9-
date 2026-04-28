@@ -103,3 +103,15 @@ void initTokensSequence(nametable_t* nametable, size_t startInd){
     }
 }
 
+void dumpNameTable(nametable_t* nameTable, FILE* stream){
+    assert(nameTable);
+    assert(stream);
+
+    fprintf(stream, "nameTableSize = %lu\n",     nameTable->size);
+    fprintf(stream, "nameTableCapacity = %lu\n", nameTable->capacity);
+
+    for(size_t i = 0; i < nameTable->capacity; i++){
+        fprintf(stream, "nameTableCapacityElem = %lu\n");
+    }
+}
+
