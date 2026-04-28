@@ -77,7 +77,7 @@ void initTokensSequence(tokensSequence_t* tokensSequence, size_t startInd){
 token_t* tokenSequenceTail(tokensSequence_t* tokenSequence){
     assert(tokenSequence);
 
-    return &(tokenSequence->data[tokenSequence->size]);
+    return &(tokenSequence->data[tokenSequence->size - 1]);
 }
 
 token_t* getCurrentToken(const char* curOpStringName){

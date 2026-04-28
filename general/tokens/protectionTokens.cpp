@@ -1,8 +1,8 @@
 
 #include "protectionTokens.h"
 
-#include "../general/debug.h"
-#include "../general/file.h"
+#include "general/debug.h"
+#include "general/file.h"
 
 #include <assert.h>
 
@@ -68,6 +68,8 @@ const char* tokenTypeToStr(tokenType type){
         case RETURN:        return "RETURN";
         case SQRT:          return "SQRT";
         case DRAW:          return "DRAW";
+        case VARIABLE:      return "VARIABLE";
+        case FUNCTION:      return "FUNCTION";
         default:            return "UNKNOWN";
     }
 }
