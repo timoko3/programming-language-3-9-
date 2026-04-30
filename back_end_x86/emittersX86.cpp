@@ -10,7 +10,11 @@ struct emitRule{
     emitter_t   emitter;
 };
 
+void emitEb(treeNode_t* node, codeGenContext* context);
+void emitBlock(treeNode_t* node, codeGenContext* context);
+
 static emitRule emittersTable[] = {
+    {END_BLOCK, emitEb}
     // {NUMBER,        emitNumber},
     // {ADD,           emitAdd   },
     // {SUB,           emitSub   },
@@ -55,6 +59,19 @@ void emitNode(treeNode_t* node, codeGenContext* context){
     emitter_t curEmitter = getEmitter(_NODE_TYPE(node));    
     if(curEmitter){
         curEmitter(node, context);
+    }
+}
+
+void emitEb(treeNode_t* node, codeGenContext* context){
+    assert(node);
+    assert(context);
+
+    if(_L(node)){
+        emitBlock(_L(node), context);
+    }
+
+    if(_R(node)){
+        emitBlock(_L(node), context);
     }
 }
 
