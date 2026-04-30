@@ -1,3 +1,5 @@
+#include "back_end_x86/nasmGeneration.h"
+
 #include "general/debug.h"
 #include "general/file.h"
 #include "general/devTools/protectionTree.h"
@@ -19,7 +21,7 @@ void compilerBackendX86(char* sourceFileName, char* destFileName){
     treeRead(&AST, sourceFileName);
     treeGraphDump(&AST);
     
-    // genAsmCode(&AST);
+    genAsmCode(&AST, destFileName);
     
     treeDtor(&AST);   
 }
