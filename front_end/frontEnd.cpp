@@ -7,7 +7,7 @@
 #include "general/strFunc.h"
 #include "general/tree/treeExpImp.h"
 
-#include "compiler.h"
+#include "frontEnd.h"
 
 #include <assert.h>
 #include <malloc.h>
@@ -46,18 +46,3 @@ void compilerFrontend(char* sourceFileName, char* destFileName, bool debugSymbol
 
     tokenSequenceDtor(&tokensSequence);
 }
-
-// void compilerBackendX86(char* sourceFileName, char* destFileName){
-//     assert(sourceFileName);
-//     assert(destFileName);
-
-//     tree_t AST;
-//     treeCtor(&AST);
-
-//     treeRead(&AST, sourceFileName);
-//     // logTree(&syntaxTree, "readed tree");
-    
-//     genAsmCode(&AST);
-    
-//     treeDtor(&AST);   
-// }

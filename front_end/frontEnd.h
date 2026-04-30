@@ -1,6 +1,6 @@
-#ifndef COMPILER_H
-#define COMPILER_H
+#ifndef FRONT_END_H
+#define FRONT_END_H
 
 void compilerFrontend(char* sourceFileName, char* destFileName, bool debugSymbols);
 
-#endif /* COMPILER_H */
+#endif /* FRONT_END_H */

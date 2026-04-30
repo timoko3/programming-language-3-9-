@@ -10,6 +10,7 @@
 #include <string.h>
 #include <ctype.h>
 #include <stdlib.h>
+#include <string.h>
 
 static treeNode_t* readNode(char** curBufferPos);
 static char*       getNodeValue(char** curBufferPos);
@@ -153,7 +154,16 @@ static void assignTreeNodeData(treeNode_t* node){
         assignTreeNodeLanguageNum(node, _NODE_WRITE_FILE(node));
     }
     else{
-        _NODE_TYPE(node) = NAME;
+        if(!strncmp(_NODE_WRITE_FILE(node), "FUN", 3)){
+            _NODE_TYPE(node) = FUNCTION;
+        }
+        else if(!strncmp(_NODE_WRITE_FILE(node), "VAR", 3)){
+            _NODE_TYPE(node) = VARIABLE;
+        }
+        else{
+            _NODE_TYPE(node) = NAME;
+        }
+
         assignTreeNodeLanguageStr(node, _NODE_WRITE_FILE(node));
     }
 

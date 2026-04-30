@@ -1,19 +1,20 @@
 #!/usr/bin/env bash
 
 CXX="g++"
-TARGET="front_end.out"
+TARGET="back_endX86.out"
 STD="-std=c++17"
 
 SOURCES=(
-    front_end/*.cpp
+    back_end_x86/main.cpp
+    back_end_x86/backEndX86.cpp
     general/*.cpp
     general/tree/*.cpp
     general/tokens/*.cpp
     general/devTools/*.cpp
-    general/stack/*.cpp
-    general/hashTable/*.cpp
-    general/cashFriendlyList/*.cpp
-    general/cashFriendlyList/optimizedStrcmp.o
+    # general/stack/*.cpp
+    # general/hashTable/*.cpp
+    # general/cashFriendlyList/*.cpp
+    # general/cashFriendlyList/optimizedStrcmp.o
     core/*.cpp
 )
 

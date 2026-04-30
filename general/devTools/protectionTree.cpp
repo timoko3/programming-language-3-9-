@@ -1,10 +1,10 @@
 #include "protectionTree.h"
-#include "../core/DSL.h"
+#include "core/DSL.h"
 
-#include "../general/tokens/protectionTokens.h"
+#include "general/tokens/protectionTokens.h"
 
-#include "../general/file.h"
-#include "../general/debug.h"
+#include "general/file.h"
+#include "general/debug.h"
 
 #include <assert.h>
 #include <stdint.h>
