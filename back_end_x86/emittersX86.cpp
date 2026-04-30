@@ -75,6 +75,37 @@ void emitEb(treeNode_t* node, codeGenContext* context){
     }
 }
 
+void emitBlock(treeNode_t* node, codeGenContext* context){
+    assert(node);
+    assert(context);
+
+    emitter_t curEmitter = getEmitter(_NODE_TYPE(node));    
+    if(curEmitter){
+        curEmitter(node, context);
+    }
+}
+
+void emitMain(treeNode_t* node, codeGenContext* context){
+    assert(node);
+    assert(context);
+
+    fprintf(_CONTEXT_FILE_PTR(context), "_start:");
+
+    emitter_t curEmitter = getEmitter(_NODE_TYPE(node));    
+    if(_L(node)){
+        curEmitter(_L(node), context);
+    }
+}
+
+void emitAssign(treeNode_t* node, codeGenContext* context){
+    assert(node);
+    assert(context);
+
+    fprintf(_CONTEXT_FILE_PTR(context), "mov");    
+
+    emitVar()
+}
+
 void emitPlug(treeNode_t* node, codeGenContext* context){
     return;
 }

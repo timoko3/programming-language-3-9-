@@ -26,4 +26,9 @@ void genAsmCode(tree_t* syntaxTree, const char* destFileName){
     fclose(asmFilePtr);
 }
 
+void genPreamble(codeGenContext* context){
+    assert(context);
 
+    fprintf(context->filePtr, "section .text\n");
+    fprintf(context->filePtr, "global _start\n");
+}
