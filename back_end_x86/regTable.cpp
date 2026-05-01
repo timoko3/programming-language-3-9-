@@ -1,8 +1,21 @@
 #include "regTable.h"
 
+#include "general/poison.h"
 #include "core/DSL.h"
 
-// void regTableInsert(hashTable_t* regTable, regTableElem_t)
+#include <assert.h>
+#include <malloc.h>
+
+regTableElem_t* regTableElemCtor(genPurposeRegs reg, regUseScenery useScenery, int variableCode){
+    regTableElem_t* elem = (regTableElem_t*) calloc(1, sizeof(regTableElem_t));
+    assert(elem);
+
+    REG_TABLE_ELEM_REG(elem)           = reg;
+    REG_TABLE_ELEM_USE_BIT(elem)       = (regUseScenery) 0;
+    REG_TABLE_ELEM_USE_SCENERY(elem)   = useScenery;
+    REG_TABLE_ELEM_VARIABLE_CODE(elem) = variableCode;
+    return elem;
+}
 
 void* regTableCopy(void* dest, void* src){
     regTableElem_t* destRegT = (regTableElem_t*) dest;
@@ -28,4 +41,11 @@ int regTableCmp(void* a, void* b){
     }
 
     return result;
+}
+
+bool regTableElemDtor(regTableElem_t* elem){
+    free(elem);
+    poisonMemory(elem, sizeof(elem));
+
+    return true;
 }

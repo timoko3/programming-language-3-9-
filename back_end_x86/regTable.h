@@ -3,6 +3,8 @@
 
 #include "general/hashTable/hashTable.h"
 
+const int PZN_VARIABLE_CODE = -1;
+
 enum genPurposeRegs{
     RAX,
     RBX,
@@ -34,5 +36,10 @@ struct regTableElem_t{
     regUseScenery  useScenery : 7;
     int            variableCode;
 };
+
+regTableElem_t* regTableElemCtor(genPurposeRegs reg, regUseScenery useScenery, int variableCode);
+void* regTableCopy(void* dest, void* src);
+int regTableCmp(void* a, void* b);
+bool regTableElemDtor(regTableElem_t* elem);
 
 #endif  /* REG_TABLE_H */
