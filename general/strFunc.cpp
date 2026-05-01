@@ -377,5 +377,14 @@ int compareStrings(void* a, void* b){
 }
 
 void* copyString(void* a, void* b){
-    return strcpy((char*) a, (char*) b);
+    char* dest = (char*) calloc(256, sizeof(char));
+    strcpy((char*) dest, (char*) b);
+    return dest;
+}
+
+void freeStr(void* ptr){
+    char* elem = (char*) ptr;
+
+    poisonMemory(elem, sizeof(elem));
+    free(elem);
 }

@@ -3,6 +3,7 @@
 
 #include "general/debug.h"
 #include "general/poison.h"
+#include "general/strFunc.h"
 
 #include <malloc.h>
 #include <assert.h>
@@ -78,7 +79,7 @@ bool hashTableFind(hashTable_t* hashTable, hashTableElem_t* elem, char* key, int
 
 bool hashTableDtor(hashTable_t* hashTable){
     for(size_t i = 0; i < HASH_TABLE_CAPACITY(hashTable); i++){
-        listDtor(&HASH_TABLE_CELLS(hashTable)[i].value);
+        listDtor(&HASH_TABLE_CELLS(hashTable)[i].value, freeStr);
     }
 
     free(HASH_TABLE_CELLS(hashTable));     
@@ -91,3 +92,5 @@ bool hashTableDtor(hashTable_t* hashTable){
 
     return true;
 }
+
+

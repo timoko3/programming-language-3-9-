@@ -201,7 +201,7 @@ void htmlLog(list_t* list, const char* callFileName, const char* callFuncName, i
         "</tr></thead><tbody>\n");
 
     for (int i = 0; i < (int) list->capacity; i++) {
-        bool isFree = (!list->cmpFunc(*data(list, i), LIST_POISON));
+        bool isFree = (*data(list, i) == LIST_POISON);
         fprintf(logFilePtr, "<tr class=\"%s\">", isFree ? "free" : "");
         fprintf(logFilePtr, "<td>%d</td>", i);
         if (isFree)
@@ -251,7 +251,7 @@ void listDumpBasic(list_t* list, FILE* stream){
 
     fprintf(stream, "\telements:\n");
     for(int curElemInd = 0; curElemInd < (int) list->capacity; curElemInd++){
-        if(list->cmpFunc(*data(list, (int) curElemInd), LIST_POISON)){
+        if(!(*data(list, (int) curElemInd) ==LIST_POISON)){
             fprintf(stream, "\t\tdata: %-10s, next: %-3d, prev: %-3d\n", *data(list, (int) curElemInd), 
                                                                          *next(list, (int) curElemInd), 
                                                                          *prev(list, (int) curElemInd));
@@ -294,7 +294,7 @@ void listGraphDump(list_t* list){
             continue;
         }
         
-        if(list->cmpFunc(*data(list, curCellInd), LIST_POISON)){
+        if(!(*data(list, curCellInd) == LIST_POISON)){
             fprintf(graphFilePtr, "\tnode%d [label=\"phys idx = %d | data = %p | {prev = %d | next = %d} \"];\n", curCellInd, curCellInd, *data(list, curCellInd), *prev(list, curCellInd), *next(list, curCellInd));
         }
         else{
@@ -348,7 +348,7 @@ void listGraphDump(list_t* list){
         }
 
         
-        if(!list->cmpFunc(*data(list, curCellInd), LIST_POISON) && curCellInd != 0){
+        if((*data(list, curCellInd) == LIST_POISON) && curCellInd != 0){
             fprintf(graphFilePtr, "node%d [fillcolor = \"%s\", fontcolor = \"%s\"]\n", curCellInd,                FREE_NODE_FILLCOLOR, FREE_NODE_FONTCOLOR);
 
             if(curCellInd < (int) list->capacity - 1){
@@ -379,7 +379,7 @@ void listGraphDump(list_t* list){
 
             fprintf(graphFilePtr, "node%d", *next(list, curCellInd));
 
-            if(!list->cmpFunc(*data(list, curCellInd), LIST_POISON) && curCellInd != 0){
+            if(!(*data(list, curCellInd) == LIST_POISON) && curCellInd != 0){
                 fprintf(graphFilePtr, "[color=\"%s\", arrowsize=1.5, penwidth=5, weight=1000, constraint=false, tailport = n];\n", FREE_CHAIN_COLOR);
             }
             else{

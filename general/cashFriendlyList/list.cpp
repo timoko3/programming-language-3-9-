@@ -46,9 +46,12 @@ listStatus listCtor(list_t* list, size_t capacity, listCmpFunc_t cmpFunc, listCo
 listStatus listDtor(list_t* list, listFreeDataFunc_t freeDataFunc){
     assert(list);
 
-    for(size_t i = 0; i < list->capacity; i++){
-        freeDataFunc(list->elem[i].data);
+    if(freeDataFunc){
+        for(size_t i = 0; i < list->capacity; i++){
+            if(list->elem[i].data != LIST_POISON) freeDataFunc(list->elem[i].data);
+        }        
     }
+
 
     poisonMemory(list->elem, sizeof(listElem_t) * list->capacity);
     free(list->elem);
@@ -74,7 +77,7 @@ listStatus listInsertAfter(list_t* list, int insIndex, listVal_t insValue){
         reallocateList(list);
     }
 
-    list->copyFunc(*data(list, *freeInd(list)), insValue);
+    *data(list, *freeInd(list)) = list->copyFunc(*data(list, *freeInd(list)), insValue);
 
     int insertedCellPhysInd = *freeInd(list);
     *freeInd(list) = *next(list, *freeInd(list));
@@ -134,7 +137,7 @@ listStatus listDelete(list_t* list, int deleteIndex){
     *next(list, *prev(list, deleteIndex)) = *next(list, deleteIndex);
     *prev(list, *next(list, deleteIndex)) = *prev(list, deleteIndex);
 
-    list->copyFunc(*data(list, deleteIndex), LIST_POISON);
+    *data(list, deleteIndex) = (void*) LIST_POISON;
     *next(list, deleteIndex) = *freeInd(list);
     *prev(list, deleteIndex) = *tail(list);
 
@@ -163,7 +166,7 @@ listStatus listFind(list_t* list, listVal_t findValue, int* findIndex){
     LPRINTF("size = %llu\n", list->size);
     
     for(size_t i = 0; i < list->size; i++){
-        if(!list->cmpFunc(findValue, list->elem[curElem].data)){
+        if((list->elem[curElem].data != LIST_POISON) && !list->cmpFunc(findValue, list->elem[curElem].data)){
             *findIndex = curElem;
             break; 
         }
@@ -180,22 +183,22 @@ static listStatus listInit(list_t* list, size_t startIndex){
     static size_t initCount = 0;
 
     for(int allocInd = startIndex; allocInd < list->capacity; allocInd++){
-        *data(list, allocInd) = (char*) calloc(listValueMaxLen, sizeof(char));
-        assert(*data(list, allocInd));
+        // *data(list, allocInd) = (char*) calloc(listValueMaxLen, sizeof(char));
+        // assert(*data(list, allocInd));
         
-        LPRINTF("memAllocated = %llu\n", malloc_usable_size(*data(list, allocInd)));
+        // LPRINTF("memAllocated = %llu\n", malloc_usable_size(*data(list, allocInd)));
     }
 
     for(size_t fillInd = startIndex; fillInd < list->capacity; fillInd++){
         LPRINTF("fillInd = %d\n", (int) fillInd);
 
-        list->copyFunc(*data(list, (int) fillInd), LIST_POISON);
+        *data(list, (int) fillInd) = (void*) LIST_POISON;
         *next(list, (int) fillInd) = (int) fillInd + 1;
         *prev(list, (int) fillInd) = (int) fillInd - 1;
     }
 
     if(startIndex == 0){
-        list->copyFunc(*data(list, 0),  LIST_POISON);
+        *data(list, 0) = (void*) LIST_POISON;
         *head(list) = 0;
         *tail(list) = 0;
     }

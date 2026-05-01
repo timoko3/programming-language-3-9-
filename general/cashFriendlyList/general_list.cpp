@@ -2,7 +2,7 @@
 
 #include <assert.h>
 
-void* LIST_POISON = NULL;
+const void* LIST_POISON = ((void*)0xDEADBEEF);
 
 listVal_t* data(list_t* list, int index){
     assert(list);

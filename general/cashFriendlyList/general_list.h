@@ -9,7 +9,7 @@
 
 typedef void* listVal_t;
 
-extern void* LIST_POISON;
+extern const void* LIST_POISON;
 
 enum listStatus{
     PROCESS_OK_LIST,
