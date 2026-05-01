@@ -5,47 +5,48 @@
 
 #include <assert.h>
 #include <malloc.h>
+#include <string.h>
 
 regTableElem_t initRegTable[] = {
-    {RAX, FUNC_RET_VAL, false,  PZN_VARIABLE_CODE},  
-    {RBX, STORE_VAR,    false,  PZN_VARIABLE_CODE},  
-    {RCX, FUNC_ARGS,    false,  PZN_VARIABLE_CODE},  
-    {RDX, FUNC_ARGS,    false,  PZN_VARIABLE_CODE},  
-    {RDI, FUNC_ARGS,    false,  PZN_VARIABLE_CODE},  
-    {RSI, FUNC_ARGS,    false,  PZN_VARIABLE_CODE},  
-    {RSP, STACK,        true,   PZN_VARIABLE_CODE},  
-    {RBP, STACK,        true,   PZN_VARIABLE_CODE},  
-    {R8,  STORE_VAR,    false,  PZN_VARIABLE_CODE},  
-    {R9,  STORE_VAR,    false,  PZN_VARIABLE_CODE},  
-    {R10, STORE_VAR,    false,  PZN_VARIABLE_CODE},  
-    {R11, STORE_VAR,    false,  PZN_VARIABLE_CODE},  
-    {R12, STORE_VAR,    false,  PZN_VARIABLE_CODE},  
-    {R13, STORE_VAR,    false,  PZN_VARIABLE_CODE},  
-    {R14, STORE_VAR,    false,  PZN_VARIABLE_CODE},  
-    {R15, STORE_VAR,    false,  PZN_VARIABLE_CODE},  
+    {RAX, "rax", FUNC_RET_VAL, false,  PZN_VARIABLE_CODE},  
+    {RBX, "rbx", STORE_VAR,    false,  PZN_VARIABLE_CODE},  
+    {RCX, "rcx", FUNC_ARGS,    false,  PZN_VARIABLE_CODE},  
+    {RDX, "rdx", FUNC_ARGS,    false,  PZN_VARIABLE_CODE},  
+    {RDI, "rdi", FUNC_ARGS,    false,  PZN_VARIABLE_CODE},  
+    {RSI, "rsi", FUNC_ARGS,    false,  PZN_VARIABLE_CODE},  
+    {RSP, "rsp", STACK,        true,   PZN_VARIABLE_CODE},  
+    {RBP, "rbp", STACK,        true,   PZN_VARIABLE_CODE},  
+    {R8,  "r8",  STORE_VAR,    false,  PZN_VARIABLE_CODE},  
+    {R9,  "r9",  STORE_VAR,    false,  PZN_VARIABLE_CODE},  
+    {R10, "r10", STORE_VAR,    false,  PZN_VARIABLE_CODE},  
+    {R11, "r11", STORE_VAR,    false,  PZN_VARIABLE_CODE},  
+    {R12, "r12", STORE_VAR,    false,  PZN_VARIABLE_CODE},  
+    {R13, "r13", STORE_VAR,    false,  PZN_VARIABLE_CODE},  
+    {R14, "r14", STORE_VAR,    false,  PZN_VARIABLE_CODE},  
+    {R15, "r15", STORE_VAR,    false,  PZN_VARIABLE_CODE},  
 };
 
-regTableElem_t* regTableElemCtor(genPurposeRegs reg, regUseScenery useScenery, int variableCode){
+regTableElem_t* regTableElemCtor(genPurposeRegs reg, char* name, regUseScenery useScenery, int variableCode, bool isUsed = false){
     regTableElem_t* elem = (regTableElem_t*) calloc(1, sizeof(regTableElem_t));
     assert(elem);
 
+    strcpy(REG_TABLE_ELEM_NAME(elem), name);
     REG_TABLE_ELEM_REG(elem)           = reg;
-    REG_TABLE_ELEM_USE_BIT(elem)       = false;
+    REG_TABLE_ELEM_USE_BIT(elem)       = isUsed;
     REG_TABLE_ELEM_USE_SCENERY(elem)   = useScenery;
     REG_TABLE_ELEM_VARIABLE_CODE(elem) = variableCode;
     return elem;
 }
 
-void regTableInit(hashTable_t* regTable){
+void regTableInit(list_t* regTable){
     assert(regTable);
 
     for(size_t curElem = 0; curElem < sizeof(initRegTable) / sizeof(regTableElem_t); curElem++){
         regTableElem_t* curRegTableElem = regTableElemCtor(REG_TABLE_ELEM_REG((&initRegTable[curElem])), 
+                                                           REG_TABLE_ELEM_NAME((&initRegTable[curElem])),
                                                            REG_TABLE_ELEM_USE_SCENERY((&initRegTable[curElem])), 
                                                            REG_TABLE_ELEM_VARIABLE_CODE((&initRegTable[curElem])));
-        char curKey[3] = "";
-        snprintf(curKey, 3, "%d", REG_TABLE_ELEM_REG((&initRegTable[curElem])));
-        hashTableInsert(regTable, (void**) curRegTableElem, curKey, NULL);
+        listInsertToTail(regTable, (void**) curRegTableElem);
     }
 }
 
@@ -69,6 +70,35 @@ int regTableCmp(void* a, void* b){
 
     if((REG_TABLE_ELEM_REG(regTa) == REG_TABLE_ELEM_REG(regTb)) &&
         REG_TABLE_ELEM_VARIABLE_CODE(regTa) == REG_TABLE_ELEM_VARIABLE_CODE(regTb)){
+        result = 0;
+    }
+
+    return result;
+}
+
+regTableElem_t* regTableFind(list_t* regTable, listCmpFunc_t findRule, regTableElem_t* refElem){
+    assert(regTable);
+
+    listCmpFunc_t saveCmp = regTable->cmpFunc;
+    
+    regTable->cmpFunc = findRule;
+
+    int result = 0;
+    listFind(regTable, (void**) refElem, &result);
+
+    regTable->cmpFunc = saveCmp;
+
+    return (regTableElem_t*) &regTable->elem[result];
+}
+
+int findFreeRegStoreValRule(void* a, void* b){
+    regTableElem_t* regTa  = (regTableElem_t*) a;
+    regTableElem_t* regTb  = (regTableElem_t*) b;
+
+    int result = 1;
+
+    if((REG_TABLE_ELEM_USE_BIT(regTa) == REG_TABLE_ELEM_USE_BIT(regTb)) &&
+        REG_TABLE_ELEM_USE_SCENERY(regTa) == REG_TABLE_ELEM_USE_SCENERY(regTb)){
         result = 0;
     }
 

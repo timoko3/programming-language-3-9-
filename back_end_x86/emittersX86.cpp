@@ -1,4 +1,4 @@
-#include "emitters.h"
+#include "emittersX86.h"
 
 #include "core/core.h"
 #include "core/DSL.h"
@@ -14,7 +14,7 @@ void emitEb(treeNode_t* node, codeGenContext* context);
 void emitBlock(treeNode_t* node, codeGenContext* context);
 
 static emitRule emittersTable[] = {
-    {END_BLOCK, emitEb}
+    {END_BLOCK, emitEb},
     // {NUMBER,        emitNumber},
     // {ADD,           emitAdd   },
     // {SUB,           emitSub   },
@@ -107,9 +107,11 @@ void emitAssign(treeNode_t* node, codeGenContext* context){
         emitVar(_L(node), context);
     }
     
-    if(_R(node)){
-        emitExpression(_R(node), context);
-    }
+    fprintf(_CONTEXT_FILE_PTR(context), ",");    
+
+    // if(_R(node)){
+    //     emitExpression(_R(node), context);
+    // }
 
 
 }
@@ -118,7 +120,15 @@ void emitVar(treeNode_t* node, codeGenContext* context){
     assert(node);
     assert(context);
 
+    regTableElem_t* refReg = regTableElemCtor(NONE, "", STORE_VAR, PZN_VARIABLE_CODE, 0);
+    assert(refReg);
 
+    regTableElem_t* foundReg = regTableFind(_CONTEXT_REG_TABLE(context), findFreeRegStoreValRule, refReg);
+    assert(foundReg);
+
+    fprintf(_CONTEXT_FILE_PTR(context), "%s", REG_TABLE_ELEM_NAME(foundReg));
+
+    regTableElemDtor(refReg);
 }
 
 void emitPlug(treeNode_t* node, codeGenContext* context){

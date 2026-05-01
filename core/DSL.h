@@ -53,6 +53,7 @@
 #define HASH_TABLE_CELL_HASH(hashTableCell)    hashTableCell->hash
 
 #define REG_TABLE_ELEM_REG(regTable)           regTable->reg
+#define REG_TABLE_ELEM_NAME(regTable)          regTable->name
 #define REG_TABLE_ELEM_USE_BIT(regTable)       regTable->useBit
 #define REG_TABLE_ELEM_USE_SCENERY(regTable)   regTable->useScenery
 #define REG_TABLE_ELEM_VARIABLE_CODE(regTable) regTable->variableCode

@@ -20,15 +20,15 @@ void genAsmCode(tree_t* syntaxTree, const char* destFileName){
     assert(asmFilePtr);
 
     codeGenContext context;
-    hashTable_t* regTable = (hashTable_t*) calloc(1, sizeof(hashTable_t));
-    hashTableCtor(regTable, AMOUNT_REGS, regTableCmp, regTableCopy, regTableHash);
+    list_t* regTable = (list_t*) calloc(1, sizeof(list_t));
+    listCtor(regTable, regTableCmp, regTableCopy);
 
     _CONTEXT_FILE_PTR(&context) = asmFilePtr;
     _CONTEXT_REG_TABLE(&context) = regTable;
 
     emitNode(syntaxTree->root, &context);
 
-    free(regTable);
+    listDtor(regTable);
 
     fclose(asmFilePtr);
 }

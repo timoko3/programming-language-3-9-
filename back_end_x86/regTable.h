@@ -1,7 +1,7 @@
 #ifndef REG_TABLE_H
 #define REG_TABLE_H
 
-#include "general/hashTable/hashTable.h"
+#include "general/cashFriendlyList/list.h"
 
 const int PZN_VARIABLE_CODE = -1;
 
@@ -23,7 +23,8 @@ enum genPurposeRegs{
     R12,
     R13,
     R14,
-    R15
+    R15,
+    NONE
 };
 
 enum regUseScenery{
@@ -35,14 +36,20 @@ enum regUseScenery{
 
 struct regTableElem_t{
     genPurposeRegs reg;
+    char*          name;
     regUseScenery  useScenery;
     bool           useBit;
     int            variableCode;
 };
 
-regTableElem_t* regTableElemCtor(genPurposeRegs reg, regUseScenery useScenery, int variableCode);
+regTableElem_t* regTableElemCtor(genPurposeRegs reg, char* name, regUseScenery useScenery, int variableCode, bool isUsed = false);
+
 void* regTableCopy(void* dest, void* src);
 int regTableCmp(void* a, void* b);
+
+regTableElem_t* regTableFind(list_t* regTable, listCmpFunc_t findRule, regTableElem_t* refElem);
+int findFreeRegStoreValRule(void* a, void* b);
+
 bool regTableElemDtor(regTableElem_t* elem);
 
 #endif  /* REG_TABLE_H */

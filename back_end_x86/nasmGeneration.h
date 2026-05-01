@@ -9,7 +9,7 @@
 
 struct codeGenContext{
     FILE*           filePtr;
-    hashTable_t*    regTable;
+    list_t*         regTable;
     // size_t          stackFrameBase;
     // size_t          stackFrameOffset;
 };
