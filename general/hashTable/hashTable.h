@@ -25,7 +25,7 @@ struct hashTable_t{
     // listCmpFunc_t    listCmpFunc;
 };
 
-bool hashTableCtor  (hashTable_t* hashTable, size_t capacity,  listCmpFunc_t cmpFunc, listCopyFunc_t copyFunc);
+bool hashTableCtor  (hashTable_t* hashTable, size_t capacity,  listCmpFunc_t cmpFunc, listCopyFunc_t copyFunc, hashFunction_t hashFunc);
 bool hashTableInsert(hashTable_t* hashTable, hashTableElem_t* str, char* key, int* insertCellNum             );
 bool hashTableFind  (hashTable_t* hashTable, hashTableElem_t* str, char* key, int* findCellNum               );
 bool hashTableDtor  (hashTable_t* hashTable                                                                  );

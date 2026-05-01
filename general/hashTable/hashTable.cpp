@@ -11,10 +11,10 @@
 
 const size_t LIST_START_CAPACITY          = 3;
 
-bool hashTableCtor(hashTable_t* hashTable, size_t capacity, listCmpFunc_t cmpFunc, listCopyFunc_t copyFunc){
+bool hashTableCtor  (hashTable_t* hashTable, size_t capacity,  listCmpFunc_t cmpFunc, listCopyFunc_t copyFunc, hashFunction_t hashFunc){
     HASH_TABLE_CAPACITY(hashTable)        = capacity; 
     HASH_TABLE_AMOUNT_ELEMENTS(hashTable) = 0; 
-    HASH_TABLE_FUNCTION(hashTable)        = gnuHash;
+    HASH_TABLE_FUNCTION(hashTable)        = hashFunc;
 
     HASH_TABLE_CELLS(hashTable)           = (hashTableCell_t*) calloc(capacity, sizeof(hashTableCell_t));
     assert(HASH_TABLE_CELLS(hashTable));
@@ -31,10 +31,9 @@ bool hashTableInsert(hashTable_t* hashTable, hashTableElem_t* elem, char* key, i
     assert(hashTable);
     assert(elem);
     assert(key);
-    assert(insertCellNum);
     
     size_t cellNumber = HASH_TABLE_FUNCTION(hashTable) (key) % HASH_TABLE_CAPACITY(hashTable);
-    *insertCellNum = cellNumber;
+    if(insertCellNum) *insertCellNum = cellNumber;
     LPRINTF("cellNumber = %llu", cellNumber);
 
     hashTableCell_t* curCell = &(HASH_TABLE_CELLS(hashTable)[cellNumber]);

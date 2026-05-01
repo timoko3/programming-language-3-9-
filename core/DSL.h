@@ -22,10 +22,11 @@
 #define _EMIT_RULE_TYPE(emitRule) (emitRule)->type
 #define _EMIT_RULE_EMITTER(emitRule) (emitRule)->emitter
 
-#define _CONTEXT_FILE_PTR(context)         (context)->filePtr
-#define _CONTEXT_NAMES(context)            (context)->names
-#define _CONTEXT_LABELS(context)           (context)->labels
+#define _CONTEXT_FILE_PTR(context)           (context)->filePtr
+#define _CONTEXT_NAMES(context)              (context)->names
+#define _CONTEXT_LABELS(context)             (context)->labels
 #define _CONTEXT_STACK_FRAME_OFFSET(context) (context)->stackFrameOffset
+#define _CONTEXT_REG_TABLE(context)          (context)->regTable
 
 #define _SPU_NAME_TABLE_SIZE(spuNameTable) (spuNameTable)->size
 #define _SPU_NAME_TABLE_CAPACITY(spuNameTable) (spuNameTable)->capacity

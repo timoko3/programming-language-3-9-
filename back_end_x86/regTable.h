@@ -5,6 +5,8 @@
 
 const int PZN_VARIABLE_CODE = -1;
 
+const size_t AMOUNT_REGS    = 16;
+
 enum genPurposeRegs{
     RAX,
     RBX,
@@ -27,13 +29,14 @@ enum genPurposeRegs{
 enum regUseScenery{
     FUNC_ARGS,
     FUNC_RET_VAL,
+    STACK,
     STORE_VAR
 };
 
 struct regTableElem_t{
     genPurposeRegs reg;
-    regUseScenery  useBit     : 1;
-    regUseScenery  useScenery : 7;
+    regUseScenery  useScenery;
+    bool           useBit;
     int            variableCode;
 };
 
