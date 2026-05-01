@@ -27,12 +27,13 @@ bool hashTableCtor(hashTable_t* hashTable, size_t capacity, listCmpFunc_t cmpFun
     return true;
 }
 
-bool hashTableInsert(hashTable_t* hashTable, char* str, int* insertCellNum){
+bool hashTableInsert(hashTable_t* hashTable, hashTableElem_t* elem, char* key, int* insertCellNum){
     assert(hashTable);
-    assert(str);
+    assert(elem);
+    assert(key);
     assert(insertCellNum);
     
-    size_t cellNumber = HASH_TABLE_FUNCTION(hashTable) (str) % HASH_TABLE_CAPACITY(hashTable);
+    size_t cellNumber = HASH_TABLE_FUNCTION(hashTable) (key) % HASH_TABLE_CAPACITY(hashTable);
     *insertCellNum = cellNumber;
     LPRINTF("cellNumber = %llu", cellNumber);
 
@@ -40,10 +41,10 @@ bool hashTableInsert(hashTable_t* hashTable, char* str, int* insertCellNum){
     
     // check exists word
     int listSearchElemIndex = 0;
-    listFind(&HASH_TABLE_CELL_VALUE(curCell), str, &listSearchElemIndex);
+    listFind(&HASH_TABLE_CELL_VALUE(curCell), elem, &listSearchElemIndex);
     if(!(listSearchElemIndex == SEARCH_NOT_FOUND_VALUE)) return false;
 
-    listInsertToTail(&HASH_TABLE_CELL_VALUE(curCell), str);
+    listInsertToTail(&HASH_TABLE_CELL_VALUE(curCell), elem);
 
     HASH_TABLE_AMOUNT_ELEMENTS(hashTable)++;
 
@@ -54,14 +55,15 @@ bool hashTableInsert(hashTable_t* hashTable, char* str, int* insertCellNum){
     return true;
 }
 
-bool hashTableFind(hashTable_t* hashTable, char* str, int* findCellNum){
+bool hashTableFind(hashTable_t* hashTable, hashTableElem_t* elem, char* key, int* findCellNum){
     assert(hashTable);
-    assert(str);
+    assert(elem);
+    assert(key);
     assert(findCellNum);
 
     *findCellNum = SEARCH_NOT_FOUND_VALUE;
 
-    size_t cellNumber = HASH_TABLE_FUNCTION(hashTable) (str) % HASH_TABLE_CAPACITY(hashTable);
+    size_t cellNumber = HASH_TABLE_FUNCTION(hashTable) (key) % HASH_TABLE_CAPACITY(hashTable);
 
     LPRINTF("cellNumber = %llu", cellNumber);
 
@@ -70,7 +72,7 @@ bool hashTableFind(hashTable_t* hashTable, char* str, int* findCellNum){
     LPRINTF("addrListFindFunc = %p", curCell);
 
     int listSearchElemIndex = 0;
-    if(listFind(&HASH_TABLE_CELL_VALUE(curCell), str, &listSearchElemIndex)) *findCellNum = cellNumber;
+    if(listFind(&HASH_TABLE_CELL_VALUE(curCell), elem, &listSearchElemIndex)) *findCellNum = cellNumber;
 
     return true;
 }

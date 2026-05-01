@@ -178,9 +178,9 @@ static bool parseName(char* curBufferPos, token_t* token, char** endPos, ASTnode
         LPRINTF("startNameTableFind str: %s", curTokenValue);
 
         int curCellNum = 0;
-        hashTableFind(nameTable, curTokenValue, &curCellNum);
+        hashTableFind(nameTable, (void**) curTokenValue, curTokenValue, &curCellNum);
         if(curCellNum == SEARCH_NOT_FOUND_VALUE){
-            hashTableInsert(nameTable, curTokenValue, &curCellNum);
+            hashTableInsert(nameTable, (void**) curTokenValue, curTokenValue, &curCellNum);
         }
 
         LPRINTF("foundCellNum: %d", curCellNum);
