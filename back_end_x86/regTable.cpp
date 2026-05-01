@@ -63,7 +63,7 @@ void regTableInit(list_t* regTable){
         listInsertToTail(regTable, (void*) curRegTableElem);
         regTableElemDtor(curRegTableElem);
     }
-    listGraphDump(regTable);
+    // listGraphDump(regTable);
 }
 
 void* regTableCopy(void* dest, void* src){

@@ -19,14 +19,18 @@ void emitBlock(treeNode_t* node, codeGenContext* context);
 void emitMain(treeNode_t* node, codeGenContext* context);
 void emitAssign(treeNode_t* node, codeGenContext* context);
 void emitVar(treeNode_t* node, codeGenContext* context);
+void emitExpression(treeNode_t* node, codeGenContext* context);
+void emitNumber(treeNode_t* node, codeGenContext* context);
+
 
 void emitPlug(treeNode_t* node, codeGenContext* context);
 
 static emitRule emittersTable[] = {
-    {END_BLOCK, emitEb    },
-    {MAIN,      emitMain  },
-    {ASSIGN,    emitAssign},
-    {VARIABLE,  emitVar   },
+    {END_BLOCK, emitEb           },
+    {MAIN,      emitMain         },
+    {ASSIGN,    emitAssign       },
+    {VARIABLE,  emitVar          },
+    {NUMBER,    emitNumber       },
     // {NUMBER,        emitNumber},
     // {ADD,           emitAdd   },
     // {SUB,           emitSub   },
@@ -141,9 +145,9 @@ void emitAssign(treeNode_t* node, codeGenContext* context){
     
     fprintf(_CONTEXT_FILE_PTR(context), ", ");    
 
-    // if(_R(node)){
-    //     emitExpression(_R(node), context);
-    // }
+    if(_R(node)){
+        emitExpression(_R(node), context);
+    }
 
     LPRINTF("emitAssign end");
 }
@@ -158,9 +162,40 @@ void emitVar(treeNode_t* node, codeGenContext* context){
     regTableElem_t* foundReg = regTableFind(_CONTEXT_REG_TABLE(context), findFreeRegStoreValRule, refReg);
     assert(foundReg);
 
+
+
+    sscanf(_NODE_WRITE_FILE(node), "VAR%d", &REG_TABLE_ELEM_VARIABLE_CODE(foundReg));
+
+    printf("code = %d", REG_TABLE_ELEM_VARIABLE_CODE(foundReg));
+
     fprintf(_CONTEXT_FILE_PTR(context), "%s", REG_TABLE_ELEM_NAME(foundReg));
 
     regTableElemDtor(refReg);
+}
+
+void emitExpression(treeNode_t* node, codeGenContext* context){
+    assert(node);
+    assert(context);
+
+    LPRINTF("emitExpression start");
+
+    emitter_t curEmitter = getEmitter(_NODE_TYPE(node));    
+    if(curEmitter){
+        curEmitter(node, context);
+    }
+
+    LPRINTF("emitExpression end");    
+}
+
+void emitNumber(treeNode_t* node, codeGenContext* context){
+    assert(node);
+    assert(context);
+
+    LPRINTF("emitNumber start");
+
+    fprintf(_CONTEXT_FILE_PTR(context), "%d", _NODE_VALUE_NUM(node));
+
+    LPRINTF("emitNumber end");
 }
 
 void emitPlug(treeNode_t* node, codeGenContext* context){
