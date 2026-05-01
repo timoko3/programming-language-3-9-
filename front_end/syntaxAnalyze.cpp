@@ -315,6 +315,9 @@ static treeNode_t* getCallFunc(treeNode_t* node, token_t** curToken){
 
         val1 = createTreeNodeFromToken(&tempToken, val1, NULL);
     }
+    else{
+        val1 = getE(node, curToken);
+    }
 
     LPRINTF("Выхожу из CallFunc. Текущий токен: %p", *curToken);
 
