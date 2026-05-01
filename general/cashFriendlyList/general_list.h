@@ -9,7 +9,7 @@
 
 typedef void* listVal_t;
 
-const listVal_t LIST_POISON = (void*) "\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0";
+extern void* LIST_POISON;
 
 enum listStatus{
     PROCESS_OK_LIST,
@@ -46,6 +46,8 @@ struct listElem_t{
 
 typedef int   (*listCmpFunc_t)(void* a, void* b);
 typedef void*  (*listCopyFunc_t)(void* a, void* b);
+
+typedef void  (*listFreeDataFunc_t)(listVal_t data);
 
 struct list_t{
     listElem_t*            elem;

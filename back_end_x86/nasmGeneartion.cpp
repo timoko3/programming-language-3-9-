@@ -25,6 +25,7 @@ void genAsmCode(tree_t* syntaxTree, const char* destFileName){
     codeGenContext context;
     list_t regTable;
     listCtor(&regTable, AMOUNT_REGS, regTableCmp, regTableCopy);
+    regTableInit(&regTable);
 
     _CONTEXT_FILE_PTR(&context) = asmFilePtr;
     _CONTEXT_REG_TABLE(&context) = &regTable;
@@ -33,7 +34,7 @@ void genAsmCode(tree_t* syntaxTree, const char* destFileName){
 
     emitNode(syntaxTree->root, &context);
 
-    listDtor(&regTable);
+    listDtor(&regTable, regTableElemDtor);
 
     fclose(asmFilePtr);
 }

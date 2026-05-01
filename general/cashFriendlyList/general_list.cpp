@@ -2,6 +2,8 @@
 
 #include <assert.h>
 
+void* LIST_POISON = NULL;
+
 listVal_t* data(list_t* list, int index){
     assert(list);
 

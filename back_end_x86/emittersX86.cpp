@@ -3,6 +3,10 @@
 #include "core/core.h"
 #include "core/DSL.h"
 
+#define DEBUG
+
+#include "general/debug.h"
+
 #include <assert.h>
 
 struct emitRule{
@@ -12,12 +16,17 @@ struct emitRule{
 
 void emitEb(treeNode_t* node, codeGenContext* context);
 void emitBlock(treeNode_t* node, codeGenContext* context);
+void emitMain(treeNode_t* node, codeGenContext* context);
+void emitAssign(treeNode_t* node, codeGenContext* context);
 void emitVar(treeNode_t* node, codeGenContext* context);
 
 void emitPlug(treeNode_t* node, codeGenContext* context);
 
 static emitRule emittersTable[] = {
-    {END_BLOCK, emitEb},
+    {END_BLOCK, emitEb    },
+    {MAIN,      emitMain  },
+    {ASSIGN,    emitAssign},
+    {VARIABLE,  emitVar   },
     // {NUMBER,        emitNumber},
     // {ADD,           emitAdd   },
     // {SUB,           emitSub   },
@@ -45,6 +54,8 @@ static emitRule emittersTable[] = {
 
 const size_t EMIT_TABLE_SIZE = sizeof(emittersTable) / sizeof(emitRule);
 
+#define GET_FUNC_NAME(f) ( #f )
+
 emitter_t getEmitter(ASTnodeType type){
 for(size_t curEmitRuleInd = 0; curEmitRuleInd < EMIT_TABLE_SIZE; curEmitRuleInd++){
         if(type == _EMIT_RULE_TYPE(&emittersTable[curEmitRuleInd])){
@@ -59,15 +70,21 @@ void emitNode(treeNode_t* node, codeGenContext* context){
     assert(node);
     assert(context);
 
+    LPRINTF("emitNode start");
+
     emitter_t curEmitter = getEmitter(_NODE_TYPE(node));    
     if(curEmitter){
         curEmitter(node, context);
     }
+
+    LPRINTF("emitNode end");
 }
 
 void emitEb(treeNode_t* node, codeGenContext* context){
     assert(node);
     assert(context);
+
+    LPRINTF("emitEb start");
 
     if(_L(node)){
         emitBlock(_L(node), context);
@@ -76,47 +93,59 @@ void emitEb(treeNode_t* node, codeGenContext* context){
     if(_R(node)){
         emitBlock(_L(node), context);
     }
+
+    LPRINTF("emitEb end");
 }
 
 void emitBlock(treeNode_t* node, codeGenContext* context){
     assert(node);
     assert(context);
 
+    LPRINTF("emitBlock start");
+
     emitter_t curEmitter = getEmitter(_NODE_TYPE(node));    
     if(curEmitter){
         curEmitter(node, context);
     }
+
+    LPRINTF("emitBlock end");
 }
 
 void emitMain(treeNode_t* node, codeGenContext* context){
     assert(node);
     assert(context);
 
-    fprintf(_CONTEXT_FILE_PTR(context), "_start:");
+    LPRINTF("emitMain start");
 
-    emitter_t curEmitter = getEmitter(_NODE_TYPE(node));    
-    if(_L(node)){
-        curEmitter(_L(node), context);
+    fprintf(_CONTEXT_FILE_PTR(context), "_start:\n");
+
+    emitter_t curEmitter = getEmitter(_NODE_TYPE(_R(node)));    
+    if(_R(node)){
+        curEmitter(_R(node), context);
     }
+
+    LPRINTF("emitMain end");
 }
 
 void emitAssign(treeNode_t* node, codeGenContext* context){
     assert(node);
     assert(context);
 
-    fprintf(_CONTEXT_FILE_PTR(context), "mov");    
+    LPRINTF("emitAssign start");
+
+    fprintf(_CONTEXT_FILE_PTR(context), "mov ");    
 
     if(_L(node)){
         emitVar(_L(node), context);
     }
     
-    fprintf(_CONTEXT_FILE_PTR(context), ",");    
+    fprintf(_CONTEXT_FILE_PTR(context), ", ");    
 
     // if(_R(node)){
     //     emitExpression(_R(node), context);
     // }
 
-
+    LPRINTF("emitAssign end");
 }
 
 void emitVar(treeNode_t* node, codeGenContext* context){
@@ -135,5 +164,6 @@ void emitVar(treeNode_t* node, codeGenContext* context){
 }
 
 void emitPlug(treeNode_t* node, codeGenContext* context){
+    LPRINTF("plug");
     return;
 }

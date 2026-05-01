@@ -43,12 +43,11 @@ listStatus listCtor(list_t* list, size_t capacity, listCmpFunc_t cmpFunc, listCo
     return PROCESS_OK_LIST;
 }
 
-listStatus listDtor(list_t* list){
+listStatus listDtor(list_t* list, listFreeDataFunc_t freeDataFunc){
     assert(list);
 
     for(size_t i = 0; i < list->capacity; i++){
-        poisonMemory(list->elem[i].data, sizeof(char) * listValueMaxLen);
-        free(list->elem[i].data);
+        freeDataFunc(list->elem[i].data);
     }
 
     poisonMemory(list->elem, sizeof(listElem_t) * list->capacity);

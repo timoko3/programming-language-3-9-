@@ -44,12 +44,13 @@ struct regTableElem_t{
 
 regTableElem_t* regTableElemCtor(genPurposeRegs reg, char* name, regUseScenery useScenery, int variableCode, bool isUsed = false);
 
+void regTableInit(list_t* regTable);
 void* regTableCopy(void* dest, void* src);
 int regTableCmp(void* a, void* b);
 
 regTableElem_t* regTableFind(list_t* regTable, listCmpFunc_t findRule, regTableElem_t* refElem);
 int findFreeRegStoreValRule(void* a, void* b);
 
-bool regTableElemDtor(regTableElem_t* elem);
+void regTableElemDtor(void* ptr);
 
 #endif  /* REG_TABLE_H */

@@ -1,11 +1,16 @@
 #include "regTable.h"
 
+#define DEBUG
+
+#include "general/debug.h"
 #include "general/poison.h"
 #include "core/DSL.h"
 
 #include <assert.h>
 #include <malloc.h>
 #include <string.h>
+
+const size_t MAX_REG_NAME_LEN = 5;
 
 regTableElem_t initRegTable[] = {
     {RAX, "rax", FUNC_RET_VAL, false,  PZN_VARIABLE_CODE},  
@@ -30,7 +35,15 @@ regTableElem_t* regTableElemCtor(genPurposeRegs reg, char* name, regUseScenery u
     regTableElem_t* elem = (regTableElem_t*) calloc(1, sizeof(regTableElem_t));
     assert(elem);
 
+    REG_TABLE_ELEM_NAME(elem) = (char*) calloc(MAX_REG_NAME_LEN, sizeof(char));
+    assert(REG_TABLE_ELEM_NAME(elem));
+
+    LPRINTF("name = %s\n", name);
+
     strcpy(REG_TABLE_ELEM_NAME(elem), name);
+
+    LPRINTF("REG_TABLE_ELEM_NAME(elem) = %s\n", REG_TABLE_ELEM_NAME(elem));
+
     REG_TABLE_ELEM_REG(elem)           = reg;
     REG_TABLE_ELEM_USE_BIT(elem)       = isUsed;
     REG_TABLE_ELEM_USE_SCENERY(elem)   = useScenery;
@@ -46,11 +59,16 @@ void regTableInit(list_t* regTable){
                                                            REG_TABLE_ELEM_NAME((&initRegTable[curElem])),
                                                            REG_TABLE_ELEM_USE_SCENERY((&initRegTable[curElem])), 
                                                            REG_TABLE_ELEM_VARIABLE_CODE((&initRegTable[curElem])));
-        listInsertToTail(regTable, (void**) curRegTableElem);
+        LPRINTF("curElemAddr = %p", curRegTableElem);
+        listInsertToTail(regTable, (void*) curRegTableElem);
+        regTableElemDtor(curRegTableElem);
     }
+    listGraphDump(regTable);
 }
 
 void* regTableCopy(void* dest, void* src){
+    if(dest == NULL || src == NULL) return NULL;
+
     regTableElem_t* destRegT = (regTableElem_t*) dest;
     regTableElem_t* srcRegT  = (regTableElem_t*) src;
 
@@ -59,10 +77,16 @@ void* regTableCopy(void* dest, void* src){
     REG_TABLE_ELEM_USE_SCENERY(destRegT)   = REG_TABLE_ELEM_USE_SCENERY(srcRegT); 
     REG_TABLE_ELEM_VARIABLE_CODE(destRegT) = REG_TABLE_ELEM_VARIABLE_CODE(srcRegT); 
 
+    REG_TABLE_ELEM_NAME(destRegT) = (char*) calloc(MAX_REG_NAME_LEN, sizeof(char));
+    strcpy(REG_TABLE_ELEM_NAME(destRegT), REG_TABLE_ELEM_NAME(srcRegT));
+
     return (void*) destRegT;
 }
 
 int regTableCmp(void* a, void* b){
+    if(a == NULL && b == NULL) return 0;
+    if(a == NULL || b == NULL) return 1;
+
     regTableElem_t* regTa  = (regTableElem_t*) a;
     regTableElem_t* regTb  = (regTableElem_t*) b;
 
@@ -88,13 +112,14 @@ regTableElem_t* regTableFind(list_t* regTable, listCmpFunc_t findRule, regTableE
 
     regTable->cmpFunc = saveCmp;
 
-    return (regTableElem_t*) &regTable->elem[result];
+    return (regTableElem_t*) regTable->elem[result].data;
 }
 
 int findFreeRegStoreValRule(void* a, void* b){
+    
     regTableElem_t* regTa  = (regTableElem_t*) a;
     regTableElem_t* regTb  = (regTableElem_t*) b;
-
+    
     int result = 1;
 
     if((REG_TABLE_ELEM_USE_BIT(regTa) == REG_TABLE_ELEM_USE_BIT(regTb)) &&
@@ -105,9 +130,11 @@ int findFreeRegStoreValRule(void* a, void* b){
     return result;
 }
 
-bool regTableElemDtor(regTableElem_t* elem){
-    free(elem);
-    poisonMemory(elem, sizeof(elem));
+void regTableElemDtor(void* ptr){
+    regTableElem_t* elem = (regTableElem_t*) ptr;
 
-    return true;
+    free(REG_TABLE_ELEM_NAME(elem));
+
+    poisonMemory(elem, sizeof(elem));
+    free(elem);
 }

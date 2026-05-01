@@ -295,7 +295,7 @@ void listGraphDump(list_t* list){
         }
         
         if(list->cmpFunc(*data(list, curCellInd), LIST_POISON)){
-            fprintf(graphFilePtr, "\tnode%d [label=\"phys idx = %d | data = %s | {prev = %d | next = %d} \"];\n", curCellInd, curCellInd, *data(list, curCellInd), *prev(list, curCellInd), *next(list, curCellInd));
+            fprintf(graphFilePtr, "\tnode%d [label=\"phys idx = %d | data = %p | {prev = %d | next = %d} \"];\n", curCellInd, curCellInd, *data(list, curCellInd), *prev(list, curCellInd), *next(list, curCellInd));
         }
         else{
             fprintf(graphFilePtr, "\tnode%d [label=\"phys idx = %d | data = PZN | {prev = %d | next = %d} \"];\n", curCellInd, curCellInd, *prev(list, curCellInd), *next(list, curCellInd));
