@@ -69,7 +69,9 @@ void regTableInit(list_t* regTable){
 void* regTableCopy(void* dest, void* src){
     if(dest == NULL || src == NULL) return NULL;
 
-    regTableElem_t* destRegT = (regTableElem_t*) dest;
+    regTableElem_t* destRegT = (regTableElem_t*) calloc(1, sizeof(regTableElem_t));
+    assert(destRegT);
+
     regTableElem_t* srcRegT  = (regTableElem_t*) src;
 
     REG_TABLE_ELEM_REG(destRegT)           = REG_TABLE_ELEM_REG(srcRegT); 

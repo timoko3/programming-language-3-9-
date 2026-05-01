@@ -1,4 +1,4 @@
 section .text
 global _start
 _start:
-mov rbx, 5
+mov rbx, mov r8, mov r9, 

@@ -17,20 +17,24 @@ struct emitRule{
 void emitEb(treeNode_t* node, codeGenContext* context);
 void emitBlock(treeNode_t* node, codeGenContext* context);
 void emitMain(treeNode_t* node, codeGenContext* context);
+void emitEs(treeNode_t* node, codeGenContext* context);
+void emitStatement(treeNode_t* node, codeGenContext* context);
 void emitAssign(treeNode_t* node, codeGenContext* context);
 void emitVar(treeNode_t* node, codeGenContext* context);
 void emitExpression(treeNode_t* node, codeGenContext* context);
 void emitNumber(treeNode_t* node, codeGenContext* context);
 
+inline void emitNonTerminal(treeNode_t* node, codeGenContext* context);
 
 void emitPlug(treeNode_t* node, codeGenContext* context);
 
 static emitRule emittersTable[] = {
-    {END_BLOCK, emitEb           },
-    {MAIN,      emitMain         },
-    {ASSIGN,    emitAssign       },
-    {VARIABLE,  emitVar          },
-    {NUMBER,    emitNumber       },
+    {END_BLOCK,     emitEb       },
+    {MAIN,          emitMain     },
+    {END_STATEMENT, emitEs       },
+    {ASSIGN,        emitAssign   },
+    {VARIABLE,      emitVar      },
+    {NUMBER,        emitNumber   },
     // {NUMBER,        emitNumber},
     // {ADD,           emitAdd   },
     // {SUB,           emitSub   },
@@ -50,7 +54,6 @@ static emitRule emittersTable[] = {
     {IN,            emitPlug  },
     {OUT,           emitPlug  },
     {ASSIGN,        emitPlug  },
-    {END_STATEMENT, emitPlug  },
     {MAIN,          emitPlug  },
     // {POPM,          emitPopm  },
     // {DRAW,          emitDraw  }
@@ -76,10 +79,7 @@ void emitNode(treeNode_t* node, codeGenContext* context){
 
     LPRINTF("emitNode start");
 
-    emitter_t curEmitter = getEmitter(_NODE_TYPE(node));    
-    if(curEmitter){
-        curEmitter(node, context);
-    }
+    emitNonTerminal(node, context);
 
     LPRINTF("emitNode end");
 }
@@ -95,7 +95,7 @@ void emitEb(treeNode_t* node, codeGenContext* context){
     }
 
     if(_R(node)){
-        emitBlock(_L(node), context);
+        emitBlock(_R(node), context);
     }
 
     LPRINTF("emitEb end");
@@ -107,10 +107,7 @@ void emitBlock(treeNode_t* node, codeGenContext* context){
 
     LPRINTF("emitBlock start");
 
-    emitter_t curEmitter = getEmitter(_NODE_TYPE(node));    
-    if(curEmitter){
-        curEmitter(node, context);
-    }
+    emitNonTerminal(node, context);
 
     LPRINTF("emitBlock end");
 }
@@ -123,12 +120,39 @@ void emitMain(treeNode_t* node, codeGenContext* context){
 
     fprintf(_CONTEXT_FILE_PTR(context), "_start:\n");
 
-    emitter_t curEmitter = getEmitter(_NODE_TYPE(_R(node)));    
     if(_R(node)){
-        curEmitter(_R(node), context);
+        emitBlock(_R(node), context);
     }
 
     LPRINTF("emitMain end");
+}
+
+void emitEs(treeNode_t* node, codeGenContext* context){
+    assert(node);
+    assert(context);
+
+    LPRINTF("emitEs start");
+
+    if(_L(node)){
+        emitStatement(_L(node), context);
+    }
+
+    if(_R(node)){
+        emitStatement(_R(node), context);
+    }
+
+    LPRINTF("emitEs end");
+}
+
+void emitStatement(treeNode_t* node, codeGenContext* context){
+    assert(node);
+    assert(context);
+
+    LPRINTF("emitStatement start");
+
+    emitNonTerminal(node, context);
+
+    LPRINTF("emitStatement end");
 }
 
 void emitAssign(treeNode_t* node, codeGenContext* context){
@@ -149,6 +173,8 @@ void emitAssign(treeNode_t* node, codeGenContext* context){
         emitExpression(_R(node), context);
     }
 
+    fprintf(_CONTEXT_FILE_PTR(context), "\n");    
+
     LPRINTF("emitAssign end");
 }
 
@@ -156,21 +182,24 @@ void emitVar(treeNode_t* node, codeGenContext* context){
     assert(node);
     assert(context);
 
+    LPRINTF("emitVar end");
+
     regTableElem_t* refReg = regTableElemCtor(NONE, "", STORE_VAR, PZN_VARIABLE_CODE, 0);
     assert(refReg);
 
     regTableElem_t* foundReg = regTableFind(_CONTEXT_REG_TABLE(context), findFreeRegStoreValRule, refReg);
     assert(foundReg);
 
-
-
     sscanf(_NODE_WRITE_FILE(node), "VAR%d", &REG_TABLE_ELEM_VARIABLE_CODE(foundReg));
+    REG_TABLE_ELEM_USE_BIT(foundReg) = 1;
 
-    printf("code = %d", REG_TABLE_ELEM_VARIABLE_CODE(foundReg));
+    printf("code = %d\n", REG_TABLE_ELEM_VARIABLE_CODE(foundReg));
 
     fprintf(_CONTEXT_FILE_PTR(context), "%s", REG_TABLE_ELEM_NAME(foundReg));
 
     regTableElemDtor(refReg);
+
+    LPRINTF("emitVar end");
 }
 
 void emitExpression(treeNode_t* node, codeGenContext* context){
@@ -179,10 +208,7 @@ void emitExpression(treeNode_t* node, codeGenContext* context){
 
     LPRINTF("emitExpression start");
 
-    emitter_t curEmitter = getEmitter(_NODE_TYPE(node));    
-    if(curEmitter){
-        curEmitter(node, context);
-    }
+    emitNonTerminal(node, context);
 
     LPRINTF("emitExpression end");    
 }
@@ -201,4 +227,15 @@ void emitNumber(treeNode_t* node, codeGenContext* context){
 void emitPlug(treeNode_t* node, codeGenContext* context){
     LPRINTF("plug");
     return;
+}
+
+
+inline void emitNonTerminal(treeNode_t* node, codeGenContext* context){
+    assert(node);
+    assert(context);
+
+    emitter_t curEmitter = getEmitter(_NODE_TYPE(node));    
+    if(curEmitter){
+        curEmitter(node, context);
+    }
 }
