@@ -26,7 +26,7 @@ regTableElem_t initRegTable[] = {
     {R15, "r15", STORE_VAR,    false,  PZN_VARIABLE_CODE},  
 };
 
-regTableElem_t* regTableElemCtor(genPurposeRegs reg, char* name, regUseScenery useScenery, int variableCode, bool isUsed = false){
+regTableElem_t* regTableElemCtor(genPurposeRegs reg, char* name, regUseScenery useScenery, int variableCode, bool isUsed){
     regTableElem_t* elem = (regTableElem_t*) calloc(1, sizeof(regTableElem_t));
     assert(elem);
 

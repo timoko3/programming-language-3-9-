@@ -12,6 +12,9 @@ struct emitRule{
 
 void emitEb(treeNode_t* node, codeGenContext* context);
 void emitBlock(treeNode_t* node, codeGenContext* context);
+void emitVar(treeNode_t* node, codeGenContext* context);
+
+void emitPlug(treeNode_t* node, codeGenContext* context);
 
 static emitRule emittersTable[] = {
     {END_BLOCK, emitEb},

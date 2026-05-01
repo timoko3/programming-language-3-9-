@@ -1,4 +1,5 @@
 #include "emittersX86.h"
+#include "nasmGeneration.h"
 
 #include "core/DSL.h"
 
@@ -7,6 +8,8 @@
 
 #include <malloc.h>
 #include <assert.h>
+
+void genPreamble(codeGenContext* context);
 
 void genAsmCode(tree_t* syntaxTree, const char* destFileName){
     assert(syntaxTree);
@@ -20,15 +23,17 @@ void genAsmCode(tree_t* syntaxTree, const char* destFileName){
     assert(asmFilePtr);
 
     codeGenContext context;
-    list_t* regTable = (list_t*) calloc(1, sizeof(list_t));
-    listCtor(regTable, regTableCmp, regTableCopy);
+    list_t regTable;
+    listCtor(&regTable, AMOUNT_REGS, regTableCmp, regTableCopy);
 
     _CONTEXT_FILE_PTR(&context) = asmFilePtr;
-    _CONTEXT_REG_TABLE(&context) = regTable;
+    _CONTEXT_REG_TABLE(&context) = &regTable;
+
+    genPreamble(&context);
 
     emitNode(syntaxTree->root, &context);
 
-    listDtor(regTable);
+    listDtor(&regTable);
 
     fclose(asmFilePtr);
 }

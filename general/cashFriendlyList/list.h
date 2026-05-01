@@ -8,7 +8,7 @@
 
 const size_t listValueMaxLen = 64;
 
-listStatus listCtor(list_t* list, listCmpFunc_t cmpFunc, listCopyFunc_t copyFunc);
+listStatus listCtor(list_t* list, size_t capacity, listCmpFunc_t cmpFunc, listCopyFunc_t copyFunc);
 listStatus listDtor(list_t* list);
 
 listStatus listInsertAfter(list_t* list, int index, listVal_t insValue);

@@ -21,7 +21,7 @@ bool hashTableCtor  (hashTable_t* hashTable, size_t capacity,  listCmpFunc_t cmp
 
     for(size_t i = 0; i < capacity; i++){
         HASH_TABLE_CELLS(hashTable)[i].value.capacity = LIST_START_CAPACITY; 
-        listCtor(&HASH_TABLE_CELLS(hashTable)[i].value, cmpFunc, copyFunc);
+        listCtor(&HASH_TABLE_CELLS(hashTable)[i].value, LIST_START_CAPACITY, cmpFunc, copyFunc);
     }
 
     return true;

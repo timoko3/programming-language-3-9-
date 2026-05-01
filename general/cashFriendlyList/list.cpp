@@ -20,11 +20,13 @@ static listStatus listInit(list_t* list, size_t startIndex = 1);
 static listStatus reallocateList(list_t* list); 
 static void placeNodeRight(list_t* list, int logicalInd, int physicalInd);
 
-listStatus listCtor(list_t* list, listCmpFunc_t cmpFunc, listCopyFunc_t copyFunc){
+listStatus listCtor(list_t* list, size_t capacity, listCmpFunc_t cmpFunc, listCopyFunc_t copyFunc){
     assert(list);
-    assert(list->capacity > 2);
     assert(cmpFunc);
     assert(copyFunc);
+    
+    list->capacity = capacity;
+    assert(list->capacity > 2);
 
     list->size     = 0;
     *freeInd(list) = 1;
