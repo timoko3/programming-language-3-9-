@@ -31,7 +31,7 @@ enum regUseScenery{
 struct regTableElem_t{
     genPurposeRegs reg;
     regUseScenery  useBit     : 1;
-    regUseScenery  UseScenery : 7;
+    regUseScenery  useScenery : 7;
     int            variableCode;
 };
 
