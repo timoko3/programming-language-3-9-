@@ -103,7 +103,22 @@ void emitAssign(treeNode_t* node, codeGenContext* context){
 
     fprintf(_CONTEXT_FILE_PTR(context), "mov");    
 
-    emitVar()
+    if(_L(node)){
+        emitVar(_L(node), context);
+    }
+    
+    if(_R(node)){
+        emitExpression(_R(node), context);
+    }
+
+
+}
+
+void emitVar(treeNode_t* node, codeGenContext* context){
+    assert(node);
+    assert(context);
+
+
 }
 
 void emitPlug(treeNode_t* node, codeGenContext* context){

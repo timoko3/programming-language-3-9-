@@ -36,7 +36,7 @@ tokensSequence_t* tokenize(char* curBufferPos, tokensSequence_t* tokensSequence,
     hashTable_t* nameTable = (hashTable_t*) calloc(1, sizeof(hashTable_t));
     assert(nameTable);
 
-    hashTableCtor(nameTable, MAX_FUNCS_AMOUNT);
+    hashTableCtor(nameTable, MAX_FUNCS_AMOUNT, compareStrings, copyString);
 
     stackPush(&nameTablesStack, nameTable);
 
@@ -61,7 +61,7 @@ tokensSequence_t* tokenize(char* curBufferPos, tokensSequence_t* tokensSequence,
                 hashTable_t* newNameTable = (hashTable_t*) calloc(1, sizeof(hashTable_t));
                 assert(newNameTable);
 
-                hashTableCtor(newNameTable, MAX_LOCAL_VAR_AMOUNT);
+                hashTableCtor(newNameTable, MAX_LOCAL_VAR_AMOUNT, compareStrings, copyString);
                 stackPush(&nameTablesStack, newNameTable);
 
                 if(_TOKEN_TYPE((&tempToken)) == INIT_FUNC){

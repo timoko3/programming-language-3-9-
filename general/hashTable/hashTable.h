@@ -19,9 +19,11 @@ struct hashTable_t{
     size_t           amountElements; // unique and duplicate
     hashFunction_t   hashFunction;
     hashTableCell_t* cells;
+    // listCopyFunc_t   listCopyFunc;
+    // listCmpFunc_t    listCmpFunc;
 };
 
-bool hashTableCtor(hashTable_t* hashTable, size_t capacity);
+bool hashTableCtor(hashTable_t* hashTable, size_t capacity,  listCmpFunc_t cmpFunc, listCopyFunc_t copyFunc);
 bool hashTableInsert(hashTable_t* hashTable, char* str, int* insertCellNum);
 bool hashTableFind(hashTable_t* hashTable, char* str, int* findCellNum);
 bool hashTableDtor(hashTable_t* hashTable);

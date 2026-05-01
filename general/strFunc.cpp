@@ -371,3 +371,11 @@ static bool isSpecialVarSymCodepoint(uint32_t c){
 
     return false;
 }
+
+int compareStrings(void* a, void* b){
+    return strcmp((char*)a, (char*)b);
+}
+
+void* copyString(void* a, void* b){
+    return strcpy((char*) a, (char*) b);
+}

@@ -11,7 +11,7 @@
 
 const size_t LIST_START_CAPACITY          = 3;
 
-bool hashTableCtor(hashTable_t* hashTable, size_t capacity){
+bool hashTableCtor(hashTable_t* hashTable, size_t capacity, listCmpFunc_t cmpFunc, listCopyFunc_t copyFunc){
     HASH_TABLE_CAPACITY(hashTable)        = capacity; 
     HASH_TABLE_AMOUNT_ELEMENTS(hashTable) = 0; 
     HASH_TABLE_FUNCTION(hashTable)        = gnuHash;
@@ -21,7 +21,7 @@ bool hashTableCtor(hashTable_t* hashTable, size_t capacity){
 
     for(size_t i = 0; i < capacity; i++){
         HASH_TABLE_CELLS(hashTable)[i].value.capacity = LIST_START_CAPACITY; 
-        listCtor(&HASH_TABLE_CELLS(hashTable)[i].value);
+        listCtor(&HASH_TABLE_CELLS(hashTable)[i].value, cmpFunc, copyFunc);
     }
 
     return true;

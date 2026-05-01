@@ -45,4 +45,7 @@ bool isalphaUtf8(const char* str);
 
 char* transliterate(char* str);
 
+int compareStrings(void* a, void* b);
+void* copyString(void* a, void* b);
+
 #endif /* STR_FUNC_H */

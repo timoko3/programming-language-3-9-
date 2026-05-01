@@ -20,16 +20,21 @@ static listStatus listInit(list_t* list, size_t startIndex = 1);
 static listStatus reallocateList(list_t* list); 
 static void placeNodeRight(list_t* list, int logicalInd, int physicalInd);
 
-listStatus listCtor(list_t* list){
+listStatus listCtor(list_t* list, listCmpFunc_t cmpFunc, listCopyFunc_t copyFunc){
     assert(list);
     assert(list->capacity > 2);
+    assert(cmpFunc);
+    assert(copyFunc);
 
     list->size     = 0;
     *freeInd(list) = 1;
 
     list->elem = (listElem_t*) calloc(list->capacity, sizeof(listElem_t));
     assert(list->elem);
-    
+
+    list->cmpFunc  = cmpFunc; 
+    list->copyFunc = copyFunc;
+
     listInit(list, 0);
     
     list->status.type = PROCESS_OK_LIST;
@@ -68,7 +73,7 @@ listStatus listInsertAfter(list_t* list, int insIndex, listVal_t insValue){
         reallocateList(list);
     }
 
-    strcpy(*data(list, *freeInd(list)), insValue);
+    list->copyFunc(*data(list, *freeInd(list)), insValue);
 
     int insertedCellPhysInd = *freeInd(list);
     *freeInd(list) = *next(list, *freeInd(list));
@@ -128,7 +133,7 @@ listStatus listDelete(list_t* list, int deleteIndex){
     *next(list, *prev(list, deleteIndex)) = *next(list, deleteIndex);
     *prev(list, *next(list, deleteIndex)) = *prev(list, deleteIndex);
 
-    strcpy(*data(list, deleteIndex), LIST_POISON);
+    list->copyFunc(*data(list, deleteIndex), LIST_POISON);
     *next(list, deleteIndex) = *freeInd(list);
     *prev(list, deleteIndex) = *tail(list);
 
@@ -157,7 +162,7 @@ listStatus listFind(list_t* list, listVal_t findValue, int* findIndex){
     LPRINTF("size = %llu\n", list->size);
     
     for(size_t i = 0; i < list->size; i++){
-        if(!strcmp(findValue, list->elem[curElem].data)){
+        if(!list->cmpFunc(findValue, list->elem[curElem].data)){
             *findIndex = curElem;
             break; 
         }
@@ -183,13 +188,13 @@ static listStatus listInit(list_t* list, size_t startIndex){
     for(size_t fillInd = startIndex; fillInd < list->capacity; fillInd++){
         LPRINTF("fillInd = %d\n", (int) fillInd);
 
-        strcpy(*data(list, (int) fillInd), LIST_POISON);
+        list->copyFunc(*data(list, (int) fillInd), LIST_POISON);
         *next(list, (int) fillInd) = (int) fillInd + 1;
         *prev(list, (int) fillInd) = (int) fillInd - 1;
     }
 
     if(startIndex == 0){
-        strcpy(*data(list, 0),  LIST_POISON);
+        list->copyFunc(*data(list, 0),  LIST_POISON);
         *head(list) = 0;
         *tail(list) = 0;
     }
