@@ -127,6 +127,11 @@ void emitMain(treeNode_t* node, codeGenContext* context){
         emitBlock(_R(node), context);
     }
 
+    fprintf(_CONTEXT_FILE_PTR(context), "\n\t; sys_exit(0)\n");
+    fprintf(_CONTEXT_FILE_PTR(context), "\tmov rax, 60\n");
+    fprintf(_CONTEXT_FILE_PTR(context), "\tmov rdi, 0\n");
+    fprintf(_CONTEXT_FILE_PTR(context), "\tsyscall\n");
+
     LPRINTF("emitMain end");
 }
 
@@ -169,14 +174,14 @@ void emitAssign(treeNode_t* node, codeGenContext* context){
 
     fprintf(_CONTEXT_FILE_PTR(context), "mov ");    
 
-    if(_L(node)){
-        emitVar(_L(node), context);
+    if(_R(node)){
+        emitExpression(_R(node), context);
     }
     
     fprintf(_CONTEXT_FILE_PTR(context), ", ");    
 
-    if(_R(node)){
-        emitExpression(_R(node), context);
+    if(_L(node)){
+        emitVar(_L(node), context);
     }
 
     fprintf(_CONTEXT_FILE_PTR(context), "\n");    

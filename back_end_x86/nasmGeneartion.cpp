@@ -10,6 +10,7 @@
 #include <assert.h>
 
 void genPreamble(codeGenContext* context);
+void genEpilogue(codeGenContext* context);
 
 void genAsmCode(tree_t* syntaxTree, const char* destFileName){
     assert(syntaxTree);
@@ -32,8 +33,8 @@ void genAsmCode(tree_t* syntaxTree, const char* destFileName){
     _CONTEXT_BLOCK_IM_DEPTH(&context) = 0;
 
     genPreamble(&context);
-
     emitNode(syntaxTree->root, &context);
+    genEpilogue(&context);
 
     listDtor(&regTable, regTableElemDtor);
 
@@ -43,6 +44,13 @@ void genAsmCode(tree_t* syntaxTree, const char* destFileName){
 void genPreamble(codeGenContext* context){
     assert(context);
 
-    fprintf(context->filePtr, "section .text\n");
-    fprintf(context->filePtr, "global _start\n");
+    fprintf(_CONTEXT_FILE_PTR(context), "section .text\n");
+    fprintf(_CONTEXT_FILE_PTR(context), "global _start\n");
+}
+
+void genEpilogue(codeGenContext* context){
+    assert(context);
+
+    // fprintf(_CONTEXT_FILE_PTR(context), "section .text\n");
+    // fprintf(_CONTEXT_FILE_PTR(context), "global _start\n");
 }

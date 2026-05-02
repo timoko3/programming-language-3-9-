@@ -7,3 +7,8 @@ _start:
 	mov rbx, 1
 	mov r10, -5
 	mov r11, 6
+
+	; sys_exit(0)
+	mov rax, 60
+	mov rdi, 0
+	syscall

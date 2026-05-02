@@ -31,6 +31,7 @@ enum regUseScenery{
     FUNC_ARGS,
     FUNC_RET_VAL,
     CALC,
+    TEMP_STORE,
     STACK,
     STORE_VAR
 };
