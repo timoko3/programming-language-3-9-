@@ -30,6 +30,7 @@ enum genPurposeRegs{
 enum regUseScenery{
     FUNC_ARGS,
     FUNC_RET_VAL,
+    CALC,
     STACK,
     STORE_VAR
 };

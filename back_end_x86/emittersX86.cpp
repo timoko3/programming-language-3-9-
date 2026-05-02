@@ -229,7 +229,6 @@ void emitPlug(treeNode_t* node, codeGenContext* context){
     return;
 }
 
-
 inline void emitNonTerminal(treeNode_t* node, codeGenContext* context){
     assert(node);
     assert(context);
@@ -239,3 +238,10 @@ inline void emitNonTerminal(treeNode_t* node, codeGenContext* context){
         curEmitter(node, context);
     }
 }
+
+// inline void emitBinaryOp(treeNode_t* node, codeGenContext* context){
+//     assert(node);
+//     assert(context);
+
+
+// }
