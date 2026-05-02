@@ -24,7 +24,7 @@
 
 #define _CONTEXT_FILE_PTR(context)           (context)->filePtr
 #define _CONTEXT_NAMES(context)              (context)->names
-#define _CONTEXT_LABELS(context)             (context)->labels
+#define _CONTEXT_LABELS_TABLE(context)       (context)->labelsTable
 #define _CONTEXT_STACK_FRAME_OFFSET(context) (context)->stackFrameOffset
 #define _CONTEXT_REG_TABLE(context)          (context)->regTable
 #define _CONTEXT_TEMP_REG(context)           (context)->tempReg
@@ -41,12 +41,8 @@
 #define _SPU_NAME_ADDR(name) (name).addr
 #define _SPU_NAME_SCOPE(name) (name).scope
 
-#define _LABEL_DATA_PREFIX(label) (label)->prefix
-#define _LABEL_DATA_ID(label)  (label)->id
-#define _LABEL_TABLE_DATA(label) (label)->data
-
-#define _LABEL_TABLE_SIZE(labelTable) (labelTable)->size
-#define _LABEL_TABLE_CAPACITY(labelTable) (labelTable)->capacity
+#define _LABEL_DATA_NAME(label)   (label)->name
+#define _LABEL_DATA_ID(label)     (label)->id
 
 #define HASH_TABLE_CAPACITY(hashTable)         hashTable->capacity
 #define HASH_TABLE_AMOUNT_ELEMENTS(hashTable)  hashTable->amountElements

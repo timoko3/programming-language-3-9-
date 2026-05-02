@@ -9,7 +9,7 @@
 #include <malloc.h>
 #include <assert.h>
 
-static void initContext(codeGenContext* context, FILE* asmFilePtr, list_t* regTable);
+static void initContext(codeGenContext* context, FILE* asmFilePtr, list_t* regTable, labelsTable_t* labelsTable);
 static void genPreamble(codeGenContext* context);
 static void genEpilogue(codeGenContext* context);
 
@@ -26,24 +26,29 @@ void genAsmCode(tree_t* syntaxTree, const char* destFileName){
 
     codeGenContext context;
     list_t regTable;
-    initContext(&context, asmFilePtr, &regTable);
+    labelsTable_t labelsTable;
+    initContext(&context, asmFilePtr, &regTable, &labelsTable);
 
     genPreamble(&context);
     emitNode(syntaxTree->root, &context);
     genEpilogue(&context);
 
     listDtor(_CONTEXT_REG_TABLE(&context), regTableElemDtor);
+    listDtor(_CONTEXT_LABELS_TABLE(&context), labelDtor);
 
     fclose(asmFilePtr);
 }
 
-static void initContext(codeGenContext* context, FILE* asmFilePtr, list_t* regTable){
+static void initContext(codeGenContext* context, FILE* asmFilePtr, list_t* regTable, labelsTable_t* labelsTable){
     
     listCtor(regTable, AMOUNT_REGS, regTableCmp, regTableCopy);
     regTableInit(regTable);
 
-    _CONTEXT_FILE_PTR(context) = asmFilePtr;
-    _CONTEXT_REG_TABLE(context) = regTable;
+    listCtor(labelsTable, AMOUNT_LABELS, labelCmp, labelCopy);
+
+    _CONTEXT_FILE_PTR(context)       = asmFilePtr;
+    _CONTEXT_REG_TABLE(context)      = regTable;
+    _CONTEXT_LABELS_TABLE(context)   = labelsTable;
     _CONTEXT_BLOCK_IM_DEPTH(context) = 0;
 
     regTableElem_t* refReg = regTableElemCtor(NONE, "", TEMP_STORE, PZN_VARIABLE_CODE, 0);

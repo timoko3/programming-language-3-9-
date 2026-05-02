@@ -2,6 +2,7 @@
 #define CODE_GENERATION_H
 
 #include "regTable.h"
+#include "labels.h"
 
 #include "general/tree/tree.h"
 
@@ -15,6 +16,7 @@ struct codeGenContext{
     regTableElem_t* tempReg;
     regTableElem_t* calcRegA;
     regTableElem_t* calcRegB;
+    labelsTable_t*  labelsTable;
     int             blockImmersionDepth;
     // size_t          stackFrameBase;
     // size_t          stackFrameOffset;

@@ -20,6 +20,8 @@ regTableElem_t* emitEb(treeNode_t* node, codeGenContext* context);
 regTableElem_t* emitBlock(treeNode_t* node, codeGenContext* context);
 regTableElem_t* emitMain(treeNode_t* node, codeGenContext* context);
 
+regTableElem_t* emitIf(treeNode_t* node, codeGenContext* context);
+regTableElem_t* emitCondition(treeNode_t* node, codeGenContext* context);
 
 regTableElem_t* emitEs(treeNode_t* node, codeGenContext* context);
 regTableElem_t* emitStatement(treeNode_t* node, codeGenContext* context);
@@ -37,6 +39,8 @@ regTableElem_t* emitVar(treeNode_t* node, codeGenContext* context);
 
 regTableElem_t* emitBinaryOpPreamble(treeNode_t* node, codeGenContext* context);
 
+regTableElem_t* emitHlt(treeNode_t* node, codeGenContext* context);
+
 inline regTableElem_t* emitNonTerminal(treeNode_t* node, codeGenContext* context);
 
 regTableElem_t* emitPlug(treeNode_t* node, codeGenContext* context);
@@ -44,15 +48,17 @@ regTableElem_t* emitPlug(treeNode_t* node, codeGenContext* context);
 static emitRule emittersTable[] = {
     {END_BLOCK,     emitEb       },
     {MAIN,          emitMain     },
+    {IF,            emitIf       },
     {END_STATEMENT, emitEs       },
     {ASSIGN,        emitAssign   },
-    {VARIABLE,      emitVar      },
-    {NUMBER,        emitNumber   },
     {SUB,           emitSub      },
     {MUL,           emitMul      },
     {ADD,           emitAdd      },
     {DIVIDE,        emitDiv      },
-    // {HLT,           emitHlt   },
+    {HLT,           emitHlt      },
+    {VARIABLE,      emitVar      },
+    {NUMBER,        emitNumber   },
+    // {SQRT,          emitSqrt  },
     // {RETURN,        emitRet   },
     // {GT,            emitGt    },           
     // {LT,            emitLt    },
@@ -60,8 +66,6 @@ static emitRule emittersTable[] = {
     // {LE,            emitLe    },
     // {EQUAL,         emitEqual },
     // {NOT_EQUAL,     emitNEqual},
-    // {SQRT,          emitSqrt  },
-    {IF,            emitPlug     },
     {WHILE,         emitPlug     },
     {IN,            emitPlug     },
     {OUT,           emitPlug     },
@@ -69,10 +73,20 @@ static emitRule emittersTable[] = {
     // {DRAW,          emitDraw  }
 };
 
+const char* MAIN_START_NAME    = "_start";
+
 const char* ADD_OPERATION_NAME = "add";
-const char* SUB_OPERATION_NAME = "sub";
+const char* SUB_OPERATION_NAME = "sub" ;
 const char* MUL_OPERATION_NAME = "imul";
 const char* DIV_OPERATION_NAME = "idiv";
+
+const char* CMP_OPERATION_NAME = "cmp";
+const char* JG_OPERATION_NAME  = "jg";
+const char* JGE_OPERATION_NAME = "jge";
+const char* JL_OPERATION_NAME  = "jl";
+const char* JLE_OPERATION_NAME = "jle";
+const char* JE_OPERATION_NAME  = "je";
+const char* JNE_OPERATION_NAME = "jne";
 
 const size_t EMIT_TABLE_SIZE = sizeof(emittersTable) / sizeof(emitRule);
 
@@ -141,18 +155,64 @@ regTableElem_t* emitMain(treeNode_t* node, codeGenContext* context){
 
     LPRINTF("emitMain start");
 
-    fprintf(_CONTEXT_FILE_PTR(context), "_start:\n");
+    fprintf(_CONTEXT_FILE_PTR(context), "%s:\n", MAIN_START_NAME);
 
     if(_R(node)){
         emitBlock(_R(node), context);
     }
 
-    fprintf(_CONTEXT_FILE_PTR(context), "\n; sys_exit(0)\n");
-    fprintf(_CONTEXT_FILE_PTR(context), "mov rax, 60\n");
-    fprintf(_CONTEXT_FILE_PTR(context), "mov rdi, 0\n");
-    fprintf(_CONTEXT_FILE_PTR(context), "syscall\n");
+    emitHlt(node, context);
 
     LPRINTF("emitMain end");
+
+    return _CONTEXT_TEMP_REG(context);
+}
+
+regTableElem_t* emitIf(treeNode_t* node, codeGenContext* context){
+    assert(node);
+    assert(context);
+
+    if(_L(node)){
+        emitCondition(_L(node), context);
+    }   
+
+    const char* condJumpInstruction = "";
+
+    switch(_NODE_TYPE(_L(node))){
+        case LE:        condJumpInstruction = JG_OPERATION_NAME ; break; 
+        case LT:        condJumpInstruction = JGE_OPERATION_NAME; break; 
+        case GE:        condJumpInstruction = JL_OPERATION_NAME ; break; 
+        case GT:        condJumpInstruction = JLE_OPERATION_NAME; break; 
+        case EQUAL:     condJumpInstruction = JNE_OPERATION_NAME; break; 
+        case NOT_EQUAL: condJumpInstruction = JE_OPERATION_NAME ; break; 
+        default: break;
+    }
+
+    label_t* ifLabel = createLabel(_CONTEXT_LABELS_TABLE(context), LABEL_PREFIX_IF_END);
+    assert(ifLabel);
+
+    fprintf(_CONTEXT_FILE_PTR(context), "%s .%s_%d\n", condJumpInstruction, _LABEL_DATA_NAME(ifLabel), _LABEL_DATA_ID(ifLabel));
+
+    if(_R(node)){
+        emitBlock(_R(node), context);
+    }   
+
+    fprintf(_CONTEXT_FILE_PTR(context), ".%s_%d:\n", _LABEL_DATA_NAME(ifLabel), _LABEL_DATA_ID(ifLabel));
+
+    return _CONTEXT_TEMP_REG(context);
+}
+
+regTableElem_t* emitCondition(treeNode_t* node, codeGenContext* context){
+    assert(node);
+    assert(context);
+
+    LPRINTF("emitCondition start");
+
+    emitBinaryOpPreamble(node, context);
+
+    fprintf(_CONTEXT_FILE_PTR(context), "%s %s, %s\n", CMP_OPERATION_NAME, REG_TABLE_ELEM_NAME(_CONTEXT_CALC_REG_A(context)), REG_TABLE_ELEM_NAME(_CONTEXT_CALC_REG_B(context)));
+
+    LPRINTF("emitCondition end");
 
     return _CONTEXT_TEMP_REG(context);
 }
@@ -303,7 +363,7 @@ regTableElem_t* emitDiv(treeNode_t* node, codeGenContext* context){
     fprintf(_CONTEXT_FILE_PTR(context), "xor rdx, rdx\n", REG_TABLE_ELEM_NAME(_CONTEXT_CALC_REG_A(context)));
     fprintf(_CONTEXT_FILE_PTR(context), "mov rax, %s\n", REG_TABLE_ELEM_NAME(_CONTEXT_CALC_REG_A(context)));
 
-    fprintf(_CONTEXT_FILE_PTR(context), "idiv %s\n", DIV_OPERATION_NAME, REG_TABLE_ELEM_NAME(_CONTEXT_CALC_REG_B(context)));
+    fprintf(_CONTEXT_FILE_PTR(context), "%s %s\n", DIV_OPERATION_NAME, REG_TABLE_ELEM_NAME(_CONTEXT_CALC_REG_B(context)));
 
     fprintf(_CONTEXT_FILE_PTR(context), "pop rdx\n");
     fprintf(_CONTEXT_FILE_PTR(context), "pop rax\n");
@@ -358,6 +418,18 @@ regTableElem_t* emitNumber(treeNode_t* node, codeGenContext* context){
     fprintf(_CONTEXT_FILE_PTR(context), "mov %s, %d\n", REG_TABLE_ELEM_NAME(_CONTEXT_TEMP_REG(context)), _NODE_VALUE_NUM(node));
 
     LPRINTF("emitNumber end");
+
+    return _CONTEXT_TEMP_REG(context);
+}
+
+regTableElem_t* emitHlt(treeNode_t* node, codeGenContext* context){
+    assert(node);
+    assert(context);
+
+    fprintf(_CONTEXT_FILE_PTR(context), "\n; sys_exit(0)\n");
+    fprintf(_CONTEXT_FILE_PTR(context), "mov rax, 60\n");
+    fprintf(_CONTEXT_FILE_PTR(context), "mov rdi, 0\n");
+    fprintf(_CONTEXT_FILE_PTR(context), "syscall\n");
 
     return _CONTEXT_TEMP_REG(context);
 }

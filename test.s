@@ -1,11 +1,83 @@
 section .text
 global _start
 _start:
-mov rbx, 0
+
+;startSub
+mov rbx, 9
+mov r8, rbx
+push r8
+
+;startMul
+mov rbx, 3
+mov r8, rbx
+push r8
+mov rbx, 3
+mov r9, rbx
+pop r8
+imul r8, r9
+mov rbx, r8
+
+
+;endMul
+mov r9, rbx
+pop r8
+sub r8, r9
+mov rbx, r8
+
+
+;endSub
 mov r10, rbx
-mov rbx, 0
+
+;startSub
+mov rbx, 9
+mov r8, rbx
+push r8
+
+;startMul
+mov rbx, 3
+mov r8, rbx
+push r8
+mov rbx, 3
+mov r9, rbx
+pop r8
+imul r8, r9
+mov rbx, r8
+
+
+;endMul
+mov r9, rbx
+pop r8
+sub r8, r9
+mov rbx, r8
+
+
+;endSub
 mov r11, rbx
-mov rbx, 0
+
+;startSub
+mov rbx, 9
+mov r8, rbx
+push r8
+
+;startMul
+mov rbx, 3
+mov r8, rbx
+push r8
+mov rbx, 3
+mov r9, rbx
+pop r8
+imul r8, r9
+mov rbx, r8
+
+
+;endMul
+mov r9, rbx
+pop r8
+sub r8, r9
+mov rbx, r8
+
+
+;endSub
 mov r12, rbx
 mov rbx, 1
 mov r10, rbx
@@ -59,6 +131,19 @@ mov rbx, r8
 
 ;endSub
 mov r13, rbx
+mov r8, r13
+push r8
+mov rbx, 0
+mov r9, rbx
+pop r8
+cmp r8, r9
+jge .ifEnd_1
+
+; sys_exit(0)
+mov rax, 60
+mov rdi, 0
+syscall
+.ifEnd_1:
 
 ; sys_exit(0)
 mov rax, 60
