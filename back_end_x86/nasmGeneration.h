@@ -1,13 +1,15 @@
 #ifndef CODE_GENERATION_H
 #define CODE_GENERATION_H
 
+#include "regTable.h"
+
 #include "general/tree/tree.h"
 
 // #include "labels.h"
 
 struct codeGenContext{
     FILE*           filePtr;
-    // labelsTable_t*  labels; 
+    list_t*         regTable;
     // size_t          stackFrameBase;
     // size_t          stackFrameOffset;
 };

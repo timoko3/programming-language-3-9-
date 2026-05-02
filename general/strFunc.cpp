@@ -371,3 +371,20 @@ static bool isSpecialVarSymCodepoint(uint32_t c){
 
     return false;
 }
+
+int compareStrings(void* a, void* b){
+    return strcmp((char*)a, (char*)b);
+}
+
+void* copyString(void* a, void* b){
+    char* dest = (char*) calloc(256, sizeof(char));
+    strcpy((char*) dest, (char*) b);
+    return dest;
+}
+
+void freeStr(void* ptr){
+    char* elem = (char*) ptr;
+
+    poisonMemory(elem, sizeof(elem));
+    free(elem);
+}

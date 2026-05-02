@@ -3,6 +3,7 @@
 
 #include "general/debug.h"
 #include "general/poison.h"
+#include "general/strFunc.h"
 
 #include <malloc.h>
 #include <assert.h>
@@ -11,39 +12,39 @@
 
 const size_t LIST_START_CAPACITY          = 3;
 
-bool hashTableCtor(hashTable_t* hashTable, size_t capacity){
+bool hashTableCtor  (hashTable_t* hashTable, size_t capacity,  listCmpFunc_t cmpFunc, listCopyFunc_t copyFunc, hashFunction_t hashFunc){
     HASH_TABLE_CAPACITY(hashTable)        = capacity; 
     HASH_TABLE_AMOUNT_ELEMENTS(hashTable) = 0; 
-    HASH_TABLE_FUNCTION(hashTable)        = gnuHash;
+    HASH_TABLE_FUNCTION(hashTable)        = hashFunc;
 
     HASH_TABLE_CELLS(hashTable)           = (hashTableCell_t*) calloc(capacity, sizeof(hashTableCell_t));
     assert(HASH_TABLE_CELLS(hashTable));
 
     for(size_t i = 0; i < capacity; i++){
         HASH_TABLE_CELLS(hashTable)[i].value.capacity = LIST_START_CAPACITY; 
-        listCtor(&HASH_TABLE_CELLS(hashTable)[i].value);
+        listCtor(&HASH_TABLE_CELLS(hashTable)[i].value, LIST_START_CAPACITY, cmpFunc, copyFunc);
     }
 
     return true;
 }
 
-bool hashTableInsert(hashTable_t* hashTable, char* str, int* insertCellNum){
+bool hashTableInsert(hashTable_t* hashTable, hashTableElem_t* elem, char* key, int* insertCellNum){
     assert(hashTable);
-    assert(str);
-    assert(insertCellNum);
+    assert(elem);
+    assert(key);
     
-    size_t cellNumber = HASH_TABLE_FUNCTION(hashTable) (str) % HASH_TABLE_CAPACITY(hashTable);
-    *insertCellNum = cellNumber;
+    size_t cellNumber = HASH_TABLE_FUNCTION(hashTable) (key) % HASH_TABLE_CAPACITY(hashTable);
+    if(insertCellNum) *insertCellNum = cellNumber;
     LPRINTF("cellNumber = %llu", cellNumber);
 
     hashTableCell_t* curCell = &(HASH_TABLE_CELLS(hashTable)[cellNumber]);
     
     // check exists word
     int listSearchElemIndex = 0;
-    listFind(&HASH_TABLE_CELL_VALUE(curCell), str, &listSearchElemIndex);
+    listFind(&HASH_TABLE_CELL_VALUE(curCell), elem, &listSearchElemIndex);
     if(!(listSearchElemIndex == SEARCH_NOT_FOUND_VALUE)) return false;
 
-    listInsertToTail(&HASH_TABLE_CELL_VALUE(curCell), str);
+    listInsertToTail(&HASH_TABLE_CELL_VALUE(curCell), elem);
 
     HASH_TABLE_AMOUNT_ELEMENTS(hashTable)++;
 
@@ -54,14 +55,15 @@ bool hashTableInsert(hashTable_t* hashTable, char* str, int* insertCellNum){
     return true;
 }
 
-bool hashTableFind(hashTable_t* hashTable, char* str, int* findCellNum){
+bool hashTableFind(hashTable_t* hashTable, hashTableElem_t* elem, char* key, int* findCellNum){
     assert(hashTable);
-    assert(str);
+    assert(elem);
+    assert(key);
     assert(findCellNum);
 
     *findCellNum = SEARCH_NOT_FOUND_VALUE;
 
-    size_t cellNumber = HASH_TABLE_FUNCTION(hashTable) (str) % HASH_TABLE_CAPACITY(hashTable);
+    size_t cellNumber = HASH_TABLE_FUNCTION(hashTable) (key) % HASH_TABLE_CAPACITY(hashTable);
 
     LPRINTF("cellNumber = %llu", cellNumber);
 
@@ -70,14 +72,14 @@ bool hashTableFind(hashTable_t* hashTable, char* str, int* findCellNum){
     LPRINTF("addrListFindFunc = %p", curCell);
 
     int listSearchElemIndex = 0;
-    if(listFind(&HASH_TABLE_CELL_VALUE(curCell), str, &listSearchElemIndex)) *findCellNum = cellNumber;
+    if(listFind(&HASH_TABLE_CELL_VALUE(curCell), elem, &listSearchElemIndex)) *findCellNum = cellNumber;
 
     return true;
 }
 
 bool hashTableDtor(hashTable_t* hashTable){
     for(size_t i = 0; i < HASH_TABLE_CAPACITY(hashTable); i++){
-        listDtor(&HASH_TABLE_CELLS(hashTable)[i].value);
+        listDtor(&HASH_TABLE_CELLS(hashTable)[i].value, freeStr);
     }
 
     free(HASH_TABLE_CELLS(hashTable));     
@@ -90,3 +92,5 @@ bool hashTableDtor(hashTable_t* hashTable){
 
     return true;
 }
+
+

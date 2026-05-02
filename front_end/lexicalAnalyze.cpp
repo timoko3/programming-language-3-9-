@@ -36,7 +36,7 @@ tokensSequence_t* tokenize(char* curBufferPos, tokensSequence_t* tokensSequence,
     hashTable_t* nameTable = (hashTable_t*) calloc(1, sizeof(hashTable_t));
     assert(nameTable);
 
-    hashTableCtor(nameTable, MAX_FUNCS_AMOUNT);
+    hashTableCtor(nameTable, MAX_FUNCS_AMOUNT, compareStrings, copyString, gnuHash);
 
     stackPush(&nameTablesStack, nameTable);
 
@@ -61,7 +61,7 @@ tokensSequence_t* tokenize(char* curBufferPos, tokensSequence_t* tokensSequence,
                 hashTable_t* newNameTable = (hashTable_t*) calloc(1, sizeof(hashTable_t));
                 assert(newNameTable);
 
-                hashTableCtor(newNameTable, MAX_LOCAL_VAR_AMOUNT);
+                hashTableCtor(newNameTable, MAX_LOCAL_VAR_AMOUNT, compareStrings, copyString, gnuHash);
                 stackPush(&nameTablesStack, newNameTable);
 
                 if(_TOKEN_TYPE((&tempToken)) == INIT_FUNC){
@@ -178,9 +178,9 @@ static bool parseName(char* curBufferPos, token_t* token, char** endPos, ASTnode
         LPRINTF("startNameTableFind str: %s", curTokenValue);
 
         int curCellNum = 0;
-        hashTableFind(nameTable, curTokenValue, &curCellNum);
+        hashTableFind(nameTable, (void**) curTokenValue, curTokenValue, &curCellNum);
         if(curCellNum == SEARCH_NOT_FOUND_VALUE){
-            hashTableInsert(nameTable, curTokenValue, &curCellNum);
+            hashTableInsert(nameTable, (void**) curTokenValue, curTokenValue, &curCellNum);
         }
 
         LPRINTF("foundCellNum: %d", curCellNum);

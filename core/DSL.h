@@ -22,10 +22,11 @@
 #define _EMIT_RULE_TYPE(emitRule) (emitRule)->type
 #define _EMIT_RULE_EMITTER(emitRule) (emitRule)->emitter
 
-#define _CONTEXT_FILE_PTR(context)         (context)->filePtr
-#define _CONTEXT_NAMES(context)            (context)->names
-#define _CONTEXT_LABELS(context)           (context)->labels
+#define _CONTEXT_FILE_PTR(context)           (context)->filePtr
+#define _CONTEXT_NAMES(context)              (context)->names
+#define _CONTEXT_LABELS(context)             (context)->labels
 #define _CONTEXT_STACK_FRAME_OFFSET(context) (context)->stackFrameOffset
+#define _CONTEXT_REG_TABLE(context)          (context)->regTable
 
 #define _SPU_NAME_TABLE_SIZE(spuNameTable) (spuNameTable)->size
 #define _SPU_NAME_TABLE_CAPACITY(spuNameTable) (spuNameTable)->capacity
@@ -51,5 +52,10 @@
 #define HASH_TABLE_CELL_VALUE(hashTableCell)   hashTableCell->value
 #define HASH_TABLE_CELL_HASH(hashTableCell)    hashTableCell->hash
 
+#define REG_TABLE_ELEM_REG(regTable)           regTable->reg
+#define REG_TABLE_ELEM_NAME(regTable)          regTable->name
+#define REG_TABLE_ELEM_USE_BIT(regTable)       regTable->useBit
+#define REG_TABLE_ELEM_USE_SCENERY(regTable)   regTable->useScenery
+#define REG_TABLE_ELEM_VARIABLE_CODE(regTable) regTable->variableCode
 
 #endif /* DSL_H */

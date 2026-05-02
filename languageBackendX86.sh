@@ -5,15 +5,14 @@ TARGET="back_endX86.out"
 STD="-std=c++17"
 
 SOURCES=(
-    back_end_x86/main.cpp
-    back_end_x86/backEndX86.cpp
+    back_end_x86/*.cpp
     general/*.cpp
     general/tree/*.cpp
     general/tokens/*.cpp
     general/devTools/*.cpp
     # general/stack/*.cpp
     # general/hashTable/*.cpp
-    # general/cashFriendlyList/*.cpp
+    general/cashFriendlyList/*.cpp
     # general/cashFriendlyList/optimizedStrcmp.o
     core/*.cpp
 )

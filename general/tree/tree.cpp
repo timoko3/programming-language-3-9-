@@ -56,6 +56,11 @@ treeNode_t* createNewNodeNumber(double value, treeNode_t* left, treeNode_t* righ
 
     _NODE_VALUE_NUM(newNode) = value;
 
+    _NODE_WRITE_FILE(newNode) = (char*) calloc(MAX_NODE_VALUE_SIZE, sizeof(char));    // можно менять строку для записи
+    assert(_NODE_WRITE_FILE(newNode));
+
+    sprintf(_NODE_WRITE_FILE(newNode), "%d", value); 
+
     return newNode;
 }
 

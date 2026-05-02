@@ -149,6 +149,12 @@ hash_t murMurHash(hashData_t str){
 
 }
 
+hash_t regTableHash(hashData_t str){
+    assert(str);
+
+    return (hash_t) atoi(str);
+}
+
 // hash_t crcOptimizedHash(hashData_t str){
 //     assert(str);
 

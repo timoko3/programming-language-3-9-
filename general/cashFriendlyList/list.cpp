@@ -20,8 +20,12 @@ static listStatus listInit(list_t* list, size_t startIndex = 1);
 static listStatus reallocateList(list_t* list); 
 static void placeNodeRight(list_t* list, int logicalInd, int physicalInd);
 
-listStatus listCtor(list_t* list){
+listStatus listCtor(list_t* list, size_t capacity, listCmpFunc_t cmpFunc, listCopyFunc_t copyFunc){
     assert(list);
+    assert(cmpFunc);
+    assert(copyFunc);
+    
+    list->capacity = capacity;
     assert(list->capacity > 2);
 
     list->size     = 0;
@@ -29,20 +33,25 @@ listStatus listCtor(list_t* list){
 
     list->elem = (listElem_t*) calloc(list->capacity, sizeof(listElem_t));
     assert(list->elem);
-    
+
+    list->cmpFunc  = cmpFunc; 
+    list->copyFunc = copyFunc;
+
     listInit(list, 0);
     
     list->status.type = PROCESS_OK_LIST;
     return PROCESS_OK_LIST;
 }
 
-listStatus listDtor(list_t* list){
+listStatus listDtor(list_t* list, listFreeDataFunc_t freeDataFunc){
     assert(list);
 
-    for(size_t i = 0; i < list->capacity; i++){
-        poisonMemory(list->elem[i].data, sizeof(char) * listValueMaxLen);
-        free(list->elem[i].data);
+    if(freeDataFunc){
+        for(size_t i = 0; i < list->capacity; i++){
+            if(list->elem[i].data != LIST_POISON) freeDataFunc(list->elem[i].data);
+        }        
     }
+
 
     poisonMemory(list->elem, sizeof(listElem_t) * list->capacity);
     free(list->elem);
@@ -68,7 +77,7 @@ listStatus listInsertAfter(list_t* list, int insIndex, listVal_t insValue){
         reallocateList(list);
     }
 
-    strcpy(*data(list, *freeInd(list)), insValue);
+    *data(list, *freeInd(list)) = list->copyFunc(*data(list, *freeInd(list)), insValue);
 
     int insertedCellPhysInd = *freeInd(list);
     *freeInd(list) = *next(list, *freeInd(list));
@@ -128,7 +137,7 @@ listStatus listDelete(list_t* list, int deleteIndex){
     *next(list, *prev(list, deleteIndex)) = *next(list, deleteIndex);
     *prev(list, *next(list, deleteIndex)) = *prev(list, deleteIndex);
 
-    strcpy(*data(list, deleteIndex), LIST_POISON);
+    *data(list, deleteIndex) = (void*) LIST_POISON;
     *next(list, deleteIndex) = *freeInd(list);
     *prev(list, deleteIndex) = *tail(list);
 
@@ -157,7 +166,7 @@ listStatus listFind(list_t* list, listVal_t findValue, int* findIndex){
     LPRINTF("size = %llu\n", list->size);
     
     for(size_t i = 0; i < list->size; i++){
-        if(!strcmp(findValue, list->elem[curElem].data)){
+        if((list->elem[curElem].data != LIST_POISON) && !list->cmpFunc(findValue, list->elem[curElem].data)){
             *findIndex = curElem;
             break; 
         }
@@ -174,22 +183,22 @@ static listStatus listInit(list_t* list, size_t startIndex){
     static size_t initCount = 0;
 
     for(int allocInd = startIndex; allocInd < list->capacity; allocInd++){
-        *data(list, allocInd) = (char*) calloc(listValueMaxLen, sizeof(char));
-        assert(*data(list, allocInd));
+        // *data(list, allocInd) = (char*) calloc(listValueMaxLen, sizeof(char));
+        // assert(*data(list, allocInd));
         
-        LPRINTF("memAllocated = %llu\n", malloc_usable_size(*data(list, allocInd)));
+        // LPRINTF("memAllocated = %llu\n", malloc_usable_size(*data(list, allocInd)));
     }
 
     for(size_t fillInd = startIndex; fillInd < list->capacity; fillInd++){
         LPRINTF("fillInd = %d\n", (int) fillInd);
 
-        strcpy(*data(list, (int) fillInd), LIST_POISON);
+        *data(list, (int) fillInd) = (void*) LIST_POISON;
         *next(list, (int) fillInd) = (int) fillInd + 1;
         *prev(list, (int) fillInd) = (int) fillInd - 1;
     }
 
     if(startIndex == 0){
-        strcpy(*data(list, 0),  LIST_POISON);
+        *data(list, 0) = (void*) LIST_POISON;
         *head(list) = 0;
         *tail(list) = 0;
     }
