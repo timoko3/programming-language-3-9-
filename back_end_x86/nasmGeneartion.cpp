@@ -9,7 +9,7 @@
 #include <malloc.h>
 #include <assert.h>
 
-static void initContext(codeGenContext* context, FILE* asmFilePtr);
+static void initContext(codeGenContext* context, FILE* asmFilePtr, list_t* regTable);
 static void genPreamble(codeGenContext* context);
 static void genEpilogue(codeGenContext* context);
 
@@ -25,7 +25,8 @@ void genAsmCode(tree_t* syntaxTree, const char* destFileName){
     assert(asmFilePtr);
 
     codeGenContext context;
-    initContext(&context, asmFilePtr);
+    list_t regTable;
+    initContext(&context, asmFilePtr, &regTable);
 
     genPreamble(&context);
     emitNode(syntaxTree->root, &context);
@@ -36,13 +37,13 @@ void genAsmCode(tree_t* syntaxTree, const char* destFileName){
     fclose(asmFilePtr);
 }
 
-static void initContext(codeGenContext* context, FILE* asmFilePtr){
-    list_t regTable;
-    listCtor(&regTable, AMOUNT_REGS, regTableCmp, regTableCopy);
-    regTableInit(&regTable);
+static void initContext(codeGenContext* context, FILE* asmFilePtr, list_t* regTable){
+    
+    listCtor(regTable, AMOUNT_REGS, regTableCmp, regTableCopy);
+    regTableInit(regTable);
 
     _CONTEXT_FILE_PTR(context) = asmFilePtr;
-    _CONTEXT_REG_TABLE(context) = &regTable;
+    _CONTEXT_REG_TABLE(context) = regTable;
     _CONTEXT_BLOCK_IM_DEPTH(context) = 0;
 
     regTableElem_t* refReg = regTableElemCtor(NONE, "", STORE_VAR, PZN_VARIABLE_CODE, 0);

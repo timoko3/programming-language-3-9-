@@ -3,9 +3,9 @@
 
 #include "nasmGeneration.h"
 
-typedef void (*emitter_t) (treeNode_t*, codeGenContext*);
+typedef regTableElem_t* (*emitter_t) (treeNode_t*, codeGenContext*);
 
-void emitNode(treeNode_t* node, codeGenContext* context);
+regTableElem_t* emitNode(treeNode_t* node, codeGenContext* context);
 emitter_t getEmitter(ASTnodeType type);
 
 #endif /* EMITERS_X86 */

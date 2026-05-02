@@ -15,19 +15,24 @@ struct emitRule{
     emitter_t   emitter;
 };
 
-void emitEb(treeNode_t* node, codeGenContext* context);
-void emitBlock(treeNode_t* node, codeGenContext* context);
-void emitMain(treeNode_t* node, codeGenContext* context);
-void emitEs(treeNode_t* node, codeGenContext* context);
-void emitStatement(treeNode_t* node, codeGenContext* context);
-void emitAssign(treeNode_t* node, codeGenContext* context);
-void emitVar(treeNode_t* node, codeGenContext* context);
-void emitExpression(treeNode_t* node, codeGenContext* context);
-void emitNumber(treeNode_t* node, codeGenContext* context);
+regTableElem_t* emitEb(treeNode_t* node, codeGenContext* context);
+regTableElem_t* emitBlock(treeNode_t* node, codeGenContext* context);
+regTableElem_t* emitMain(treeNode_t* node, codeGenContext* context);
 
-inline void emitNonTerminal(treeNode_t* node, codeGenContext* context);
 
-void emitPlug(treeNode_t* node, codeGenContext* context);
+regTableElem_t* emitEs(treeNode_t* node, codeGenContext* context);
+regTableElem_t* emitStatement(treeNode_t* node, codeGenContext* context);
+regTableElem_t* emitAssign(treeNode_t* node, codeGenContext* context);
+regTableElem_t* emitExpression(treeNode_t* node, codeGenContext* context);
+regTableElem_t* emitMul(treeNode_t* node, codeGenContext* context);
+regTableElem_t* emitSub(treeNode_t* node, codeGenContext* context);
+
+regTableElem_t* emitNumber(treeNode_t* node, codeGenContext* context);
+regTableElem_t* emitVar(treeNode_t* node, codeGenContext* context);
+
+inline regTableElem_t* emitNonTerminal(treeNode_t* node, codeGenContext* context);
+
+regTableElem_t* emitPlug(treeNode_t* node, codeGenContext* context);
 
 static emitRule emittersTable[] = {
     {END_BLOCK,     emitEb       },
@@ -36,9 +41,9 @@ static emitRule emittersTable[] = {
     {ASSIGN,        emitAssign   },
     {VARIABLE,      emitVar      },
     {NUMBER,        emitNumber   },
+    {SUB,           emitSub      },
+    {MUL,           emitMul      },
     // {ADD,           emitAdd   },
-    // {SUB,           emitSub   },
-    // {MUL,           emitMul   },
     // {DIVIDE,        emitDiv   },
     // {HLT,           emitHlt   },
     // {RETURN,        emitRet   },
@@ -71,7 +76,7 @@ for(size_t curEmitRuleInd = 0; curEmitRuleInd < EMIT_TABLE_SIZE; curEmitRuleInd+
     return NULL;
 }   
 
-void emitNode(treeNode_t* node, codeGenContext* context){ 
+regTableElem_t* emitNode(treeNode_t* node, codeGenContext* context){ 
     assert(node);
     assert(context);
 
@@ -80,9 +85,11 @@ void emitNode(treeNode_t* node, codeGenContext* context){
     emitNonTerminal(node, context);
 
     LPRINTF("emitNode end");
+
+    return _CONTEXT_TEMP_REG(context);
 }
 
-void emitEb(treeNode_t* node, codeGenContext* context){
+regTableElem_t* emitEb(treeNode_t* node, codeGenContext* context){
     assert(node);
     assert(context);
 
@@ -97,9 +104,11 @@ void emitEb(treeNode_t* node, codeGenContext* context){
     }
 
     LPRINTF("emitEb end");
+
+    return _CONTEXT_TEMP_REG(context);
 }
 
-void emitBlock(treeNode_t* node, codeGenContext* context){
+regTableElem_t* emitBlock(treeNode_t* node, codeGenContext* context){
     assert(node);
     assert(context);
 
@@ -112,9 +121,11 @@ void emitBlock(treeNode_t* node, codeGenContext* context){
     _CONTEXT_BLOCK_IM_DEPTH(context)--;
 
     LPRINTF("emitBlock end");
+
+    return _CONTEXT_TEMP_REG(context);
 }
 
-void emitMain(treeNode_t* node, codeGenContext* context){
+regTableElem_t* emitMain(treeNode_t* node, codeGenContext* context){
     assert(node);
     assert(context);
 
@@ -126,15 +137,17 @@ void emitMain(treeNode_t* node, codeGenContext* context){
         emitBlock(_R(node), context);
     }
 
-    fprintf(_CONTEXT_FILE_PTR(context), "\n\t; sys_exit(0)\n");
-    fprintf(_CONTEXT_FILE_PTR(context), "\tmov rax, 60\n");
-    fprintf(_CONTEXT_FILE_PTR(context), "\tmov rdi, 0\n");
-    fprintf(_CONTEXT_FILE_PTR(context), "\tsyscall\n");
+    fprintf(_CONTEXT_FILE_PTR(context), "\n; sys_exit(0)\n");
+    fprintf(_CONTEXT_FILE_PTR(context), "mov rax, 60\n");
+    fprintf(_CONTEXT_FILE_PTR(context), "mov rdi, 0\n");
+    fprintf(_CONTEXT_FILE_PTR(context), "syscall\n");
 
     LPRINTF("emitMain end");
+
+    return _CONTEXT_TEMP_REG(context);
 }
 
-void emitEs(treeNode_t* node, codeGenContext* context){
+regTableElem_t* emitEs(treeNode_t* node, codeGenContext* context){
     assert(node);
     assert(context);
 
@@ -150,43 +163,48 @@ void emitEs(treeNode_t* node, codeGenContext* context){
     }
 
     LPRINTF("emitEs end");
+
+    return _CONTEXT_TEMP_REG(context);
 }
 
-void emitStatement(treeNode_t* node, codeGenContext* context){
+regTableElem_t* emitStatement(treeNode_t* node, codeGenContext* context){
     assert(node);
     assert(context);
 
     LPRINTF("emitStatement start");
 
-    emitTabs(context);
+    // emitTabs(context);
 
     emitNonTerminal(node, context);
 
     LPRINTF("emitStatement end");
+
+    return _CONTEXT_TEMP_REG(context);
 }
 
-void emitAssign(treeNode_t* node, codeGenContext* context){
+regTableElem_t* emitAssign(treeNode_t* node, codeGenContext* context){
     assert(node);
     assert(context);
 
     LPRINTF("emitAssign start");
     
+    regTableElem_t* foundVar = NULL;
+    if(_L(node)){
+        foundVar = emitVar(_L(node), context);
+    }
+
     if(_R(node)){
         emitExpression(_R(node), context);
     }
-    
-    fprintf(_CONTEXT_FILE_PTR(context), "mov ");
 
-    if(_L(node)){
-        emitVar(_L(node), context);
-    }
-
-    fprintf(_CONTEXT_FILE_PTR(context), ", %s\n", REG_TABLE_ELEM_NAME(_CONTEXT_TEMP_REG(context)));       
+    fprintf(_CONTEXT_FILE_PTR(context), "mov %s, %s\n", REG_TABLE_ELEM_NAME(foundVar), REG_TABLE_ELEM_NAME(_CONTEXT_TEMP_REG(context)));       
 
     LPRINTF("emitAssign end");
+
+    return _CONTEXT_TEMP_REG(context);
 }
 
-void emitVar(treeNode_t* node, codeGenContext* context){
+regTableElem_t* emitVar(treeNode_t* node, codeGenContext* context){
     assert(node);
     assert(context);
 
@@ -213,120 +231,127 @@ void emitVar(treeNode_t* node, codeGenContext* context){
 
     printf("code = %d\n", REG_TABLE_ELEM_VARIABLE_CODE(foundReg));
 
-    fprintf(_CONTEXT_FILE_PTR(context), "%s", REG_TABLE_ELEM_NAME(foundReg));
+    // fprintf(_CONTEXT_FILE_PTR(context), "%s", REG_TABLE_ELEM_NAME(foundReg));
 
     regTableElemDtor(refReg);
 
     LPRINTF("emitVar end");
+
+    return foundReg;
 }
 
-void emitExpression(treeNode_t* node, codeGenContext* context){
+regTableElem_t* emitExpression(treeNode_t* node, codeGenContext* context){
     assert(node);
     assert(context);
 
     LPRINTF("emitExpression start");
 
-    emitNonTerminal(node, context);
+    regTableElem_t* retVal = emitNonTerminal(node, context);
 
     LPRINTF("emitExpression end");    
+
+    return retVal;
 }
 
-void emitCalcSecondPriority(treeNode_t* node, codeGenContext* context){
-    assert(node);
-    assert(context);
-
-    if(_NODE_TYPE(node) == ADD || _NODE_TYPE(node) == SUB){
-        emitNonTerminal(node, context);
-    }
-}
-
-void emitCalcFirstPriority(treeNode_t* node, codeGenContext* context){
-    assert(node);
-    assert(context);
-
-    if(_NODE_TYPE(node) == MUL || _NODE_TYPE(node) == DIVIDE){
-        emitNonTerminal(node, context);
-    }
-}
-
-void emitSub(treeNode_t* node, codeGenContext* context){
+regTableElem_t* emitSub(treeNode_t* node, codeGenContext* context){
     assert(node);
     assert(context);
 
     LPRINTF("emitSub start");
 
+    fprintf(_CONTEXT_FILE_PTR(context), "\n;startSub\n");
+
+    regTableElem_t* retVal = NULL;
     if(_L(node)){
-        emitCalcFirstPriority(_L(node), context);
+        retVal = emitExpression(_L(node), context);
     }
+
+    fprintf(_CONTEXT_FILE_PTR(context), "mov %s, %s\n", REG_TABLE_ELEM_NAME(_CONTEXT_CALC_REG_A(context)), REG_TABLE_ELEM_NAME(retVal));
+    fprintf(_CONTEXT_FILE_PTR(context), "push %s\n", REG_TABLE_ELEM_NAME(_CONTEXT_CALC_REG_A(context)));
 
     if(_R(node)){
-        emitCalcFirstPriority(_R(node), context);
+        retVal = emitExpression(_R(node), context);
     }
 
+    fprintf(_CONTEXT_FILE_PTR(context), "mov %s, %s\n", REG_TABLE_ELEM_NAME(_CONTEXT_CALC_REG_B(context)), REG_TABLE_ELEM_NAME(retVal));
+    fprintf(_CONTEXT_FILE_PTR(context), "pop %s\n", REG_TABLE_ELEM_NAME(_CONTEXT_CALC_REG_A(context)));
+
+    fprintf(_CONTEXT_FILE_PTR(context), "sub %s, %s\n", REG_TABLE_ELEM_NAME(_CONTEXT_CALC_REG_A(context)), REG_TABLE_ELEM_NAME(_CONTEXT_CALC_REG_B(context)));
+    fprintf(_CONTEXT_FILE_PTR(context), "mov %s, %s\n", REG_TABLE_ELEM_NAME(_CONTEXT_TEMP_REG(context)), REG_TABLE_ELEM_NAME(_CONTEXT_CALC_REG_A(context)));
+
+    fprintf(_CONTEXT_FILE_PTR(context), "\n\n;endSub\n");
 
     LPRINTF("emitSub end");    
+
+    return _CONTEXT_TEMP_REG(context);
 }
 
-void emitMul(treeNode_t* node, codeGenContext* context){
+regTableElem_t* emitMul(treeNode_t* node, codeGenContext* context){
     assert(node);
     assert(context);
 
     LPRINTF("emitMul start");
 
+    fprintf(_CONTEXT_FILE_PTR(context), "\n;startMul\n");
+
+    regTableElem_t* retVal = NULL;
     if(_L(node)){
-        emitIdentifiersAndLiterals(_L(node), context);
+        retVal = emitExpression(_L(node), context);
     }
 
-    while(_NODE_TYPE(node) == MUL){
-        fprintf(_CONTEXT_FILE_PTR(context), "mov %s, ", REG_TABLE_ELEM_NAME(_CONTEXT_CALC_REG_A(context)));
+    fprintf(_CONTEXT_FILE_PTR(context), "mov %s, %s\n", REG_TABLE_ELEM_NAME(_CONTEXT_CALC_REG_A(context)), REG_TABLE_ELEM_NAME(retVal));
+    fprintf(_CONTEXT_FILE_PTR(context), "push %s\n", REG_TABLE_ELEM_NAME(_CONTEXT_CALC_REG_A(context)));
 
-        if(_R(node)){
-            emitIdentifiersAndLiterals(_R(node), context);
-        }
-
-        fprintf(_CONTEXT_FILE_PTR(context), "imul ");
+    if(_R(node)){
+        retVal = emitExpression(_R(node), context);
     }
+
+    fprintf(_CONTEXT_FILE_PTR(context), "mov %s, %s\n", REG_TABLE_ELEM_NAME(_CONTEXT_CALC_REG_B(context)), REG_TABLE_ELEM_NAME(retVal));
+    fprintf(_CONTEXT_FILE_PTR(context), "pop %s\n", REG_TABLE_ELEM_NAME(_CONTEXT_CALC_REG_A(context)));
+
+    fprintf(_CONTEXT_FILE_PTR(context), "imul %s, %s\n", REG_TABLE_ELEM_NAME(_CONTEXT_CALC_REG_A(context)), REG_TABLE_ELEM_NAME(_CONTEXT_CALC_REG_B(context)));
+    fprintf(_CONTEXT_FILE_PTR(context), "mov %s, %s\n", REG_TABLE_ELEM_NAME(_CONTEXT_TEMP_REG(context)), REG_TABLE_ELEM_NAME(_CONTEXT_CALC_REG_A(context)));
+
+    fprintf(_CONTEXT_FILE_PTR(context), "\n\n;endMul\n");
 
     LPRINTF("emitMul end");    
+
+    return _CONTEXT_TEMP_REG(context);
 }
 
-void emitIdentifiersAndLiterals(treeNode_t* node, codeGenContext* context){
-    assert(node);
-    assert(context);   
-
-    if(_NODE_TYPE(node) == NUMBER || _NODE_TYPE(node) == VARIABLE){
-        emitNonTerminal(node, context);
-    }
-}
-
-
-void emitNumber(treeNode_t* node, codeGenContext* context){
+regTableElem_t* emitNumber(treeNode_t* node, codeGenContext* context){
     assert(node);
     assert(context);
 
     LPRINTF("emitNumber start");
 
-    fprintf(_CONTEXT_FILE_PTR(context), "%d", _NODE_VALUE_NUM(node));
+    fprintf(_CONTEXT_FILE_PTR(context), "mov %s, %d\n", REG_TABLE_ELEM_NAME(_CONTEXT_TEMP_REG(context)), _NODE_VALUE_NUM(node));
 
     LPRINTF("emitNumber end");
+
+    return _CONTEXT_TEMP_REG(context);
 }
 
-void emitPlug(treeNode_t* node, codeGenContext* context){
+regTableElem_t* emitPlug(treeNode_t* node, codeGenContext* context){
     LPRINTF("plug");
-    return;
+    return _CONTEXT_TEMP_REG(context);
 }
 
-inline void emitNonTerminal(treeNode_t* node, codeGenContext* context){
+inline regTableElem_t* emitNonTerminal(treeNode_t* node, codeGenContext* context){
     assert(node);
     assert(context);
 
+    regTableElem_t* retVal = NULL;
+
     emitter_t curEmitter = getEmitter(_NODE_TYPE(node));    
     if(curEmitter){
-        curEmitter(node, context);
+        retVal = curEmitter(node, context);
     }
+
+    return retVal;
 }
 
-// inline void emitBinaryOpPreamble(treeNode_t* node, codeGenContext* context){
+// inline regTableElem_t* emitBinaryOpPreamble(treeNode_t* node, codeGenContext* context){
 //     assert(node);
 //     assert(context);
 
