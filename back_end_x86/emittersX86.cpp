@@ -36,7 +36,6 @@ static emitRule emittersTable[] = {
     {ASSIGN,        emitAssign   },
     {VARIABLE,      emitVar      },
     {NUMBER,        emitNumber   },
-    // {NUMBER,        emitNumber},
     // {ADD,           emitAdd   },
     // {SUB,           emitSub   },
     // {MUL,           emitMul   },
@@ -171,20 +170,18 @@ void emitAssign(treeNode_t* node, codeGenContext* context){
     assert(context);
 
     LPRINTF("emitAssign start");
-
-    fprintf(_CONTEXT_FILE_PTR(context), "mov ");    
-
+    
     if(_R(node)){
         emitExpression(_R(node), context);
     }
     
-    fprintf(_CONTEXT_FILE_PTR(context), ", ");    
+    fprintf(_CONTEXT_FILE_PTR(context), "mov ");
 
     if(_L(node)){
         emitVar(_L(node), context);
     }
 
-    fprintf(_CONTEXT_FILE_PTR(context), "\n");    
+    fprintf(_CONTEXT_FILE_PTR(context), ", %s\n", REG_TABLE_ELEM_NAME(_CONTEXT_TEMP_REG(context)));       
 
     LPRINTF("emitAssign end");
 }
@@ -207,7 +204,7 @@ void emitVar(treeNode_t* node, codeGenContext* context){
         REG_TABLE_ELEM_VARIABLE_CODE(refReg) = PZN_VARIABLE_CODE;
         REG_TABLE_ELEM_USE_SCENERY(refReg)   = STORE_VAR;
 
-        foundReg = regTableFind(_CONTEXT_REG_TABLE(context), findFreeRegStoreValRule, refReg);
+        foundReg = regTableFind(_CONTEXT_REG_TABLE(context), findTypeRegFree, refReg);
         assert(foundReg);   /// remove when stack added
 
         REG_TABLE_ELEM_VARIABLE_CODE(foundReg) = curVarCode;
@@ -233,6 +230,75 @@ void emitExpression(treeNode_t* node, codeGenContext* context){
 
     LPRINTF("emitExpression end");    
 }
+
+void emitCalcSecondPriority(treeNode_t* node, codeGenContext* context){
+    assert(node);
+    assert(context);
+
+    if(_NODE_TYPE(node) == ADD || _NODE_TYPE(node) == SUB){
+        emitNonTerminal(node, context);
+    }
+}
+
+void emitCalcFirstPriority(treeNode_t* node, codeGenContext* context){
+    assert(node);
+    assert(context);
+
+    if(_NODE_TYPE(node) == MUL || _NODE_TYPE(node) == DIVIDE){
+        emitNonTerminal(node, context);
+    }
+}
+
+void emitSub(treeNode_t* node, codeGenContext* context){
+    assert(node);
+    assert(context);
+
+    LPRINTF("emitSub start");
+
+    if(_L(node)){
+        emitCalcFirstPriority(_L(node), context);
+    }
+
+    if(_R(node)){
+        emitCalcFirstPriority(_R(node), context);
+    }
+
+
+    LPRINTF("emitSub end");    
+}
+
+void emitMul(treeNode_t* node, codeGenContext* context){
+    assert(node);
+    assert(context);
+
+    LPRINTF("emitMul start");
+
+    if(_L(node)){
+        emitIdentifiersAndLiterals(_L(node), context);
+    }
+
+    while(_NODE_TYPE(node) == MUL){
+        fprintf(_CONTEXT_FILE_PTR(context), "mov %s, ", REG_TABLE_ELEM_NAME(_CONTEXT_CALC_REG_A(context)));
+
+        if(_R(node)){
+            emitIdentifiersAndLiterals(_R(node), context);
+        }
+
+        fprintf(_CONTEXT_FILE_PTR(context), "imul ");
+    }
+
+    LPRINTF("emitMul end");    
+}
+
+void emitIdentifiersAndLiterals(treeNode_t* node, codeGenContext* context){
+    assert(node);
+    assert(context);   
+
+    if(_NODE_TYPE(node) == NUMBER || _NODE_TYPE(node) == VARIABLE){
+        emitNonTerminal(node, context);
+    }
+}
+
 
 void emitNumber(treeNode_t* node, codeGenContext* context){
     assert(node);
@@ -260,7 +326,7 @@ inline void emitNonTerminal(treeNode_t* node, codeGenContext* context){
     }
 }
 
-// inline void emitBinaryOp(treeNode_t* node, codeGenContext* context){
+// inline void emitBinaryOpPreamble(treeNode_t* node, codeGenContext* context){
 //     assert(node);
 //     assert(context);
 

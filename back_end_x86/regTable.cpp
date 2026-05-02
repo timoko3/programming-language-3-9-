@@ -12,7 +12,7 @@ const size_t MAX_REG_NAME_LEN = 5;
 
 regTableElem_t initRegTable[] = {
     {RAX, "rax", FUNC_RET_VAL, false,  PZN_VARIABLE_CODE},  
-    {RBX, "rbx", STORE_VAR,    false,  PZN_VARIABLE_CODE},  
+    {RBX, "rbx", TEMP_STORE,   false,  PZN_VARIABLE_CODE},  
     {RCX, "rcx", FUNC_ARGS,    false,  PZN_VARIABLE_CODE},  
     {RDX, "rdx", FUNC_ARGS,    false,  PZN_VARIABLE_CODE},  
     {RDI, "rdi", FUNC_ARGS,    false,  PZN_VARIABLE_CODE},  
@@ -21,8 +21,8 @@ regTableElem_t initRegTable[] = {
     {RBP, "rbp", STACK,        true,   PZN_VARIABLE_CODE},  
     {R8,  "r8",  CALC,         false,  PZN_VARIABLE_CODE},  
     {R9,  "r9",  CALC,         false,  PZN_VARIABLE_CODE},  
-    {R10, "r10", TEMP_STORE,   false,  PZN_VARIABLE_CODE},  
-    {R11, "r11", TEMP_STORE,   false,  PZN_VARIABLE_CODE},  
+    {R10, "r10", STORE_VAR,    false,  PZN_VARIABLE_CODE},  
+    {R11, "r11", STORE_VAR,    false,  PZN_VARIABLE_CODE},  
     {R12, "r12", STORE_VAR,    false,  PZN_VARIABLE_CODE},  
     {R13, "r13", STORE_VAR,    false,  PZN_VARIABLE_CODE},  
     {R14, "r14", STORE_VAR,    false,  PZN_VARIABLE_CODE},  
@@ -117,7 +117,7 @@ regTableElem_t* regTableFind(list_t* regTable, listCmpFunc_t findRule, regTableE
     return (regTableElem_t*) regTable->elem[result].data;
 }
 
-int findFreeRegStoreValRule(void* a, void* b){
+int findTypeRegFree(void* a, void* b){
     
     regTableElem_t* regTa  = (regTableElem_t*) a;
     regTableElem_t* regTb  = (regTableElem_t*) b;
@@ -144,6 +144,20 @@ int findVar(void* a, void* b){
 
     return result;
 }
+
+// int findTypeReg(void* a, void* b){
+//     regTableElem_t* regTa  = (regTableElem_t*) a;
+//     regTableElem_t* regTb  = (regTableElem_t*) b;
+
+//     int result = 1;
+
+//     if((REG_TABLE_ELEM_USE_SCENERY(regTa) == REG_TABLE_ELEM_USE_SCENERY(regTb))){
+//         result = 0;
+//     }
+
+//     return result;
+// }   
+
 
 void regTableElemDtor(void* ptr){
     regTableElem_t* elem = (regTableElem_t*) ptr;

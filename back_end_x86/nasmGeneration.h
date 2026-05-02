@@ -12,6 +12,9 @@ const int MAX_IM_DEPTH = 64;
 struct codeGenContext{
     FILE*           filePtr;
     list_t*         regTable;
+    regTableElem_t* tempReg;
+    regTableElem_t* calcRegA;
+    regTableElem_t* calcRegB;
     int             blockImmersionDepth;
     // size_t          stackFrameBase;
     // size_t          stackFrameOffset;

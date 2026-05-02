@@ -27,6 +27,9 @@
 #define _CONTEXT_LABELS(context)             (context)->labels
 #define _CONTEXT_STACK_FRAME_OFFSET(context) (context)->stackFrameOffset
 #define _CONTEXT_REG_TABLE(context)          (context)->regTable
+#define _CONTEXT_TEMP_REG(context)           (context)->tempReg
+#define _CONTEXT_CALC_REG_A(context)         (context)->calcRegA
+#define _CONTEXT_CALC_REG_B(context)         (context)->calcRegB
 #define _CONTEXT_BLOCK_IM_DEPTH(context)     (context)->blockImmersionDepth
 
 #define _SPU_NAME_TABLE_SIZE(spuNameTable) (spuNameTable)->size
