@@ -7,9 +7,12 @@
 
 // #include "labels.h"
 
+const int MAX_IM_DEPTH = 64;
+
 struct codeGenContext{
     FILE*           filePtr;
     list_t*         regTable;
+    int             blockImmersionDepth;
     // size_t          stackFrameBase;
     // size_t          stackFrameOffset;
 };

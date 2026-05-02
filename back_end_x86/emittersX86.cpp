@@ -1,4 +1,5 @@
 #include "emittersX86.h"
+#include "format.h"
 
 #include "core/core.h"
 #include "core/DSL.h"
@@ -105,7 +106,11 @@ void emitBlock(treeNode_t* node, codeGenContext* context){
 
     LPRINTF("emitBlock start");
 
+    _CONTEXT_BLOCK_IM_DEPTH(context)++;
+
     emitNonTerminal(node, context);
+
+    _CONTEXT_BLOCK_IM_DEPTH(context)--;
 
     LPRINTF("emitBlock end");
 }
@@ -136,7 +141,8 @@ void emitEs(treeNode_t* node, codeGenContext* context){
     }
 
     if(_R(node)){
-        emitStatement(_R(node), context);
+        if(_NODE_TYPE(_R(node)) != END_STATEMENT) emitStatement(_R(node), context);
+        else emitEs(_R(node), context);
     }
 
     LPRINTF("emitEs end");
@@ -147,6 +153,8 @@ void emitStatement(treeNode_t* node, codeGenContext* context){
     assert(context);
 
     LPRINTF("emitStatement start");
+
+    emitTabs(context);
 
     emitNonTerminal(node, context);
 
@@ -180,7 +188,7 @@ void emitVar(treeNode_t* node, codeGenContext* context){
     assert(node);
     assert(context);
 
-    LPRINTF("emitVar end");
+    LPRINTF("emitVar start");
 
     int curVarCode = 0;
     sscanf(_NODE_WRITE_FILE(node), "VAR%d", &curVarCode);

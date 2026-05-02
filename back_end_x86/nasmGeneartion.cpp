@@ -29,6 +29,7 @@ void genAsmCode(tree_t* syntaxTree, const char* destFileName){
 
     _CONTEXT_FILE_PTR(&context) = asmFilePtr;
     _CONTEXT_REG_TABLE(&context) = &regTable;
+    _CONTEXT_BLOCK_IM_DEPTH(&context) = 0;
 
     genPreamble(&context);
 
