@@ -34,9 +34,12 @@ regTableElem_t* emitSub(treeNode_t* node, codeGenContext* context);
 
 regTableElem_t* emitDiv(treeNode_t* node, codeGenContext* context);
 
+regTableElem_t* emitSqrt(treeNode_t* node, codeGenContext* context);
+
 regTableElem_t* emitNumber(treeNode_t* node, codeGenContext* context);
 regTableElem_t* emitVar(treeNode_t* node, codeGenContext* context);
 
+regTableElem_t* emitUnaryOpPreamble(treeNode_t* node, codeGenContext* context);
 regTableElem_t* emitBinaryOpPreamble(treeNode_t* node, codeGenContext* context);
 
 regTableElem_t* emitHlt(treeNode_t* node, codeGenContext* context);
@@ -58,7 +61,7 @@ static emitRule emittersTable[] = {
     {HLT,           emitHlt      },
     {VARIABLE,      emitVar      },
     {NUMBER,        emitNumber   },
-    // {SQRT,          emitSqrt  },
+    {SQRT,          emitSqrt     },
     // {RETURN,        emitRet   },
     // {GT,            emitGt    },           
     // {LT,            emitLt    },
@@ -79,6 +82,8 @@ const char* ADD_OPERATION_NAME = "add";
 const char* SUB_OPERATION_NAME = "sub" ;
 const char* MUL_OPERATION_NAME = "imul";
 const char* DIV_OPERATION_NAME = "idiv";
+
+const char* SQRT_OPERATION_NAME = "sqrtss";
 
 const char* CMP_OPERATION_NAME = "cmp";
 const char* JG_OPERATION_NAME  = "jg";
@@ -365,12 +370,37 @@ regTableElem_t* emitDiv(treeNode_t* node, codeGenContext* context){
 
     fprintf(_CONTEXT_FILE_PTR(context), "%s %s\n", DIV_OPERATION_NAME, REG_TABLE_ELEM_NAME(_CONTEXT_CALC_REG_B(context)));
 
+    fprintf(_CONTEXT_FILE_PTR(context), "mov %s, rax\n", REG_TABLE_ELEM_NAME(_CONTEXT_TEMP_REG(context)));
+
     fprintf(_CONTEXT_FILE_PTR(context), "pop rdx\n");
     fprintf(_CONTEXT_FILE_PTR(context), "pop rax\n");
 
     fprintf(_CONTEXT_FILE_PTR(context), "\n\n;endDiv\n");
 
     LPRINTF("emitDiv end");    
+
+    return _CONTEXT_TEMP_REG(context);
+}
+
+regTableElem_t* emitSqrt(treeNode_t* node, codeGenContext* context){
+    assert(node);
+    assert(context);
+
+    LPRINTF("emitSqrt start");    
+
+    fprintf(_CONTEXT_FILE_PTR(context), "\n;startSqrt\n");
+
+    emitUnaryOpPreamble(node, context);
+
+    fprintf(_CONTEXT_FILE_PTR(context), "cvtsi2ss xmm0, %s\n", REG_TABLE_ELEM_NAME(_CONTEXT_CALC_REG_A(context)));
+    fprintf(_CONTEXT_FILE_PTR(context), "%s xmm0, xmm0\n", SQRT_OPERATION_NAME);
+    fprintf(_CONTEXT_FILE_PTR(context), "cvttss2si %s, xmm0\n", REG_TABLE_ELEM_NAME(_CONTEXT_CALC_REG_A(context)));
+
+    fprintf(_CONTEXT_FILE_PTR(context), "mov %s, %s\n", REG_TABLE_ELEM_NAME(_CONTEXT_TEMP_REG(context)), REG_TABLE_ELEM_NAME(_CONTEXT_CALC_REG_A(context)));
+
+    fprintf(_CONTEXT_FILE_PTR(context), "\n\n;endSqrt\n");
+
+    LPRINTF("emitSqrt end");    
 
     return _CONTEXT_TEMP_REG(context);
 }
@@ -471,6 +501,20 @@ regTableElem_t* emitBinaryOpPreamble(treeNode_t* node, codeGenContext* context){
 
     fprintf(_CONTEXT_FILE_PTR(context), "mov %s, %s\n", REG_TABLE_ELEM_NAME(_CONTEXT_CALC_REG_B(context)), REG_TABLE_ELEM_NAME(retVal));
     fprintf(_CONTEXT_FILE_PTR(context), "pop %s\n", REG_TABLE_ELEM_NAME(_CONTEXT_CALC_REG_A(context)));
+
+    return _CONTEXT_TEMP_REG(context);
+}
+
+regTableElem_t* emitUnaryOpPreamble(treeNode_t* node, codeGenContext* context){
+    assert(node);
+    assert(context);
+
+    regTableElem_t* retVal = NULL;
+    if(_R(node)){
+        retVal = emitExpression(_R(node), context);
+    }
+
+    fprintf(_CONTEXT_FILE_PTR(context), "mov %s, %s\n", REG_TABLE_ELEM_NAME(_CONTEXT_CALC_REG_A(context)), REG_TABLE_ELEM_NAME(retVal));
 
     return _CONTEXT_TEMP_REG(context);
 }
