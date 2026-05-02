@@ -30,10 +30,12 @@ regTableElem_t* emitMul(treeNode_t* node, codeGenContext* context);
 regTableElem_t* emitAdd(treeNode_t* node, codeGenContext* context);
 regTableElem_t* emitSub(treeNode_t* node, codeGenContext* context);
 
+regTableElem_t* emitDiv(treeNode_t* node, codeGenContext* context);
+
 regTableElem_t* emitNumber(treeNode_t* node, codeGenContext* context);
 regTableElem_t* emitVar(treeNode_t* node, codeGenContext* context);
 
-regTableElem_t* emitBinaryOp(treeNode_t* node, codeGenContext* context, const char* nameOp);
+regTableElem_t* emitBinaryOpPreamble(treeNode_t* node, codeGenContext* context);
 
 inline regTableElem_t* emitNonTerminal(treeNode_t* node, codeGenContext* context);
 
@@ -49,7 +51,7 @@ static emitRule emittersTable[] = {
     {SUB,           emitSub      },
     {MUL,           emitMul      },
     {ADD,           emitAdd      },
-    // {DIVIDE,        emitDiv   },
+    {DIVIDE,        emitDiv      },
     // {HLT,           emitHlt   },
     // {RETURN,        emitRet   },
     // {GT,            emitGt    },           
@@ -70,6 +72,7 @@ static emitRule emittersTable[] = {
 const char* ADD_OPERATION_NAME = "add";
 const char* SUB_OPERATION_NAME = "sub";
 const char* MUL_OPERATION_NAME = "imul";
+const char* DIV_OPERATION_NAME = "idiv";
 
 const size_t EMIT_TABLE_SIZE = sizeof(emittersTable) / sizeof(emitRule);
 
@@ -228,15 +231,18 @@ regTableElem_t* emitAdd(treeNode_t* node, codeGenContext* context){
     assert(node);
     assert(context);
 
-    LPRINTF("emitSub start");
+    LPRINTF("emitAdd start");
 
-    fprintf(_CONTEXT_FILE_PTR(context), "\n;startSub\n");
+    fprintf(_CONTEXT_FILE_PTR(context), "\n;startAdd\n");
 
-    emitBinaryOp(node, context, ADD_OPERATION_NAME);
+    emitBinaryOpPreamble(node, context);
 
-    fprintf(_CONTEXT_FILE_PTR(context), "\n\n;endSub\n");
+    fprintf(_CONTEXT_FILE_PTR(context), "%s %s, %s\n", ADD_OPERATION_NAME, REG_TABLE_ELEM_NAME(_CONTEXT_CALC_REG_A(context)), REG_TABLE_ELEM_NAME(_CONTEXT_CALC_REG_B(context)));
+    fprintf(_CONTEXT_FILE_PTR(context), "mov %s, %s\n", REG_TABLE_ELEM_NAME(_CONTEXT_TEMP_REG(context)), REG_TABLE_ELEM_NAME(_CONTEXT_CALC_REG_A(context)));
 
-    LPRINTF("emitSub end");    
+    fprintf(_CONTEXT_FILE_PTR(context), "\n\n;endAdd\n");
+
+    LPRINTF("emitAdd end");    
 
     return _CONTEXT_TEMP_REG(context);
 }
@@ -249,7 +255,10 @@ regTableElem_t* emitSub(treeNode_t* node, codeGenContext* context){
 
     fprintf(_CONTEXT_FILE_PTR(context), "\n;startSub\n");
 
-    emitBinaryOp(node, context, SUB_OPERATION_NAME);
+    emitBinaryOpPreamble(node, context);
+
+    fprintf(_CONTEXT_FILE_PTR(context), "%s %s, %s\n", SUB_OPERATION_NAME, REG_TABLE_ELEM_NAME(_CONTEXT_CALC_REG_A(context)), REG_TABLE_ELEM_NAME(_CONTEXT_CALC_REG_B(context)));
+    fprintf(_CONTEXT_FILE_PTR(context), "mov %s, %s\n", REG_TABLE_ELEM_NAME(_CONTEXT_TEMP_REG(context)), REG_TABLE_ELEM_NAME(_CONTEXT_CALC_REG_A(context)));
 
     fprintf(_CONTEXT_FILE_PTR(context), "\n\n;endSub\n");
 
@@ -266,11 +275,42 @@ regTableElem_t* emitMul(treeNode_t* node, codeGenContext* context){
 
     fprintf(_CONTEXT_FILE_PTR(context), "\n;startMul\n");
 
-    emitBinaryOp(node, context, MUL_OPERATION_NAME);
+    emitBinaryOpPreamble(node, context);
+
+    fprintf(_CONTEXT_FILE_PTR(context), "%s %s, %s\n", MUL_OPERATION_NAME, REG_TABLE_ELEM_NAME(_CONTEXT_CALC_REG_A(context)), REG_TABLE_ELEM_NAME(_CONTEXT_CALC_REG_B(context)));
+    fprintf(_CONTEXT_FILE_PTR(context), "mov %s, %s\n", REG_TABLE_ELEM_NAME(_CONTEXT_TEMP_REG(context)), REG_TABLE_ELEM_NAME(_CONTEXT_CALC_REG_A(context)));
 
     fprintf(_CONTEXT_FILE_PTR(context), "\n\n;endMul\n");
 
     LPRINTF("emitMul end");    
+
+    return _CONTEXT_TEMP_REG(context);
+}
+
+regTableElem_t* emitDiv(treeNode_t* node, codeGenContext* context){
+    assert(node);
+    assert(context);
+
+    LPRINTF("emitDiv start");
+
+    fprintf(_CONTEXT_FILE_PTR(context), "\n;startDiv\n");
+
+    emitBinaryOpPreamble(node, context);
+
+    fprintf(_CONTEXT_FILE_PTR(context), "push rax\n");
+    fprintf(_CONTEXT_FILE_PTR(context), "push rdx\n");
+
+    fprintf(_CONTEXT_FILE_PTR(context), "xor rdx, rdx\n", REG_TABLE_ELEM_NAME(_CONTEXT_CALC_REG_A(context)));
+    fprintf(_CONTEXT_FILE_PTR(context), "mov rax, %s\n", REG_TABLE_ELEM_NAME(_CONTEXT_CALC_REG_A(context)));
+
+    fprintf(_CONTEXT_FILE_PTR(context), "idiv %s\n", DIV_OPERATION_NAME, REG_TABLE_ELEM_NAME(_CONTEXT_CALC_REG_B(context)));
+
+    fprintf(_CONTEXT_FILE_PTR(context), "pop rdx\n");
+    fprintf(_CONTEXT_FILE_PTR(context), "pop rax\n");
+
+    fprintf(_CONTEXT_FILE_PTR(context), "\n\n;endDiv\n");
+
+    LPRINTF("emitDiv end");    
 
     return _CONTEXT_TEMP_REG(context);
 }
@@ -341,10 +381,9 @@ inline regTableElem_t* emitNonTerminal(treeNode_t* node, codeGenContext* context
     return retVal;
 }
 
-regTableElem_t* emitBinaryOp(treeNode_t* node, codeGenContext* context, const char* nameOp){
+regTableElem_t* emitBinaryOpPreamble(treeNode_t* node, codeGenContext* context){
     assert(node);
     assert(context);
-    assert(nameOp);
 
     regTableElem_t* retVal = NULL;
     if(_L(node)){
@@ -360,9 +399,6 @@ regTableElem_t* emitBinaryOp(treeNode_t* node, codeGenContext* context, const ch
 
     fprintf(_CONTEXT_FILE_PTR(context), "mov %s, %s\n", REG_TABLE_ELEM_NAME(_CONTEXT_CALC_REG_B(context)), REG_TABLE_ELEM_NAME(retVal));
     fprintf(_CONTEXT_FILE_PTR(context), "pop %s\n", REG_TABLE_ELEM_NAME(_CONTEXT_CALC_REG_A(context)));
-
-    fprintf(_CONTEXT_FILE_PTR(context), "%s %s, %s\n", nameOp, REG_TABLE_ELEM_NAME(_CONTEXT_CALC_REG_A(context)), REG_TABLE_ELEM_NAME(_CONTEXT_CALC_REG_B(context)));
-    fprintf(_CONTEXT_FILE_PTR(context), "mov %s, %s\n", REG_TABLE_ELEM_NAME(_CONTEXT_TEMP_REG(context)), REG_TABLE_ELEM_NAME(_CONTEXT_CALC_REG_A(context)));
 
     return _CONTEXT_TEMP_REG(context);
 }
