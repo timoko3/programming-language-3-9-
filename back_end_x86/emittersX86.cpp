@@ -21,6 +21,7 @@ regTableElem_t* emitBlock(treeNode_t* node, codeGenContext* context);
 regTableElem_t* emitMain(treeNode_t* node, codeGenContext* context);
 
 regTableElem_t* emitIf(treeNode_t* node, codeGenContext* context);
+regTableElem_t* emitWhile(treeNode_t* node, codeGenContext* context);
 regTableElem_t* emitCondition(treeNode_t* node, codeGenContext* context);
 
 regTableElem_t* emitEs(treeNode_t* node, codeGenContext* context);
@@ -52,6 +53,7 @@ static emitRule emittersTable[] = {
     {END_BLOCK,     emitEb       },
     {MAIN,          emitMain     },
     {IF,            emitIf       },
+    {WHILE,         emitWhile    },
     {END_STATEMENT, emitEs       },
     {ASSIGN,        emitAssign   },
     {SUB,           emitSub      },
@@ -203,6 +205,46 @@ regTableElem_t* emitIf(treeNode_t* node, codeGenContext* context){
     }   
 
     fprintf(_CONTEXT_FILE_PTR(context), ".%s_%d:\n", _LABEL_DATA_NAME(ifLabel), _LABEL_DATA_ID(ifLabel));
+
+    return _CONTEXT_TEMP_REG(context);
+}
+
+regTableElem_t* emitWhile(treeNode_t* node, codeGenContext* context){
+    assert(node);
+    assert(context);
+
+    if(_L(node)){
+        emitCondition(_L(node), context);
+    }   
+
+    const char* condJumpInstruction = "";
+
+    switch(_NODE_TYPE(_L(node))){
+        case LE:        condJumpInstruction = JG_OPERATION_NAME ; break; 
+        case LT:        condJumpInstruction = JGE_OPERATION_NAME; break; 
+        case GE:        condJumpInstruction = JL_OPERATION_NAME ; break; 
+        case GT:        condJumpInstruction = JLE_OPERATION_NAME; break; 
+        case EQUAL:     condJumpInstruction = JNE_OPERATION_NAME; break; 
+        case NOT_EQUAL: condJumpInstruction = JE_OPERATION_NAME ; break; 
+        default: break;
+    }
+
+    label_t* whileStartLabel = createLabel(_CONTEXT_LABELS_TABLE(context), LABEL_PREFIX_WHILE_BEGIN);
+    assert(whileStartLabel);
+
+    label_t* whileEndLabel = createLabel(_CONTEXT_LABELS_TABLE(context), LABEL_PREFIX_WHILE_END);
+    assert(whileEndLabel);
+
+    fprintf(_CONTEXT_FILE_PTR(context), ".%s_%d\n", _LABEL_DATA_NAME(whileStartLabel), _LABEL_DATA_ID(whileStartLabel));
+
+    fprintf(_CONTEXT_FILE_PTR(context), "%s .%s_%d\n", condJumpInstruction, _LABEL_DATA_NAME(whileEndLabel), _LABEL_DATA_ID(whileEndLabel));
+
+    if(_R(node)){
+        emitBlock(_R(node), context);
+    }   
+
+    fprintf(_CONTEXT_FILE_PTR(context), "jmp .%s_%d:\n", _LABEL_DATA_NAME(whileStartLabel), _LABEL_DATA_ID(whileStartLabel));
+    fprintf(_CONTEXT_FILE_PTR(context), ".%s_%d:\n", _LABEL_DATA_NAME(whileEndLabel), _LABEL_DATA_ID(whileEndLabel));
 
     return _CONTEXT_TEMP_REG(context);
 }
