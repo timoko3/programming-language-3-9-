@@ -1,64 +1,64 @@
 section .text
 global _start
 _start:
-mov r10, 0
-mov r11, r10
-mov r10, 0
-mov r12, r10
-mov r10, 0
-mov r13, r10
-mov r10, 1
-mov r11, r10
-mov r10, -5
-mov r12, r10
-mov r10, 6
-mov r13, r10
+mov rbx, 0
+mov r10, rbx
+mov rbx, 0
+mov r11, rbx
+mov rbx, 0
+mov r12, rbx
+mov rbx, 1
+mov r10, rbx
+mov rbx, -5
+mov r11, rbx
+mov rbx, 6
+mov r12, rbx
 
 ;startSub
 
 ;startMul
-mov r8, r12
-push r8
-mov r9, r12
-pop r8
-imul r8, r9
-mov r10, r8
-
-
-;endMul
-mov r8, r10
-push r8
-
-;startMul
-
-;startMul
-mov r10, 4
-mov r8, r10
+mov r8, r11
 push r8
 mov r9, r11
 pop r8
 imul r8, r9
-mov r10, r8
+mov rbx, r8
 
 
 ;endMul
-mov r8, r10
+mov r8, rbx
 push r8
-mov r9, r13
-pop r8
-imul r8, r9
-mov r10, r8
 
+;startMul
 
-;endMul
+;startMul
+mov rbx, 4
+mov r8, rbx
+push r8
 mov r9, r10
 pop r8
+imul r8, r9
+mov rbx, r8
+
+
+;endMul
+mov r8, rbx
+push r8
+mov r9, r12
+pop r8
+imul r8, r9
+mov rbx, r8
+
+
+;endMul
+mov r9, rbx
+pop r8
 sub r8, r9
-mov r10, r8
+mov rbx, r8
 
 
 ;endSub
-mov r14, r10
+mov r13, rbx
 
 ; sys_exit(0)
 mov rax, 60

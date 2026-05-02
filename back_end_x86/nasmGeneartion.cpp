@@ -46,7 +46,7 @@ static void initContext(codeGenContext* context, FILE* asmFilePtr, list_t* regTa
     _CONTEXT_REG_TABLE(context) = regTable;
     _CONTEXT_BLOCK_IM_DEPTH(context) = 0;
 
-    regTableElem_t* refReg = regTableElemCtor(NONE, "", STORE_VAR, PZN_VARIABLE_CODE, 0);
+    regTableElem_t* refReg = regTableElemCtor(NONE, "", TEMP_STORE, PZN_VARIABLE_CODE, 0);
     assert(refReg);
     _CONTEXT_TEMP_REG(context) = regTableFind(_CONTEXT_REG_TABLE(context), findTypeRegFree, refReg);
     REG_TABLE_ELEM_USE_BIT(_CONTEXT_TEMP_REG(context)) = 1;
