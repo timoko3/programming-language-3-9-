@@ -20,6 +20,8 @@ regTableElem_t* emitEb(treeNode_t* node, codeGenContext* context);
 regTableElem_t* emitBlock(treeNode_t* node, codeGenContext* context);
 regTableElem_t* emitMain(treeNode_t* node, codeGenContext* context);
 
+regTableElem_t* emitFunc(treeNode_t* node, codeGenContext* context);
+
 regTableElem_t* emitIf(treeNode_t* node, codeGenContext* context);
 regTableElem_t* emitWhile(treeNode_t* node, codeGenContext* context);
 regTableElem_t* emitCondition(treeNode_t* node, codeGenContext* context);
@@ -52,6 +54,7 @@ regTableElem_t* emitPlug(treeNode_t* node, codeGenContext* context);
 static emitRule emittersTable[] = {
     {END_BLOCK,     emitEb       },
     {MAIN,          emitMain     },
+    {FUNCTION,      emitFunc     },
     {IF,            emitIf       },
     {WHILE,         emitWhile    },
     {END_STATEMENT, emitEs       },
@@ -173,6 +176,44 @@ regTableElem_t* emitMain(treeNode_t* node, codeGenContext* context){
     LPRINTF("emitMain end");
 
     return _CONTEXT_TEMP_REG(context);
+}
+
+regTableElem_t* emitFunc(treeNode_t* node, codeGenContext* context){
+    assert(node);
+    assert(context);
+
+    LPRINTF("emitFunc start");
+
+    if(_R(node)){
+        emitInitFunc(node, context);
+    }
+    // else{
+    //     emitCallFunc();
+    // }
+
+    LPRINTF("emitFunc end");
+
+    return _CONTEXT_TEMP_REG(context);
+}
+
+regTableElem_t* emitInitFunc(treeNode_t* node, codeGenContext* context){
+    assert(node);
+    assert(context);
+
+    fprintf(_CONTEXT_FILE_PTR(context), "%s:\n", _NODE_VALUE_STR(node));
+}
+
+regTableElem_t* emitFuncProlog(treeNode_t* node, codeGenContext* context){
+    assert(node);
+    assert(context);
+
+    fprintf(_CONTEXT_FILE_PTR(context), "push rbp\n");
+    fprintf(_CONTEXT_FILE_PTR(context), "mov rbp, rsp\n");
+}
+
+regTableElem_t* emitFuncEpilog(treeNode_t* node, codeGenContext* context){
+    assert(node);
+    assert(context);
 }
 
 regTableElem_t* emitIf(treeNode_t* node, codeGenContext* context){
