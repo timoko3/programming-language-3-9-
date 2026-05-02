@@ -51,6 +51,7 @@ int regTableCmp(void* a, void* b);
 
 regTableElem_t* regTableFind(list_t* regTable, listCmpFunc_t findRule, regTableElem_t* refElem);
 int findFreeRegStoreValRule(void* a, void* b);
+int findVar(void* a, void* b);
 
 void regTableElemDtor(void* ptr);
 

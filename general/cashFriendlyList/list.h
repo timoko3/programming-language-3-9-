@@ -6,6 +6,8 @@
 
 // #define DEBUG
 
+extern const int SEARCH_NOT_FOUND_VALUE;
+
 const size_t listValueMaxLen = 64;
 
 listStatus listCtor(list_t* list, size_t capacity, listCmpFunc_t cmpFunc, listCopyFunc_t copyFunc);

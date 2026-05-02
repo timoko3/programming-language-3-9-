@@ -112,6 +112,8 @@ regTableElem_t* regTableFind(list_t* regTable, listCmpFunc_t findRule, regTableE
     int result = 0;
     listFind(regTable, (void**) refElem, &result);
 
+    if(result == SEARCH_NOT_FOUND_VALUE) return NULL;
+
     regTable->cmpFunc = saveCmp;
 
     return (regTableElem_t*) regTable->elem[result].data;
@@ -126,6 +128,19 @@ int findFreeRegStoreValRule(void* a, void* b){
 
     if((REG_TABLE_ELEM_USE_BIT(regTa) == REG_TABLE_ELEM_USE_BIT(regTb)) &&
         REG_TABLE_ELEM_USE_SCENERY(regTa) == REG_TABLE_ELEM_USE_SCENERY(regTb)){
+        result = 0;
+    }
+
+    return result;
+}
+
+int findVar(void* a, void* b){
+    regTableElem_t* regTa  = (regTableElem_t*) a;
+    regTableElem_t* regTb  = (regTableElem_t*) b;
+
+    int result = 1;
+
+    if((REG_TABLE_ELEM_VARIABLE_CODE(regTa) == REG_TABLE_ELEM_VARIABLE_CODE(regTb))){
         result = 0;
     }
 

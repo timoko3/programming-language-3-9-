@@ -61,8 +61,6 @@ static emitRule emittersTable[] = {
 
 const size_t EMIT_TABLE_SIZE = sizeof(emittersTable) / sizeof(emitRule);
 
-#define GET_FUNC_NAME(f) ( #f )
-
 emitter_t getEmitter(ASTnodeType type){
 for(size_t curEmitRuleInd = 0; curEmitRuleInd < EMIT_TABLE_SIZE; curEmitRuleInd++){
         if(type == _EMIT_RULE_TYPE(&emittersTable[curEmitRuleInd])){
@@ -184,14 +182,24 @@ void emitVar(treeNode_t* node, codeGenContext* context){
 
     LPRINTF("emitVar end");
 
-    regTableElem_t* refReg = regTableElemCtor(NONE, "", STORE_VAR, PZN_VARIABLE_CODE, 0);
+    int curVarCode = 0;
+    sscanf(_NODE_WRITE_FILE(node), "VAR%d", &curVarCode);
+
+    regTableElem_t* refReg = regTableElemCtor(NONE, "", STORE_VAR, curVarCode, 0);
     assert(refReg);
 
-    regTableElem_t* foundReg = regTableFind(_CONTEXT_REG_TABLE(context), findFreeRegStoreValRule, refReg);
-    assert(foundReg);
+    regTableElem_t* foundReg = regTableFind(_CONTEXT_REG_TABLE(context), findVar, refReg);
 
-    sscanf(_NODE_WRITE_FILE(node), "VAR%d", &REG_TABLE_ELEM_VARIABLE_CODE(foundReg));
-    REG_TABLE_ELEM_USE_BIT(foundReg) = 1;
+    if(!foundReg){
+        REG_TABLE_ELEM_VARIABLE_CODE(refReg) = PZN_VARIABLE_CODE;
+        REG_TABLE_ELEM_USE_SCENERY(refReg)   = STORE_VAR;
+
+        foundReg = regTableFind(_CONTEXT_REG_TABLE(context), findFreeRegStoreValRule, refReg);
+        assert(foundReg);   /// remove when stack added
+
+        REG_TABLE_ELEM_VARIABLE_CODE(foundReg) = curVarCode;
+        REG_TABLE_ELEM_USE_BIT(foundReg) = 1;
+    }
 
     printf("code = %d\n", REG_TABLE_ELEM_VARIABLE_CODE(foundReg));
 
