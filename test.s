@@ -2,69 +2,69 @@ section .text
 global _start
 _start:
 mov rbx, 0
-mov r10, rbx
+mov rcx, rbx
 mov rbx, 0
-mov r11, rbx
+mov rdx, rbx
 mov rbx, 0
 mov r12, rbx
 mov rbx, 1
-mov r10, rbx
+mov rcx, rbx
 mov rbx, -5
-mov r11, rbx
+mov rdx, rbx
 mov rbx, 6
 mov r12, rbx
 
 ;startSub
 
 ;startMul
-mov r8, r11
-push r8
-mov r9, r11
-pop r8
-imul r8, r9
-mov rbx, r8
+mov r10, rdx
+push r10
+mov r11, rdx
+pop r10
+imul r10, r11
+mov rbx, r10
 
 
 ;endMul
-mov r8, rbx
-push r8
+mov r10, rbx
+push r10
 
 ;startMul
 
 ;startMul
 mov rbx, 4
-mov r8, rbx
-push r8
-mov r9, r10
-pop r8
-imul r8, r9
-mov rbx, r8
+mov r10, rbx
+push r10
+mov r11, rcx
+pop r10
+imul r10, r11
+mov rbx, r10
 
 
 ;endMul
-mov r8, rbx
-push r8
-mov r9, r12
-pop r8
-imul r8, r9
-mov rbx, r8
+mov r10, rbx
+push r10
+mov r11, r12
+pop r10
+imul r10, r11
+mov rbx, r10
 
 
 ;endMul
-mov r9, rbx
-pop r8
-sub r8, r9
-mov rbx, r8
+mov r11, rbx
+pop r10
+sub r10, r11
+mov rbx, r10
 
 
 ;endSub
 mov r13, rbx
-mov r8, r13
-push r8
+mov r10, r13
+push r10
 mov rbx, 0
-mov r9, rbx
-pop r8
-cmp r8, r9
+mov r11, rbx
+pop r10
+cmp r10, r11
 jge .ifEnd_1
 
 ; sys_exit(0)
@@ -72,12 +72,12 @@ mov rax, 60
 mov rdi, 0
 syscall
 .ifEnd_1:
-mov r8, r13
-push r8
+mov r10, r13
+push r10
 mov rbx, 0
-mov r9, rbx
-pop r8
-cmp r8, r9
+mov r11, rbx
+pop r10
+cmp r10, r11
 jne .ifEnd_2
 
 ;startDiv
@@ -86,55 +86,55 @@ jne .ifEnd_2
 
 ;startMul
 mov rbx, -1
-mov r8, rbx
-push r8
-mov r9, r11
-pop r8
-imul r8, r9
-mov rbx, r8
+mov r10, rbx
+push r10
+mov r11, rdx
+pop r10
+imul r10, r11
+mov rbx, r10
 
 
 ;endMul
-mov r8, rbx
-push r8
+mov r10, rbx
+push r10
 
 ;startSqrt
-mov r8, r13
-cvtsi2ss xmm0, r8
+mov r10, r13
+cvtsi2ss xmm0, r10
 sqrtss xmm0, xmm0
-cvttss2si r8, xmm0
-mov rbx, r8
+cvttss2si r10, xmm0
+mov rbx, r10
 
 
 ;endSqrt
-mov r9, rbx
-pop r8
-add r8, r9
-mov rbx, r8
+mov r11, rbx
+pop r10
+add r10, r11
+mov rbx, r10
 
 
 ;endAdd
-mov r8, rbx
-push r8
+mov r10, rbx
+push r10
 
 ;startMul
 mov rbx, 2
-mov r8, rbx
-push r8
-mov r9, r10
-pop r8
-imul r8, r9
-mov rbx, r8
+mov r10, rbx
+push r10
+mov r11, rcx
+pop r10
+imul r10, r11
+mov rbx, r10
 
 
 ;endMul
-mov r9, rbx
-pop r8
+mov r11, rbx
+pop r10
 push rax
 push rdx
 xor rdx, rdx
-mov rax, r8
-idiv r9
+mov rax, r10
+idiv r11
 mov rbx, rax
 pop rdx
 pop rax
@@ -148,12 +148,12 @@ mov rax, 60
 mov rdi, 0
 syscall
 .ifEnd_2:
-mov r8, r13
-push r8
+mov r10, r13
+push r10
 mov rbx, 0
-mov r9, rbx
-pop r8
-cmp r8, r9
+mov r11, rbx
+pop r10
+cmp r10, r11
 jle .ifEnd_3
 
 ;startDiv
@@ -162,55 +162,55 @@ jle .ifEnd_3
 
 ;startMul
 mov rbx, -1
-mov r8, rbx
-push r8
-mov r9, r11
-pop r8
-imul r8, r9
-mov rbx, r8
+mov r10, rbx
+push r10
+mov r11, rdx
+pop r10
+imul r10, r11
+mov rbx, r10
 
 
 ;endMul
-mov r8, rbx
-push r8
+mov r10, rbx
+push r10
 
 ;startSqrt
-mov r8, r13
-cvtsi2ss xmm0, r8
+mov r10, r13
+cvtsi2ss xmm0, r10
 sqrtss xmm0, xmm0
-cvttss2si r8, xmm0
-mov rbx, r8
+cvttss2si r10, xmm0
+mov rbx, r10
 
 
 ;endSqrt
-mov r9, rbx
-pop r8
-add r8, r9
-mov rbx, r8
+mov r11, rbx
+pop r10
+add r10, r11
+mov rbx, r10
 
 
 ;endAdd
-mov r8, rbx
-push r8
+mov r10, rbx
+push r10
 
 ;startMul
 mov rbx, 2
-mov r8, rbx
-push r8
-mov r9, r10
-pop r8
-imul r8, r9
-mov rbx, r8
+mov r10, rbx
+push r10
+mov r11, rcx
+pop r10
+imul r10, r11
+mov rbx, r10
 
 
 ;endMul
-mov r9, rbx
-pop r8
+mov r11, rbx
+pop r10
 push rax
 push rdx
 xor rdx, rdx
-mov rax, r8
-idiv r9
+mov rax, r10
+idiv r11
 mov rbx, rax
 pop rdx
 pop rax
@@ -225,55 +225,55 @@ mov r14, rbx
 
 ;startMul
 mov rbx, -1
-mov r8, rbx
-push r8
-mov r9, r11
-pop r8
-imul r8, r9
-mov rbx, r8
+mov r10, rbx
+push r10
+mov r11, rdx
+pop r10
+imul r10, r11
+mov rbx, r10
 
 
 ;endMul
-mov r8, rbx
-push r8
+mov r10, rbx
+push r10
 
 ;startSqrt
-mov r8, r13
-cvtsi2ss xmm0, r8
+mov r10, r13
+cvtsi2ss xmm0, r10
 sqrtss xmm0, xmm0
-cvttss2si r8, xmm0
-mov rbx, r8
+cvttss2si r10, xmm0
+mov rbx, r10
 
 
 ;endSqrt
-mov r9, rbx
-pop r8
-sub r8, r9
-mov rbx, r8
+mov r11, rbx
+pop r10
+sub r10, r11
+mov rbx, r10
 
 
 ;endSub
-mov r8, rbx
-push r8
+mov r10, rbx
+push r10
 
 ;startMul
 mov rbx, 2
-mov r8, rbx
-push r8
-mov r9, r10
-pop r8
-imul r8, r9
-mov rbx, r8
+mov r10, rbx
+push r10
+mov r11, rcx
+pop r10
+imul r10, r11
+mov rbx, r10
 
 
 ;endMul
-mov r9, rbx
-pop r8
+mov r11, rbx
+pop r10
 push rax
 push rdx
 xor rdx, rdx
-mov rax, r8
-idiv r9
+mov rax, r10
+idiv r11
 mov rbx, rax
 pop rdx
 pop rax

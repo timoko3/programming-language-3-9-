@@ -495,11 +495,13 @@ regTableElem_t* emitVar(treeNode_t* node, codeGenContext* context){
     assert(context);
 
     LPRINTF("emitVar start");
+    
+    printf("amountVariables: %llu\n", _CONTEXT_VAR_MAP(context)->size);
 
     int curVarCode = 0;
     sscanf(_NODE_WRITE_FILE(node), "VAR%d", &curVarCode);
 
-    varMapElem_t* refElem = varMapElemCtor(curVarCode, ANY);
+    varMapElem_t* refElem = varMapElemCtor(curVarCode, LOCK_ANY);
     assert(refElem);
 
     varMapElem_t* foundElem = varMapFind(_CONTEXT_VAR_MAP(context), varMapCmp, refElem);

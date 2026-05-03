@@ -8,13 +8,13 @@
 #include <malloc.h>
 #include <string.h>
 
-const size_t MAX_REG_NAME_LEN = 3;
+const size_t MAX_REG_NAME_LEN = 5;
 
 regTableElem_t initRegTable[] = {
     {RAX, "rax", FUNC_RET_VAL, false,  CALLER_SAVED},  
     {RBX, "rbx", TEMP_STORE,   false,  CALLEE_SAVED},  
-    {RCX, "rcx", FUNC_ARGS,    false,  CALLER_SAVED},  
-    {RDX, "rdx", FUNC_ARGS,    false,  CALLER_SAVED},  
+    {RCX, "rcx", STORE_VAR,    false,  CALLER_SAVED},  
+    {RDX, "rdx", STORE_VAR,    false,  CALLER_SAVED},  
     {RDI, "rdi", FUNC_ARGS,    false,  CALLER_SAVED},  
     {RSI, "rsi", FUNC_ARGS,    false,  CALLER_SAVED},  
     {RSP, "rsp", STACK,        true,   CALLER_SAVED},  

@@ -5,8 +5,9 @@
 #include "core/DSL.h"
 
 #include <assert.h>
+#include <malloc.h>
 
-varMapElem_t* varMapElemCtor(int variableCode, varLocationType locType, genPurposeRegs reg = NONE, int stackOffset = 0){
+varMapElem_t* varMapElemCtor(int variableCode, varLocationType locType, genPurposeRegs reg, int stackOffset){
     varMapElem_t* elem = (varMapElem_t*) calloc(1, sizeof(varMapElem_t));
     assert(elem);
 
@@ -16,6 +17,7 @@ varMapElem_t* varMapElemCtor(int variableCode, varLocationType locType, genPurpo
     switch (VARIABLE_MAP_LOC_TYPE(elem)){
         case LOCK_REG: VARIABLE_MAP_LOC_REG(elem)            = reg;         break;
         case LOCK_STACK: VARIABLE_MAP_LOC_STACK_OFFSET(elem) = stackOffset; break;
+        case LOCK_ANY:   break;
         default: printf("ошибка!"); break;
     }
 
@@ -36,6 +38,7 @@ void* varMapCopy(void* dest, void* src){
     switch (VARIABLE_MAP_LOC_TYPE(srcRegT)){
         case LOCK_REG:   VARIABLE_MAP_LOC_REG(destRegT)          = VARIABLE_MAP_LOC_REG(srcRegT);           break;
         case LOCK_STACK: VARIABLE_MAP_LOC_STACK_OFFSET(destRegT) = VARIABLE_MAP_LOC_STACK_OFFSET(srcRegT);  break;
+        case LOCK_ANY:   break;
         default: printf("ошибка!"); break;
     }
 
@@ -70,16 +73,18 @@ varMapElem_t* varMapAddVar(list_t* varMap, list_t* regTable, int variableCode, i
 
     varMapElem_t* curVar = NULL;
     if(foundReg){
-        varMapElemCtor(variableCode, LOCK_REG, REG_TABLE_ELEM_REG(foundReg));
+        curVar = varMapElemCtor(variableCode, LOCK_REG, REG_TABLE_ELEM_REG(foundReg));
         REG_TABLE_ELEM_USE_BIT(foundReg) = 1;
     }
     else{
-        varMapElemCtor(variableCode, LOCK_STACK, NONE, stackOffset);
+        curVar = varMapElemCtor(variableCode, LOCK_STACK, NONE, stackOffset);
     }
 
     listInsertToTail(varMap, curVar);
 
     varMapElemDtor(curVar);
+
+    return (varMapElem_t*) *data(varMap, *tail(varMap));
 }
 
 varMapElem_t* varMapFind(list_t* varMap, listCmpFunc_t findRule, varMapElem_t* refElem){

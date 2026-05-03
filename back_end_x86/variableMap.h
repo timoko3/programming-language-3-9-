@@ -7,7 +7,7 @@
 enum varLocationType{
     LOCK_REG,
     LOCK_STACK,
-    ANY
+    LOCK_ANY
 };
 
 struct varMapElem_t{
