@@ -3,7 +3,7 @@
 
 #include "general/cashFriendlyList/list.h"
 
-const int PZN_VARIABLE_CODE = -1;
+// const int PZN_VARIABLE_CODE = -1;
 
 const size_t AMOUNT_REGS    = 16;
 
@@ -36,15 +36,20 @@ enum regUseScenery{
     STORE_VAR
 };
 
-struct regTableElem_t{
-    genPurposeRegs reg;
-    char*          name;
-    regUseScenery  useScenery;
-    bool           useBit;
-    int            variableCode;
+enum callConvention_t{
+    CALLEE_SAVED,
+    CALLER_SAVED
 };
 
-regTableElem_t* regTableElemCtor(genPurposeRegs reg, char* name, regUseScenery useScenery, int variableCode, bool isUsed = false);
+struct regTableElem_t{
+    genPurposeRegs   reg;
+    char*            name;
+    regUseScenery    useScenery;
+    bool             useBit;
+    callConvention_t callConvention;
+};
+
+regTableElem_t* regTableElemCtor(genPurposeRegs reg, char* name, regUseScenery useScenery, bool isUsed = false);
 
 void regTableInit(list_t* regTable);
 void* regTableCopy(void* dest, void* src);

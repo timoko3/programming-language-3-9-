@@ -58,4 +58,9 @@
 #define REG_TABLE_ELEM_USE_SCENERY(regTable)   regTable->useScenery
 #define REG_TABLE_ELEM_VARIABLE_CODE(regTable) regTable->variableCode
 
+#define VARIABLE_MAP_VARIABLE_CODE(variableMap)    variableMap->variableCode       
+#define VARIABLE_MAP_LOC_TYPE(variableMap)         variableMap->locType        
+#define VARIABLE_MAP_LOC_REG(variableMap)          variableMap->loc.reg        
+#define VARIABLE_MAP_LOC_STACK_OFFSET(variableMap) variableMap->loc.stackOffset        
+
 #endif /* DSL_H */

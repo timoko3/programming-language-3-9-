@@ -74,7 +74,6 @@ static emitRule emittersTable[] = {
     // {LE,            emitLe    },
     // {EQUAL,         emitEqual },
     // {NOT_EQUAL,     emitNEqual},
-    {WHILE,         emitPlug     },
     {IN,            emitPlug     },
     {OUT,           emitPlug     },
     // {POPM,          emitPopm  },

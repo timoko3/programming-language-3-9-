@@ -1,7 +1,7 @@
 #ifndef CODE_GENERATION_H
 #define CODE_GENERATION_H
 
-#include "regTable.h"
+#include "variableMap.h"
 #include "labels.h"
 
 #include "general/tree/tree.h"
@@ -18,8 +18,6 @@ struct codeGenContext{
     regTableElem_t* calcRegB;
     labelsTable_t*  labelsTable;
     int             blockImmersionDepth;
-    // size_t          stackFrameBase;
-    // size_t          stackFrameOffset;
 };
 
 void genAsmCode(tree_t* syntaxTree, const char* destFileName);
