@@ -23,7 +23,7 @@ struct varMapElem_t{
 varMapElem_t* varMapElemCtor(int variableCode, varLocationType locType, genPurposeRegs reg = NONE, int stackOffset = 0);
 
 varMapElem_t* varMapFind(list_t* varMap, listCmpFunc_t findRule, varMapElem_t* refElem);
-varMapElem_t* varMapAddVar(list_t* varMap, list_t* regTable, int variableCode, int stackOffset);
+varMapElem_t* varMapAddVar(list_t* varMap, list_t* regTable, int variableCode, int stackOffset, regUseScenery regUseScenery = STORE_VAR);
 
 void* varMapCopy(void* dest, void* src);
 int varMapCmp(void* a, void* b);

@@ -61,15 +61,21 @@ int varMapCmp(void* a, void* b){
     return result;
 }
 
-varMapElem_t* varMapAddVar(list_t* varMap, list_t* regTable, int variableCode, int stackOffset){
+varMapElem_t* varMapAddVar(list_t* varMap, list_t* regTable, int variableCode, int stackOffset, regUseScenery regUseScenery){
     assert(varMap);
 
-    regTableElem_t* refReg = regTableElemCtor(NONE, "", STORE_VAR, 0);
-    assert(refReg);
+    regTableElem_t* foundReg = NULL;
 
-    regTableElem_t* foundReg = regTableFind(regTable, findTypeRegFree, refReg);
+    if(regUseScenery != NOT_REG_SCEN){
+        regTableElem_t* refReg = regTableElemCtor(NONE, "", regUseScenery, 0);
+        assert(refReg);
 
-    regTableElemDtor(refReg);
+        foundReg = regTableFind(regTable, findTypeRegFree, refReg);
+
+        regTableElemDtor(refReg);
+    }
+
+    if(foundReg) printf("foundReg = %s\n", REG_TABLE_ELEM_NAME(foundReg));
 
     varMapElem_t* curVar = NULL;
     if(foundReg){

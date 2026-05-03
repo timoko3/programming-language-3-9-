@@ -24,6 +24,9 @@ regTableElem_t* emitFunc(treeNode_t* node, codeGenContext* context);
 regTableElem_t* emitInitFunc(treeNode_t* node, codeGenContext* context);
 regTableElem_t* emitFuncProlog(treeNode_t* node, codeGenContext* context);
 regTableElem_t* emitFuncEpilog(treeNode_t* node, codeGenContext* context);
+regTableElem_t* emitFuncArgs(treeNode_t* node, codeGenContext* context);
+regTableElem_t* emitComma(treeNode_t* node, codeGenContext* context);
+regTableElem_t* emitRet(treeNode_t* node, codeGenContext* context);
 
 regTableElem_t* emitIf(treeNode_t* node, codeGenContext* context);
 regTableElem_t* emitWhile(treeNode_t* node, codeGenContext* context);
@@ -50,7 +53,7 @@ regTableElem_t* emitBinaryOpPreamble(treeNode_t* node, codeGenContext* context);
 
 regTableElem_t* emitHlt(treeNode_t* node, codeGenContext* context);
 
-inline regTableElem_t* emitNonTerminal(treeNode_t* node, codeGenContext* context);
+inline regTableElem_t* emitCurNode(treeNode_t* node, codeGenContext* context);
 
 regTableElem_t* emitPlug(treeNode_t* node, codeGenContext* context);
 
@@ -58,6 +61,8 @@ static emitRule emittersTable[] = {
     {END_BLOCK,     emitEb       },
     {MAIN,          emitMain     },
     {FUNCTION,      emitFunc     },
+    {RETURN,        emitRet      },
+    {COMMA,         emitComma    },
     {IF,            emitIf       },
     {WHILE,         emitWhile    },
     {END_STATEMENT, emitEs       },
@@ -70,7 +75,6 @@ static emitRule emittersTable[] = {
     {VARIABLE,      emitVar      },
     {NUMBER,        emitNumber   },
     {SQRT,          emitSqrt     },
-    // {RETURN,        emitRet   },
     // {GT,            emitGt    },           
     // {LT,            emitLt    },
     // {GE,            emitGe    },
@@ -118,7 +122,7 @@ regTableElem_t* emitNode(treeNode_t* node, codeGenContext* context){
 
     LPRINTF("emitNode start");
 
-    emitNonTerminal(node, context);
+    emitCurNode(node, context);
 
     LPRINTF("emitNode end");
 
@@ -152,7 +156,7 @@ regTableElem_t* emitBlock(treeNode_t* node, codeGenContext* context){
 
     _CONTEXT_BLOCK_IM_DEPTH(context)++;
 
-    emitNonTerminal(node, context);
+    emitCurNode(node, context);
 
     _CONTEXT_BLOCK_IM_DEPTH(context)--;
 
@@ -202,7 +206,56 @@ regTableElem_t* emitInitFunc(treeNode_t* node, codeGenContext* context){
     assert(node);
     assert(context);
 
-    fprintf(_CONTEXT_FILE_PTR(context), "%s:\n", _NODE_VALUE_STR(node));
+    list_t newVarMap;
+    listCtor(&newVarMap, 3, varMapCmp, varMapCopy);
+    _CONTEXT_VAR_MAP(context) = &newVarMap;
+
+    fprintf(_CONTEXT_FILE_PTR(context), "\n\n%s:\n", _NODE_VALUE_STR(node));
+    emitFuncProlog(node, context);
+
+    if(_R(node)){
+        emitFuncArgs(_R(node), context);
+    }
+
+    _CONTEXT_VAR_REG_USE_SCENERY(context) = NOT_REG_SCEN;
+    if(_L(node)){
+        emitBlock(_L(node), context);
+    }
+    _CONTEXT_VAR_REG_USE_SCENERY(context) = STORE_VAR;
+
+    emitRet(node, context);
+
+    listDtor(&newVarMap, varMapElemDtor);
+
+    return _CONTEXT_TEMP_REG(context);
+}
+
+regTableElem_t* emitFuncArgs(treeNode_t* node, codeGenContext* context){
+    assert(node);
+    assert(context);
+
+    _CONTEXT_VAR_REG_USE_SCENERY(context) = FUNC_ARGS;
+
+    emitCurNode(node, context);
+
+    _CONTEXT_VAR_REG_USE_SCENERY(context) = STORE_VAR;  
+
+    return _CONTEXT_TEMP_REG(context);
+}
+
+regTableElem_t* emitComma(treeNode_t* node, codeGenContext* context){
+    assert(node);
+    assert(context);
+
+    if(_L(node)){
+        emitCurNode(_L(node), context);
+    }
+
+    if(_R(node)){
+        emitCurNode(_R(node), context);
+    }
+
+    return _CONTEXT_TEMP_REG(context);
 }
 
 regTableElem_t* emitFuncProlog(treeNode_t* node, codeGenContext* context){
@@ -211,11 +264,29 @@ regTableElem_t* emitFuncProlog(treeNode_t* node, codeGenContext* context){
 
     fprintf(_CONTEXT_FILE_PTR(context), "push rbp\n");
     fprintf(_CONTEXT_FILE_PTR(context), "mov rbp, rsp\n");
+
+    return _CONTEXT_TEMP_REG(context);
 }
+
+regTableElem_t* emitRet(treeNode_t* node, codeGenContext* context){
+    assert(node);
+    assert(context);
+
+    emitFuncEpilog(node, context);
+    fprintf(_CONTEXT_FILE_PTR(context), "ret\n");
+
+    return _CONTEXT_TEMP_REG(context);
+}
+
 
 regTableElem_t* emitFuncEpilog(treeNode_t* node, codeGenContext* context){
     assert(node);
     assert(context);
+
+    fprintf(_CONTEXT_FILE_PTR(context), "mov rsp, rbp\n");
+    fprintf(_CONTEXT_FILE_PTR(context), "pop rbp\n");
+
+    return _CONTEXT_TEMP_REG(context);
 }
 
 regTableElem_t* emitIf(treeNode_t* node, codeGenContext* context){
@@ -335,7 +406,7 @@ regTableElem_t* emitStatement(treeNode_t* node, codeGenContext* context){
 
     // emitTabs(context);
 
-    emitNonTerminal(node, context);
+    emitCurNode(node, context);
 
     LPRINTF("emitStatement end");
 
@@ -370,7 +441,7 @@ regTableElem_t* emitExpression(treeNode_t* node, codeGenContext* context){
 
     LPRINTF("emitExpression start");
 
-    regTableElem_t* retVal = emitNonTerminal(node, context);
+    regTableElem_t* retVal = emitCurNode(node, context);
 
     LPRINTF("emitExpression end");    
 
@@ -507,7 +578,7 @@ regTableElem_t* emitVar(treeNode_t* node, codeGenContext* context){
     varMapElem_t* foundElem = varMapFind(_CONTEXT_VAR_MAP(context), varMapCmp, refElem);
 
     if(!foundElem){
-        foundElem = varMapAddVar(_CONTEXT_VAR_MAP(context), _CONTEXT_REG_TABLE(context), curVarCode, _CONTEXT_STACK_OFFSET(context));
+        foundElem = varMapAddVar(_CONTEXT_VAR_MAP(context), _CONTEXT_REG_TABLE(context), curVarCode, _CONTEXT_STACK_OFFSET(context), _CONTEXT_VAR_REG_USE_SCENERY(context));
     }
 
     varMapElemDtor(refElem);
@@ -521,7 +592,11 @@ regTableElem_t* emitVar(treeNode_t* node, codeGenContext* context){
         regTableElemDtor(refElem);
     }
     else{
-        retReg = _CONTEXT_TEMP_REG(context);
+        regTableElem_t* refElem = regTableElemCtor(RBP);
+
+        retReg = regTableFind(_CONTEXT_REG_TABLE(context), findIndRegRule, refElem);
+
+        regTableElemDtor(refElem);
     }
 
     LPRINTF("emitVar end");
@@ -559,7 +634,7 @@ regTableElem_t* emitPlug(treeNode_t* node, codeGenContext* context){
     return _CONTEXT_TEMP_REG(context);
 }
 
-inline regTableElem_t* emitNonTerminal(treeNode_t* node, codeGenContext* context){
+inline regTableElem_t* emitCurNode(treeNode_t* node, codeGenContext* context){
     assert(node);
     assert(context);
 

@@ -34,7 +34,8 @@ enum regUseScenery{
     TEMP_STORE,
     STACK,
     STORE_VAR,
-    ANY
+    ANY,
+    NOT_REG_SCEN
 };
 
 enum callConvention_t{

@@ -22,16 +22,18 @@
 #define _EMIT_RULE_TYPE(emitRule) (emitRule)->type
 #define _EMIT_RULE_EMITTER(emitRule) (emitRule)->emitter
 
-#define _CONTEXT_FILE_PTR(context)           (context)->filePtr
-#define _CONTEXT_NAMES(context)              (context)->names
-#define _CONTEXT_LABELS_TABLE(context)       (context)->labelsTable
-#define _CONTEXT_STACK_OFFSET(context)       (context)->stackOffset
-#define _CONTEXT_VAR_MAP(context)            (context)->varMap
-#define _CONTEXT_REG_TABLE(context)          (context)->regTable
-#define _CONTEXT_TEMP_REG(context)           (context)->tempReg
-#define _CONTEXT_CALC_REG_A(context)         (context)->calcRegA
-#define _CONTEXT_CALC_REG_B(context)         (context)->calcRegB
-#define _CONTEXT_BLOCK_IM_DEPTH(context)     (context)->blockImmersionDepth
+#define _CONTEXT_FILE_PTR(context)            (context)->filePtr
+#define _CONTEXT_NAMES(context)               (context)->names
+#define _CONTEXT_LABELS_TABLE(context)        (context)->labelsTable
+#define _CONTEXT_STACK_OFFSET(context)        (context)->stackOffset
+#define _CONTEXT_FUNC_ARGS_AMOUNT(context)    (context)->curFuncArgsAmount
+#define _CONTEXT_VAR_MAP(context)             (context)->varMap
+#define _CONTEXT_VAR_REG_USE_SCENERY(context) (context)->curVarRegUseScenery
+#define _CONTEXT_REG_TABLE(context)           (context)->regTable
+#define _CONTEXT_TEMP_REG(context)            (context)->tempReg
+#define _CONTEXT_CALC_REG_A(context)          (context)->calcRegA
+#define _CONTEXT_CALC_REG_B(context)          (context)->calcRegB
+#define _CONTEXT_BLOCK_IM_DEPTH(context)      (context)->blockImmersionDepth
 
 #define _SPU_NAME_TABLE_SIZE(spuNameTable) (spuNameTable)->size
 #define _SPU_NAME_TABLE_CAPACITY(spuNameTable) (spuNameTable)->capacity

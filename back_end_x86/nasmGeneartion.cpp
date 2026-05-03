@@ -34,7 +34,7 @@ void genAsmCode(tree_t* syntaxTree, const char* destFileName){
     emitNode(syntaxTree->root, &context);
     genEpilogue(&context);
 
-    listDtor(_CONTEXT_VAR_MAP(&context), varMapElemDtor);
+    listDtor(&varMap, varMapElemDtor);
     listDtor(_CONTEXT_REG_TABLE(&context), regTableElemDtor);
     listDtor(_CONTEXT_LABELS_TABLE(&context), labelDtor);
 
@@ -50,11 +50,13 @@ static void initContext(codeGenContext* context, FILE* asmFilePtr, list_t* regTa
 
     listCtor(labelsTable, AMOUNT_LABELS, labelCmp, labelCopy);
 
-    _CONTEXT_FILE_PTR(context)       = asmFilePtr;
-    _CONTEXT_VAR_MAP(context)        = varMap;
-    _CONTEXT_REG_TABLE(context)      = regTable;
-    _CONTEXT_LABELS_TABLE(context)   = labelsTable;
-    _CONTEXT_BLOCK_IM_DEPTH(context) = 0;
+    _CONTEXT_FUNC_ARGS_AMOUNT(context)      = 0;
+    _CONTEXT_VAR_REG_USE_SCENERY(context)   = STORE_VAR;
+    _CONTEXT_FILE_PTR(context)              = asmFilePtr;
+    _CONTEXT_VAR_MAP(context)               = varMap;
+    _CONTEXT_REG_TABLE(context)             = regTable;
+    _CONTEXT_LABELS_TABLE(context)          = labelsTable;
+    _CONTEXT_BLOCK_IM_DEPTH(context)        = 0;
 
     regTableElem_t* refReg = regTableElemCtor(NONE, "", TEMP_STORE, 0);
     assert(refReg);
