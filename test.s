@@ -94,7 +94,7 @@ mov r10, rbx
 push r10
 
 ;startSqrt
-mov r10, rdx
+mov r10, rcx
 cvtsi2ss xmm0, r10
 sqrtss xmm0, xmm0
 cvttss2si r10, xmm0
@@ -116,7 +116,7 @@ push r10
 mov rbx, 2
 mov r10, rbx
 push r10
-mov r11, rcx
+mov r11, rdi
 pop r10
 imul r10, r11
 mov rbx, r10
@@ -136,7 +136,7 @@ pop rax
 
 
 ;endDiv
-mov rdi, rbx
+mov rbp, rbx
 
 ;startDiv
 
@@ -157,7 +157,7 @@ mov r10, rbx
 push r10
 
 ;startSqrt
-mov r10, rdx
+mov r10, rcx
 cvtsi2ss xmm0, r10
 sqrtss xmm0, xmm0
 cvttss2si r10, xmm0
@@ -179,7 +179,7 @@ push r10
 mov rbx, 2
 mov r10, rbx
 push r10
-mov r11, rcx
+mov r11, rdi
 pop r10
 imul r10, r11
 mov rbx, r10
@@ -199,7 +199,7 @@ pop rax
 
 
 ;endDiv
-mov r8, rbx
+mov rbp, rbx
 
 ; sys_exit(0)
 mov rax, 60

@@ -213,13 +213,13 @@ regTableElem_t* emitInitFunc(treeNode_t* node, codeGenContext* context){
     fprintf(_CONTEXT_FILE_PTR(context), "\n\n%s:\n", _NODE_VALUE_STR(node));
     emitFuncProlog(node, context);
 
-    if(_R(node)){
-        emitFuncArgs(_R(node), context);
+    if(_L(node)){
+        emitFuncArgs(_L(node), context);
     }
 
     _CONTEXT_VAR_REG_USE_SCENERY(context) = NOT_REG_SCEN;
-    if(_L(node)){
-        emitBlock(_L(node), context);
+    if(_R(node)){
+        emitBlock(_R(node), context);
     }
     _CONTEXT_VAR_REG_USE_SCENERY(context) = STORE_VAR;
 
@@ -592,6 +592,8 @@ regTableElem_t* emitVar(treeNode_t* node, codeGenContext* context){
         regTableElemDtor(refElem);
     }
     else{
+        printf("stackVarCase\n");
+
         regTableElem_t* refElem = regTableElemCtor(RBP);
 
         retReg = regTableFind(_CONTEXT_REG_TABLE(context), findIndRegRule, refElem);
