@@ -33,7 +33,8 @@ enum regUseScenery{
     CALC,
     TEMP_STORE,
     STACK,
-    STORE_VAR
+    STORE_VAR,
+    ANY
 };
 
 enum callConvention_t{
@@ -49,7 +50,7 @@ struct regTableElem_t{
     callConvention_t callConvention;
 };
 
-regTableElem_t* regTableElemCtor(genPurposeRegs reg, char* name, regUseScenery useScenery, bool isUsed = false);
+regTableElem_t* regTableElemCtor(genPurposeRegs reg, char* name = "", regUseScenery useScenery = ANY, bool isUsed = false);
 
 void regTableInit(list_t* regTable);
 void* regTableCopy(void* dest, void* src);
@@ -57,6 +58,7 @@ int regTableCmp(void* a, void* b);
 
 regTableElem_t* regTableFind(list_t* regTable, listCmpFunc_t findRule, regTableElem_t* refElem);
 int findTypeRegFree(void* a, void* b);
+int findIndRegRule(void* a, void* b);
 int findVar(void* a, void* b);
 // int findTypeReg(void* a, void* b);
 

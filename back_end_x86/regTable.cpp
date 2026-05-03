@@ -128,6 +128,20 @@ int findTypeRegFree(void* a, void* b){
     return result;
 }
 
+int findIndRegRule(void* a, void* b){
+    
+    regTableElem_t* regTa  = (regTableElem_t*) a;
+    regTableElem_t* regTb  = (regTableElem_t*) b;
+    
+    int result = 1;
+
+    if((REG_TABLE_ELEM_REG(regTa) == REG_TABLE_ELEM_REG(regTb))){
+        result = 0;
+    }
+
+    return result;
+}
+
 // int findVar(void* a, void* b){
 //     regTableElem_t* regTa  = (regTableElem_t*) a;
 //     regTableElem_t* regTb  = (regTableElem_t*) b;

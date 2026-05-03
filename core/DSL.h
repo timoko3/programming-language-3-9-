@@ -25,7 +25,8 @@
 #define _CONTEXT_FILE_PTR(context)           (context)->filePtr
 #define _CONTEXT_NAMES(context)              (context)->names
 #define _CONTEXT_LABELS_TABLE(context)       (context)->labelsTable
-#define _CONTEXT_STACK_FRAME_OFFSET(context) (context)->stackFrameOffset
+#define _CONTEXT_STACK_OFFSET(context)       (context)->stackOffset
+#define _CONTEXT_VAR_MAP(context)            (context)->varMap
 #define _CONTEXT_REG_TABLE(context)          (context)->regTable
 #define _CONTEXT_TEMP_REG(context)           (context)->tempReg
 #define _CONTEXT_CALC_REG_A(context)         (context)->calcRegA

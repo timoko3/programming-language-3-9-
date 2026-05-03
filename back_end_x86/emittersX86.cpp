@@ -21,6 +21,9 @@ regTableElem_t* emitBlock(treeNode_t* node, codeGenContext* context);
 regTableElem_t* emitMain(treeNode_t* node, codeGenContext* context);
 
 regTableElem_t* emitFunc(treeNode_t* node, codeGenContext* context);
+regTableElem_t* emitInitFunc(treeNode_t* node, codeGenContext* context);
+regTableElem_t* emitFuncProlog(treeNode_t* node, codeGenContext* context);
+regTableElem_t* emitFuncEpilog(treeNode_t* node, codeGenContext* context);
 
 regTableElem_t* emitIf(treeNode_t* node, codeGenContext* context);
 regTableElem_t* emitWhile(treeNode_t* node, codeGenContext* context);
@@ -496,29 +499,32 @@ regTableElem_t* emitVar(treeNode_t* node, codeGenContext* context){
     int curVarCode = 0;
     sscanf(_NODE_WRITE_FILE(node), "VAR%d", &curVarCode);
 
-    regTableElem_t* refReg = regTableElemCtor(NONE, "", STORE_VAR, curVarCode, 0);
-    assert(refReg);
+    varMapElem_t* refElem = varMapElemCtor(curVarCode, ANY);
+    assert(refElem);
 
-    regTableElem_t* foundReg = regTableFind(_CONTEXT_REG_TABLE(context), findVar, refReg);
+    varMapElem_t* foundElem = varMapFind(_CONTEXT_VAR_MAP(context), varMapCmp, refElem);
 
-    if(!foundReg){
-        REG_TABLE_ELEM_VARIABLE_CODE(refReg) = PZN_VARIABLE_CODE;
-        REG_TABLE_ELEM_USE_SCENERY(refReg)   = STORE_VAR;
-
-        foundReg = regTableFind(_CONTEXT_REG_TABLE(context), findTypeRegFree, refReg);
-        assert(foundReg);   /// remove when stack added
-
-        REG_TABLE_ELEM_VARIABLE_CODE(foundReg) = curVarCode;
-        REG_TABLE_ELEM_USE_BIT(foundReg) = 1;
+    if(!foundElem){
+        foundElem = varMapAddVar(_CONTEXT_VAR_MAP(context), _CONTEXT_REG_TABLE(context), curVarCode, _CONTEXT_STACK_OFFSET(context));
     }
 
-    printf("code = %d\n", REG_TABLE_ELEM_VARIABLE_CODE(foundReg));
+    varMapElemDtor(refElem);
 
-    regTableElemDtor(refReg);
+    regTableElem_t* retReg = NULL;
+    if(VARIABLE_MAP_LOC_TYPE(foundElem) == LOCK_REG){
+        regTableElem_t* refElem = regTableElemCtor(VARIABLE_MAP_LOC_REG(foundElem));
+
+        retReg = regTableFind(_CONTEXT_REG_TABLE(context), findIndRegRule, refElem);
+
+        regTableElemDtor(refElem);
+    }
+    else{
+        retReg = _CONTEXT_TEMP_REG(context);
+    }
 
     LPRINTF("emitVar end");
 
-    return foundReg;
+    return retReg;
 }
 
 regTableElem_t* emitNumber(treeNode_t* node, codeGenContext* context){

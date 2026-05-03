@@ -58,6 +58,30 @@ int varMapCmp(void* a, void* b){
     return result;
 }
 
+varMapElem_t* varMapAddVar(list_t* varMap, list_t* regTable, int variableCode, int stackOffset){
+    assert(varMap);
+
+    regTableElem_t* refReg = regTableElemCtor(NONE, "", STORE_VAR, 0);
+    assert(refReg);
+
+    regTableElem_t* foundReg = regTableFind(regTable, findTypeRegFree, refReg);
+
+    regTableElemDtor(refReg);
+
+    varMapElem_t* curVar = NULL;
+    if(foundReg){
+        varMapElemCtor(variableCode, LOCK_REG, REG_TABLE_ELEM_REG(foundReg));
+        REG_TABLE_ELEM_USE_BIT(foundReg) = 1;
+    }
+    else{
+        varMapElemCtor(variableCode, LOCK_STACK, NONE, stackOffset);
+    }
+
+    listInsertToTail(varMap, curVar);
+
+    varMapElemDtor(curVar);
+}
+
 varMapElem_t* varMapFind(list_t* varMap, listCmpFunc_t findRule, varMapElem_t* refElem){
     assert(varMap);
 
