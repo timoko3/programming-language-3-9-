@@ -30,6 +30,7 @@ varMapElem_t* emitRet(treeNode_t* node, codeGenContext* context);
 
 varMapElem_t* emitCallFunc(treeNode_t* node, codeGenContext* context);
 varMapElem_t* emitCallFuncArg(treeNode_t* node, codeGenContext* context);
+varMapElem_t* emitCallFuncFreeArgRegs(treeNode_t* node, codeGenContext* context);
 
 varMapElem_t* emitIf(treeNode_t* node, codeGenContext* context);
 varMapElem_t* emitWhile(treeNode_t* node, codeGenContext* context);
@@ -213,13 +214,36 @@ varMapElem_t* emitCallFunc(treeNode_t* node, codeGenContext* context){
 
     fprintf(_CONTEXT_FILE_PTR(context), "\n;startCallFunc\n");
 
+    freeTypeRegs(_CONTEXT_REG_TABLE(context), FUNC_ARGS);
+
     emitCallFuncArg(node, context);
 
     fprintf(_CONTEXT_FILE_PTR(context), "call %s\n", _NODE_VALUE_STR(node));
 
-    fprintf(_CONTEXT_FILE_PTR(context), "\n\n;endCallFunc\n");
+    fprintf(_CONTEXT_FILE_PTR(context), "mov %s, %s\n", REG_TABLE_ELEM_NAME(_CONTEXT_TEMP_REG(context)), REG_TABLE_ELEM_NAME(_CONTEXT_FUNC_RET_REG(context)));
 
-    freeTypeRegs(_CONTEXT_REG_TABLE(context), FUNC_ARGS);
+    emitCallFuncFreeArgRegs(node, context);
+
+    fprintf(_CONTEXT_FILE_PTR(context), "\n\n;endCallFunc\n");
+    
+    return _CONTEXT_TEMP_VAR(context);
+}
+
+varMapElem_t* emitCallFuncFreeArgRegs(treeNode_t* node, codeGenContext* context){
+    assert(node);
+    assert(context);
+
+    regTableElem_t* refReg = regTableElemCtor(NONE, "", FUNC_ARGS, 1);
+
+    regTableElem_t* foundReg = regTableFind(_CONTEXT_REG_TABLE(context), findTypeRegFree, refReg);
+    if(foundReg){
+        REG_TABLE_ELEM_USE_BIT(foundReg) = 0;
+        emitCallFuncFreeArgRegs(node, context);
+    }
+
+    if(foundReg) fprintf(_CONTEXT_FILE_PTR(context), "pop %s\n", REG_TABLE_ELEM_NAME(foundReg));
+    
+    regTableElemDtor(refReg);       
 
     return _CONTEXT_TEMP_VAR(context);
 }
@@ -244,6 +268,7 @@ varMapElem_t* emitCallFuncArg(treeNode_t* node, codeGenContext* context){
 
         regTableElemDtor(refReg);
 
+        fprintf(_CONTEXT_FILE_PTR(context), "push %s\n", REG_TABLE_ELEM_NAME(foundReg), REG_TABLE_ELEM_NAME(_CONTEXT_TEMP_REG(context)));
         fprintf(_CONTEXT_FILE_PTR(context), "mov %s, %s\n", REG_TABLE_ELEM_NAME(foundReg), REG_TABLE_ELEM_NAME(_CONTEXT_TEMP_REG(context)));
 
         REG_TABLE_ELEM_USE_BIT(foundReg) = 1;
@@ -326,8 +351,16 @@ varMapElem_t* emitRet(treeNode_t* node, codeGenContext* context){
     assert(node);
     assert(context);
 
+    _CONTEXT_VAR_REG_USE_SCENERY(context) = FUNC_ARGS;
+
+    varMapElem_t* retVal = emitVar(_L(node), context);
+    loadToReg(retVal, context);
+    fprintf(_CONTEXT_FILE_PTR(context), "mov %s, %s\n", REG_TABLE_ELEM_NAME(_CONTEXT_FUNC_RET_REG(context)), REG_TABLE_ELEM_NAME(_CONTEXT_TEMP_REG(context)));
+
     emitFuncEpilog(node, context);
     fprintf(_CONTEXT_FILE_PTR(context), "ret\n");
+
+    _CONTEXT_VAR_REG_USE_SCENERY(context) = STORE_VAR;
 
     return _CONTEXT_TEMP_VAR(context);
 }
@@ -489,7 +522,7 @@ varMapElem_t* emitAssign(treeNode_t* node, codeGenContext* context){
         fprintf(_CONTEXT_FILE_PTR(context), "mov %s, %s\n", REG_TABLE_ELEM_NAME(VARIABLE_MAP_LOC_REG((foundVar))), REG_TABLE_ELEM_NAME(_CONTEXT_TEMP_REG(context)));       
     }
     else if(VARIABLE_MAP_LOC_TYPE(foundVar) == LOCK_STACK){
-        fprintf(_CONTEXT_FILE_PTR(context), "sub esp, %d\n", VARIABLE_BYTES_SIZE);       
+        fprintf(_CONTEXT_FILE_PTR(context), "sub rsp, %d\n", VARIABLE_BYTES_SIZE);       
         fprintf(_CONTEXT_FILE_PTR(context), "mov [rbp - %d], %s\n", VARIABLE_MAP_LOC_STACK_OFFSET((foundVar)), REG_TABLE_ELEM_NAME(_CONTEXT_TEMP_REG(context)));       
     }
 
@@ -744,7 +777,7 @@ regTableElem_t* loadToReg(varMapElem_t* var, codeGenContext* context){
         if(REG_TABLE_ELEM_USE_SCENERY(VARIABLE_MAP_LOC_REG(var)) != TEMP_STORE) fprintf(_CONTEXT_FILE_PTR(context), "mov %s, %s\n", REG_TABLE_ELEM_NAME(_CONTEXT_TEMP_REG(context)), REG_TABLE_ELEM_NAME(VARIABLE_MAP_LOC_REG(var)));
     }
     else{
-        fprintf(_CONTEXT_FILE_PTR(context), "mov %s, [rbp %+d]\n", 
+        fprintf(_CONTEXT_FILE_PTR(context), "mov %s, [rbp - %d]\n", 
         REG_TABLE_ELEM_NAME(_CONTEXT_TEMP_REG(context)), VARIABLE_MAP_LOC_STACK_OFFSET(var));
     }
 

@@ -65,14 +65,15 @@ static void initContext(codeGenContext* context, FILE* asmFilePtr, list_t* regTa
 
     regTableElem_t* refReg = regTableElemCtor(NONE, "", CALC, 0);
     assert(refReg);
-    regTableElem_t* foundReg = regTableFind(regTable, findTypeRegFree, refReg);        
-    assert(foundReg);
 
     _CONTEXT_CALC_REG_A(context) = regTableFind(_CONTEXT_REG_TABLE(context), findTypeRegFree, refReg);
     REG_TABLE_ELEM_USE_BIT(_CONTEXT_CALC_REG_A(context)) = 1;
 
     _CONTEXT_CALC_REG_B(context) = regTableFind(_CONTEXT_REG_TABLE(context), findTypeRegFree, refReg);
     REG_TABLE_ELEM_USE_BIT(_CONTEXT_CALC_REG_B(context)) = 1;
+
+    REG_TABLE_ELEM_USE_SCENERY(refReg) = FUNC_RET_VAL;
+    _CONTEXT_FUNC_RET_REG(context) = regTableFind(_CONTEXT_REG_TABLE(context), findTypeRegFree, refReg);
 
     regTableElemDtor(refReg);
 }

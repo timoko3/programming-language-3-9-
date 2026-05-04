@@ -17,6 +17,7 @@ struct codeGenContext{
 
     list_t*         regTable;
     regTableElem_t* tempReg;
+    regTableElem_t* funcRetReg;
     regTableElem_t* calcRegA;
     regTableElem_t* calcRegB;
 

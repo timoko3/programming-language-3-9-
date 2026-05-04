@@ -6,7 +6,7 @@
 
 const int TEMP_VARIABLE_CODE = -33;
 
-const size_t VARIABLE_BYTES_SIZE = 8;
+const size_t VARIABLE_BYTES_SIZE = 16;
 
 enum varLocationType{
     LOCK_REG,

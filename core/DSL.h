@@ -32,6 +32,7 @@
 #define _CONTEXT_VAR_REG_USE_SCENERY(context) (context)->curVarRegUseScenery
 #define _CONTEXT_REG_TABLE(context)           (context)->regTable
 #define _CONTEXT_TEMP_REG(context)            (context)->tempReg
+#define _CONTEXT_FUNC_RET_REG(context)        (context)->funcRetReg
 #define _CONTEXT_CALC_REG_A(context)          (context)->calcRegA
 #define _CONTEXT_CALC_REG_B(context)          (context)->calcRegB
 #define _CONTEXT_BLOCK_IM_DEPTH(context)      (context)->blockImmersionDepth
