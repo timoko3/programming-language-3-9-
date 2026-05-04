@@ -187,7 +187,12 @@ static bool parseName(char* curBufferPos, token_t* token, char** endPos, ASTnode
 
         if(!debugSymbols){
             char writeFileName[MAX_VARIABLE_SIZE] = "";
-            sprintf(writeFileName, "%.3s%d%d", tokenTypeToStr(type), blockNumber, curCellNum);
+            if(type == VARIABLE){
+                sprintf(writeFileName, "%.3s%d%d", tokenTypeToStr(type), blockNumber, curCellNum);
+            }
+            else{
+                sprintf(writeFileName, "%.3s%d", tokenTypeToStr(type), curCellNum);
+            }
             createNameToken(token, curTokenValue, writeFileName, type);
         }
         else{
