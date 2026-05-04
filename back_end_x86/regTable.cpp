@@ -113,6 +113,20 @@ regTableElem_t* regTableFind(list_t* regTable, listCmpFunc_t findRule, regTableE
     return (regTableElem_t*) regTable->elem[result].data;
 }
 
+void freeTypeRegs(list_t* regTable, regUseScenery scenery){
+    assert(regTable);
+
+    regTableElem_t* refReg = regTableElemCtor(NONE, "", FUNC_ARGS, 1);
+
+    regTableElem_t* foundReg = NULL;
+    
+    while(foundReg = regTableFind(regTable, findTypeRegFree, refReg)){
+        REG_TABLE_ELEM_USE_BIT(foundReg) = 0;
+    }
+
+    regTableElemDtor(refReg);
+}
+
 int findTypeRegFree(void* a, void* b){
     
     regTableElem_t* regTa  = (regTableElem_t*) a;

@@ -7,6 +7,23 @@
 #include <assert.h>
 #include <malloc.h>
 
+list_t* initVarMap(list_t* varMap, list_t* regTable){
+    listCtor(varMap, 3, varMapCmp, varMapCopy);
+
+    regTableElem_t* refReg = regTableElemCtor(NONE, "", TEMP_STORE, 0);
+    assert(refReg);
+    regTableElem_t* foundReg = regTableFind(regTable, findTypeRegFree, refReg);        
+    assert(foundReg);
+
+    varMapElem_t* tempVar = varMapElemCtor(TEMP_VARIABLE_CODE, LOCK_REG, foundReg);
+    listInsertToTail(varMap, tempVar);
+
+    varMapElemDtor(tempVar);
+    regTableElemDtor(refReg);
+
+    return varMap;
+}
+
 varMapElem_t* varMapElemCtor(int variableCode, varLocationType locType, regTableElem_t* reg, int stackOffset){
     varMapElem_t* elem = (varMapElem_t*) calloc(1, sizeof(varMapElem_t));
     assert(elem);

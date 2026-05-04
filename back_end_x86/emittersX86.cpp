@@ -24,9 +24,12 @@ varMapElem_t* emitFunc(treeNode_t* node, codeGenContext* context);
 varMapElem_t* emitInitFunc(treeNode_t* node, codeGenContext* context);
 varMapElem_t* emitFuncProlog(treeNode_t* node, codeGenContext* context);
 varMapElem_t* emitFuncEpilog(treeNode_t* node, codeGenContext* context);
-varMapElem_t* emitFuncArgs(treeNode_t* node, codeGenContext* context);
+varMapElem_t* emitInitFuncArgs(treeNode_t* node, codeGenContext* context);
 varMapElem_t* emitComma(treeNode_t* node, codeGenContext* context);
 varMapElem_t* emitRet(treeNode_t* node, codeGenContext* context);
+
+varMapElem_t* emitCallFunc(treeNode_t* node, codeGenContext* context);
+varMapElem_t* emitCallFuncArg(treeNode_t* node, codeGenContext* context);
 
 varMapElem_t* emitIf(treeNode_t* node, codeGenContext* context);
 varMapElem_t* emitWhile(treeNode_t* node, codeGenContext* context);
@@ -195,11 +198,56 @@ varMapElem_t* emitFunc(treeNode_t* node, codeGenContext* context){
     if(_R(node)){
         emitInitFunc(node, context);
     }
-    // else{
-    //     emitCallFunc();
-    // }
+    else{
+        emitCallFunc(node, context);
+    }
 
     LPRINTF("emitFunc end");
+
+    return _CONTEXT_TEMP_VAR(context);
+}
+
+varMapElem_t* emitCallFunc(treeNode_t* node, codeGenContext* context){
+    assert(node);
+    assert(context);
+
+    fprintf(_CONTEXT_FILE_PTR(context), "\n;startCallFunc\n");
+
+    emitCallFuncArg(node, context);
+
+    fprintf(_CONTEXT_FILE_PTR(context), "call %s\n", _NODE_VALUE_STR(node));
+
+    fprintf(_CONTEXT_FILE_PTR(context), "\n\n;endCallFunc\n");
+
+    freeTypeRegs(_CONTEXT_REG_TABLE(context), FUNC_ARGS);
+
+    return _CONTEXT_TEMP_VAR(context);
+}
+
+varMapElem_t* emitCallFuncArg(treeNode_t* node, codeGenContext* context){
+    assert(node);
+    assert(context);
+
+    if(_L(node)){
+        emitCallFuncArg(_L(node), context);
+    }
+
+    if(_R(node)){
+        emitCallFuncArg(_R(node), context);
+    }   
+
+    if((_NODE_TYPE(node) != COMMA) && (_NODE_TYPE(node) != FUNCTION)){
+        loadToReg(emitCurNode(node, context), context);
+        regTableElem_t* refReg = regTableElemCtor(NONE, "", FUNC_ARGS, 0);
+
+        regTableElem_t* foundReg = regTableFind(_CONTEXT_REG_TABLE(context), findTypeRegFree, refReg);
+
+        regTableElemDtor(refReg);
+
+        fprintf(_CONTEXT_FILE_PTR(context), "mov %s, %s\n", REG_TABLE_ELEM_NAME(foundReg), REG_TABLE_ELEM_NAME(_CONTEXT_TEMP_REG(context)));
+
+        REG_TABLE_ELEM_USE_BIT(foundReg) = 1;
+    }
 
     return _CONTEXT_TEMP_VAR(context);
 }
@@ -209,14 +257,16 @@ varMapElem_t* emitInitFunc(treeNode_t* node, codeGenContext* context){
     assert(context);
 
     list_t newVarMap;
-    listCtor(&newVarMap, 3, varMapCmp, varMapCopy);
+    initVarMap(&newVarMap, _CONTEXT_REG_TABLE(context));
     _CONTEXT_VAR_MAP(context) = &newVarMap;
+
+    _CONTEXT_STACK_OFFSET(context) = VARIABLE_BYTES_SIZE;
 
     fprintf(_CONTEXT_FILE_PTR(context), "\n\n%s:\n", _NODE_VALUE_STR(node));
     emitFuncProlog(node, context);
 
     if(_L(node)){
-        emitFuncArgs(_L(node), context);
+        emitInitFuncArgs(_L(node), context);
     }
 
     _CONTEXT_VAR_REG_USE_SCENERY(context) = NOT_REG_SCEN;
@@ -229,10 +279,12 @@ varMapElem_t* emitInitFunc(treeNode_t* node, codeGenContext* context){
 
     listDtor(&newVarMap, varMapElemDtor);
 
+    freeTypeRegs(_CONTEXT_REG_TABLE(context), FUNC_ARGS);
+
     return _CONTEXT_TEMP_VAR(context);
 }
 
-varMapElem_t* emitFuncArgs(treeNode_t* node, codeGenContext* context){
+varMapElem_t* emitInitFuncArgs(treeNode_t* node, codeGenContext* context){
     assert(node);
     assert(context);
 
@@ -284,6 +336,9 @@ varMapElem_t* emitRet(treeNode_t* node, codeGenContext* context){
 varMapElem_t* emitFuncEpilog(treeNode_t* node, codeGenContext* context){
     assert(node);
     assert(context);
+   
+
+    fprintf(_CONTEXT_FILE_PTR(context), "add rsp, %d\n", _CONTEXT_STACK_OFFSET(context) - VARIABLE_BYTES_SIZE);
 
     fprintf(_CONTEXT_FILE_PTR(context), "mov rsp, rbp\n");
     fprintf(_CONTEXT_FILE_PTR(context), "pop rbp\n");
@@ -434,7 +489,8 @@ varMapElem_t* emitAssign(treeNode_t* node, codeGenContext* context){
         fprintf(_CONTEXT_FILE_PTR(context), "mov %s, %s\n", REG_TABLE_ELEM_NAME(VARIABLE_MAP_LOC_REG((foundVar))), REG_TABLE_ELEM_NAME(_CONTEXT_TEMP_REG(context)));       
     }
     else if(VARIABLE_MAP_LOC_TYPE(foundVar) == LOCK_STACK){
-        fprintf(_CONTEXT_FILE_PTR(context), "mov [rbp %+d], %s\n", VARIABLE_MAP_LOC_STACK_OFFSET((foundVar)), REG_TABLE_ELEM_NAME(_CONTEXT_TEMP_REG(context)));       
+        fprintf(_CONTEXT_FILE_PTR(context), "sub esp, %d\n", VARIABLE_BYTES_SIZE);       
+        fprintf(_CONTEXT_FILE_PTR(context), "mov [rbp - %d], %s\n", VARIABLE_MAP_LOC_STACK_OFFSET((foundVar)), REG_TABLE_ELEM_NAME(_CONTEXT_TEMP_REG(context)));       
     }
 
 
@@ -587,6 +643,10 @@ varMapElem_t* emitVar(treeNode_t* node, codeGenContext* context){
 
     if(!foundElem){
         foundElem = varMapAddVar(_CONTEXT_VAR_MAP(context), _CONTEXT_REG_TABLE(context), curVarCode, _CONTEXT_STACK_OFFSET(context), _CONTEXT_VAR_REG_USE_SCENERY(context));
+
+        if(VARIABLE_MAP_LOC_TYPE(foundElem) == LOCK_STACK){
+            _CONTEXT_STACK_OFFSET(context) += VARIABLE_BYTES_SIZE;
+        }
     }
 
     varMapElemDtor(refElem);
@@ -595,8 +655,6 @@ varMapElem_t* emitVar(treeNode_t* node, codeGenContext* context){
 
     return foundElem;
 }
-
-
 
 varMapElem_t* emitNumber(treeNode_t* node, codeGenContext* context){
     assert(node);
@@ -683,7 +741,7 @@ varMapElem_t* emitUnaryOpPreamble(treeNode_t* node, codeGenContext* context){
 
 regTableElem_t* loadToReg(varMapElem_t* var, codeGenContext* context){
     if (VARIABLE_MAP_LOC_TYPE(var) == LOCK_REG){
-        fprintf(_CONTEXT_FILE_PTR(context), "mov %s, %s\n", REG_TABLE_ELEM_NAME(_CONTEXT_CALC_REG_A(context)), REG_TABLE_ELEM_NAME(VARIABLE_MAP_LOC_REG(var)));
+        if(REG_TABLE_ELEM_USE_SCENERY(VARIABLE_MAP_LOC_REG(var)) != TEMP_STORE) fprintf(_CONTEXT_FILE_PTR(context), "mov %s, %s\n", REG_TABLE_ELEM_NAME(_CONTEXT_TEMP_REG(context)), REG_TABLE_ELEM_NAME(VARIABLE_MAP_LOC_REG(var)));
     }
     else{
         fprintf(_CONTEXT_FILE_PTR(context), "mov %s, [rbp %+d]\n", 

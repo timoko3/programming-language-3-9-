@@ -6,6 +6,8 @@
 
 const int TEMP_VARIABLE_CODE = -33;
 
+const size_t VARIABLE_BYTES_SIZE = 8;
+
 enum varLocationType{
     LOCK_REG,
     LOCK_STACK,
@@ -21,6 +23,8 @@ struct varMapElem_t{
         int             stackOffset;
     } loc;
 };
+
+list_t* initVarMap(list_t* varMap, list_t* regTable);
 
 varMapElem_t* varMapElemCtor(int variableCode, varLocationType locType, regTableElem_t* reg = NULL, int stackOffset = 0);
 

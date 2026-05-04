@@ -17,9 +17,11 @@ mov r14, rbx
 ;startSub
 
 ;startMul
-mov r10, r13
+mov rbx, r13
+mov r10, rbx
 push r10
-mov r11, r13
+mov rbx, r13
+mov r11, rbx
 pop r10
 imul r10, r11
 mov rbx, r10
@@ -35,7 +37,8 @@ push r10
 mov rbx, 4
 mov r10, rbx
 push r10
-mov r11, r12
+mov rbx, r12
+mov r11, rbx
 pop r10
 imul r10, r11
 mov rbx, r10
@@ -44,7 +47,8 @@ mov rbx, r10
 ;endMul
 mov r10, rbx
 push r10
-mov r11, r14
+mov rbx, r14
+mov r11, rbx
 pop r10
 imul r10, r11
 mov rbx, r10
@@ -59,6 +63,20 @@ mov rbx, r10
 
 ;endSub
 mov r15, rbx
+
+;startCallFunc
+mov rbx, r12
+mov rdi, rbx
+mov rbx, r13
+mov rsi, rbx
+mov rbx, r14
+mov rdx, rbx
+mov rbx, r15
+mov rcx, rbx
+call FUN1642
+
+
+;endCallFunc
 
 ; sys_exit(0)
 mov rax, 60
@@ -83,7 +101,8 @@ mov rbp, rsp
 mov rbx, -1
 mov r10, rbx
 push r10
-mov r11, rsi
+mov rbx, rsi
+mov r11, rbx
 pop r10
 imul r10, r11
 mov rbx, r10
@@ -94,7 +113,8 @@ mov r10, rbx
 push r10
 
 ;startSqrt
-mov r10, rcx
+mov rbx, rcx
+mov r10, rbx
 cvtsi2ss xmm0, r10
 sqrtss xmm0, xmm0
 cvttss2si r10, xmm0
@@ -116,7 +136,8 @@ push r10
 mov rbx, 2
 mov r10, rbx
 push r10
-mov r11, rdi
+mov rbx, rdi
+mov r11, rbx
 pop r10
 imul r10, r11
 mov rbx, r10
@@ -136,7 +157,8 @@ pop rax
 
 
 ;endDiv
-mov rbp, rbx
+sub esp, 8
+mov [rbp - 8], rbx
 
 ;startDiv
 
@@ -146,7 +168,8 @@ mov rbp, rbx
 mov rbx, -1
 mov r10, rbx
 push r10
-mov r11, rsi
+mov rbx, rsi
+mov r11, rbx
 pop r10
 imul r10, r11
 mov rbx, r10
@@ -157,7 +180,8 @@ mov r10, rbx
 push r10
 
 ;startSqrt
-mov r10, rcx
+mov rbx, rcx
+mov r10, rbx
 cvtsi2ss xmm0, r10
 sqrtss xmm0, xmm0
 cvttss2si r10, xmm0
@@ -179,7 +203,8 @@ push r10
 mov rbx, 2
 mov r10, rbx
 push r10
-mov r11, rdi
+mov rbx, rdi
+mov r11, rbx
 pop r10
 imul r10, r11
 mov rbx, r10
@@ -199,12 +224,14 @@ pop rax
 
 
 ;endDiv
-mov rbp, rbx
+sub esp, 8
+mov [rbp - 16], rbx
 
 ; sys_exit(0)
 mov rax, 60
 mov rdi, 0
 syscall
+add rsp, 16
 mov rsp, rbp
 pop rbp
 ret

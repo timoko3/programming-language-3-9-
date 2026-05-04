@@ -46,15 +46,7 @@ static void initContext(codeGenContext* context, FILE* asmFilePtr, list_t* regTa
     listCtor(regTable, AMOUNT_REGS, regTableCmp, regTableCopy);
     regTableInit(regTable);
 
-    listCtor(varMap, 3, varMapCmp, varMapCopy);
-
-    regTableElem_t* refReg = regTableElemCtor(NONE, "", TEMP_STORE, 0);
-    assert(refReg);
-    regTableElem_t* foundReg = regTableFind(regTable, findTypeRegFree, refReg);        
-    assert(foundReg);
-
-    varMapElem_t* tempVar = varMapElemCtor(TEMP_VARIABLE_CODE, LOCK_REG, foundReg);
-    listInsertToTail(varMap, tempVar);
+    initVarMap(varMap, regTable);
    
     _CONTEXT_TEMP_VAR(context) = (varMapElem_t*) *data(varMap, *tail(varMap));
 
@@ -67,11 +59,15 @@ static void initContext(codeGenContext* context, FILE* asmFilePtr, list_t* regTa
     _CONTEXT_REG_TABLE(context)             = regTable;
     _CONTEXT_LABELS_TABLE(context)          = labelsTable;
     _CONTEXT_BLOCK_IM_DEPTH(context)        = 0;
+    _CONTEXT_STACK_OFFSET(context)          = VARIABLE_BYTES_SIZE;
+    
+    _CONTEXT_TEMP_REG(context) = VARIABLE_MAP_LOC_REG(_CONTEXT_TEMP_VAR(context) );
 
-    _CONTEXT_TEMP_REG(context) = regTableFind(_CONTEXT_REG_TABLE(context), findTypeRegFree, refReg);
-    REG_TABLE_ELEM_USE_BIT(_CONTEXT_TEMP_REG(context)) = 1;
+    regTableElem_t* refReg = regTableElemCtor(NONE, "", CALC, 0);
+    assert(refReg);
+    regTableElem_t* foundReg = regTableFind(regTable, findTypeRegFree, refReg);        
+    assert(foundReg);
 
-    REG_TABLE_ELEM_USE_SCENERY(refReg) = CALC;
     _CONTEXT_CALC_REG_A(context) = regTableFind(_CONTEXT_REG_TABLE(context), findTypeRegFree, refReg);
     REG_TABLE_ELEM_USE_BIT(_CONTEXT_CALC_REG_A(context)) = 1;
 

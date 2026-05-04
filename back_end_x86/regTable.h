@@ -58,6 +58,7 @@ void* regTableCopy(void* dest, void* src);
 int regTableCmp(void* a, void* b);
 
 regTableElem_t* regTableFind(list_t* regTable, listCmpFunc_t findRule, regTableElem_t* refElem);
+void freeTypeRegs(list_t* regTable, regUseScenery scenery);
 int findTypeRegFree(void* a, void* b);
 int findIndRegRule(void* a, void* b);
 int findVar(void* a, void* b);
