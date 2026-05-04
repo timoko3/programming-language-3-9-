@@ -28,6 +28,7 @@
 #define _CONTEXT_STACK_OFFSET(context)        (context)->stackOffset
 #define _CONTEXT_FUNC_ARGS_AMOUNT(context)    (context)->curFuncArgsAmount
 #define _CONTEXT_VAR_MAP(context)             (context)->varMap
+#define _CONTEXT_TEMP_VAR(context)            (context)->tempVar
 #define _CONTEXT_VAR_REG_USE_SCENERY(context) (context)->curVarRegUseScenery
 #define _CONTEXT_REG_TABLE(context)           (context)->regTable
 #define _CONTEXT_TEMP_REG(context)            (context)->tempReg

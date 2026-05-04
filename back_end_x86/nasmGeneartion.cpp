@@ -43,10 +43,20 @@ void genAsmCode(tree_t* syntaxTree, const char* destFileName){
 
 static void initContext(codeGenContext* context, FILE* asmFilePtr, list_t* regTable, list_t* varMap, labelsTable_t* labelsTable){
     
-    listCtor(varMap, 3, varMapCmp, varMapCopy);
-
     listCtor(regTable, AMOUNT_REGS, regTableCmp, regTableCopy);
     regTableInit(regTable);
+
+    listCtor(varMap, 3, varMapCmp, varMapCopy);
+
+    regTableElem_t* refReg = regTableElemCtor(NONE, "", TEMP_STORE, 0);
+    assert(refReg);
+    regTableElem_t* foundReg = regTableFind(regTable, findTypeRegFree, refReg);        
+    assert(foundReg);
+
+    varMapElem_t* tempVar = varMapElemCtor(TEMP_VARIABLE_CODE, LOCK_REG, foundReg);
+    listInsertToTail(varMap, tempVar);
+   
+    _CONTEXT_TEMP_VAR(context) = (varMapElem_t*) *data(varMap, *tail(varMap));
 
     listCtor(labelsTable, AMOUNT_LABELS, labelCmp, labelCopy);
 
@@ -58,8 +68,6 @@ static void initContext(codeGenContext* context, FILE* asmFilePtr, list_t* regTa
     _CONTEXT_LABELS_TABLE(context)          = labelsTable;
     _CONTEXT_BLOCK_IM_DEPTH(context)        = 0;
 
-    regTableElem_t* refReg = regTableElemCtor(NONE, "", TEMP_STORE, 0);
-    assert(refReg);
     _CONTEXT_TEMP_REG(context) = regTableFind(_CONTEXT_REG_TABLE(context), findTypeRegFree, refReg);
     REG_TABLE_ELEM_USE_BIT(_CONTEXT_TEMP_REG(context)) = 1;
 

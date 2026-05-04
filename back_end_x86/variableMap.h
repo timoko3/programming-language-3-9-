@@ -4,6 +4,8 @@
 #include "general/cashFriendlyList/list.h"
 #include "regTable.h"
 
+const int TEMP_VARIABLE_CODE = -33;
+
 enum varLocationType{
     LOCK_REG,
     LOCK_STACK,
@@ -15,12 +17,12 @@ struct varMapElem_t{
     varLocationType locType; 
     
     union {
-        genPurposeRegs reg;
-        int            stackOffset;
+        regTableElem_t* reg;
+        int             stackOffset;
     } loc;
 };
 
-varMapElem_t* varMapElemCtor(int variableCode, varLocationType locType, genPurposeRegs reg = NONE, int stackOffset = 0);
+varMapElem_t* varMapElemCtor(int variableCode, varLocationType locType, regTableElem_t* reg = NULL, int stackOffset = 0);
 
 varMapElem_t* varMapFind(list_t* varMap, listCmpFunc_t findRule, varMapElem_t* refElem);
 varMapElem_t* varMapAddVar(list_t* varMap, list_t* regTable, int variableCode, int stackOffset, regUseScenery regUseScenery = STORE_VAR);

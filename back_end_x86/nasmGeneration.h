@@ -12,6 +12,7 @@ struct codeGenContext{
     FILE*           filePtr;
 
     list_t*         varMap;
+    varMapElem_t*   tempVar;
     regUseScenery   curVarRegUseScenery;
 
     list_t*         regTable;
