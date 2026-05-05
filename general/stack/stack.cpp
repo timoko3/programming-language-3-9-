@@ -172,6 +172,14 @@ stackError stackPop(stack* stk, stackData_t* stackElem){
     return PROCESS_OK;
 }
 
+stackError stackGet(stack* stk, size_t elemIndex, stackData_t* stackElem){
+    assert(stk);
+
+    *stackElem = stk->data[elemIndex];
+
+    return PROCESS_OK;
+}
+
 stackError stackGetTop(stack* stk, stackData_t* stackElem){
     assert(stk);
 

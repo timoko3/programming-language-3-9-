@@ -71,7 +71,7 @@ bool runProcessor(processor* spu){
 bool executeCommand(processor* spu){
     assert(spu);
     
-    // processorDump(spu);
+    processorDump(spu);
     
     if(spu->isWork == false){
         return false;
@@ -114,6 +114,16 @@ bool spuPop(processor* spu, stackData_t* data){
 
     return true;
 }
+
+// bool spuStackGet(processor* spu, size_t elemIndex, stackData_t* data){
+//     assert(spu);
+
+//     if(stackPop(&(spu->stk), data) == EMPTY_STACK){
+//         return false;
+//     }
+
+//     return true;
+// }
 
 bool spuJump(processor* spu, cmdParam_t pos){
     assert(spu);

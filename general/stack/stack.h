@@ -75,6 +75,7 @@ stackError stackPush(stack* stk, stackData_t value);
 stackError stackPop(stack* stk, stackData_t* stackElem);
 stackError stackDtor(stack* stk);
 
+stackError stackGet(stack* stk, size_t elemIndex, stackData_t* stackElem);
 stackError stackGetTop   (stack* stk, stackData_t* stackElem);
 stackError stackGetBottom(stack* stk, stackData_t* stackElem);
 

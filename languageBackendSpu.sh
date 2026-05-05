@@ -1,19 +1,23 @@
 #!/usr/bin/env bash
 
 CXX="g++"
-TARGET="processor.out"
+TARGET="back_endSpu.out"
 STD="-std=c++17"
 
 SOURCES=(
-    spu/main.cpp
-    spu/processor/*.cpp
-    spu/translator/*.cpp
-    spu/general/*.cpp
-    spu/general/stack/stack.cpp
-    spu/ram.cpp
+    back_end/*.cpp
+    general/*.cpp
+    general/tree/*.cpp
+    general/tokens/*.cpp
+    general/devTools/*.cpp
+    # general/stack/*.cpp
+    # general/hashTable/*.cpp
+    general/cashFriendlyList/*.cpp
+    # general/cashFriendlyList/optimizedStrcmp.o
+    core/*.cpp
 )
 
-INCLUDES="-I. -Ispu"
+INCLUDES="-I. -I./general -I./derivative -I./devTools -I./core"
 
 CXXFLAGS=(
     -ggdb3 $STD -O0
@@ -25,20 +29,19 @@ CXXFLAGS=(
     -Woverloaded-virtual -Wpacked -Wpointer-arith -Winit-self -Wredundant-decls 
     -Wshadow -Wsign-conversion -Wsign-promo -Wstrict-null-sentinel 
     -Wstrict-overflow=2 -Wsuggest-attribute=noreturn -Wsuggest-final-methods 
-    -Wsuggest-final-types -Wsuggest-override -Wswitch-default -Wswitch-enum 
-    -Wsync-nand -Wundef -Wunreachable-code -Wunused -Wuseless-cast 
-    -Wvariadic-macros -Wno-literal-suffix -Wno-missing-field-initializers 
-    -Wno-narrowing -Wno-old-style-cast -Wno-varargs -fcheck-new 
-    -fsized-deallocation -fstack-protector -fstrict-overflow 
-    -flto-odr-type-merging -fno-omit-frame-pointer -Wstack-usage=8192 
-    -pie -fPIE -Werror=vla
+    -Wsuggest-final-types -Wsuggest-override -Wswitch-default -Wsync-nand 
+    -Wundef -Wunreachable-code -Wunused -Wuseless-cast -Wvariadic-macros 
+    -Wno-literal-suffix -Wno-missing-field-initializers -Wno-narrowing 
+    -Wno-old-style-cast -Wno-varargs -fcheck-new -fsized-deallocation 
+    -fstack-protector -fstrict-overflow -flto-odr-type-merging 
+    -fno-omit-frame-pointer -pie -fPIE -Werror=vla
 )
 
 SANITIZERS="-fsanitize=address,alignment,bool,bounds,enum,float-cast-overflow,float-divide-by-zero,integer-divide-by-zero,leak,nonnull-attribute,null,object-size,return,returns-nonnull-attribute,shift,signed-integer-overflow,undefined,unreachable,vla-bound,vptr"
 
 DEBUG_FLAGS=""
 if [ "$1" == "debug" ]; then
-    DEBUG_FLAGS="-D_DEBUG"
+    DEBUG_FLAGS="-DDEBUG"
     echo "Building in DEBUG mode..."
 fi
 
@@ -46,7 +49,6 @@ $CXX $DEBUG_FLAGS "${CXXFLAGS[@]}" $SANITIZERS "${SOURCES[@]}" $INCLUDES -o $TAR
 
 if [ $? -eq 0 ]; then
     echo "Successfully built: $TARGET"
-    # ./$TARGET  
 else
     echo "Build failed!"
     exit 1

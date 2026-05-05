@@ -9,7 +9,7 @@
 const char* const FLAG_INPUT_FILE  = "-i";
 const char* const FLAG_OUTPUT_FILE = "-o";
 
-const char* textCommandsFileName   = "quadratic.txt"; 
+const char* textCommandsFileName   = "program.spu"; 
 
 int main(int argc, char* argv[]){
     const char* filename = textCommandsFileName;

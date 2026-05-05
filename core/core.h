@@ -61,7 +61,7 @@ union ASTVal_t{
 struct ASTnodeData_t{
     ASTVal_t    value;
     ASTnodeType type;
-    char*       writeFile;
+    char*       writeFile; /// abort self
 };
 
 const size_t MAX_VARIABLE_SIZE = 512;

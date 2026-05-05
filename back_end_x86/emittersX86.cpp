@@ -369,6 +369,9 @@ varMapElem_t* emitRet(treeNode_t* node, codeGenContext* context){
 varMapElem_t* emitFuncEpilog(treeNode_t* node, codeGenContext* context){
     assert(node);
     assert(context);
+   
+
+    fprintf(_CONTEXT_FILE_PTR(context), "add rsp, %d\n", _CONTEXT_STACK_OFFSET(context) - VARIABLE_BYTES_SIZE);
 
     fprintf(_CONTEXT_FILE_PTR(context), "mov rsp, rbp\n");
     fprintf(_CONTEXT_FILE_PTR(context), "pop rbp\n");
