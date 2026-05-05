@@ -60,19 +60,19 @@ bool neq(processor* spu){
     return binaryOperation(spu, neMath);
 }
 
-bool jb(processor* spu){
+bool jl(processor* spu){
     return jumpOperation(spu, ltMath);
 }
 
-bool jbe(processor* spu){
+bool jle(processor* spu){
     return jumpOperation(spu, leMath);
 }
 
-bool ja(processor* spu){
+bool jg(processor* spu){
     return jumpOperation(spu, gtMath);
 }
 
-bool jae(processor* spu){
+bool jge(processor* spu){
     return jumpOperation(spu, geMath);
 }
 

@@ -417,6 +417,11 @@ varMapElem_t* emitWhile(treeNode_t* node, codeGenContext* context){
     assert(node);
     assert(context);
 
+    label_t* whileStartLabel = createLabel(_CONTEXT_LABELS_TABLE(context), LABEL_PREFIX_WHILE_BEGIN);
+    assert(whileStartLabel);
+
+    fprintf(_CONTEXT_FILE_PTR(context), ".%s_%d\n", _LABEL_DATA_NAME(whileStartLabel), _LABEL_DATA_ID(whileStartLabel));
+
     if(_L(node)){
         emitCondition(_L(node), context);
     }   
@@ -433,13 +438,8 @@ varMapElem_t* emitWhile(treeNode_t* node, codeGenContext* context){
         default: break;
     }
 
-    label_t* whileStartLabel = createLabel(_CONTEXT_LABELS_TABLE(context), LABEL_PREFIX_WHILE_BEGIN);
-    assert(whileStartLabel);
-
     label_t* whileEndLabel = createLabel(_CONTEXT_LABELS_TABLE(context), LABEL_PREFIX_WHILE_END);
     assert(whileEndLabel);
-
-    fprintf(_CONTEXT_FILE_PTR(context), ".%s_%d\n", _LABEL_DATA_NAME(whileStartLabel), _LABEL_DATA_ID(whileStartLabel));
 
     fprintf(_CONTEXT_FILE_PTR(context), "%s .%s_%d\n", condJumpInstruction, _LABEL_DATA_NAME(whileEndLabel), _LABEL_DATA_ID(whileEndLabel));
 

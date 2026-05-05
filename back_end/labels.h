@@ -1,27 +1,28 @@
-// #ifndef LABELS_H
-// #define LABELS_H
+#ifndef LABELS_H
+#define LABELS_H
 
-// #include <stddef.h>
+#include <stddef.h>
 
-// extern const char* LABEL_PREFIX_JBE_WHILE_END;
-// extern const char* LABEL_PREFIX_WHILE_BEGIN;
-// extern const char* LABEL_PREFIX_IF_FALSE_JMP; 
+#include "general/cashFriendlyList/list.h"
 
-// struct label_t{
-//     char* prefix; // name
-//     int id;
-// };
+extern const char* LABEL_PREFIX_WHILE_BEGIN;
+extern const char* LABEL_PREFIX_WHILE_END;
+extern const char* LABEL_PREFIX_IF_END; 
 
-// // stack, list
-// struct labelsTable_t{
-//     label_t* data;
-//     size_t   size;
-//     size_t   capacity;
-// };
+const size_t AMOUNT_LABELS    = 5;
 
-// labelsTable_t* labelsTableCtor(labelsTable_t* labelsTable);
-// // label_t* getLabel(labelsTable_t* labelsTable, const char* name);
-// label_t createLabel(labelsTable_t* labelsTable, const char* name);
-// labelsTable_t* labelsTableDtor(labelsTable_t* labelsTable);
+struct label_t{
+    char* name;
+    int id;
+};
 
-// #endif /* LABELS_H */
+typedef list_t labelsTable_t;
+
+// label_t* getLabel(labelsTable_t* labelsTable, const char* name);
+label_t* createLabel(labelsTable_t* labelsTable, const char* name);
+
+void* labelCopy(void* dest, void* src);
+int labelCmp(void* a, void* b);
+void labelDtor(void* ptr);
+
+#endif /* LABELS_H */

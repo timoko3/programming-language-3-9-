@@ -27,10 +27,10 @@ bool eq (processor* spu);
 bool neq(processor* spu);
 
 bool jmp(processor* spu);
-bool jb(processor* spu);
-bool jbe(processor* spu);
-bool ja(processor* spu);
-bool jae(processor* spu);
+bool jl(processor* spu);
+bool jle(processor* spu);
+bool jg(processor* spu);
+bool jge(processor* spu);
 bool je(processor* spu);
 bool jne(processor* spu);
 

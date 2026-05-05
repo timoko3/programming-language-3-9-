@@ -1,85 +1,80 @@
-// #include "labels.h"
+#include "labels.h"
 
-// #include "../core/DSL.h"
+#include "general/debug.h"
+#include "general/poison.h"
+#include "core/DSL.h"
 
-// #include "../general/debug.h"
-// #include "../general/strFunc.h"
+#include <assert.h>
+#include <malloc.h>
+#include <string.h>
 
-// #include <malloc.h>
-// #include <assert.h>
-// #include <string.h>
+const size_t MAX_LABEL_NAME_LEN = 64;
 
-// const char* LABEL_PREFIX_JBE_WHILE_END = "whileEndJump";
-// const char* LABEL_PREFIX_WHILE_BEGIN   = "whileBegin";
-// const char* LABEL_PREFIX_IF_FALSE_JMP  = "ifFalseJmp";
+const char* LABEL_PREFIX_WHILE_BEGIN = "whileBegin";
+const char* LABEL_PREFIX_WHILE_END   = "whileEnd";
+const char* LABEL_PREFIX_IF_END      = "ifEnd";
 
-// static labelsTable_t* reallocateLabelsTable(labelsTable_t* labelsTable);
+label_t* createLabel(labelsTable_t* labelsTable, const char* name){
+    assert(labelsTable);
+    assert(name);
 
-// labelsTable_t* labelsTableCtor(labelsTable_t* labelsTable){
-//     labelsTable = (labelsTable_t*) calloc(1, sizeof(labelsTable_t));
+    label_t* curLabel = (label_t*) calloc(1, sizeof(label_t));
+    assert(curLabel);
 
-//     labelsTable->data = (label_t*) calloc(1, sizeof(label_t));
-//     assert(labelsTable->data);
+    _LABEL_DATA_NAME(curLabel) = (char*) calloc(MAX_LABEL_NAME_LEN, sizeof(char));
+    assert(_LABEL_DATA_NAME(curLabel));
 
-//     labelsTable->capacity = 1;
-//     labelsTable->size = 0;
+    LPRINTF("name = %s\n", name);
 
-//     return labelsTable;
-// }
+    strcpy(_LABEL_DATA_NAME(curLabel), name);
 
-// labelsTable_t* labelsTableDtor(labelsTable_t* labelsTable){
-//     assert(labelsTable);
+    _LABEL_DATA_ID(curLabel) = *freeInd(labelsTable);
+    
+    LPRINTF("curLabelAddr = %p", curLabel);
+    listInsertToTail(labelsTable, (void*) curLabel);
 
-//     for(size_t curLabelInd = 0; curLabelInd < labelsTable->size; curLabelInd++){
-//         free(_LABEL_DATA_PREFIX(&labelsTable->data[curLabelInd]));
-//     }
+    labelDtor(curLabel);
 
-//     free(_LABEL_TABLE_DATA(labelsTable));
+    return (label_t*) *data(labelsTable, *tail(labelsTable));
+}
 
-//     free(labelsTable);
+void* labelCopy(void* dest, void* src){
+    if(dest == NULL || src == NULL) return NULL;
 
-//     return NULL;
-// }
+    label_t* destLabel = (label_t*) calloc(1, sizeof(label_t));
+    assert(destLabel);
 
-// label_t createLabel(labelsTable_t* labelsTable, const char* name){
-//     assert(labelsTable);
-//     assert(name);
+    label_t* srcLabel  = (label_t*) src;
 
-//     if(_LABEL_TABLE_SIZE(labelsTable) >= _LABEL_TABLE_CAPACITY(labelsTable)){
-//         reallocateLabelsTable(labelsTable);
-//     }
+    _LABEL_DATA_ID(destLabel) = _LABEL_DATA_ID(srcLabel);
+    _LABEL_DATA_NAME(destLabel) = (char*) calloc(MAX_LABEL_NAME_LEN, sizeof(char));
+    strcpy(_LABEL_DATA_NAME(destLabel), _LABEL_DATA_NAME(srcLabel));
 
-//     int num = _LABEL_TABLE_SIZE(labelsTable);
+    return (void*) destLabel;
+}
 
-//     size_t curSize = _LABEL_TABLE_SIZE(labelsTable);
+int labelCmp(void* a, void* b){
+    if(a == NULL && b == NULL) return 0;
+    if(a == NULL || b == NULL) return 1;
 
-//     LPRINTF("WRITE slot addr=%p", &labelsTable->data[curSize]);
+    label_t* labelA  = (label_t*) a;
+    label_t* labelB  = (label_t*) b;
 
-//     _LABEL_DATA_PREFIX(&labelsTable->data[curSize])  = myStrDup(name);
-//     _LABEL_DATA_ID(&labelsTable->data[curSize]) = num;
+    int result = 1;
 
-//     _LABEL_TABLE_SIZE(labelsTable)++;
+    if(!strcmp(_LABEL_DATA_NAME(labelA), _LABEL_DATA_NAME(labelB)) &&
+        _LABEL_DATA_ID(labelA) == _LABEL_DATA_ID(labelB)){
+        result = 0;
+    }
 
-//     return labelsTable->data[curSize];
-// }
+    return result;
+}
 
-// static labelsTable_t* reallocateLabelsTable(labelsTable_t* labelsTable){
-//     assert(labelsTable);
+void labelDtor(void* ptr){
+    label_t* label = (label_t*) ptr;
 
-//     LPRINTF("start reallocation");
+    free(_LABEL_DATA_NAME(label));
 
-//     size_t startSize = _LABEL_TABLE_CAPACITY(labelsTable);
-
-//     label_t* temp = (label_t*) realloc(_LABEL_TABLE_DATA(labelsTable), _LABEL_TABLE_CAPACITY(labelsTable) * 2 * sizeof(label_t));
-//     assert(temp);
-
-//     _LABEL_TABLE_DATA(labelsTable) = temp;
-//     _LABEL_TABLE_CAPACITY(labelsTable) *= 2;
-
-//     LPRINTF("ended reallocation");
-
-//     return labelsTable;
-// }
-
-
-
+    poisonMemory(label, sizeof(label));
+    free(label);
+}

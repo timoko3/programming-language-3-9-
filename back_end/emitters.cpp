@@ -33,9 +33,9 @@ void emitMain(treeNode_t* node, codeGenContext* context);
 // varMapElem_t* emitCallFuncArg(treeNode_t* node, codeGenContext* context);
 // varMapElem_t* emitCallFuncFreeArgRegs(treeNode_t* node, codeGenContext* context);
 
-// varMapElem_t* emitIf(treeNode_t* node, codeGenContext* context);
-// varMapElem_t* emitWhile(treeNode_t* node, codeGenContext* context);
-// varMapElem_t* emitCondition(treeNode_t* node, codeGenContext* context);
+void emitIf(treeNode_t* node, codeGenContext* context);
+void emitWhile(treeNode_t* node, codeGenContext* context);
+void emitCondition(treeNode_t* node, codeGenContext* context);
 
 void emitEs(treeNode_t* node, codeGenContext* context);
 void emitStatement(treeNode_t* node, codeGenContext* context);
@@ -45,17 +45,16 @@ void emitAssign(treeNode_t* node, codeGenContext* context);
 void emitExpression(treeNode_t* node, codeGenContext* context);
 void emitAdd(treeNode_t* node, codeGenContext* context);
 void emitMul(treeNode_t* node, codeGenContext* context);
-// varMapElem_t* emitSub(treeNode_t* node, codeGenContext* context);
+void emitSub(treeNode_t* node, codeGenContext* context);
+void emitDiv(treeNode_t* node, codeGenContext* context);
 
-// varMapElem_t* emitDiv(treeNode_t* node, codeGenContext* context);
-
-// varMapElem_t* emitSqrt(treeNode_t* node, codeGenContext* context);
+void emitSqrt(treeNode_t* node, codeGenContext* context);
 
 // varMapElem_t* 
 void emitNumber(treeNode_t* node, codeGenContext* context);
 void emitVar(treeNode_t* node, codeGenContext* context);
 
-// varMapElem_t* emitUnaryOpPreamble(treeNode_t* node, codeGenContext* context);
+void emitUnaryOpPreamble(treeNode_t* node, codeGenContext* context);
 void emitBinaryOpPreamble(treeNode_t* node, codeGenContext* context);
 
 void emitHlt(treeNode_t* node, codeGenContext* context);
@@ -74,18 +73,18 @@ static emitRule emittersTable[] = {
 //     {FUNCTION,      emitFunc     },
 //     {RETURN,        emitRet      },
 //     {COMMA,         emitComma    },
-//     {IF,            emitIf       },
-//     {WHILE,         emitWhile    },
+    {IF,            emitIf       },
+    {WHILE,         emitWhile    },
     {END_STATEMENT, emitEs       },
     {ASSIGN,        emitAssign   },
     {ADD,           emitAdd      },
-//     {SUB,           emitSub      },
+    {SUB,           emitSub      },
     {MUL,           emitMul      },
-//     {DIVIDE,        emitDiv      },
+    {DIVIDE,        emitDiv      },
     {HLT,           emitHlt      },
     {VARIABLE,      emitVar      },
     {NUMBER,        emitNumber   },
-//     {SQRT,          emitSqrt     },
+    {SQRT,          emitSqrt     },
 //     // {GT,            emitGt    },           
 //     // {LT,            emitLt    },
 //     // {GE,            emitGe    },
@@ -105,15 +104,16 @@ const char* SUB_OPERATION_NAME = "SUB" ;
 const char* MUL_OPERATION_NAME = "MUL";
 const char* DIV_OPERATION_NAME = "DIV";
 
-// const char* SQRT_OPERATION_NAME = "sqrtss";
+const char* SQRT_OPERATION_NAME = "SQRT";
 
 // const char* CMP_OPERATION_NAME = "cmp";
-// const char* JG_OPERATION_NAME  = "jg";
-// const char* JGE_OPERATION_NAME = "jge";
-// const char* JL_OPERATION_NAME  = "jl";
-// const char* JLE_OPERATION_NAME = "jle";
-// const char* JE_OPERATION_NAME  = "je";
-// const char* JNE_OPERATION_NAME = "jne";
+const char* JMP_OPERATION_NAME  = "JMP";
+const char* JG_OPERATION_NAME  = "JG";
+const char* JGE_OPERATION_NAME = "JGE";
+const char* JL_OPERATION_NAME  = "JL";
+const char* JLE_OPERATION_NAME = "JLE";
+const char* JE_OPERATION_NAME  = "JE";
+const char* JNE_OPERATION_NAME = "JNE";
 
 const size_t EMIT_TABLE_SIZE = sizeof(emittersTable) / sizeof(emitRule);
 
@@ -369,94 +369,88 @@ void emitMain(treeNode_t* node, codeGenContext* context){
 //     return _CONTEXT_TEMP_VAR(context);
 // }
 
-// varMapElem_t* emitIf(treeNode_t* node, codeGenContext* context){
-//     assert(node);
-//     assert(context);
+void  emitIf(treeNode_t* node, codeGenContext* context){
+    assert(node);
+    assert(context);
 
-//     if(_L(node)){
-//         emitCondition(_L(node), context);
-//     }   
+    if(_L(node)){
+        emitCondition(_L(node), context);
+    }   
 
-//     const char* condJumpInstruction = "";
+    const char* condJumpInstruction = "";
 
-//     switch(_NODE_TYPE(_L(node))){
-//         case LE:        condJumpInstruction = JG_OPERATION_NAME ; break; 
-//         case LT:        condJumpInstruction = JGE_OPERATION_NAME; break; 
-//         case GE:        condJumpInstruction = JL_OPERATION_NAME ; break; 
-//         case GT:        condJumpInstruction = JLE_OPERATION_NAME; break; 
-//         case EQUAL:     condJumpInstruction = JNE_OPERATION_NAME; break; 
-//         case NOT_EQUAL: condJumpInstruction = JE_OPERATION_NAME ; break; 
-//         default: break;
-//     }
+    switch(_NODE_TYPE(_L(node))){
+        case LE:        condJumpInstruction = JG_OPERATION_NAME ; break; 
+        case LT:        condJumpInstruction = JGE_OPERATION_NAME; break; 
+        case GE:        condJumpInstruction = JL_OPERATION_NAME ; break; 
+        case GT:        condJumpInstruction = JLE_OPERATION_NAME; break; 
+        case EQUAL:     condJumpInstruction = JNE_OPERATION_NAME; break; 
+        case NOT_EQUAL: condJumpInstruction = JE_OPERATION_NAME ; break; 
+        default: break;
+    }
 
-//     label_t* ifLabel = createLabel(_CONTEXT_LABELS_TABLE(context), LABEL_PREFIX_IF_END);
-//     assert(ifLabel);
+    label_t* ifLabel = createLabel(_CONTEXT_LABELS_TABLE(context), LABEL_PREFIX_IF_END);
+    assert(ifLabel);
 
-//     fprintf(_CONTEXT_FILE_PTR(context), "%s .%s_%d\n", condJumpInstruction, _LABEL_DATA_NAME(ifLabel), _LABEL_DATA_ID(ifLabel));
+    fprintf(_CONTEXT_FILE_PTR(context), "%s :%s_%d\n", condJumpInstruction, _LABEL_DATA_NAME(ifLabel), _LABEL_DATA_ID(ifLabel));
 
-//     if(_R(node)){
-//         emitBlock(_R(node), context);
-//     }   
+    if(_R(node)){
+        emitBlock(_R(node), context);
+    }   
 
-//     fprintf(_CONTEXT_FILE_PTR(context), ".%s_%d:\n", _LABEL_DATA_NAME(ifLabel), _LABEL_DATA_ID(ifLabel));
+    fprintf(_CONTEXT_FILE_PTR(context), ":%s_%d\n", _LABEL_DATA_NAME(ifLabel), _LABEL_DATA_ID(ifLabel));
+}
 
-//     return _CONTEXT_TEMP_VAR(context);
-// }
+void emitWhile(treeNode_t* node, codeGenContext* context){
+    assert(node);
+    assert(context);
 
-// varMapElem_t* emitWhile(treeNode_t* node, codeGenContext* context){
-//     assert(node);
-//     assert(context);
+    label_t* whileStartLabel = createLabel(_CONTEXT_LABELS_TABLE(context), LABEL_PREFIX_WHILE_BEGIN);
+    assert(whileStartLabel);
 
-//     if(_L(node)){
-//         emitCondition(_L(node), context);
-//     }   
+    fprintf(_CONTEXT_FILE_PTR(context), ":%s_%d\n", _LABEL_DATA_NAME(whileStartLabel), _LABEL_DATA_ID(whileStartLabel));
 
-//     const char* condJumpInstruction = "";
+    if(_L(node)){
+        emitCondition(_L(node), context);
+    }   
 
-//     switch(_NODE_TYPE(_L(node))){
-//         case LE:        condJumpInstruction = JG_OPERATION_NAME ; break; 
-//         case LT:        condJumpInstruction = JGE_OPERATION_NAME; break; 
-//         case GE:        condJumpInstruction = JL_OPERATION_NAME ; break; 
-//         case GT:        condJumpInstruction = JLE_OPERATION_NAME; break; 
-//         case EQUAL:     condJumpInstruction = JNE_OPERATION_NAME; break; 
-//         case NOT_EQUAL: condJumpInstruction = JE_OPERATION_NAME ; break; 
-//         default: break;
-//     }
+    const char* condJumpInstruction = "";
 
-//     label_t* whileStartLabel = createLabel(_CONTEXT_LABELS_TABLE(context), LABEL_PREFIX_WHILE_BEGIN);
-//     assert(whileStartLabel);
+    switch(_NODE_TYPE(_L(node))){
+        case LE:        condJumpInstruction = JG_OPERATION_NAME ; break; 
+        case LT:        condJumpInstruction = JGE_OPERATION_NAME; break; 
+        case GE:        condJumpInstruction = JL_OPERATION_NAME ; break; 
+        case GT:        condJumpInstruction = JLE_OPERATION_NAME; break; 
+        case EQUAL:     condJumpInstruction = JNE_OPERATION_NAME; break; 
+        case NOT_EQUAL: condJumpInstruction = JE_OPERATION_NAME ; break; 
+        default: break;
+    }
 
-//     label_t* whileEndLabel = createLabel(_CONTEXT_LABELS_TABLE(context), LABEL_PREFIX_WHILE_END);
-//     assert(whileEndLabel);
+    label_t* whileEndLabel = createLabel(_CONTEXT_LABELS_TABLE(context), LABEL_PREFIX_WHILE_END);
+    assert(whileEndLabel);
 
-//     fprintf(_CONTEXT_FILE_PTR(context), ".%s_%d\n", _LABEL_DATA_NAME(whileStartLabel), _LABEL_DATA_ID(whileStartLabel));
 
-//     fprintf(_CONTEXT_FILE_PTR(context), "%s .%s_%d\n", condJumpInstruction, _LABEL_DATA_NAME(whileEndLabel), _LABEL_DATA_ID(whileEndLabel));
+    fprintf(_CONTEXT_FILE_PTR(context), "%s :%s_%d\n", condJumpInstruction, _LABEL_DATA_NAME(whileEndLabel), _LABEL_DATA_ID(whileEndLabel));
 
-//     if(_R(node)){
-//         emitBlock(_R(node), context);
-//     }   
+    if(_R(node)){
+        emitBlock(_R(node), context);
+    }   
 
-//     fprintf(_CONTEXT_FILE_PTR(context), "jmp .%s_%d:\n", _LABEL_DATA_NAME(whileStartLabel), _LABEL_DATA_ID(whileStartLabel));
-//     fprintf(_CONTEXT_FILE_PTR(context), ".%s_%d:\n", _LABEL_DATA_NAME(whileEndLabel), _LABEL_DATA_ID(whileEndLabel));
+    fprintf(_CONTEXT_FILE_PTR(context), "%s :%s_%d\n", JMP_OPERATION_NAME, _LABEL_DATA_NAME(whileStartLabel), _LABEL_DATA_ID(whileStartLabel));
+    fprintf(_CONTEXT_FILE_PTR(context), ":%s_%d\n", _LABEL_DATA_NAME(whileEndLabel), _LABEL_DATA_ID(whileEndLabel));
+}
 
-//     return _CONTEXT_TEMP_VAR(context);
-// }
+void emitCondition(treeNode_t* node, codeGenContext* context){
+    assert(node);
+    assert(context);
 
-// varMapElem_t* emitCondition(treeNode_t* node, codeGenContext* context){
-//     assert(node);
-//     assert(context);
+    LPRINTF("emitCondition start");
 
-//     LPRINTF("emitCondition start");
+    emitBinaryOpPreamble(node, context);
 
-//     emitBinaryOpPreamble(node, context);
+    LPRINTF("emitCondition end");
+}
 
-//     fprintf(_CONTEXT_FILE_PTR(context), "%s %s, %s\n", CMP_OPERATION_NAME, REG_TABLE_ELEM_NAME(_CONTEXT_CALC_REG_A(context)), REG_TABLE_ELEM_NAME(_CONTEXT_CALC_REG_B(context)));
-
-//     LPRINTF("emitCondition end");
-
-//     return _CONTEXT_TEMP_VAR(context);
-// }
 
 void emitEs(treeNode_t* node, codeGenContext* context){
     assert(node);
@@ -552,33 +546,27 @@ void emitAdd(treeNode_t* node, codeGenContext* context){
 
     fprintf(_CONTEXT_FILE_PTR(context), "%s\n", ADD_OPERATION_NAME);
 
-    // fprintf(_CONTEXT_FILE_PTR(context), "%s %s, %s\n", ADD_OPERATION_NAME, REG_TABLE_ELEM_NAME(_CONTEXT_CALC_REG_A(context)), REG_TABLE_ELEM_NAME(_CONTEXT_CALC_REG_B(context)));
-    // fprintf(_CONTEXT_FILE_PTR(context), "mov %s, %s\n", REG_TABLE_ELEM_NAME(_CONTEXT_TEMP_REG(context)), REG_TABLE_ELEM_NAME(_CONTEXT_CALC_REG_A(context)));
-
     fprintf(_CONTEXT_FILE_PTR(context), "\n\n;endAdd\n");
 
     LPRINTF("emitAdd end");    
 }
 
-// varMapElem_t* emitSub(treeNode_t* node, codeGenContext* context){
-//     assert(node);
-//     assert(context);
+void emitSub(treeNode_t* node, codeGenContext* context){
+    assert(node);
+    assert(context);
 
-//     LPRINTF("emitSub start");
+    LPRINTF("emitSub start");
 
-//     fprintf(_CONTEXT_FILE_PTR(context), "\n;startSub\n");
+    fprintf(_CONTEXT_FILE_PTR(context), "\n;startSub\n");
 
-//     emitBinaryOpPreamble(node, context);
+    emitBinaryOpPreamble(node, context);
 
-//     fprintf(_CONTEXT_FILE_PTR(context), "%s %s, %s\n", SUB_OPERATION_NAME, REG_TABLE_ELEM_NAME(_CONTEXT_CALC_REG_A(context)), REG_TABLE_ELEM_NAME(_CONTEXT_CALC_REG_B(context)));
-//     fprintf(_CONTEXT_FILE_PTR(context), "mov %s, %s\n", REG_TABLE_ELEM_NAME(_CONTEXT_TEMP_REG(context)), REG_TABLE_ELEM_NAME(_CONTEXT_CALC_REG_A(context)));
+    fprintf(_CONTEXT_FILE_PTR(context), "%s\n", SUB_OPERATION_NAME);
 
-//     fprintf(_CONTEXT_FILE_PTR(context), "\n\n;endSub\n");
+    fprintf(_CONTEXT_FILE_PTR(context), "\n\n;endSub\n");
 
-//     LPRINTF("emitSub end");    
-
-//     return _CONTEXT_TEMP_VAR(context);
-// }
+    LPRINTF("emitSub end");    
+}
 
 void emitMul(treeNode_t* node, codeGenContext* context){
     assert(node);
@@ -597,58 +585,39 @@ void emitMul(treeNode_t* node, codeGenContext* context){
     LPRINTF("emitMul end");    
 }
 
-// varMapElem_t* emitDiv(treeNode_t* node, codeGenContext* context){
-//     assert(node);
-//     assert(context);
+void emitDiv(treeNode_t* node, codeGenContext* context){
+    assert(node);
+    assert(context);
 
-//     LPRINTF("emitDiv start");
+    LPRINTF("emitDiv start");
 
-//     fprintf(_CONTEXT_FILE_PTR(context), "\n;startDiv\n");
+    fprintf(_CONTEXT_FILE_PTR(context), "\n;startDiv\n");
 
-//     emitBinaryOpPreamble(node, context);
+    emitBinaryOpPreamble(node, context);
 
-//     fprintf(_CONTEXT_FILE_PTR(context), "push rax\n");
-//     fprintf(_CONTEXT_FILE_PTR(context), "push rdx\n");
+    fprintf(_CONTEXT_FILE_PTR(context), "%s\n", DIV_OPERATION_NAME);
 
-//     fprintf(_CONTEXT_FILE_PTR(context), "xor rdx, rdx\n", REG_TABLE_ELEM_NAME(_CONTEXT_CALC_REG_A(context)));
-//     fprintf(_CONTEXT_FILE_PTR(context), "mov rax, %s\n", REG_TABLE_ELEM_NAME(_CONTEXT_CALC_REG_A(context)));
+    fprintf(_CONTEXT_FILE_PTR(context), "\n\n;endDiv\n");
 
-//     fprintf(_CONTEXT_FILE_PTR(context), "%s %s\n", DIV_OPERATION_NAME, REG_TABLE_ELEM_NAME(_CONTEXT_CALC_REG_B(context)));
+    LPRINTF("emitDiv end");    
+}
 
-//     fprintf(_CONTEXT_FILE_PTR(context), "mov %s, rax\n", REG_TABLE_ELEM_NAME(_CONTEXT_TEMP_REG(context)));
+void emitSqrt(treeNode_t* node, codeGenContext* context){
+    assert(node);
+    assert(context);
 
-//     fprintf(_CONTEXT_FILE_PTR(context), "pop rdx\n");
-//     fprintf(_CONTEXT_FILE_PTR(context), "pop rax\n");
+    LPRINTF("emitSqrt start");    
 
-//     fprintf(_CONTEXT_FILE_PTR(context), "\n\n;endDiv\n");
+    fprintf(_CONTEXT_FILE_PTR(context), "\n;startSqrt\n");
 
-//     LPRINTF("emitDiv end");    
+    emitUnaryOpPreamble(node, context);
 
-//     return _CONTEXT_TEMP_VAR(context);
-// }
+    fprintf(_CONTEXT_FILE_PTR(context), "%s\n", SQRT_OPERATION_NAME);
 
-// varMapElem_t* emitSqrt(treeNode_t* node, codeGenContext* context){
-//     assert(node);
-//     assert(context);
+    fprintf(_CONTEXT_FILE_PTR(context), "\n\n;endSqrt\n");
 
-//     LPRINTF("emitSqrt start");    
-
-//     fprintf(_CONTEXT_FILE_PTR(context), "\n;startSqrt\n");
-
-//     emitUnaryOpPreamble(node, context);
-
-//     fprintf(_CONTEXT_FILE_PTR(context), "cvtsi2ss xmm0, %s\n", REG_TABLE_ELEM_NAME(_CONTEXT_CALC_REG_A(context)));
-//     fprintf(_CONTEXT_FILE_PTR(context), "%s xmm0, xmm0\n", SQRT_OPERATION_NAME);
-//     fprintf(_CONTEXT_FILE_PTR(context), "cvttss2si %s, xmm0\n", REG_TABLE_ELEM_NAME(_CONTEXT_CALC_REG_A(context)));
-
-//     fprintf(_CONTEXT_FILE_PTR(context), "mov %s, %s\n", REG_TABLE_ELEM_NAME(_CONTEXT_TEMP_REG(context)), REG_TABLE_ELEM_NAME(_CONTEXT_CALC_REG_A(context)));
-
-//     fprintf(_CONTEXT_FILE_PTR(context), "\n\n;endSqrt\n");
-
-//     LPRINTF("emitSqrt end");    
-
-//     return _CONTEXT_TEMP_VAR(context);
-// }
+    LPRINTF("emitSqrt end");    
+}
 
 void emitVar(treeNode_t* node, codeGenContext* context){
     assert(node);
@@ -756,20 +725,18 @@ void emitBinaryOpPreamble(treeNode_t* node, codeGenContext* context){
 
 }
 
-// varMapElem_t* emitUnaryOpPreamble(treeNode_t* node, codeGenContext* context){
-//     assert(node);
-//     assert(context);
+void emitUnaryOpPreamble(treeNode_t* node, codeGenContext* context){
+    assert(node);
+    assert(context);
 
-//     varMapElem_t* retVal = NULL;
-//     if(_R(node)){
-//         retVal = emitExpression(_R(node), context);
-//     }
+    varMapElem_t* retVal = NULL;
+    if(_R(node)){
+        emitExpression(_R(node), context);
+    }
+    retVal = _CONTEXT_CUR_VAR(context);
 
-//     loadToReg(retVal, context);
-//     fprintf(_CONTEXT_FILE_PTR(context), "mov %s, %s\n", REG_TABLE_ELEM_NAME(_CONTEXT_CALC_REG_A(context)), REG_TABLE_ELEM_NAME(_CONTEXT_TEMP_REG(context)));
-
-//     return _CONTEXT_TEMP_VAR(context);
-// }
+    if(_NODE_TYPE(_R(node)) == VARIABLE) fprintf(_CONTEXT_FILE_PTR(context), "GET %d\n", VARIABLE_MAP_LOC_STACK_OFFSET(retVal));
+}
 
 // regTableElem_t* loadToReg(varMapElem_t* var, codeGenContext* context){
 //     if (VARIABLE_MAP_LOC_TYPE(var) == LOCK_REG){

@@ -1,18 +1,65 @@
-PUSH 0
+PUSH 5
 POPREG BX
 PUSHREG BX
 PUSHREG BX
 SET 0
 
-;startAdd
+;startDiv
+
+;startDiv
+PUSH 9
+PUSH 3
+DIV
+
+
+;endDiv
+PUSH 3
+DIV
+
+
+;endDiv
+POPREG BX
+PUSHREG BX
+PUSHREG BX
+SET 1
+
+;startDiv
+
+;startDiv
+PUSH 9
+PUSH 3
+DIV
+
+
+;endDiv
+PUSH 3
+DIV
+
+
+;endDiv
+POPREG BX
+PUSHREG BX
+PUSHREG BX
+SET 2
+:whileBegin_1
+GET 1
+GET 0
+JG :whileEnd_2
 
 ;startMul
-PUSH 2
-GET 0
+GET 2
+GET 1
 MUL
 
 
 ;endMul
+POPREG BX
+PUSHREG BX
+PUSHREG BX
+SET 2
+
+;startAdd
+GET 1
 PUSH 1
 ADD
 
@@ -22,5 +69,6 @@ POPREG BX
 PUSHREG BX
 PUSHREG BX
 SET 1
-
-PUSH 10
+JMP :whileBegin_1
+:whileEnd_2
+HLT

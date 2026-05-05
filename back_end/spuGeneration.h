@@ -2,7 +2,7 @@
 #define CODE_GENERATION_H
 
 #include "variableMapSpu.h"
-// #include "labels.h"
+#include "labels.h"
 
 #include "general/tree/tree.h"
 
@@ -22,7 +22,7 @@ struct codeGenContext{
     // regTableElem_t* calcRegA;
     // regTableElem_t* calcRegB;
 
-    // labelsTable_t*  labelsTable;
+    labelsTable_t*  labelsTable;
 
     int             stackOffset;
     // int             curFuncArgsAmount;
