@@ -1,4 +1,4 @@
-#include "regTable.h"
+#include "regTableSpu.h"
 
 #include "general/debug.h"
 #include "general/poison.h"
@@ -11,16 +11,16 @@
 const size_t MAX_REG_NAME_LEN = 5;
 
 regTableElem_t initRegTable[] = {
-    {RAX, "AX", STORE_VAR,    false,  CALLER_SAVED},  
-    {RBX, "BX", TEMP_STORE,   false,  CALLEE_SAVED},  
-    {RDI, "CX", CALC,         false,  CALLER_SAVED},  
-    {RSI, "DX", CALC,         false,  CALLER_SAVED},  
-    {RDX, "EX", STORE_VAR,    false,  CALLER_SAVED},  
-    {RCX, "FX", STORE_VAR,    false,  CALLER_SAVED},  
-    {R8,  "GX", STORE_VAR,    false,  CALLER_SAVED},  
-    {R9,  "HX", STORE_VAR,    false,  CALLER_SAVED},  
-    {RSP, "IX", STACK,        true,   CALLER_SAVED},  
-    {RBP, "JX", STACK,        true,   CALLEE_SAVED},  
+    {AX, "AX", NOT_REG_SCEN,    false,  CALLER_SAVED},  
+    {BX, "BX", TEMP_STORE,      false,  CALLEE_SAVED},  
+    {CX, "CX", CALC,            false,  CALLER_SAVED},  
+    {DX, "DX", CALC,            false,  CALLER_SAVED},  
+    {EX, "EX", NOT_REG_SCEN,    false,  CALLER_SAVED},  
+    {FX, "FX", NOT_REG_SCEN,    false,  CALLER_SAVED},  
+    {GX, "GX", NOT_REG_SCEN,    false,  CALLER_SAVED},  
+    {HX, "HX", NOT_REG_SCEN,    false,  CALLER_SAVED},  
+    {IX, "IX", STACK,           true,   CALLER_SAVED},  
+    {JX, "JX", STACK,           true,   CALLEE_SAVED},  
 };
 
 regTableElem_t* regTableElemCtor(genPurposeRegs reg, char* name, regUseScenery useScenery, bool isUsed){

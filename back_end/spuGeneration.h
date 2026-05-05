@@ -1,7 +1,7 @@
 #ifndef CODE_GENERATION_H
 #define CODE_GENERATION_H
 
-#include "variableMap.h"
+#include "variableMapSpu.h"
 // #include "labels.h"
 
 #include "general/tree/tree.h"
@@ -14,10 +14,10 @@ struct codeGenContext{
     list_t*         varMap;
     varMapElem_t*   tempVar;
     varMapElem_t*   curVar;
-    // regUseScenery   curVarRegUseScenery;
+    regUseScenery   curVarRegUseScenery;
 
     list_t*         regTable;
-    // regTableElem_t* tempReg;
+    regTableElem_t* tempReg;
     // regTableElem_t* funcRetReg;
     // regTableElem_t* calcRegA;
     // regTableElem_t* calcRegB;

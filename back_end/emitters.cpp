@@ -37,14 +37,14 @@ void emitMain(treeNode_t* node, codeGenContext* context);
 // varMapElem_t* emitWhile(treeNode_t* node, codeGenContext* context);
 // varMapElem_t* emitCondition(treeNode_t* node, codeGenContext* context);
 
-// varMapElem_t* emitEs(treeNode_t* node, codeGenContext* context);
-// varMapElem_t* emitStatement(treeNode_t* node, codeGenContext* context);
+void emitEs(treeNode_t* node, codeGenContext* context);
+void emitStatement(treeNode_t* node, codeGenContext* context);
 // varMapElem_t* 
 void emitAssign(treeNode_t* node, codeGenContext* context);
 
 void emitExpression(treeNode_t* node, codeGenContext* context);
-// varMapElem_t* emitMul(treeNode_t* node, codeGenContext* context);
-// varMapElem_t* emitAdd(treeNode_t* node, codeGenContext* context);
+void emitAdd(treeNode_t* node, codeGenContext* context);
+void emitMul(treeNode_t* node, codeGenContext* context);
 // varMapElem_t* emitSub(treeNode_t* node, codeGenContext* context);
 
 // varMapElem_t* emitDiv(treeNode_t* node, codeGenContext* context);
@@ -53,7 +53,7 @@ void emitExpression(treeNode_t* node, codeGenContext* context);
 
 // varMapElem_t* 
 void emitNumber(treeNode_t* node, codeGenContext* context);
-// varMapElem_t* emitVar(treeNode_t* node, codeGenContext* context);
+void emitVar(treeNode_t* node, codeGenContext* context);
 
 // varMapElem_t* emitUnaryOpPreamble(treeNode_t* node, codeGenContext* context);
 void emitBinaryOpPreamble(treeNode_t* node, codeGenContext* context);
@@ -69,21 +69,21 @@ void emitCurNode(treeNode_t* node, codeGenContext* context);
 // regTableElem_t* loadToReg(varMapElem_t* var, codeGenContext* context);
 
 static emitRule emittersTable[] = {
-//     {END_BLOCK,     emitEb       },
+    {END_BLOCK,     emitEb       },
     {MAIN,          emitMain     },
 //     {FUNCTION,      emitFunc     },
 //     {RETURN,        emitRet      },
 //     {COMMA,         emitComma    },
 //     {IF,            emitIf       },
 //     {WHILE,         emitWhile    },
-//     {END_STATEMENT, emitEs       },
-{ASSIGN,        emitAssign   },
-//     {ADD,           emitAdd      },
+    {END_STATEMENT, emitEs       },
+    {ASSIGN,        emitAssign   },
+    {ADD,           emitAdd      },
 //     {SUB,           emitSub      },
-//     {MUL,           emitMul      },
+    {MUL,           emitMul      },
 //     {DIVIDE,        emitDiv      },
     {HLT,           emitHlt      },
-//     {VARIABLE,      emitVar      },
+    {VARIABLE,      emitVar      },
     {NUMBER,        emitNumber   },
 //     {SQRT,          emitSqrt     },
 //     // {GT,            emitGt    },           
@@ -100,10 +100,10 @@ static emitRule emittersTable[] = {
 
 // const char* MAIN_START_NAME    = "_start";
 
-// const char* ADD_OPERATION_NAME = "add";
-// const char* SUB_OPERATION_NAME = "sub" ;
-// const char* MUL_OPERATION_NAME = "imul";
-// const char* DIV_OPERATION_NAME = "idiv";
+const char* ADD_OPERATION_NAME = "ADD";
+const char* SUB_OPERATION_NAME = "SUB" ;
+const char* MUL_OPERATION_NAME = "MUL";
+const char* DIV_OPERATION_NAME = "DIV";
 
 // const char* SQRT_OPERATION_NAME = "sqrtss";
 
@@ -458,40 +458,36 @@ void emitMain(treeNode_t* node, codeGenContext* context){
 //     return _CONTEXT_TEMP_VAR(context);
 // }
 
-// varMapElem_t* emitEs(treeNode_t* node, codeGenContext* context){
-//     assert(node);
-//     assert(context);
+void emitEs(treeNode_t* node, codeGenContext* context){
+    assert(node);
+    assert(context);
 
-//     LPRINTF("emitEs start");
+    LPRINTF("emitEs start");
 
-//     if(_L(node)){
-//         emitStatement(_L(node), context);
-//     }
+    if(_L(node)){
+        emitStatement(_L(node), context);
+    }
 
-//     if(_R(node)){
-//         if(_NODE_TYPE(_R(node)) != END_STATEMENT) emitStatement(_R(node), context);
-//         else emitEs(_R(node), context);
-//     }
+    if(_R(node)){
+        if(_NODE_TYPE(_R(node)) != END_STATEMENT) emitStatement(_R(node), context);
+        else emitEs(_R(node), context);
+    }
 
-//     LPRINTF("emitEs end");
+    LPRINTF("emitEs end");
+}
 
-//     return _CONTEXT_TEMP_VAR(context);
-// }
+void emitStatement(treeNode_t* node, codeGenContext* context){
+    assert(node);
+    assert(context);
 
-// varMapElem_t* emitStatement(treeNode_t* node, codeGenContext* context){
-//     assert(node);
-//     assert(context);
+    LPRINTF("emitStatement start");
 
-//     LPRINTF("emitStatement start");
+    // emitTabs(context);
 
-//     // emitTabs(context);
+    emitCurNode(node, context);
 
-//     emitCurNode(node, context);
-
-//     LPRINTF("emitStatement end");
-
-//     return _CONTEXT_TEMP_VAR(context);
-// }
+    LPRINTF("emitStatement end");
+}
 
 // varMapElem_t* 
 void emitAssign(treeNode_t* node, codeGenContext* context){
@@ -500,22 +496,28 @@ void emitAssign(treeNode_t* node, codeGenContext* context){
 
     LPRINTF("emitAssign start");
     
-    // varMapElem_t* foundVar = NULL;
-    // if(_L(node)){
-    //     foundVar = emitVar(_L(node), context);
-    // }
+    varMapElem_t* foundVar = NULL;
+    if(_L(node)){
+        emitVar(_L(node), context);
+    }
+    foundVar = _CONTEXT_CUR_VAR(context);
 
     if(_R(node)){
         emitExpression(_R(node), context);
     }
 
-    // if(VARIABLE_MAP_LOC_TYPE(foundVar) == LOCK_REG){
-    //     fprintf(_CONTEXT_FILE_PTR(context), "mov %s, %s\n", REG_TABLE_ELEM_NAME(VARIABLE_MAP_LOC_REG((foundVar))), REG_TABLE_ELEM_NAME(_CONTEXT_TEMP_REG(context)));       
-    // }
-    // else if(VARIABLE_MAP_LOC_TYPE(foundVar) == LOCK_STACK){
-    //     fprintf(_CONTEXT_FILE_PTR(context), "sub rsp, %d\n", VARIABLE_BYTES_SIZE);       
-    //     fprintf(_CONTEXT_FILE_PTR(context), "mov [rbp - %d], %s\n", VARIABLE_MAP_LOC_STACK_OFFSET((foundVar)), REG_TABLE_ELEM_NAME(_CONTEXT_TEMP_REG(context)));       
-    // }
+    printf("LOC_TYPE = %d\n", VARIABLE_MAP_LOC_TYPE(foundVar));
+    if(VARIABLE_MAP_LOC_TYPE(foundVar) == LOCK_REG){
+        // fprintf(_CONTEXT_FILE_PTR(context), "mov %s, %s\n", REG_TABLE_ELEM_NAME(VARIABLE_MAP_LOC_REG((foundVar))), REG_TABLE_ELEM_NAME(_CONTEXT_TEMP_REG(context)));       
+    }
+    else if(VARIABLE_MAP_LOC_TYPE(foundVar) == LOCK_STACK){
+        fprintf(_CONTEXT_FILE_PTR(context), "POPREG %s\n", REG_TABLE_ELEM_NAME(_CONTEXT_TEMP_REG(context)));       
+        fprintf(_CONTEXT_FILE_PTR(context), "PUSHREG %s\n", REG_TABLE_ELEM_NAME(_CONTEXT_TEMP_REG(context)));       
+        fprintf(_CONTEXT_FILE_PTR(context), "PUSHREG %s\n", REG_TABLE_ELEM_NAME(_CONTEXT_TEMP_REG(context)));       
+        fprintf(_CONTEXT_FILE_PTR(context), "SET %d\n", VARIABLE_MAP_LOC_STACK_OFFSET(foundVar));       
+        // fprintf(_CONTEXT_FILE_PTR(context), "sub rsp, %d\n", VARIABLE_BYTES_SIZE);       
+        // fprintf(_CONTEXT_FILE_PTR(context), "mov [rbp - %d], %s\n", VARIABLE_MAP_LOC_STACK_OFFSET((foundVar)), REG_TABLE_ELEM_NAME(_CONTEXT_TEMP_REG(context)));       
+    }
 
 
     LPRINTF("emitAssign end");
@@ -538,27 +540,25 @@ void emitExpression(treeNode_t* node, codeGenContext* context){
     // return retVal;
 }
 
-// varMapElem_t* emitAdd(treeNode_t* node, codeGenContext* context){
-//     assert(node);
-//     assert(context);
+void emitAdd(treeNode_t* node, codeGenContext* context){
+    assert(node);
+    assert(context);
 
-//     LPRINTF("emitAdd start");
+    LPRINTF("emitAdd start");
 
-//     fprintf(_CONTEXT_FILE_PTR(context), "\n;startAdd\n");
+    fprintf(_CONTEXT_FILE_PTR(context), "\n;startAdd\n");
 
-//     // emitBinaryOpPreamble(node, context);
+    emitBinaryOpPreamble(node, context);
 
-//     fprintf(_CONTEXT_FILE_PTR(context), "ADD\n");
+    fprintf(_CONTEXT_FILE_PTR(context), "%s\n", ADD_OPERATION_NAME);
 
-//     // fprintf(_CONTEXT_FILE_PTR(context), "%s %s, %s\n", ADD_OPERATION_NAME, REG_TABLE_ELEM_NAME(_CONTEXT_CALC_REG_A(context)), REG_TABLE_ELEM_NAME(_CONTEXT_CALC_REG_B(context)));
-//     // fprintf(_CONTEXT_FILE_PTR(context), "mov %s, %s\n", REG_TABLE_ELEM_NAME(_CONTEXT_TEMP_REG(context)), REG_TABLE_ELEM_NAME(_CONTEXT_CALC_REG_A(context)));
+    // fprintf(_CONTEXT_FILE_PTR(context), "%s %s, %s\n", ADD_OPERATION_NAME, REG_TABLE_ELEM_NAME(_CONTEXT_CALC_REG_A(context)), REG_TABLE_ELEM_NAME(_CONTEXT_CALC_REG_B(context)));
+    // fprintf(_CONTEXT_FILE_PTR(context), "mov %s, %s\n", REG_TABLE_ELEM_NAME(_CONTEXT_TEMP_REG(context)), REG_TABLE_ELEM_NAME(_CONTEXT_CALC_REG_A(context)));
 
-//     fprintf(_CONTEXT_FILE_PTR(context), "\n\n;endAdd\n");
+    fprintf(_CONTEXT_FILE_PTR(context), "\n\n;endAdd\n");
 
-//     LPRINTF("emitAdd end");    
-
-//     return _CONTEXT_TEMP_VAR(context);
-// }
+    LPRINTF("emitAdd end");    
+}
 
 // varMapElem_t* emitSub(treeNode_t* node, codeGenContext* context){
 //     assert(node);
@@ -580,25 +580,22 @@ void emitExpression(treeNode_t* node, codeGenContext* context){
 //     return _CONTEXT_TEMP_VAR(context);
 // }
 
-// varMapElem_t* emitMul(treeNode_t* node, codeGenContext* context){
-//     assert(node);
-//     assert(context);
+void emitMul(treeNode_t* node, codeGenContext* context){
+    assert(node);
+    assert(context);
 
-//     LPRINTF("emitMul start");
+    LPRINTF("emitMul start");
 
-//     fprintf(_CONTEXT_FILE_PTR(context), "\n;startMul\n");
+    fprintf(_CONTEXT_FILE_PTR(context), "\n;startMul\n");
 
-//     emitBinaryOpPreamble(node, context);
+    emitBinaryOpPreamble(node, context);
 
-//     fprintf(_CONTEXT_FILE_PTR(context), "%s %s, %s\n", MUL_OPERATION_NAME, REG_TABLE_ELEM_NAME(_CONTEXT_CALC_REG_A(context)), REG_TABLE_ELEM_NAME(_CONTEXT_CALC_REG_B(context)));
-//     fprintf(_CONTEXT_FILE_PTR(context), "mov %s, %s\n", REG_TABLE_ELEM_NAME(_CONTEXT_TEMP_REG(context)), REG_TABLE_ELEM_NAME(_CONTEXT_CALC_REG_A(context)));
+    fprintf(_CONTEXT_FILE_PTR(context), "%s\n", MUL_OPERATION_NAME);
 
-//     fprintf(_CONTEXT_FILE_PTR(context), "\n\n;endMul\n");
+    fprintf(_CONTEXT_FILE_PTR(context), "\n\n;endMul\n");
 
-//     LPRINTF("emitMul end");    
-
-//     return _CONTEXT_TEMP_VAR(context);
-// }
+    LPRINTF("emitMul end");    
+}
 
 // varMapElem_t* emitDiv(treeNode_t* node, codeGenContext* context){
 //     assert(node);
@@ -673,9 +670,12 @@ void emitVar(treeNode_t* node, codeGenContext* context){
         foundElem = varMapAddVar(_CONTEXT_VAR_MAP(context), _CONTEXT_REG_TABLE(context), curVarCode, _CONTEXT_STACK_OFFSET(context), _CONTEXT_VAR_REG_USE_SCENERY(context));
 
         if(VARIABLE_MAP_LOC_TYPE(foundElem) == LOCK_STACK){
+            // printf("stack case\n");
             _CONTEXT_STACK_OFFSET(context) += VARIABLE_BYTES_SIZE;
         }
     }
+
+    _CONTEXT_CUR_VAR(context) = foundElem;
 
     varMapElemDtor(refElem);
 
@@ -725,29 +725,36 @@ void emitCurNode(treeNode_t* node, codeGenContext* context){
     // return retVal;
 }
 
-// varMapElem_t* emitBinaryOpPreamble(treeNode_t* node, codeGenContext* context){
-//     assert(node);
-//     assert(context);
+void emitBinaryOpPreamble(treeNode_t* node, codeGenContext* context){
+    assert(node);
+    assert(context);
 
-//     varMapElem_t* retVal = NULL;
-//     if(_L(node)){
-//         retVal = emitExpression(_L(node), context);
-//     }
+    varMapElem_t* retVal = NULL;
+    if(_L(node)){
+        emitExpression(_L(node), context);
+    }
+    retVal = _CONTEXT_CUR_VAR(context);
 
-//     // loadToReg(retVal, context);
-//     // fprintf(_CONTEXT_FILE_PTR(context), "mov %s, %s\n", REG_TABLE_ELEM_NAME(_CONTEXT_CALC_REG_A(context)), REG_TABLE_ELEM_NAME(_CONTEXT_TEMP_REG(context)));
-//     fprintf(_CONTEXT_FILE_PTR(context), "push %s\n", REG_TABLE_ELEM_NAME(_CONTEXT_CALC_REG_A(context)));
+    if(_NODE_TYPE(_L(node)) == VARIABLE) fprintf(_CONTEXT_FILE_PTR(context), "GET %d\n", VARIABLE_MAP_LOC_STACK_OFFSET(retVal));
 
-//     if(_R(node)){
-//         retVal = emitExpression(_R(node), context);
-//     }
+    // loadToReg(retVal, context);
+    // fprintf(_CONTEXT_FILE_PTR(context), "mov %s, %s\n", REG_TABLE_ELEM_NAME(_CONTEXT_CALC_REG_A(context)), REG_TABLE_ELEM_NAME(_CONTEXT_TEMP_REG(context)));
+    // fprintf(_CONTEXT_FILE_PTR(context), "push %s\n", REG_TABLE_ELEM_NAME(_CONTEXT_CALC_REG_A(context)));
 
-//     loadToReg(retVal, context);
-//     fprintf(_CONTEXT_FILE_PTR(context), "mov %s, %s\n", REG_TABLE_ELEM_NAME(_CONTEXT_CALC_REG_B(context)), REG_TABLE_ELEM_NAME(_CONTEXT_TEMP_REG(context)));
-//     fprintf(_CONTEXT_FILE_PTR(context), "pop %s\n", REG_TABLE_ELEM_NAME(_CONTEXT_CALC_REG_A(context)));
+    if(_R(node)){
+        emitExpression(_R(node), context);
+    }
+    retVal = _CONTEXT_CUR_VAR(context);
 
-//     return _CONTEXT_TEMP_VAR(context);
-// }
+    printf("Stack offset var = %d\n", VARIABLE_MAP_LOC_STACK_OFFSET(retVal));
+
+    if(_NODE_TYPE(_R(node)) == VARIABLE) fprintf(_CONTEXT_FILE_PTR(context), "GET %d\n", VARIABLE_MAP_LOC_STACK_OFFSET(retVal));
+
+    // loadToReg(retVal, context);
+    // fprintf(_CONTEXT_FILE_PTR(context), "mov %s, %s\n", REG_TABLE_ELEM_NAME(_CONTEXT_CALC_REG_B(context)), REG_TABLE_ELEM_NAME(_CONTEXT_TEMP_REG(context)));
+    // fprintf(_CONTEXT_FILE_PTR(context), "pop %s\n", REG_TABLE_ELEM_NAME(_CONTEXT_CALC_REG_A(context)));
+
+}
 
 // varMapElem_t* emitUnaryOpPreamble(treeNode_t* node, codeGenContext* context){
 //     assert(node);

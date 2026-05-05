@@ -147,7 +147,7 @@ bool set(processor* spu){
     spuPop(spu, &numPush);
 
     spuSet(spu, (size_t) stackIndex, numPush);
-    
+
     return true;
 }
 

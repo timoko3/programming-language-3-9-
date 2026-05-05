@@ -6,6 +6,7 @@
 #include <math.h>
 
 const double STACK_FRAME_BASE = 25;
+const size_t STACK_POINTER_REG_IND = 8;
 
 #define $ fprintf(stderr, "MEOW in %s:%d\n", __FILE__, __LINE__);
 
@@ -102,6 +103,8 @@ bool spuPush(processor* spu, stackData_t data){
 
     stackPush(&(spu->stk), data); 
 
+    (spu->regs[STACK_POINTER_REG_IND])++;
+
     return true;
 }
 
@@ -111,6 +114,8 @@ bool spuPop(processor* spu, stackData_t* data){
     if(stackPop(&(spu->stk), data) == EMPTY_STACK){
         return false;
     }
+
+    (spu->regs[STACK_POINTER_REG_IND])--;
 
     return true;
 }

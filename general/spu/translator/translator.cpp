@@ -98,7 +98,7 @@ static bool listing(translator_t* translator){
 
         char curCmdName[COMMAND_NAME_MAX_SIZE] = {0};
         sscanf(translator->input_buffer.ptrs[curStringInd].ptr, "%c", &curCmdName[0]);
-        if(curCmdName[0] == '\n'){
+        if(curCmdName[0] == '\n' || curCmdName[0] == ';'){
             continue;
         }
 
@@ -140,7 +140,9 @@ static bool assemblePass(translator_t* translator){
 
         if(getLabel(translator)) continue;
         
-        if (translator->input_buffer.ptrs[curStringInd].ptr[0] == '\n'){
+        printf("curString: %c\n", translator->input_buffer.ptrs[curStringInd].ptr[0]);
+        if (translator->input_buffer.ptrs[curStringInd].ptr[0] == '\n' ||
+            translator->input_buffer.ptrs[curStringInd].ptr[0] == ';'){
             
             continue;
         }
@@ -149,7 +151,7 @@ static bool assemblePass(translator_t* translator){
         sscanf(translator->input_buffer.ptrs[curStringInd].ptr, "%s", curCmdName);
         
         translator->curState.cmdName = curCmdName;
-        printf("curCmdName: %s\n", curCmdName);
+        // printf("curCmdName: %s\n", curCmdName);
         ON_DEBUG(printf("curCmdName: %s\n", curCmdName))
         if(!encodeCommand(translator)) break; 
         
@@ -157,11 +159,11 @@ static bool assemblePass(translator_t* translator){
         
         addCommandParameter(translator);
         
-        printf("curStringInd: %lu\n", curStringInd);
-        printf("count: %lu\n", translator->input_buffer.count);
+        // printf("curStringInd: %lu\n", curStringInd);
+        // printf("count: %lu\n", translator->input_buffer.count);
         ON_DEBUG(printf("\n"))
     }
-    printf("FILLED\n");
+    // printf("FILLED\n");
     return true;
 }
 
