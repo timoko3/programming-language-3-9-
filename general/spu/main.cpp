@@ -1,9 +1,9 @@
 #include "ram.h"
 #include "processor/processor.h"
 #include "translator/translator.h"
-#include "general/file.h"
+#include "general/spu/generalSpu/file.h"
 #include "general/poison.h"
-#include "general/stack/stack.h"
+#include "general/spu/generalSpu/stack/stack.h"
 
 
 const char* const FLAG_INPUT_FILE  = "-i";

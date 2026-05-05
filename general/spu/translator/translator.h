@@ -1,8 +1,8 @@
 #ifndef TRANSLATOR_H
 #define TRANSLATOR_H
 
-#include "../general/file.h"
-#include "../general/strFunc.h"
+#include "general/spu/generalSpu/file.h"
+#include "general/spu/generalSpu/strFunc.h"
 #include "../cmd.h"
 
 #define DEBUG_TRANSLATOR 0

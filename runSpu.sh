@@ -5,15 +5,15 @@ TARGET="processor.out"
 STD="-std=c++17"
 
 SOURCES=(
-    spu/main.cpp
-    spu/processor/*.cpp
-    spu/translator/*.cpp
-    spu/general/*.cpp
-    spu/general/stack/stack.cpp
-    spu/ram.cpp
+    general/spu/main.cpp
+    general/spu/processor/*.cpp
+    general/spu/translator/*.cpp
+    general/spu/ram.cpp
+    general/spu/generalSpu/*.cpp
+    general/spu/generalSpu/stack/stack.cpp
 )
 
-INCLUDES="-I. -Ispu"
+INCLUDES="-I. -I./general"
 
 CXXFLAGS=(
     -ggdb3 $STD -O0
