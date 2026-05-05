@@ -115,15 +115,25 @@ bool spuPop(processor* spu, stackData_t* data){
     return true;
 }
 
-// bool spuStackGet(processor* spu, size_t elemIndex, stackData_t* data){
-//     assert(spu);
+bool spuGet(processor* spu, size_t elemIndex, stackData_t* data){
+    assert(spu);
 
-//     if(stackPop(&(spu->stk), data) == EMPTY_STACK){
-//         return false;
-//     }
+    if(stackGet(&(spu->stk), elemIndex, data) == EMPTY_STACK){
+        return false;
+    }
 
-//     return true;
-// }
+    return true;
+}
+
+bool spuSet(processor* spu, size_t elemIndex, stackData_t data){
+    assert(spu);
+
+    if(stackSet(&(spu->stk), elemIndex, data) == EMPTY_STACK){
+        return false;
+    }
+
+    return true;
+}
 
 bool spuJump(processor* spu, cmdParam_t pos){
     assert(spu);

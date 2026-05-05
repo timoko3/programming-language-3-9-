@@ -653,36 +653,34 @@ void emitExpression(treeNode_t* node, codeGenContext* context){
 //     return _CONTEXT_TEMP_VAR(context);
 // }
 
-// varMapElem_t* emitVar(treeNode_t* node, codeGenContext* context){
-//     assert(node);
-//     assert(context);
+void emitVar(treeNode_t* node, codeGenContext* context){
+    assert(node);
+    assert(context);
 
-//     LPRINTF("emitVar start");
+    LPRINTF("emitVar start");
     
-//     printf("amountVariables: %llu\n", _CONTEXT_VAR_MAP(context)->size);
+    printf("amountVariables: %llu\n", _CONTEXT_VAR_MAP(context)->size);
 
-//     int curVarCode = 0;
-//     sscanf(_NODE_WRITE_FILE(node), "VAR%d", &curVarCode);
+    int curVarCode = 0;
+    sscanf(_NODE_WRITE_FILE(node), "VAR%d", &curVarCode);
 
-//     varMapElem_t* refElem = varMapElemCtor(curVarCode, LOCK_ANY);
-//     assert(refElem);
+    varMapElem_t* refElem = varMapElemCtor(curVarCode, LOCK_ANY);
+    assert(refElem);
 
-//     varMapElem_t* foundElem = varMapFind(_CONTEXT_VAR_MAP(context), varMapCmp, refElem);
+    varMapElem_t* foundElem = varMapFind(_CONTEXT_VAR_MAP(context), varMapCmp, refElem);
 
-//     if(!foundElem){
-//         foundElem = varMapAddVar(_CONTEXT_VAR_MAP(context), _CONTEXT_REG_TABLE(context), curVarCode, _CONTEXT_STACK_OFFSET(context), _CONTEXT_VAR_REG_USE_SCENERY(context));
+    if(!foundElem){
+        foundElem = varMapAddVar(_CONTEXT_VAR_MAP(context), _CONTEXT_REG_TABLE(context), curVarCode, _CONTEXT_STACK_OFFSET(context), _CONTEXT_VAR_REG_USE_SCENERY(context));
 
-//         if(VARIABLE_MAP_LOC_TYPE(foundElem) == LOCK_STACK){
-//             _CONTEXT_STACK_OFFSET(context) += VARIABLE_BYTES_SIZE;
-//         }
-//     }
+        if(VARIABLE_MAP_LOC_TYPE(foundElem) == LOCK_STACK){
+            _CONTEXT_STACK_OFFSET(context) += VARIABLE_BYTES_SIZE;
+        }
+    }
 
-//     varMapElemDtor(refElem);
+    varMapElemDtor(refElem);
 
-//     LPRINTF("emitVar end");
-
-//     return foundElem;
-// }
+    LPRINTF("emitVar end");
+}
 
 // varMapElem_t* 
 void emitNumber(treeNode_t* node, codeGenContext* context){

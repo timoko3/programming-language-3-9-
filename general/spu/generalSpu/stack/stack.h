@@ -67,7 +67,8 @@ struct stack{
 };
 
 stackError stackCtor(stack* stk, size_t capacity);
-/// stackError stackGet(const stack* stk, size_t index, stackData_t* stackElem);
+stackError stackGet(stack* stk, size_t elemIndex, stackData_t* stackElem);
+stackError stackSet(stack* stk, size_t elemIndex, stackData_t stackElem);
 stackError stackPush(stack* stk, stackData_t value);
 stackError stackPop(stack* stk, stackData_t* stackElem);
 stackError stackDtor(stack* stk);

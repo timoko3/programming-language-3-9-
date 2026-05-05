@@ -125,6 +125,32 @@ bool push(processor* spu){
     return true;
 }
 
+bool get(processor* spu){
+    cmdParam_t stackIndex = 0;
+
+    spuGetArg(spu,  &stackIndex);
+
+    cmdParam_t numPush = 0;
+    spuGet(spu, (size_t) stackIndex, &numPush);
+
+    spuPush(spu, (cmdParam_t) numPush);
+
+    return true;
+}
+
+bool set(processor* spu){
+    cmdParam_t stackIndex = 0;
+
+    spuGetArg(spu,  &stackIndex);
+
+    cmdParam_t numPush = 0;
+    spuPop(spu, &numPush);
+
+    spuSet(spu, (size_t) stackIndex, numPush);
+    
+    return true;
+}
+
 bool pushreg(processor* spu){
     cmdParam_t regNumDouble = 0;
 

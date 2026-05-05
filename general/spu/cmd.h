@@ -38,7 +38,9 @@ enum cmdOpcodes{
     GT,
     GE,
     EQUAL,
-    NEQUAL
+    NEQUAL,
+    GET,
+    SET
 };
 
 enum param_t{
@@ -72,7 +74,6 @@ static command_t commands[]{
     {EQUAL,    eq,         0, NO_PARAM,     "EQ"     },
     {NEQUAL,   neq,        0, NO_PARAM,     "NEQ"    },
     
-    
     {JMP,      jmp,        1, LABEL_PARAM,  "JMP"    },
     {JB,       jb,         1, LABEL_PARAM,  "JB"     },
     {JBE,      jbe,        1, LABEL_PARAM,  "JBE"    },
@@ -82,6 +83,8 @@ static command_t commands[]{
     {JNE,      jne,        1, LABEL_PARAM,  "JNE"    },
 
     {PUSH,     push,       1, NUMBER_PARAM, "PUSH"   },
+    {GET,      get,        1, NUMBER_PARAM, "GET"    },
+    {SET,      set,        1, NUMBER_PARAM, "SET"    },
     {PUSHREG,  pushreg,    1, REG_PARAM,    "PUSHREG"},
     {POPREG,   popreg,     1, REG_PARAM,    "POPREG" },
     {PUSHM,    pushm,      1, REG_PARAM,    "PUSHM"  },

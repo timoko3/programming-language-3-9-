@@ -17,8 +17,8 @@ regTableElem_t initRegTable[] = {
     {RSI, "DX", CALC,         false,  CALLER_SAVED},  
     {RDX, "EX", STORE_VAR,    false,  CALLER_SAVED},  
     {RCX, "FX", STORE_VAR,    false,  CALLER_SAVED},  
-    {R8,  "GX",  STORE_VAR,   false,  CALLER_SAVED},  
-    {R9,  "HX",  STORE_VAR,   false,  CALLER_SAVED},  
+    {R8,  "GX", STORE_VAR,    false,  CALLER_SAVED},  
+    {R9,  "HX", STORE_VAR,    false,  CALLER_SAVED},  
     {RSP, "IX", STACK,        true,   CALLER_SAVED},  
     {RBP, "JX", STACK,        true,   CALLEE_SAVED},  
 };

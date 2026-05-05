@@ -170,6 +170,26 @@ stackError stackPop(stack* stk, stackData_t* stackElem){
     return PROCESS_OK;
 }
 
+stackError stackGet(stack* stk, size_t elemIndex, stackData_t* stackElem){
+
+    if(stk->size <= 0){
+        return EMPTY_STACK;
+    }
+    *stackElem = stk->data[elemIndex];
+
+    return PROCESS_OK;   
+}
+
+stackError stackSet(stack* stk, size_t elemIndex, stackData_t value){
+
+    if(stk->size <= 0){
+        return EMPTY_STACK;
+    }
+    stk->data[elemIndex] = value;
+
+    return PROCESS_OK;   
+}
+
 stackError stackDtor(stack* stk){
     assert(stk);
     

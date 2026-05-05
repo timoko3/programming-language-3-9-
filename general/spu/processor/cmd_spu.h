@@ -35,6 +35,8 @@ bool je(processor* spu);
 bool jne(processor* spu);
 
 bool push(processor* spu);
+bool get(processor* spu);
+bool set(processor* spu);
 bool pushreg(processor* spu);
 bool popreg(processor* spu);
 bool pushm(processor* spu);

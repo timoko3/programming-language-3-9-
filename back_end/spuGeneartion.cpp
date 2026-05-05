@@ -9,7 +9,7 @@
 #include <malloc.h>
 #include <assert.h>
 
-static void initContext(codeGenContext* context, FILE* asmFilePtr /*, list_t* regTable, list_t* varMap, labelsTable_t* labelsTable */);
+static void initContext(codeGenContext* context, FILE* asmFilePtr, list_t* regTable, list_t* varMap/*, labelsTable_t* labelsTable */);
 static void genPreamble(codeGenContext* context);
 static void genEpilogue(codeGenContext* context);
 
@@ -25,10 +25,10 @@ void genAsmCodeSpu(tree_t* syntaxTree, const char* destFileName){
     assert(asmFilePtr);
 
     codeGenContext context;
-    // list_t varMap;
-    // list_t regTable;
+    list_t varMap;
+    list_t regTable;
     // labelsTable_t labelsTable;
-    initContext(&context, asmFilePtr/*, &regTable, &varMap, &labelsTable*/);
+    initContext(&context, asmFilePtr, &regTable, &varMap/*, &labelsTable*/);
 
     // genPreamble(&context);
     emitNode(syntaxTree->root, &context);
@@ -41,25 +41,25 @@ void genAsmCodeSpu(tree_t* syntaxTree, const char* destFileName){
     fclose(asmFilePtr);
 }
 
-static void initContext(codeGenContext* context, FILE* asmFilePtr/*, list_t* regTable, list_t* varMap, labelsTable_t* labelsTable*/){
+static void initContext(codeGenContext* context, FILE* asmFilePtr, list_t* regTable, list_t* varMap/*, labelsTable_t* labelsTable*/){
     
-    // listCtor(regTable, AMOUNT_REGS, regTableCmp, regTableCopy);
-    // regTableInit(regTable);
+    listCtor(regTable, AMOUNT_REGS, regTableCmp, regTableCopy);
+    regTableInit(regTable);
 
-    // initVarMap(varMap, regTable);
+    initVarMap(varMap, regTable);
    
-    // _CONTEXT_TEMP_VAR(context) = (varMapElem_t*) *data(varMap, *tail(varMap));
+    _CONTEXT_TEMP_VAR(context) = (varMapElem_t*) *data(varMap, *tail(varMap));
 
     // listCtor(labelsTable, AMOUNT_LABELS, labelCmp, labelCopy);
 
     // _CONTEXT_FUNC_ARGS_AMOUNT(context)      = 0;
     // _CONTEXT_VAR_REG_USE_SCENERY(context)   = STORE_VAR;
     _CONTEXT_FILE_PTR(context)              = asmFilePtr;
-    // _CONTEXT_VAR_MAP(context)               = varMap;
-    // _CONTEXT_REG_TABLE(context)             = regTable;
+    _CONTEXT_VAR_MAP(context)               = varMap;
+    _CONTEXT_REG_TABLE(context)             = regTable;
     // _CONTEXT_LABELS_TABLE(context)          = labelsTable;
     // _CONTEXT_BLOCK_IM_DEPTH(context)        = 0;
-    // _CONTEXT_STACK_OFFSET(context)          = VARIABLE_BYTES_SIZE;
+    _CONTEXT_STACK_OFFSET(context)          = VARIABLE_BYTES_SIZE;
     
     // _CONTEXT_TEMP_REG(context) = VARIABLE_MAP_LOC_REG(_CONTEXT_TEMP_VAR(context) );
 
