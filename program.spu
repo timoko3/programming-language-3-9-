@@ -1,9 +1,6 @@
 PUSHREG JX
 
-;startVar
-
-
-;endVar
+;startAssign
 
 
 ;endCallFunc
@@ -11,20 +8,30 @@ PUSH 5
 
 
 ;endNumber
+
+;startVar
 PUSH 1
 PUSHREG JX
 ADD
 POPREG BX
 SET BX
 
-;startVar
-
 
 ;endVar
+
+
+;endAssign
+
+;startAssign
 
 ;startCallFunc
 
 ;startVar
+PUSH 1
+PUSHREG JX
+ADD
+POPREG BX
+GET BX
 
 
 ;endVar
@@ -33,11 +40,19 @@ PUSHREG AX
 
 
 ;endCallFunc
+
+;startVar
 PUSH 2
 PUSHREG JX
 ADD
 POPREG BX
 SET BX
+
+
+;endVar
+
+
+;endAssign
 HLT
 POPREG JX
 
@@ -48,14 +63,16 @@ PUSHREG IX
 POPREG JX
 
 ;startVar
+PUSH 0
+PUSHREG JX
+ADD
+POPREG BX
+SET BX
 
 
 ;endVar
 
-;startVar
-
-
-;endVar
+;startAssign
 
 ;startDiv
 
@@ -89,129 +106,144 @@ DIV
 
 
 ;endDiv
+
+;startVar
+PUSH 1
+PUSHREG JX
+ADD
+POPREG BX
+SET BX
+
+
+;endVar
+
+
+;endAssign
+
+;startAssign
+
+;startDiv
+
+;startDiv
+
+
+;endCallFunc
+PUSH 9
+
+
+;endNumber
+
+
+;endCallFunc
+PUSH 3
+
+
+;endNumber
+DIV
+
+
+;endDiv
+
+
+;endCallFunc
+PUSH 3
+
+
+;endNumber
+DIV
+
+
+;endDiv
+
+;startVar
 PUSH 2
 PUSHREG JX
 ADD
 POPREG BX
 SET BX
 
-;startVar
-
 
 ;endVar
 
-;startDiv
 
-;startDiv
-
-
-;endCallFunc
-PUSH 9
-
-
-;endNumber
-
-
-;endCallFunc
-PUSH 3
-
-
-;endNumber
-DIV
-
-
-;endDiv
-
-
-;endCallFunc
-PUSH 3
-
-
-;endNumber
-DIV
-
-
-;endDiv
-PUSH 3
-PUSHREG JX
-ADD
-POPREG BX
-SET BX
+;endAssign
 :whileBegin_1
 
 ;startVar
-
-
-;endVar
-PUSH 2
-PUSHREG JX
-ADD
-POPREG BX
-GET BX
-
-;startVar
-
-
-;endVar
 PUSH 1
 PUSHREG JX
 ADD
 POPREG BX
 GET BX
-JG :whileEnd_2
-
-;startVar
 
 
 ;endVar
 
-;startMul
-
 ;startVar
-
-
-;endVar
-PUSH 3
+PUSH 0
 PUSHREG JX
 ADD
 POPREG BX
 GET BX
 
-;startVar
-
 
 ;endVar
+JG :whileEnd_2
+
+;startAssign
+
+;startMul
+
+;startVar
 PUSH 2
 PUSHREG JX
 ADD
 POPREG BX
 GET BX
+
+
+;endVar
+
+;startVar
+PUSH 1
+PUSHREG JX
+ADD
+POPREG BX
+GET BX
+
+
+;endVar
 MUL
 
 
 ;endMul
-PUSH 3
+
+;startVar
+PUSH 2
 PUSHREG JX
 ADD
 POPREG BX
 SET BX
 
-;startVar
-
 
 ;endVar
+
+
+;endAssign
+
+;startAssign
 
 ;startAdd
 
 ;startVar
-
-
-;endVar
-PUSH 2
+PUSH 1
 PUSHREG JX
 ADD
 POPREG BX
 GET BX
+
+
+;endVar
 
 ;startDiv
 
@@ -249,15 +281,28 @@ ADD
 
 
 ;endAdd
-PUSH 2
+
+;startVar
+PUSH 1
 PUSHREG JX
 ADD
 POPREG BX
 SET BX
+
+
+;endVar
+
+
+;endAssign
 JMP :whileBegin_1
 :whileEnd_2
 
 ;startVar
+PUSH 0
+PUSHREG JX
+ADD
+POPREG BX
+GET BX
 
 
 ;endVar

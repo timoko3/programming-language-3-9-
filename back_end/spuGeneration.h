@@ -16,6 +16,7 @@ struct codeGenContext{
     varMapElem_t*   curVar;
     regUseScenery   curVarRegUseScenery;
 
+    bool            isLValue;
     list_t*         regTable;
     regTableElem_t* tempReg;
     regTableElem_t* funcRetReg;
