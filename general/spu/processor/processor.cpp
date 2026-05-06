@@ -103,8 +103,6 @@ bool spuPush(processor* spu, stackData_t data){
 
     stackPush(&(spu->stk), data); 
 
-    (spu->regs[STACK_POINTER_REG_IND])++;
-
     return true;
 }
 
@@ -115,15 +113,13 @@ bool spuPop(processor* spu, stackData_t* data){
         return false;
     }
 
-    (spu->regs[STACK_POINTER_REG_IND])--;
-
     return true;
 }
 
 bool spuGet(processor* spu, size_t elemIndex, stackData_t* data){
     assert(spu);
 
-    if(stackGet(&(spu->stk), elemIndex, data) == EMPTY_STACK){
+    if(stackGet(&(spu->funcRetAddr), elemIndex, data) == EMPTY_STACK){
         return false;
     }
 
@@ -133,12 +129,39 @@ bool spuGet(processor* spu, size_t elemIndex, stackData_t* data){
 bool spuSet(processor* spu, size_t elemIndex, stackData_t data){
     assert(spu);
 
-    if(stackSet(&(spu->stk), elemIndex, data) == EMPTY_STACK){
+    if(elemIndex >= (size_t) spu->regs[STACK_POINTER_REG_IND]){
+        (spu->regs[STACK_POINTER_REG_IND])++;
+    }
+
+    if(stackSet(&(spu->funcRetAddr), elemIndex, data) == EMPTY_STACK){
         return false;
     }
+    
+    return true;
+}
+
+bool spuPushRt(processor* spu, stackData_t data){
+    assert(spu);
+
+    stackPush(&(spu->funcRetAddr), data); 
+
+    (spu->regs[STACK_POINTER_REG_IND])++;
 
     return true;
 }
+
+bool spuPopRt(processor* spu, stackData_t* data){
+    assert(spu);
+
+    if(stackPop(&(spu->funcRetAddr), data) == EMPTY_STACK){
+        return false;
+    }
+
+    (spu->regs[STACK_POINTER_REG_IND])--;
+
+    return true;
+}
+
 
 bool spuJump(processor* spu, cmdParam_t pos){
     assert(spu);
@@ -171,6 +194,29 @@ bool spuPopReg(processor* spu, int* regNumber){
     assert(regNumber);
 
     stackPop(&spu->stk, &spu->regs[*regNumber]);
+
+    return true;
+}
+
+bool spuPushRegRt(processor* spu, int* regNumber){
+    assert(spu);
+    assert(regNumber);
+
+    regParam_t curRegValue = spu->regs[*regNumber];
+    stackPush(&spu->funcRetAddr, curRegValue);
+
+    (spu->regs[STACK_POINTER_REG_IND])++;
+
+    return true;
+}
+
+bool spuPopRegRt(processor* spu, int* regNumber){
+    assert(spu);
+    assert(regNumber);
+
+    stackPop(&spu->funcRetAddr, &spu->regs[*regNumber]);
+
+    (spu->regs[STACK_POINTER_REG_IND])--;
 
     return true;
 }
@@ -211,12 +257,13 @@ bool spuCall(processor* spu){
     assert(spu);
 
     stackPush(&(spu->funcRetAddr), (cmdParam_t) spu->pc + 2);
-
+    
     cmdParam_t pos = 0;
     spuGetArg(spu, &pos);
-
+    
     spuJump(spu, pos);
     
+    (spu->regs[STACK_POINTER_REG_IND])++;
     return true;
 }
 
@@ -227,6 +274,7 @@ bool spuRet(processor* spu){
     stackPop(&(spu->funcRetAddr), &retAddr);
     spu->pc = (size_t) retAddr;
 
+    (spu->regs[STACK_POINTER_REG_IND])--;
     return true;
 }
 

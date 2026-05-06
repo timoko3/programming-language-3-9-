@@ -38,6 +38,11 @@ bool push(processor* spu);
 bool get(processor* spu);
 bool set(processor* spu);
 bool pushreg(processor* spu);
+
+bool pushrt(processor* spu);
+bool pushregrt(processor* spu);
+bool popregrt(processor* spu);
+
 bool popreg(processor* spu);
 bool pushm(processor* spu);
 bool popm(processor* spu);

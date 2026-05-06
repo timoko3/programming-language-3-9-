@@ -28,6 +28,9 @@ enum cmdOpcodes{
     RET,
     PUSHREG = 32 + PUSH,
     POPREG,
+    PUSHRT,
+    PUSHREGRT,
+    POPREGRT,
     PUSHM,
     POPM,
     PUSHMA,
@@ -83,10 +86,13 @@ static command_t commands[]{
     {JNE,      jne,        1, LABEL_PARAM,  "JNE"    },
 
     {PUSH,     push,       1, NUMBER_PARAM, "PUSH"   },
+    {PUSHRT,   pushrt,     1, NUMBER_PARAM, "PUSHRT" },
     {GET,      get,        1, REG_PARAM,    "GET"    },
     {SET,      set,        1, REG_PARAM,    "SET"    },
     {PUSHREG,  pushreg,    1, REG_PARAM,    "PUSHREG"},
     {POPREG,   popreg,     1, REG_PARAM,    "POPREG" },
+    {PUSHREGRT,pushregrt,  1, REG_PARAM,    "PUSHREGRT"},
+    {POPREGRT, popregrt,   1, REG_PARAM,    "POPREGRT" },
     {PUSHM,    pushm,      1, REG_PARAM,    "PUSHM"  },
     {POPM,     popm,       1, REG_PARAM,    "POPM"   },
 

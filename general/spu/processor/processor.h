@@ -26,15 +26,26 @@ enum processorStatus{
 
 bool spuPush(processor* spu, stackData_t data);
 bool spuPop(processor* spu, stackData_t* data);
+
 bool spuGet(processor* spu, size_t elemIndex, stackData_t* data);
 bool spuSet(processor* spu, size_t elemIndex, stackData_t data);
+
 bool spuJump(processor* spu, stackData_t data);
 bool spuGetArg(processor* spu, stackData_t* data);
+
 bool spuPushReg(processor* spu, int* regNumber);
 bool spuPopReg(processor* spu, int* regNumber);
+
+bool spuPushRt(processor* spu, stackData_t data);
+bool spuPopRt(processor* spu, stackData_t* data);
+bool spuPushRegRt(processor* spu, int* regNumber);
+bool spuPopRegRt(processor* spu, int* regNumber);
+
 bool spuPushM(processor* spu, int* memCellNum);
 bool spuPopM(processor* spu, int* memCellNum);
+
 bool spuHlt(processor* spu);
+
 bool spuCall(processor* spu);
 bool spuRet(processor* spu);
 

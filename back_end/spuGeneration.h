@@ -26,7 +26,7 @@ struct codeGenContext{
     labelsTable_t*  labelsTable;
 
     int             stackOffset;
-    // int             curFuncArgsAmount;
+    int             curFuncArgsAmount;
 
     // int             blockImmersionDepth;
 };

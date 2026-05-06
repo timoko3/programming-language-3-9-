@@ -125,6 +125,15 @@ bool push(processor* spu){
     return true;
 }
 
+bool pushrt(processor* spu){
+    cmdParam_t numPush = 0;
+
+    spuGetArg(spu, &numPush);
+    spuPushRt(spu, (cmdParam_t) numPush);
+
+    return true;
+}
+
 bool get(processor* spu){
     cmdParam_t stackIndex = 0;
 
@@ -169,6 +178,28 @@ bool popreg(processor* spu){
 
     int regNum = (int) regNumDouble;
     spuPopReg(spu, &regNum);
+
+    return true;
+}
+
+bool pushregrt(processor* spu){
+    cmdParam_t regNumDouble = 0;
+
+    spuGetArg(spu,  &regNumDouble);
+
+    int regNum = (int) regNumDouble;
+    spuPushRegRt(spu, &regNum);
+
+    return true;
+}
+
+bool popregrt(processor* spu){
+    cmdParam_t regNumDouble = 0;
+
+    spuGetArg(spu,  &regNumDouble);
+
+    int regNum = (int) regNumDouble;
+    spuPopRegRt(spu, &regNum);
 
     return true;
 }

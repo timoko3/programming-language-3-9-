@@ -176,13 +176,13 @@ void emitMain(treeNode_t* node, codeGenContext* context){
 
     LPRINTF("emitMain start");
 
-    fprintf(_CONTEXT_FILE_PTR(context), "PUSHREG JX\n");
+    fprintf(_CONTEXT_FILE_PTR(context), "PUSHREGRT JX\n");
     
     if(_R(node)){
         emitBlock(_R(node), context);
     }
     
-    fprintf(_CONTEXT_FILE_PTR(context), "POPREG JX\n");
+    fprintf(_CONTEXT_FILE_PTR(context), "POPREGRT JX\n");
 
     LPRINTF("emitMain end");
 }
@@ -304,9 +304,9 @@ void emitFuncProlog(treeNode_t* node, codeGenContext* context){
     assert(node);
     assert(context);
 
-    fprintf(_CONTEXT_FILE_PTR(context), "PUSHREG JX\n");
-    fprintf(_CONTEXT_FILE_PTR(context), "PUSHREG IX\n");
-    fprintf(_CONTEXT_FILE_PTR(context), "POPREG JX\n");
+    fprintf(_CONTEXT_FILE_PTR(context), "PUSHREGRT JX\n");
+    fprintf(_CONTEXT_FILE_PTR(context), "PUSHREGRT IX\n");
+    fprintf(_CONTEXT_FILE_PTR(context), "POPREGRT JX\n");
 }
 
 void emitRet(treeNode_t* node, codeGenContext* context){
@@ -314,7 +314,7 @@ void emitRet(treeNode_t* node, codeGenContext* context){
     assert(context);
 
     emitVar(_L(node), context);
-    fprintf(_CONTEXT_FILE_PTR(context), "POPREG %s\n", REG_TABLE_ELEM_NAME(_CONTEXT_FUNC_RET_REG(context)));
+    fprintf(_CONTEXT_FILE_PTR(context), "POPREGRT %s\n", REG_TABLE_ELEM_NAME(_CONTEXT_FUNC_RET_REG(context)));
 
     emitFuncEpilog(node, context);
     fprintf(_CONTEXT_FILE_PTR(context), "RET\n");
@@ -325,9 +325,9 @@ void emitFuncEpilog(treeNode_t* node, codeGenContext* context){
     assert(node);
     assert(context);
 
-    fprintf(_CONTEXT_FILE_PTR(context), "PUSHREG JX\n");
-    fprintf(_CONTEXT_FILE_PTR(context), "POPREG IX\n");
-    fprintf(_CONTEXT_FILE_PTR(context), "POPREG JX\n");
+    fprintf(_CONTEXT_FILE_PTR(context), "PUSHREGRT JX\n");
+    fprintf(_CONTEXT_FILE_PTR(context), "POPREGRT IX\n");
+    fprintf(_CONTEXT_FILE_PTR(context), "POPREGRT JX\n");
 }
 
 void  emitIf(treeNode_t* node, codeGenContext* context){
