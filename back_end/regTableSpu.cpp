@@ -11,7 +11,7 @@
 const size_t MAX_REG_NAME_LEN = 5;
 
 regTableElem_t initRegTable[] = {
-    {AX, "AX", NOT_REG_SCEN,    false,  CALLER_SAVED},  
+    {AX, "AX", FUNC_RET_VAL,    false,  CALLER_SAVED},  
     {BX, "BX", TEMP_STORE,      false,  CALLEE_SAVED},  
     {CX, "CX", CALC,            false,  CALLER_SAVED},  
     {DX, "DX", CALC,            false,  CALLER_SAVED},  

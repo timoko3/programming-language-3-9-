@@ -1,74 +1,268 @@
+PUSHREG JX
+
+;startVar
+
+
+;endVar
+
+
+;endCallFunc
 PUSH 5
+
+
+;endNumber
+PUSH 1
+PUSHREG JX
+ADD
 POPREG BX
-PUSHREG BX
-PUSHREG BX
-SET 0
+SET BX
+
+;startVar
+
+
+;endVar
+
+;startCallFunc
+
+;startVar
+
+
+;endVar
+CALL :FUN472
+PUSHREG AX
+
+
+;endCallFunc
+PUSH 2
+PUSHREG JX
+ADD
+POPREG BX
+SET BX
+HLT
+POPREG JX
+
+
+:FUN472
+PUSHREG JX
+PUSHREG IX
+POPREG JX
+
+;startVar
+
+
+;endVar
+
+;startVar
+
+
+;endVar
 
 ;startDiv
 
 ;startDiv
+
+
+;endCallFunc
 PUSH 9
+
+
+;endNumber
+
+
+;endCallFunc
 PUSH 3
+
+
+;endNumber
 DIV
 
 
 ;endDiv
+
+
+;endCallFunc
 PUSH 3
+
+
+;endNumber
 DIV
 
 
 ;endDiv
+PUSH 2
+PUSHREG JX
+ADD
 POPREG BX
-PUSHREG BX
-PUSHREG BX
-SET 1
+SET BX
+
+;startVar
+
+
+;endVar
 
 ;startDiv
 
 ;startDiv
+
+
+;endCallFunc
 PUSH 9
+
+
+;endNumber
+
+
+;endCallFunc
 PUSH 3
+
+
+;endNumber
+DIV
+
+
+;endDiv
+
+
+;endCallFunc
+PUSH 3
+
+
+;endNumber
 DIV
 
 
 ;endDiv
 PUSH 3
-DIV
-
-
-;endDiv
+PUSHREG JX
+ADD
 POPREG BX
-PUSHREG BX
-PUSHREG BX
-SET 2
+SET BX
 :whileBegin_1
-GET 1
-GET 0
+
+;startVar
+
+
+;endVar
+PUSH 2
+PUSHREG JX
+ADD
+POPREG BX
+GET BX
+
+;startVar
+
+
+;endVar
+PUSH 1
+PUSHREG JX
+ADD
+POPREG BX
+GET BX
 JG :whileEnd_2
 
+;startVar
+
+
+;endVar
+
 ;startMul
-GET 2
-GET 1
+
+;startVar
+
+
+;endVar
+PUSH 3
+PUSHREG JX
+ADD
+POPREG BX
+GET BX
+
+;startVar
+
+
+;endVar
+PUSH 2
+PUSHREG JX
+ADD
+POPREG BX
+GET BX
 MUL
 
 
 ;endMul
+PUSH 3
+PUSHREG JX
+ADD
 POPREG BX
-PUSHREG BX
-PUSHREG BX
-SET 2
+SET BX
+
+;startVar
+
+
+;endVar
 
 ;startAdd
-GET 1
-PUSH 1
+
+;startVar
+
+
+;endVar
+PUSH 2
+PUSHREG JX
+ADD
+POPREG BX
+GET BX
+
+;startDiv
+
+;startDiv
+
+
+;endCallFunc
+PUSH 9
+
+
+;endNumber
+
+
+;endCallFunc
+PUSH 3
+
+
+;endNumber
+DIV
+
+
+;endDiv
+
+
+;endCallFunc
+PUSH 3
+
+
+;endNumber
+DIV
+
+
+;endDiv
 ADD
 
 
 ;endAdd
+PUSH 2
+PUSHREG JX
+ADD
 POPREG BX
-PUSHREG BX
-PUSHREG BX
-SET 1
+SET BX
 JMP :whileBegin_1
 :whileEnd_2
-HLT
+
+;startVar
+
+
+;endVar
+POPREG AX
+PUSHREG JX
+POPREG IX
+POPREG JX
+RET
