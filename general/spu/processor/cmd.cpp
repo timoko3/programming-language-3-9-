@@ -135,12 +135,12 @@ bool pushrt(processor* spu){
 }
 
 bool get(processor* spu){
-    cmdParam_t stackIndex = 0;
+    cmdParam_t regNum = 0;
 
-    spuGetArg(spu,  &stackIndex);
+    spuGetArg(spu,  &regNum);
 
     cmdParam_t numPush = 0;
-    spuGet(spu, (size_t) stackIndex, &numPush);
+    spuGet(spu, (size_t) spu->regs[(size_t) regNum], &numPush);
 
     spuPush(spu, (cmdParam_t) numPush);
 
@@ -148,14 +148,13 @@ bool get(processor* spu){
 }
 
 bool set(processor* spu){
-    cmdParam_t stackIndex = 0;
-
-    spuGetArg(spu,  &stackIndex);
+    cmdParam_t regNum = 0;
+    spuGetArg(spu,  &regNum);
 
     cmdParam_t numPush = 0;
     spuPop(spu, &numPush);
 
-    spuSet(spu, (size_t) stackIndex, numPush);
+    spuSet(spu, (size_t) spu->regs[(size_t) regNum], numPush);
 
     return true;
 }

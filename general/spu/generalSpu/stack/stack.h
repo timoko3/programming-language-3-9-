@@ -71,6 +71,8 @@ stackError stackGet(stack* stk, size_t elemIndex, stackData_t* stackElem);
 stackError stackSet(stack* stk, size_t elemIndex, stackData_t stackElem);
 stackError stackPush(stack* stk, stackData_t value);
 stackError stackPop(stack* stk, stackData_t* stackElem);
+stackError stackShrink(stack* stk);
+stackError stackExpand(stack* stk);
 stackError stackDtor(stack* stk);
 void stackDump(stack* stk, const char* function, const char* file, const int line);
 

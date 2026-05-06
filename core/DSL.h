@@ -26,6 +26,7 @@
 #define _CONTEXT_NAMES(context)               (context)->names
 #define _CONTEXT_LABELS_TABLE(context)        (context)->labelsTable
 #define _CONTEXT_STACK_OFFSET(context)        (context)->stackOffset
+#define _CONTEXT_STACK_SHIFT(context)         (context)->stackShift
 #define _CONTEXT_FUNC_ARGS_AMOUNT(context)    (context)->curFuncArgsAmount
 #define _CONTEXT_VAR_MAP(context)             (context)->varMap
 #define _CONTEXT_TEMP_VAR(context)            (context)->tempVar
@@ -38,6 +39,7 @@
 #define _CONTEXT_CALC_REG_B(context)          (context)->calcRegB
 #define _CONTEXT_BLOCK_IM_DEPTH(context)      (context)->blockImmersionDepth
 #define _CONTEXT_IS_L_VALUE(context)          (context)->isLValue
+#define _CONTEXT_IS_FUNC_ARG(context)         (context)->isFuncArg
 
 #define _SPU_NAME_TABLE_SIZE(spuNameTable) (spuNameTable)->size
 #define _SPU_NAME_TABLE_CAPACITY(spuNameTable) (spuNameTable)->capacity

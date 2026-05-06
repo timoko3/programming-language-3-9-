@@ -60,7 +60,9 @@ static void initContext(codeGenContext* context, FILE* asmFilePtr, list_t* regTa
     _CONTEXT_LABELS_TABLE(context)          = labelsTable;
     // _CONTEXT_BLOCK_IM_DEPTH(context)        = 0;
     _CONTEXT_STACK_OFFSET(context)          = VARIABLE_BYTES_SIZE;
+    _CONTEXT_STACK_SHIFT(context)           = 1;
     _CONTEXT_IS_L_VALUE(context)            = 0;
+    _CONTEXT_IS_FUNC_ARG(context)           = 0;
     
     _CONTEXT_TEMP_REG(context) = VARIABLE_MAP_LOC_REG(_CONTEXT_TEMP_VAR(context) );
 

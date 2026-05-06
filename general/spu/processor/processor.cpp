@@ -103,6 +103,8 @@ bool spuPush(processor* spu, stackData_t data){
 
     stackPush(&(spu->stk), data); 
 
+    (spu->regs[STACK_POINTER_REG_IND])++;
+
     return true;
 }
 
@@ -113,13 +115,15 @@ bool spuPop(processor* spu, stackData_t* data){
         return false;
     }
 
+    (spu->regs[STACK_POINTER_REG_IND])--;
+
     return true;
 }
 
 bool spuGet(processor* spu, size_t elemIndex, stackData_t* data){
     assert(spu);
 
-    if(stackGet(&(spu->funcRetAddr), elemIndex, data) == EMPTY_STACK){
+    if(stackGet(&(spu->stk), elemIndex, data) == EMPTY_STACK){
         return false;
     }
 
@@ -129,14 +133,16 @@ bool spuGet(processor* spu, size_t elemIndex, stackData_t* data){
 bool spuSet(processor* spu, size_t elemIndex, stackData_t data){
     assert(spu);
 
-    if(elemIndex >= (size_t) spu->regs[STACK_POINTER_REG_IND]){
-        (spu->regs[STACK_POINTER_REG_IND])++;
-    }
+    printf("spuSet: elemIndex = %d", elemIndex);
 
-    if(stackSet(&(spu->funcRetAddr), elemIndex, data) == EMPTY_STACK){
+    if(stackSet(&(spu->stk), elemIndex, data) == EMPTY_STACK){
         return false;
     }
     
+    if(elemIndex >= (size_t) spu->regs[STACK_POINTER_REG_IND]){
+        spuStkExtend(spu);
+    }
+
     return true;
 }
 
@@ -144,8 +150,6 @@ bool spuPushRt(processor* spu, stackData_t data){
     assert(spu);
 
     stackPush(&(spu->funcRetAddr), data); 
-
-    (spu->regs[STACK_POINTER_REG_IND])++;
 
     return true;
 }
@@ -156,8 +160,6 @@ bool spuPopRt(processor* spu, stackData_t* data){
     if(stackPop(&(spu->funcRetAddr), data) == EMPTY_STACK){
         return false;
     }
-
-    (spu->regs[STACK_POINTER_REG_IND])--;
 
     return true;
 }
@@ -186,6 +188,8 @@ bool spuPushReg(processor* spu, int* regNumber){
     regParam_t curRegValue = spu->regs[*regNumber];
     stackPush(&spu->stk, curRegValue);
 
+    (spu->regs[STACK_POINTER_REG_IND])++;
+
     return true;
 }
 
@@ -194,6 +198,8 @@ bool spuPopReg(processor* spu, int* regNumber){
     assert(regNumber);
 
     stackPop(&spu->stk, &spu->regs[*regNumber]);
+
+    (spu->regs[STACK_POINTER_REG_IND])--;
 
     return true;
 }
@@ -205,8 +211,6 @@ bool spuPushRegRt(processor* spu, int* regNumber){
     regParam_t curRegValue = spu->regs[*regNumber];
     stackPush(&spu->funcRetAddr, curRegValue);
 
-    (spu->regs[STACK_POINTER_REG_IND])++;
-
     return true;
 }
 
@@ -215,8 +219,6 @@ bool spuPopRegRt(processor* spu, int* regNumber){
     assert(regNumber);
 
     stackPop(&spu->funcRetAddr, &spu->regs[*regNumber]);
-
-    (spu->regs[STACK_POINTER_REG_IND])--;
 
     return true;
 }
@@ -245,6 +247,26 @@ bool spuPopM(processor* spu, int* memCellNum){
     return true;
 }
 
+bool spuStkExtend(processor* spu){
+    assert(spu);
+
+    stackExpand(&spu->stk);
+
+    (spu->regs[STACK_POINTER_REG_IND])++;
+
+    return true;
+}
+
+bool spuStkShrink(processor* spu){
+    assert(spu);
+
+    stackShrink(&spu->stk);
+
+    (spu->regs[STACK_POINTER_REG_IND])--;
+
+    return true;
+}
+
 bool spuHlt(processor* spu){
     assert(spu);
 
@@ -263,7 +285,6 @@ bool spuCall(processor* spu){
     
     spuJump(spu, pos);
     
-    (spu->regs[STACK_POINTER_REG_IND])++;
     return true;
 }
 
@@ -274,7 +295,6 @@ bool spuRet(processor* spu){
     stackPop(&(spu->funcRetAddr), &retAddr);
     spu->pc = (size_t) retAddr;
 
-    (spu->regs[STACK_POINTER_REG_IND])--;
     return true;
 }
 
@@ -322,6 +342,7 @@ static void simplePrintStack(stack* stk){
             printf("%lg ", stk->data[curStackElem]);
         }
     }
+    printf("stackSize: %d\n", stk->size);
 }
 
 static void printByteCode(int* byteCode, size_t byteCodeSize, size_t pc){

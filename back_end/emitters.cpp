@@ -71,7 +71,7 @@ static emitRule emittersTable[] = {
     {END_BLOCK,     emitEb       },
     {MAIN,          emitMain     },
     {FUNCTION,      emitFunc     },
-//     {RETURN,        emitRet      },
+    {RETURN,        emitRet      },
     {COMMA,         emitComma    },
     {IF,            emitIf       },
     {WHILE,         emitWhile    },
@@ -176,13 +176,13 @@ void emitMain(treeNode_t* node, codeGenContext* context){
 
     LPRINTF("emitMain start");
 
-    fprintf(_CONTEXT_FILE_PTR(context), "PUSHREGRT JX\n");
+    fprintf(_CONTEXT_FILE_PTR(context), "PUSHREG JX\n");
     
     if(_R(node)){
         emitBlock(_R(node), context);
     }
     
-    fprintf(_CONTEXT_FILE_PTR(context), "POPREGRT JX\n");
+    fprintf(_CONTEXT_FILE_PTR(context), "POPREG JX\n");
 
     LPRINTF("emitMain end");
 }
@@ -259,25 +259,33 @@ void emitCallFuncArg(treeNode_t* node, codeGenContext* context){
 void emitInitFunc(treeNode_t* node, codeGenContext* context){
     assert(node);
     assert(context);
+    
+    _CONTEXT_STACK_OFFSET(context) = -2;
+    _CONTEXT_STACK_SHIFT(context)  = -1;
 
     list_t newVarMap;
     initVarMap(&newVarMap, _CONTEXT_REG_TABLE(context));
+
     _CONTEXT_VAR_MAP(context) = &newVarMap;
 
-    _CONTEXT_STACK_OFFSET(context) = 0;
 
     fprintf(_CONTEXT_FILE_PTR(context), "\n\n:%s\n", _NODE_VALUE_STR(node));
     emitFuncProlog(node, context);
+
+    _CONTEXT_IS_FUNC_ARG(context) = 1;
 
     if(_L(node)){
         emitInitFuncArgs(_L(node), context);
     }
 
+    _CONTEXT_IS_FUNC_ARG(context) = 0;
+
+    _CONTEXT_STACK_OFFSET(context) = 0;
+    _CONTEXT_STACK_SHIFT(context)  = 1;
+
     if(_R(node)){
         emitBlock(_R(node), context);
     }
-
-    emitRet(node, context);
 
     listDtor(&newVarMap, varMapElemDtor);
 
@@ -288,9 +296,9 @@ void emitInitFuncArgs(treeNode_t* node, codeGenContext* context){
     assert(node);
     assert(context);
 
-    _CONTEXT_IS_L_VALUE(context) = 1;
+    // _CONTEXT_IS_L_VALUE(context) = 1;
     emitCurNode(node, context);
-    _CONTEXT_IS_L_VALUE(context) = 0;
+    // _CONTEXT_IS_L_VALUE(context) = 0;
 }
 
 void emitComma(treeNode_t* node, codeGenContext* context){
@@ -304,9 +312,13 @@ void emitFuncProlog(treeNode_t* node, codeGenContext* context){
     assert(node);
     assert(context);
 
-    fprintf(_CONTEXT_FILE_PTR(context), "PUSHREGRT JX\n");
-    fprintf(_CONTEXT_FILE_PTR(context), "PUSHREGRT IX\n");
-    fprintf(_CONTEXT_FILE_PTR(context), "POPREGRT JX\n");
+    fprintf(_CONTEXT_FILE_PTR(context), "PUSHREG JX\n");
+    fprintf(_CONTEXT_FILE_PTR(context), "PUSHREG IX\n");
+    fprintf(_CONTEXT_FILE_PTR(context), "POPREG JX\n");
+
+    for(size_t i = 0; i < LOCAL_VARIABLE_MAX_AMOUNT; i++){
+        fprintf(_CONTEXT_FILE_PTR(context), "STKEXTEND\n");
+    }
 }
 
 void emitRet(treeNode_t* node, codeGenContext* context){
@@ -314,7 +326,7 @@ void emitRet(treeNode_t* node, codeGenContext* context){
     assert(context);
 
     emitVar(_L(node), context);
-    fprintf(_CONTEXT_FILE_PTR(context), "POPREGRT %s\n", REG_TABLE_ELEM_NAME(_CONTEXT_FUNC_RET_REG(context)));
+    fprintf(_CONTEXT_FILE_PTR(context), "POPREG %s\n", REG_TABLE_ELEM_NAME(_CONTEXT_FUNC_RET_REG(context)));
 
     emitFuncEpilog(node, context);
     fprintf(_CONTEXT_FILE_PTR(context), "RET\n");
@@ -325,9 +337,13 @@ void emitFuncEpilog(treeNode_t* node, codeGenContext* context){
     assert(node);
     assert(context);
 
-    fprintf(_CONTEXT_FILE_PTR(context), "PUSHREGRT JX\n");
-    fprintf(_CONTEXT_FILE_PTR(context), "POPREGRT IX\n");
-    fprintf(_CONTEXT_FILE_PTR(context), "POPREGRT JX\n");
+    for(size_t i = 0; i < LOCAL_VARIABLE_MAX_AMOUNT; i++){
+        fprintf(_CONTEXT_FILE_PTR(context), "STKSHRINK\n");
+    }
+
+    fprintf(_CONTEXT_FILE_PTR(context), "PUSHREG JX\n");
+    fprintf(_CONTEXT_FILE_PTR(context), "POPREG IX\n");
+    fprintf(_CONTEXT_FILE_PTR(context), "POPREG JX\n");
 }
 
 void  emitIf(treeNode_t* node, codeGenContext* context){
@@ -605,26 +621,28 @@ void emitVar(treeNode_t* node, codeGenContext* context){
 
         if(VARIABLE_MAP_LOC_TYPE(foundElem) == LOCK_STACK){
             // printf("stack case\n");
-            _CONTEXT_STACK_OFFSET(context) += VARIABLE_BYTES_SIZE;
+            _CONTEXT_STACK_OFFSET(context) += _CONTEXT_STACK_SHIFT(context);
         }
     }
 
+    if(!_CONTEXT_IS_FUNC_ARG(context)){
+        if(_CONTEXT_IS_L_VALUE(context)){
+            fprintf(_CONTEXT_FILE_PTR(context), "PUSH %d\n", VARIABLE_MAP_LOC_STACK_OFFSET(foundElem));
+            fprintf(_CONTEXT_FILE_PTR(context), "PUSHREG JX\n");
+            fprintf(_CONTEXT_FILE_PTR(context), "ADD\n");
+            fprintf(_CONTEXT_FILE_PTR(context), "POPREG %s\n", REG_TABLE_ELEM_NAME(_CONTEXT_TEMP_REG(context)));
 
-    if(_CONTEXT_IS_L_VALUE(context)){
-        fprintf(_CONTEXT_FILE_PTR(context), "PUSH %d\n", VARIABLE_MAP_LOC_STACK_OFFSET(foundElem));
-        fprintf(_CONTEXT_FILE_PTR(context), "PUSHREG JX\n");
-        fprintf(_CONTEXT_FILE_PTR(context), "ADD\n");
-        fprintf(_CONTEXT_FILE_PTR(context), "POPREG %s\n", REG_TABLE_ELEM_NAME(_CONTEXT_TEMP_REG(context)));
+            fprintf(_CONTEXT_FILE_PTR(context), "SET %s\n", REG_TABLE_ELEM_NAME(_CONTEXT_TEMP_REG(context)));       
+            // fprintf(_CONTEXT_FILE_PTR(context), "STKEXTEND\n");       
+        }
+        else{
+            fprintf(_CONTEXT_FILE_PTR(context), "PUSH %d\n", VARIABLE_MAP_LOC_STACK_OFFSET(foundElem));
+            fprintf(_CONTEXT_FILE_PTR(context), "PUSHREG JX\n");
+            fprintf(_CONTEXT_FILE_PTR(context), "ADD\n");
+            fprintf(_CONTEXT_FILE_PTR(context), "POPREG %s\n", REG_TABLE_ELEM_NAME(_CONTEXT_TEMP_REG(context)));
 
-        fprintf(_CONTEXT_FILE_PTR(context), "SET %s\n", REG_TABLE_ELEM_NAME(_CONTEXT_TEMP_REG(context)));       
-    }
-    else{
-        fprintf(_CONTEXT_FILE_PTR(context), "PUSH %d\n", VARIABLE_MAP_LOC_STACK_OFFSET(foundElem));
-        fprintf(_CONTEXT_FILE_PTR(context), "PUSHREG JX\n");
-        fprintf(_CONTEXT_FILE_PTR(context), "ADD\n");
-        fprintf(_CONTEXT_FILE_PTR(context), "POPREG %s\n", REG_TABLE_ELEM_NAME(_CONTEXT_TEMP_REG(context)));
-
-        fprintf(_CONTEXT_FILE_PTR(context), "GET %s\n", REG_TABLE_ELEM_NAME(_CONTEXT_TEMP_REG(context)));     
+            fprintf(_CONTEXT_FILE_PTR(context), "GET %s\n", REG_TABLE_ELEM_NAME(_CONTEXT_TEMP_REG(context)));     
+        }
     }
 
     _CONTEXT_CUR_VAR(context) = foundElem;

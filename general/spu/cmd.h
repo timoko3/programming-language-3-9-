@@ -43,7 +43,9 @@ enum cmdOpcodes{
     EQUAL,
     NEQUAL,
     GET,
-    SET
+    SET,
+    STKSHRINK,
+    STKEXTEND
 };
 
 enum param_t{
@@ -105,7 +107,10 @@ static command_t commands[]{
     {CALL,     callFunc,   1, LABEL_PARAM,  "CALL"   },
     {RET,      retFunc,    0, NO_PARAM,     "RET"    },
 
-    {DRAW,     draw,       0, NO_PARAM,     "DRAW"   }
+    {DRAW,     draw,       0, NO_PARAM,     "DRAW"   },
+
+    {STKEXTEND, spuStkExtend, 0, NO_PARAM,  "STKEXTEND" },
+    {STKSHRINK, spuStkShrink, 0, NO_PARAM,  "STKSHRINK" }
 };
 
 const size_t N_REGISTERS   = 10;

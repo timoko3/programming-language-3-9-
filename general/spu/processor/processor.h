@@ -44,6 +44,9 @@ bool spuPopRegRt(processor* spu, int* regNumber);
 bool spuPushM(processor* spu, int* memCellNum);
 bool spuPopM(processor* spu, int* memCellNum);
 
+bool spuStkExtend(processor* spu);
+bool spuStkShrink(processor* spu);
+
 bool spuHlt(processor* spu);
 
 bool spuCall(processor* spu);

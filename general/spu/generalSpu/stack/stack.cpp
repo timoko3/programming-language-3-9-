@@ -185,7 +185,56 @@ stackError stackSet(stack* stk, size_t elemIndex, stackData_t value){
     if(stk->size <= 0){
         return EMPTY_STACK;
     }
+    
     stk->data[elemIndex] = value;
+
+    return PROCESS_OK;   
+}
+
+stackError stackExpand(stack* stk){
+
+    if(stk->size <= 0){
+        return EMPTY_STACK;
+    }
+    (stk->size)++;
+
+    #if DEBUG_LEVEL > 1
+    if(stk->size == stk->capacity - CANARY_PROTECTION_SIZE * 2){
+    #else   
+    if(stk->size == stk->capacity){
+    #endif
+        #if DEBUG_LEVEL > 0
+        verify
+        #endif /* DEBUG */
+
+        stk->capacity = (stk->capacity) * 2;
+        stackData_t* temp = (stackData_t*) realloc(stk->data, (stk->capacity) * sizeof(stackData_t));
+        assert(temp)    ;
+
+        stk->data = temp;
+
+        #if DEBUG_LEVEL > 0
+        verify
+        #endif /* DEBUG */
+        
+        InitializeStackBuffer(stk, stk->size + 1);
+
+        #if DEBUG_LEVEL > 1
+        setCanaryProtection(stk);
+        #endif /* DEBUG */
+    }
+
+    return PROCESS_OK;   
+}
+stackError stackShrink(stack* stk){
+
+    if(stk->size <= 0){
+        return EMPTY_STACK;
+    }
+
+    stk->data[stk->size - 1] = POISON_NUMBER;
+
+    (stk->size)--;
 
     return PROCESS_OK;   
 }
