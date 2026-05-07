@@ -36,6 +36,7 @@ GET BX
 
 ;endVar
 CALL :FUN472
+STKSHRINK
 PUSHREG AX
 
 
@@ -79,103 +80,8 @@ STKEXTEND
 
 ;startAssign
 
-;startDiv
-
-;startDiv
-
-
-;endCallFunc
-PUSH 9
-
-
-;endNumber
-
-
-;endCallFunc
-PUSH 3
-
-
-;endNumber
-DIV
-
-
-;endDiv
-
-
-;endCallFunc
-PUSH 3
-
-
-;endNumber
-DIV
-
-
-;endDiv
-
 ;startVar
-PUSH 0
-PUSHREG JX
-ADD
-POPREG BX
-SET BX
-
-
-;endVar
-
-
-;endAssign
-
-;startAssign
-
-;startDiv
-
-;startDiv
-
-
-;endCallFunc
-PUSH 9
-
-
-;endNumber
-
-
-;endCallFunc
-PUSH 3
-
-
-;endNumber
-DIV
-
-
-;endDiv
-
-
-;endCallFunc
-PUSH 3
-
-
-;endNumber
-DIV
-
-
-;endDiv
-
-;startVar
-PUSH 1
-PUSHREG JX
-ADD
-POPREG BX
-SET BX
-
-
-;endVar
-
-
-;endAssign
-:whileBegin_1
-
-;startVar
-PUSH 0
+PUSH -2
 PUSHREG JX
 ADD
 POPREG BX
@@ -183,6 +89,26 @@ GET BX
 
 
 ;endVar
+
+;startVar
+PUSH 0
+PUSHREG JX
+ADD
+POPREG BX
+SET BX
+
+
+;endVar
+
+
+;endAssign
+
+
+;endCallFunc
+PUSH 1
+
+
+;endNumber
 
 ;startVar
 PUSH -2
@@ -193,14 +119,14 @@ GET BX
 
 
 ;endVar
-JG :whileEnd_2
+JGE :ifEnd_1
 
 ;startAssign
 
-;startMul
+;startSub
 
 ;startVar
-PUSH 1
+PUSH -2
 PUSHREG JX
 ADD
 POPREG BX
@@ -208,6 +134,52 @@ GET BX
 
 
 ;endVar
+
+
+;endCallFunc
+PUSH 1
+
+
+;endNumber
+SUB
+
+
+;endSub
+
+;startVar
+PUSH -2
+PUSHREG JX
+ADD
+POPREG BX
+SET BX
+
+
+;endVar
+
+
+;endAssign
+
+;startAssign
+
+;startMul
+
+;startCallFunc
+
+;startVar
+PUSH -2
+PUSHREG JX
+ADD
+POPREG BX
+GET BX
+
+
+;endVar
+CALL :FUN472
+STKSHRINK
+PUSHREG AX
+
+
+;endCallFunc
 
 ;startVar
 PUSH 0
@@ -224,7 +196,7 @@ MUL
 ;endMul
 
 ;startVar
-PUSH 1
+PUSH 0
 PUSHREG JX
 ADD
 POPREG BX
@@ -235,10 +207,6 @@ SET BX
 
 
 ;endAssign
-
-;startAssign
-
-;startAdd
 
 ;startVar
 PUSH 0
@@ -249,61 +217,25 @@ GET BX
 
 
 ;endVar
-
-;startDiv
-
-;startDiv
-
-
-;endCallFunc
-PUSH 9
-
-
-;endNumber
-
-
-;endCallFunc
-PUSH 3
-
-
-;endNumber
-DIV
-
-
-;endDiv
-
-
-;endCallFunc
-PUSH 3
-
-
-;endNumber
-DIV
-
-
-;endDiv
-ADD
-
-
-;endAdd
+POPREG AX
+STKSHRINK
+STKSHRINK
+STKSHRINK
+STKSHRINK
+STKSHRINK
+STKSHRINK
+STKSHRINK
+STKSHRINK
+STKSHRINK
+STKSHRINK
+PUSHREG JX
+POPREG IX
+POPREG JX
+RET
+:ifEnd_1
 
 ;startVar
 PUSH 0
-PUSHREG JX
-ADD
-POPREG BX
-SET BX
-
-
-;endVar
-
-
-;endAssign
-JMP :whileBegin_1
-:whileEnd_2
-
-;startVar
-PUSH 1
 PUSHREG JX
 ADD
 POPREG BX

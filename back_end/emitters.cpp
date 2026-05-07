@@ -209,9 +209,15 @@ void emitCallFunc(treeNode_t* node, codeGenContext* context){
 
     fprintf(_CONTEXT_FILE_PTR(context), "\n;startCallFunc\n");
 
+    _CONTEXT_FUNC_ARGS_AMOUNT(context) = 0;
+
     emitCallFuncArg(node, context);
 
     fprintf(_CONTEXT_FILE_PTR(context), "CALL :%s\n", _NODE_VALUE_STR(node));
+
+    for(size_t i = 0; i < _CONTEXT_FUNC_ARGS_AMOUNT(context); i++){
+        fprintf(_CONTEXT_FILE_PTR(context), "STKSHRINK\n");
+    }
 
     fprintf(_CONTEXT_FILE_PTR(context), "PUSHREG %s\n", REG_TABLE_ELEM_NAME(_CONTEXT_FUNC_RET_REG(context)));
 
@@ -242,6 +248,7 @@ void emitCallFuncArg(treeNode_t* node, codeGenContext* context){
     assert(context);
 
     if(_L(node)){
+        _CONTEXT_FUNC_ARGS_AMOUNT(context)++;
         emitCurNode(_L(node), context);
     }
 
@@ -305,6 +312,7 @@ void emitComma(treeNode_t* node, codeGenContext* context){
     assert(node);
     assert(context);
 
+    _CONTEXT_FUNC_ARGS_AMOUNT(context)++;
     emitBinaryOpPreamble(node, context);
 }
 
