@@ -1,4 +1,4 @@
-#include "emitters.h"
+#include "emittersSpu.h"
 #include "spuGeneration.h"
 
 #include "core/DSL.h"

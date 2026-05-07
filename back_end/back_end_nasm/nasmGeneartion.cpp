@@ -1,4 +1,4 @@
-#include "emittersX86.h"
+#include "emittersNasm.h"
 #include "nasmGeneration.h"
 
 #include "core/DSL.h"
@@ -32,7 +32,7 @@ static void initContext(codeGenContext* context, FILE* asmFilePtr, list_t* regTa
 static void genPreamble(codeGenContext* context);
 static void genEpilogue(codeGenContext* context);
 
-void genAsmCode(tree_t* syntaxTree, const char* destFileName){
+void genAsmCodeX86(tree_t* syntaxTree, const char* destFileName){
     assert(syntaxTree);
 
     fileDescription asmFile{

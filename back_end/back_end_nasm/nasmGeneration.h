@@ -29,6 +29,6 @@ struct codeGenContext{
     int             blockImmersionDepth;
 };
 
-void genAsmCode(tree_t* syntaxTree, const char* destFileName);
+void genAsmCodeX86(tree_t* syntaxTree, const char* destFileName);
 
 #endif /* CODE_GENERATION_H */
