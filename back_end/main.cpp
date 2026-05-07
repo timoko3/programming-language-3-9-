@@ -1,4 +1,7 @@
-#include "back_end_spu/backEndSpu.h"
+#include "backEnd.h"
+
+#include "back_end_spu/spuGeneration.h"
+// #include "back_end_x86/nasmGeneration.h"
 
 #include <unistd.h>
 #include <assert.h>
@@ -16,7 +19,7 @@ int main(int argc, char* argv[]){
 
     cmdFlagsHandle(argc, argv, sourceFileName, destBackendFileName);
 
-    compilerBackendSpu(sourceFileName, destBackendFileName);
+    compilerBackend(sourceFileName, destBackendFileName, genAsmCodeSpu);
 }
 
 void cmdFlagsHandle(int argc, char* argv[], char* sourceFileName, char* destFileName){

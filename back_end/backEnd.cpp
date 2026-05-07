@@ -1,17 +1,14 @@
-#include "back_end_spu/spuGeneration.h"
-
 #include "general/debug.h"
 #include "general/file.h"
 #include "general/devTools/protectionTree.h"
 #include "general/strFunc.h"
-#include "general/tree/treeExpImp.h"
 
-#include "backEndSpu.h"
+#include "backEnd.h"
 
 #include <assert.h>
 #include <malloc.h>
 
-void compilerBackendSpu(char* sourceFileName, char* destFileName){
+void compilerBackend(char* sourceFileName, char* destFileName, generator_t codeGenerator){
     assert(sourceFileName);
     assert(destFileName);
 
@@ -21,7 +18,7 @@ void compilerBackendSpu(char* sourceFileName, char* destFileName){
     treeRead(&AST, sourceFileName);
     treeGraphDump(&AST);
     
-    genAsmCodeSpu(&AST, destFileName);
+    codeGenerator(&AST, destFileName);
     
     treeDtor(&AST);   
 }
