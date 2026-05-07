@@ -1,3 +1,4 @@
 *.out
 syntaxTree.txt
 logs/
+.vscode/

@@ -5,6 +5,7 @@ TARGET="back_endX86.out"
 STD="-std=c++17"
 
 SOURCES=(
+    back_end/*.cpp
     back_end_x86/*.cpp
     general/*.cpp
     general/tree/*.cpp
@@ -17,7 +18,7 @@ SOURCES=(
     core/*.cpp
 )
 
-INCLUDES="-I. -I./general -I./derivative -I./devTools -I./core"
+INCLUDES="-I. -I./general -I./derivative -I./devTools -I./core -I./back_end"
 
 CXXFLAGS=(
     -ggdb3 $STD -O0

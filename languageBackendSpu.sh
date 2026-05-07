@@ -5,7 +5,8 @@ TARGET="back_endSpu.out"
 STD="-std=c++17"
 
 SOURCES=(
-    back_end/*.cpp
+    back_end/*cpp
+    back_end_spu/*.cpp
     general/*.cpp
     general/tree/*.cpp
     general/tokens/*.cpp
@@ -17,7 +18,7 @@ SOURCES=(
     core/*.cpp
 )
 
-INCLUDES="-I. -I./general -I./derivative -I./devTools -I./core"
+INCLUDES="-I. -I./general -I./derivative -I./devTools -I./core -I./back_end"
 
 CXXFLAGS=(
     -ggdb3 $STD -O0

@@ -1,7 +1,7 @@
 #ifndef CODE_GENERATION_H
 #define CODE_GENERATION_H
 
-#include "variableMapSpu.h"
+#include "variableMap.h"
 #include "labels.h"
 
 #include "general/tree/tree.h"

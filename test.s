@@ -1,0 +1,260 @@
+PUSHREG JX
+
+;startAssign
+
+
+;endCallFunc
+PUSH 5
+
+
+;endNumber
+
+;startVar
+PUSH 1
+PUSHREG JX
+ADD
+POPREG BX
+SET BX
+
+
+;endVar
+
+
+;endAssign
+
+;startAssign
+
+;startCallFunc
+
+;startVar
+PUSH 1
+PUSHREG JX
+ADD
+POPREG BX
+GET BX
+
+
+;endVar
+CALL :FUN472
+STKSHRINK
+PUSHREG AX
+
+
+;endCallFunc
+
+;startVar
+PUSH 2
+PUSHREG JX
+ADD
+POPREG BX
+SET BX
+
+
+;endVar
+
+
+;endAssign
+HLT
+POPREG JX
+
+
+:FUN472
+PUSHREG JX
+PUSHREG IX
+POPREG JX
+STKEXTEND
+STKEXTEND
+STKEXTEND
+STKEXTEND
+STKEXTEND
+STKEXTEND
+STKEXTEND
+STKEXTEND
+STKEXTEND
+STKEXTEND
+
+;startVar
+
+
+;endVar
+
+;startAssign
+
+;startVar
+PUSH -2
+PUSHREG JX
+ADD
+POPREG BX
+GET BX
+
+
+;endVar
+
+;startVar
+PUSH 0
+PUSHREG JX
+ADD
+POPREG BX
+SET BX
+
+
+;endVar
+
+
+;endAssign
+
+
+;endCallFunc
+PUSH 1
+
+
+;endNumber
+
+;startVar
+PUSH -2
+PUSHREG JX
+ADD
+POPREG BX
+GET BX
+
+
+;endVar
+JGE :ifEnd_1
+
+;startAssign
+
+;startSub
+
+;startVar
+PUSH -2
+PUSHREG JX
+ADD
+POPREG BX
+GET BX
+
+
+;endVar
+
+
+;endCallFunc
+PUSH 1
+
+
+;endNumber
+SUB
+
+
+;endSub
+
+;startVar
+PUSH -2
+PUSHREG JX
+ADD
+POPREG BX
+SET BX
+
+
+;endVar
+
+
+;endAssign
+
+;startAssign
+
+;startMul
+
+;startCallFunc
+
+;startVar
+PUSH -2
+PUSHREG JX
+ADD
+POPREG BX
+GET BX
+
+
+;endVar
+CALL :FUN472
+STKSHRINK
+PUSHREG AX
+
+
+;endCallFunc
+
+;startVar
+PUSH 0
+PUSHREG JX
+ADD
+POPREG BX
+GET BX
+
+
+;endVar
+MUL
+
+
+;endMul
+
+;startVar
+PUSH 0
+PUSHREG JX
+ADD
+POPREG BX
+SET BX
+
+
+;endVar
+
+
+;endAssign
+
+;startVar
+PUSH 0
+PUSHREG JX
+ADD
+POPREG BX
+GET BX
+
+
+;endVar
+POPREG AX
+STKSHRINK
+STKSHRINK
+STKSHRINK
+STKSHRINK
+STKSHRINK
+STKSHRINK
+STKSHRINK
+STKSHRINK
+STKSHRINK
+STKSHRINK
+PUSHREG JX
+POPREG IX
+POPREG JX
+RET
+:ifEnd_1
+
+;startVar
+PUSH 0
+PUSHREG JX
+ADD
+POPREG BX
+GET BX
+
+
+;endVar
+POPREG AX
+STKSHRINK
+STKSHRINK
+STKSHRINK
+STKSHRINK
+STKSHRINK
+STKSHRINK
+STKSHRINK
+STKSHRINK
+STKSHRINK
+STKSHRINK
+PUSHREG JX
+POPREG IX
+POPREG JX
+RET

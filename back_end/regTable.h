@@ -8,6 +8,17 @@
 const size_t AMOUNT_REGS    = 16;
 
 enum genPurposeRegs{
+    AX,
+    BX,
+    CX,
+    DX,
+    EX,
+    FX,
+    GX,
+    HX,
+    IX,
+    JX,
+
     RAX,
     RBX,
     RCX,
@@ -24,6 +35,7 @@ enum genPurposeRegs{
     R13,
     R14,
     R15,
+
     NONE
 };
 
@@ -53,7 +65,7 @@ struct regTableElem_t{
 
 regTableElem_t* regTableElemCtor(genPurposeRegs reg, char* name = "", regUseScenery useScenery = ANY, bool isUsed = false);
 
-void regTableInit(list_t* regTable);
+void regTableInit(list_t* regTable, regTableElem_t* initRegTable, size_t sizeInitRegTable);
 void* regTableCopy(void* dest, void* src);
 int regTableCmp(void* a, void* b);
 

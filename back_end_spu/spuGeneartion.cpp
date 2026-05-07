@@ -9,6 +9,19 @@
 #include <malloc.h>
 #include <assert.h>
 
+regTableElem_t initRegTable[] = {
+    {AX, "AX", FUNC_RET_VAL,    false,  CALLER_SAVED},  
+    {BX, "BX", TEMP_STORE,      false,  CALLEE_SAVED},  
+    {CX, "CX", CALC,            false,  CALLER_SAVED},  
+    {DX, "DX", CALC,            false,  CALLER_SAVED},  
+    {EX, "EX", NOT_REG_SCEN,    false,  CALLER_SAVED},  
+    {FX, "FX", NOT_REG_SCEN,    false,  CALLER_SAVED},  
+    {GX, "GX", NOT_REG_SCEN,    false,  CALLER_SAVED},  
+    {HX, "HX", NOT_REG_SCEN,    false,  CALLER_SAVED},  
+    {IX, "IX", STACK,           true,   CALLER_SAVED},  
+    {JX, "JX", STACK,           true,   CALLEE_SAVED},  
+};
+
 static void initContext(codeGenContext* context, FILE* asmFilePtr, list_t* regTable, list_t* varMap, labelsTable_t* labelsTable);
 static void genPreamble(codeGenContext* context);
 static void genEpilogue(codeGenContext* context);
@@ -44,7 +57,7 @@ void genAsmCodeSpu(tree_t* syntaxTree, const char* destFileName){
 static void initContext(codeGenContext* context, FILE* asmFilePtr, list_t* regTable, list_t* varMap, labelsTable_t* labelsTable){
     
     listCtor(regTable, AMOUNT_REGS, regTableCmp, regTableCopy);
-    regTableInit(regTable);
+    regTableInit(regTable, initRegTable, sizeof(initRegTable) / sizeof(regTableElem_t));
 
     initVarMap(varMap, regTable);
    

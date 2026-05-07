@@ -9,6 +9,25 @@
 #include <malloc.h>
 #include <assert.h>
 
+regTableElem_t initRegTable[] = {
+    {RAX, "rax", FUNC_RET_VAL, false,  CALLER_SAVED},  
+    {RBX, "rbx", TEMP_STORE,   false,  CALLEE_SAVED},  
+    {RDI, "rdi", FUNC_ARGS,    false,  CALLER_SAVED},  
+    {RSI, "rsi", FUNC_ARGS,    false,  CALLER_SAVED},  
+    {RDX, "rdx", FUNC_ARGS,    false,  CALLER_SAVED},  
+    {RCX, "rcx", FUNC_ARGS,    false,  CALLER_SAVED},  
+    {R8,  "r8",  FUNC_ARGS,    false,  CALLER_SAVED},  
+    {R9,  "r9",  FUNC_ARGS,    false,  CALLER_SAVED},  
+    {RSP, "rsp", STACK,        true,   CALLER_SAVED},  
+    {RBP, "rbp", STACK,        true,   CALLEE_SAVED},  
+    {R10, "r10", CALC,         false,  CALLER_SAVED},  
+    {R11, "r11", CALC,         false,  CALLER_SAVED},  
+    {R12, "r12", STORE_VAR,    false,  CALLEE_SAVED},  
+    {R13, "r13", STORE_VAR,    false,  CALLEE_SAVED},  
+    {R14, "r14", STORE_VAR,    false,  CALLEE_SAVED},  
+    {R15, "r15", STORE_VAR,    false,  CALLEE_SAVED},  
+};
+
 static void initContext(codeGenContext* context, FILE* asmFilePtr, list_t* regTable, list_t* varMap, labelsTable_t* labelsTable);
 static void genPreamble(codeGenContext* context);
 static void genEpilogue(codeGenContext* context);
@@ -44,7 +63,7 @@ void genAsmCode(tree_t* syntaxTree, const char* destFileName){
 static void initContext(codeGenContext* context, FILE* asmFilePtr, list_t* regTable, list_t* varMap, labelsTable_t* labelsTable){
     
     listCtor(regTable, AMOUNT_REGS, regTableCmp, regTableCopy);
-    regTableInit(regTable);
+    regTableInit(regTable, initRegTable, sizeof(initRegTable) / sizeof(regTableElem_t));
 
     initVarMap(varMap, regTable);
    

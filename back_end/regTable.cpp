@@ -10,25 +10,6 @@
 
 const size_t MAX_REG_NAME_LEN = 5;
 
-regTableElem_t initRegTable[] = {
-    {RAX, "rax", FUNC_RET_VAL, false,  CALLER_SAVED},  
-    {RBX, "rbx", TEMP_STORE,   false,  CALLEE_SAVED},  
-    {RDI, "rdi", FUNC_ARGS,    false,  CALLER_SAVED},  
-    {RSI, "rsi", FUNC_ARGS,    false,  CALLER_SAVED},  
-    {RDX, "rdx", FUNC_ARGS,    false,  CALLER_SAVED},  
-    {RCX, "rcx", FUNC_ARGS,    false,  CALLER_SAVED},  
-    {R8,  "r8",  FUNC_ARGS,    false,  CALLER_SAVED},  
-    {R9,  "r9",  FUNC_ARGS,    false,  CALLER_SAVED},  
-    {RSP, "rsp", STACK,        true,   CALLER_SAVED},  
-    {RBP, "rbp", STACK,        true,   CALLEE_SAVED},  
-    {R10, "r10", CALC,         false,  CALLER_SAVED},  
-    {R11, "r11", CALC,         false,  CALLER_SAVED},  
-    {R12, "r12", STORE_VAR,    false,  CALLEE_SAVED},  
-    {R13, "r13", STORE_VAR,    false,  CALLEE_SAVED},  
-    {R14, "r14", STORE_VAR,    false,  CALLEE_SAVED},  
-    {R15, "r15", STORE_VAR,    false,  CALLEE_SAVED},  
-};
-
 regTableElem_t* regTableElemCtor(genPurposeRegs reg, char* name, regUseScenery useScenery, bool isUsed){
     regTableElem_t* elem = (regTableElem_t*) calloc(1, sizeof(regTableElem_t));
     assert(elem);
@@ -48,10 +29,11 @@ regTableElem_t* regTableElemCtor(genPurposeRegs reg, char* name, regUseScenery u
     return elem;
 }
 
-void regTableInit(list_t* regTable){
+void regTableInit(list_t* regTable, regTableElem_t* initRegTable, size_t sizeInitRegTable){
     assert(regTable);
+    assert(initRegTable);
 
-    for(size_t curElem = 0; curElem < sizeof(initRegTable) / sizeof(regTableElem_t); curElem++){
+    for(size_t curElem = 0; curElem < sizeInitRegTable; curElem++){
         regTableElem_t* curRegTableElem = regTableElemCtor(REG_TABLE_ELEM_REG((&initRegTable[curElem])), 
                                                            REG_TABLE_ELEM_NAME((&initRegTable[curElem])),
                                                            REG_TABLE_ELEM_USE_SCENERY((&initRegTable[curElem])));

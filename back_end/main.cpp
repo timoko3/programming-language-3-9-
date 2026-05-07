@@ -1,4 +1,4 @@
-#include "backEndSpu.h"
+#include "back_end_spu/backEndSpu.h"
 
 #include <unistd.h>
 #include <assert.h>
@@ -12,7 +12,7 @@ void cmdFlagsHandle(int argc, char* argv[], char* sourceFileName, char* destFile
 
 int main(int argc, char* argv[]){
     char sourceFileName       [MAX_FILE_NAME_SIZE] = "syntaxTree.txt";
-    char destBackendFileName [MAX_FILE_NAME_SIZE]  = "program.spu";
+    char destBackendFileName [MAX_FILE_NAME_SIZE]  = "test.s";
 
     cmdFlagsHandle(argc, argv, sourceFileName, destBackendFileName);
 
