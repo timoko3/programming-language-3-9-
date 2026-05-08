@@ -3,36 +3,59 @@
 #include "core/core.h"
 #include "core/DSL.h"
 
-#include "general/tree/tree.h"
-
-#include "context.h"
-
 #include <assert.h>
 
-struct ASTvisitorNode_t{
-    ASTnodeType type;
-    visitorFunc_t preOrderfunc;
-    visitorFunc_t inOrderfunc;
-    visitorFunc_t inOrderfunc;
-};
-typedef void (*visitorFunc_t)(treeNode_t*, ASTvisitorNode_t*);
+static ASTvisitorNode_t* getNodeVisitor(ASTnodeType typeNode, ASTvisitor_t* visitor);
 
-struct ASTvisitor_t{
-    ASTvisitorNode_t* nodeVisitors;
-    codeGenContext* context;
+ASTvisitorNode_t astNodeVisitors[]{
+    {END_BLOCK,     emitEbNasmPre,     emitEbNasmIn,     emitEbNasmPost     },
+    {MAIN,          emitMainNasmPre,   emitMainNasmIn,   emitMainNasmPost   },
+    {FUNCTION,      emitFuncPre,       emitFuncIn,       emitFuncPost       },
+    {RETURN,        emitRetNasmPre,    emitRetNasmIn,    emitRetNasmPost    },
+    {COMMA,         emitCommaNasmPre,  emitCommaNasmIn,  emitCommaNasmPost  },
+    {IF,            emitIfNasmPre,     emitIfNasmIn,     emitIfNasmPost     },
+    {WHILE,         emitWhileNasmPre,  emitWhileNasmIn,  emitWhileNasmPost  },
+    {END_STATEMENT, emitEsNasmPre,     emitEsNasmIn,     emitEsNasmPost     },
+    {ASSIGN,        emitAssignNasmPre, emitAssignNasmIn, emitAssignNasmPost },
+    {SUB,           emitSubNasmPre,    emitSubNasmIn,    emitSubNasmPost    },
+    {MUL,           emitMulNasmPre,    emitMulNasmIn,    emitMulNasmPost    },
+    {ADD,           emitAddNasmPre,    emitAddNasmIn,    emitAddNasmPost    },
+    {DIVIDE,        emitDivNasmPre,    emitDivNasmIn,    emitDivNasmPost    },
+    {HLT,           emitHltNasmPre,    emitHltNasmIn,    emitHltNasmPost    },
+    {VARIABLE,      emitVarNasmPre,    emitVarNasmIn,    emitVarNasmPost    },
+    {NUMBER,        emitNumNasmPre,    emitNumNasmIn,    emitNumNasmPost    },
+    {SQRT,          emitSqrtNasmPre,   emitSqrtNasmIn,   emitSqrtNasmPost   },
 };
 
-void traversalLRAST(treeNode_t* node, ASTvisitor_t* visitor){
+void traversalLrAST(treeNode_t* node, ASTvisitor_t* visitor){
     assert(visitor);
 
-    
+    ASTvisitorNode_t* curNodeVisitor = getNodeVisitor(_NODE_TYPE(node), visitor);
+
+    VISITOR_PRE_ORDER_FUNC(curNodeVisitor)(VISITOR_CONTEXT(visitor));
 
     if(_L(node)){
-        traversalLRAST(_L(node), visitor);
+        traversalLrAST(_L(node), visitor);
     }
+
+    VISITOR_IN_ORDER_FUNC(curNodeVisitor)(VISITOR_CONTEXT(visitor));
 
     if(_R(node)){
-        traversalLRAST(_R(node), visitor);
+        traversalLrAST(_R(node), visitor);
     }
 
+    VISITOR_POST_ORDER_FUNC(curNodeVisitor)(VISITOR_CONTEXT(visitor));
+
+}
+
+static ASTvisitorNode_t* getNodeVisitor(ASTnodeType typeNode, ASTvisitor_t* visitor){
+    assert(visitor);
+
+    for(size_t curVisiterInd = 0; curVisiterInd < VISITORS_AMOUNT(visitor); curVisiterInd++){
+        if(typeNode == VISITOR_TYPE((&NODE_VISITORS(visitor)[curVisiterInd]))){
+            return (&NODE_VISITORS(visitor)[curVisiterInd]);
+        }
+    }
+
+    return NULL;
 }

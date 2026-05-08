@@ -72,4 +72,12 @@
 #define VARIABLE_MAP_LOC_REG(variableMap)          variableMap->loc.reg        
 #define VARIABLE_MAP_LOC_STACK_OFFSET(variableMap) variableMap->loc.stackOffset        
 
+#define VISITOR_PRE_ORDER_FUNC(visitor)    visitor->preOrderfunc
+#define VISITOR_IN_ORDER_FUNC(visitor)     visitor->inOrderfunc
+#define VISITOR_POST_ORDER_FUNC(visitor)   visitor->postOrderfunc
+#define VISITOR_TYPE(visitor)              visitor->type
+#define VISITOR_CONTEXT(visitor)           visitor->context
+#define VISITORS_AMOUNT(visitor)           visitor->amountNodeVisitors
+#define NODE_VISITORS(visitor)             visitor->nodeVisitors
+
 #endif /* DSL_H */

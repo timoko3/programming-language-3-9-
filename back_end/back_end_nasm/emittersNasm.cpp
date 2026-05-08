@@ -95,6 +95,26 @@ static emitRule emittersTable[] = {
     // {DRAW,          emitDraw  }
 };
 
+ASTvisitorNode_t astNodeVisitors[]{
+    {END_BLOCK,     emitEbNasmPre,     emitEbNasmIn,     emitEbNasmPost     },
+    {MAIN,          emitMainNasmPre,   emitMainNasmIn,   emitMainNasmPost   },
+    {FUNCTION,      emitFuncPre,       emitFuncIn,       emitFuncPost       },
+    {RETURN,        emitRetNasmPre,    emitRetNasmIn,    emitRetNasmPost    },
+    {COMMA,         emitCommaNasmPre,  emitCommaNasmIn,  emitCommaNasmPost  },
+    {IF,            emitIfNasmPre,     emitIfNasmIn,     emitIfNasmPost     },
+    {WHILE,         emitWhileNasmPre,  emitWhileNasmIn,  emitWhileNasmPost  },
+    {END_STATEMENT, emitEsNasmPre,     emitEsNasmIn,     emitEsNasmPost     },
+    {ASSIGN,        emitAssignNasmPre, emitAssignNasmIn, emitAssignNasmPost },
+    {SUB,           emitSubNasmPre,    emitSubNasmIn,    emitSubNasmPost    },
+    {MUL,           emitMulNasmPre,    emitMulNasmIn,    emitMulNasmPost    },
+    {ADD,           emitAddNasmPre,    emitAddNasmIn,    emitAddNasmPost    },
+    {DIVIDE,        emitDivNasmPre,    emitDivNasmIn,    emitDivNasmPost    },
+    {HLT,           emitHltNasmPre,    emitHltNasmIn,    emitHltNasmPost    },
+    {VARIABLE,      emitVarNasmPre,    emitVarNasmIn,    emitVarNasmPost    },
+    {NUMBER,        emitNumNasmPre,    emitNumNasmIn,    emitNumNasmPost    },
+    {SQRT,          emitSqrtNasmPre,   emitSqrtNasmIn,   emitSqrtNasmPost   },
+};
+
 const char* MAIN_START_NAME    = "_start";
 
 const char* ADD_OPERATION_NAME = "add";

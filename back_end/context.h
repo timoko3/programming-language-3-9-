@@ -6,6 +6,8 @@
 
 #include "general/tree/tree.h"
 
+#include "visitorAST.h"
+
 struct codeGenContext{
     FILE*           filePtr;
 
@@ -30,7 +32,5 @@ struct codeGenContext{
 
     int             blockImmersionDepth;
 };
-
-// void initContext(codeGenContext* context, FILE* asmFilePtr, list_t* regTable, list_t* varMap, labelsTable_t* labelsTable, size_t varSize);
 
 #endif /* CONTEXT_H */
