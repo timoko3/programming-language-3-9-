@@ -29,6 +29,8 @@ void initContextNasm(codeGenContext* context, FILE* asmFilePtr, list_t* regTable
     _CONTEXT_IS_L_VALUE(context)            = 0;
     _CONTEXT_IS_FUNC_ARG(context)           = 0;
     
+    _CONTEXT_SAVE_CUR_VAR(context)          = 1;
+
     _CONTEXT_TEMP_REG(context) = VARIABLE_MAP_LOC_REG(_CONTEXT_TEMP_VAR(context) );
 
     regTableElem_t* refReg = regTableElemCtor(NONE, "", CALC, 0);

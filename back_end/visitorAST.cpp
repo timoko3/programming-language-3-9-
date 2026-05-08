@@ -32,19 +32,19 @@ void traversalLrAST(treeNode_t* node, ASTvisitor_t* visitor){
 
     ASTvisitorNode_t* curNodeVisitor = getNodeVisitor(_NODE_TYPE(node), visitor);
 
-    VISITOR_PRE_ORDER_FUNC(curNodeVisitor)(VISITOR_CONTEXT(visitor));
+    if(VISITOR_PRE_ORDER_FUNC(curNodeVisitor)) VISITOR_PRE_ORDER_FUNC(curNodeVisitor)(VISITOR_CONTEXT(visitor));
 
     if(_L(node)){
         traversalLrAST(_L(node), visitor);
     }
 
-    VISITOR_IN_ORDER_FUNC(curNodeVisitor)(VISITOR_CONTEXT(visitor));
+    if(VISITOR_IN_ORDER_FUNC(curNodeVisitor)) VISITOR_IN_ORDER_FUNC(curNodeVisitor)(VISITOR_CONTEXT(visitor));
 
     if(_R(node)){
         traversalLrAST(_R(node), visitor);
     }
 
-    VISITOR_POST_ORDER_FUNC(curNodeVisitor)(VISITOR_CONTEXT(visitor));
+    if(VISITOR_POST_ORDER_FUNC(curNodeVisitor)) VISITOR_POST_ORDER_FUNC(curNodeVisitor)(VISITOR_CONTEXT(visitor));
 
 }
 

@@ -14,6 +14,7 @@ struct codeGenContext{
     list_t*         varMap;
     varMapElem_t*   tempVar;
     varMapElem_t*   curVar;
+    bool            saveCurVar;
     regUseScenery   curVarRegUseScenery;
 
     bool            isLValue;
@@ -25,6 +26,8 @@ struct codeGenContext{
     regTableElem_t* calcRegB;
 
     labelsTable_t*  labelsTable;
+    label_t*        curLabelA;
+    label_t*        curLabelB;
 
     int             stackOffset;
     int             stackShift;

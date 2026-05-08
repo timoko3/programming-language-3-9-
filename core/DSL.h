@@ -25,12 +25,15 @@
 #define _CONTEXT_FILE_PTR(context)            (context)->filePtr
 #define _CONTEXT_NAMES(context)               (context)->names
 #define _CONTEXT_LABELS_TABLE(context)        (context)->labelsTable
+#define _CONTEXT_CUR_LABEL_A(context)         (context)->curLabelA
+#define _CONTEXT_CUR_LABEL_B(context)         (context)->curLabelB
 #define _CONTEXT_STACK_OFFSET(context)        (context)->stackOffset
 #define _CONTEXT_STACK_SHIFT(context)         (context)->stackShift
 #define _CONTEXT_FUNC_ARGS_AMOUNT(context)    (context)->curFuncArgsAmount
 #define _CONTEXT_VAR_MAP(context)             (context)->varMap
 #define _CONTEXT_TEMP_VAR(context)            (context)->tempVar
 #define _CONTEXT_CUR_VAR(context)             (context)->curVar
+#define _CONTEXT_SAVE_CUR_VAR(context)        (context)->saveCurVar  
 #define _CONTEXT_VAR_REG_USE_SCENERY(context) (context)->curVarRegUseScenery
 #define _CONTEXT_REG_TABLE(context)           (context)->regTable
 #define _CONTEXT_TEMP_REG(context)            (context)->tempReg
