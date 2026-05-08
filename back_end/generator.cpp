@@ -37,7 +37,6 @@ void genCode(tree_t* AST, const char* destFileName, generator_t generator){
     fclose(outputFilePtr);
 }
 
-
 void genCodeNasm(FILE* filePtr, tree_t* AST, codeGenContext* context, list_t* varMap, list_t* regTable, labelsTable_t* labelsTable){
     assert(filePtr);
     assert(AST);
