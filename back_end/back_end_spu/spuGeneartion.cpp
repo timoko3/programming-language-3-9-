@@ -23,8 +23,6 @@ regTableElem_t initRegTable[] = {
 };
 
 static void initContext(codeGenContext* context, FILE* asmFilePtr, list_t* regTable, list_t* varMap, labelsTable_t* labelsTable);
-static void genPreamble(codeGenContext* context);
-static void genEpilogue(codeGenContext* context);
 
 void genAsmCodeSpu(tree_t* syntaxTree, const char* destFileName){
     assert(syntaxTree);
@@ -43,9 +41,7 @@ void genAsmCodeSpu(tree_t* syntaxTree, const char* destFileName){
     labelsTable_t labelsTable;
     initContext(&context, asmFilePtr, &regTable, &varMap, &labelsTable);
 
-    // genPreamble(&context);
-    emitNode(syntaxTree->root, &context);
-    // genEpilogue(&context);
+    emitStart(syntaxTree->root, &context);
 
     listDtor(&varMap, varMapElemDtor);
     listDtor(_CONTEXT_REG_TABLE(&context), regTableElemDtor);
@@ -94,15 +90,3 @@ static void initContext(codeGenContext* context, FILE* asmFilePtr, list_t* regTa
     regTableElemDtor(refReg);
 }
 
-static void genPreamble(codeGenContext* context){
-    assert(context);
-
-    // fprintf(_CONTEXT_FILE_PTR(context), "section .text\n");
-    // fprintf(_CONTEXT_FILE_PTR(context), "global _start\n");
-}
-
-static void genEpilogue(codeGenContext* context){
-    assert(context);
-
-
-}

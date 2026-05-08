@@ -5,7 +5,7 @@
 
 typedef varMapElem_t* (*emitter_t) (treeNode_t*, codeGenContext*);
 
-varMapElem_t* emitNode(treeNode_t* node, codeGenContext* context);
+varMapElem_t* emitStart(treeNode_t* node, codeGenContext* context);
 emitter_t getEmitter(ASTnodeType type);
 
 #endif /* EMITERS_X86 */

@@ -13,7 +13,6 @@
 struct emitRule{
     ASTnodeType type;
     emitter_t   emitter;
-    char*       name;
 };
 
 varMapElem_t* emitEb(treeNode_t* node, codeGenContext* context);
@@ -122,15 +121,15 @@ for(size_t curEmitRuleInd = 0; curEmitRuleInd < EMIT_TABLE_SIZE; curEmitRuleInd+
     return NULL;
 }   
 
-varMapElem_t* emitNode(treeNode_t* node, codeGenContext* context){ 
+varMapElem_t* emitStart(treeNode_t* node, codeGenContext* context){ 
     assert(node);
     assert(context);
 
-    LPRINTF("emitNode start");
+    LPRINTF("emitStart start");
 
     emitCurNode(node, context);
 
-    LPRINTF("emitNode end");
+    LPRINTF("emitStart end");
 
     return _CONTEXT_TEMP_VAR(context);
 }

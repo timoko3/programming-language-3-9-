@@ -50,7 +50,7 @@ void genAsmCodeX86(tree_t* syntaxTree, const char* destFileName){
     initContext(&context, asmFilePtr, &regTable, &varMap, &labelsTable);
 
     genPreamble(&context);
-    emitNode(syntaxTree->root, &context);
+    emitStart(syntaxTree->root, &context);
     genEpilogue(&context);
 
     listDtor(&varMap, varMapElemDtor);

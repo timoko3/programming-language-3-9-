@@ -1,260 +1,100 @@
-PUSHREG JX
-
-;startAssign
-
-
-;endCallFunc
-PUSH 5
-
-
-;endNumber
-
-;startVar
-PUSH 1
-PUSHREG JX
-ADD
-POPREG BX
-SET BX
-
-
-;endVar
-
-
-;endAssign
-
-;startAssign
+section .text
+global _start
+_start:
+mov rbx, 5
+mov r12, rbx
 
 ;startCallFunc
-
-;startVar
-PUSH 1
-PUSHREG JX
-ADD
-POPREG BX
-GET BX
-
-
-;endVar
-CALL :FUN472
-STKSHRINK
-PUSHREG AX
+mov rbx, r12
+push rdi
+mov rdi, rbx
+call FUN472
+mov rbx, rax
+pop rdi
 
 
 ;endCallFunc
+mov r13, rbx
 
-;startVar
-PUSH 2
-PUSHREG JX
-ADD
-POPREG BX
-SET BX
+; sys_exit(0)
+mov rax, 60
+mov rdi, 0
+syscall
 
-
-;endVar
-
-
-;endAssign
-HLT
-POPREG JX
+; sys_exit(0)
+mov rax, 60
+mov rdi, 0
+syscall
 
 
-:FUN472
-PUSHREG JX
-PUSHREG IX
-POPREG JX
-STKEXTEND
-STKEXTEND
-STKEXTEND
-STKEXTEND
-STKEXTEND
-STKEXTEND
-STKEXTEND
-STKEXTEND
-STKEXTEND
-STKEXTEND
-
-;startVar
-
-
-;endVar
-
-;startAssign
-
-;startVar
-PUSH -2
-PUSHREG JX
-ADD
-POPREG BX
-GET BX
-
-
-;endVar
-
-;startVar
-PUSH 0
-PUSHREG JX
-ADD
-POPREG BX
-SET BX
-
-
-;endVar
-
-
-;endAssign
-
-
-;endCallFunc
-PUSH 1
-
-
-;endNumber
-
-;startVar
-PUSH -2
-PUSHREG JX
-ADD
-POPREG BX
-GET BX
-
-
-;endVar
-JGE :ifEnd_1
-
-;startAssign
+FUN472:
+push rbp
+mov rbp, rsp
+sub rsp, 1
+mov [rbp - 1], rbx
+mov rbx, 1
+mov r10, rbx
+push r10
+mov rbx, rdi
+mov r11, rbx
+pop r10
+cmp r10, r11
+jge .ifEnd_1
 
 ;startSub
-
-;startVar
-PUSH -2
-PUSHREG JX
-ADD
-POPREG BX
-GET BX
-
-
-;endVar
-
-
-;endCallFunc
-PUSH 1
-
-
-;endNumber
-SUB
+mov rbx, rdi
+mov r10, rbx
+push r10
+mov rbx, 1
+mov r11, rbx
+pop r10
+sub r10, r11
+mov rbx, r10
 
 
 ;endSub
-
-;startVar
-PUSH -2
-PUSHREG JX
-ADD
-POPREG BX
-SET BX
-
-
-;endVar
-
-
-;endAssign
-
-;startAssign
+mov rdi, rbx
 
 ;startMul
 
 ;startCallFunc
-
-;startVar
-PUSH -2
-PUSHREG JX
-ADD
-POPREG BX
-GET BX
-
-
-;endVar
-CALL :FUN472
-STKSHRINK
-PUSHREG AX
+mov rbx, rdi
+push rdi
+mov rdi, rbx
+call FUN472
+mov rbx, rax
+pop rdi
 
 
 ;endCallFunc
-
-;startVar
-PUSH 0
-PUSHREG JX
-ADD
-POPREG BX
-GET BX
-
-
-;endVar
-MUL
+mov r10, rbx
+push r10
+mov rbx, [rbp - 1]
+mov r11, rbx
+pop r10
+imul r10, r11
+mov rbx, r10
 
 
 ;endMul
-
-;startVar
-PUSH 0
-PUSHREG JX
-ADD
-POPREG BX
-SET BX
-
-
-;endVar
-
-
-;endAssign
-
-;startVar
-PUSH 0
-PUSHREG JX
-ADD
-POPREG BX
-GET BX
-
-
-;endVar
-POPREG AX
-STKSHRINK
-STKSHRINK
-STKSHRINK
-STKSHRINK
-STKSHRINK
-STKSHRINK
-STKSHRINK
-STKSHRINK
-STKSHRINK
-STKSHRINK
-PUSHREG JX
-POPREG IX
-POPREG JX
-RET
-:ifEnd_1
-
-;startVar
-PUSH 0
-PUSHREG JX
-ADD
-POPREG BX
-GET BX
-
-
-;endVar
-POPREG AX
-STKSHRINK
-STKSHRINK
-STKSHRINK
-STKSHRINK
-STKSHRINK
-STKSHRINK
-STKSHRINK
-STKSHRINK
-STKSHRINK
-STKSHRINK
-PUSHREG JX
-POPREG IX
-POPREG JX
-RET
+sub rsp, 1
+mov [rbp - 1], rbx
+mov rbx, [rbp - 1]
+mov rax, rbx
+add rsp, 1
+mov rsp, rbp
+pop rbp
+ret
+.ifEnd_1:
+mov rbx, [rbp - 1]
+mov rax, rbx
+add rsp, 1
+mov rsp, rbp
+pop rbp
+ret
+mov rbx, rdi
+mov rax, rbx
+add rsp, 1
+mov rsp, rbp
+pop rbp
+ret

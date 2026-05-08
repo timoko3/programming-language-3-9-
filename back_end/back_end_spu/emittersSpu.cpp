@@ -67,6 +67,9 @@ void emitCurNode(treeNode_t* node, codeGenContext* context);
 
 // regTableElem_t* loadToReg(varMapElem_t* var, codeGenContext* context);
 
+static void genPreamble(codeGenContext* context);
+static void genEpilogue(codeGenContext* context);
+
 static emitRule emittersTable[] = {
     {END_BLOCK,     emitEb       },
     {MAIN,          emitMain     },
@@ -131,15 +134,19 @@ for(size_t curEmitRuleInd = 0; curEmitRuleInd < EMIT_TABLE_SIZE; curEmitRuleInd+
 }   
 
 // varMapElem_t*
-void emitNode(treeNode_t* node, codeGenContext* context){ 
+void emitStart(treeNode_t* node, codeGenContext* context){ 
     assert(node);
     assert(context);
 
-    LPRINTF("emitNode start");
+    LPRINTF("emitStart start");
+
+    genPreamble(context);
 
     emitCurNode(node, context);
 
-    LPRINTF("emitNode end");
+    genEpilogue(context);
+
+    LPRINTF("emitStart end");
 }
 
 void emitEb(treeNode_t* node, codeGenContext* context){
@@ -778,3 +785,16 @@ void emitUnaryOpPreamble(treeNode_t* node, codeGenContext* context){
 
 //     return _CONTEXT_TEMP_REG(context);
 // }
+
+static void genPreamble(codeGenContext* context){
+    assert(context);
+
+    // fprintf(_CONTEXT_FILE_PTR(context), "section .text\n");
+    // fprintf(_CONTEXT_FILE_PTR(context), "global _start\n");
+}
+
+static void genEpilogue(codeGenContext* context){
+    assert(context);
+
+
+}
