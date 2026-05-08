@@ -13,6 +13,7 @@ mov r12, rbx
 
 ;startCallFunc
 mov rbx, r12
+push rdi
 mov rdi, rbx
 call FUN472
 mov rbx, rax
@@ -42,8 +43,8 @@ mov rbp, rsp
 
 ;startAssign
 mov rbx, rdi
-sub rsp, 1
-mov [rbp - 1], rbx
+sub rsp, 8
+mov [rbp - 8], rbx
 
 
 ;endAssign
@@ -81,6 +82,7 @@ mov rdi, rbx
 
 ;startCallFunc
 mov rbx, rdi
+push rdi
 mov rdi, rbx
 call FUN472
 mov rbx, rax
@@ -90,7 +92,7 @@ pop rdi
 ;endCallFunc
 mov r10, rbx
 push r10
-mov rbx, [rbp - 1]
+mov rbx, [rbp - 8]
 mov r11, rbx
 pop r10
 imul r10, r11
@@ -98,27 +100,27 @@ mov rbx, r10
 
 
 ;endMul
-sub rsp, 1
-mov [rbp - 1], rbx
+sub rsp, 8
+mov [rbp - 8], rbx
 
 
 ;endAssign
-mov rbx, [rbp - 1]
+mov rbx, [rbp - 8]
 mov rax, rbx
-add rsp, 1
+add rsp, 8
 mov rsp, rbp
 pop rbp
 ret
 .ifEnd_1:
-mov rbx, [rbp - 1]
+mov rbx, [rbp - 8]
 mov rax, rbx
-add rsp, 1
+add rsp, 8
 mov rsp, rbp
 pop rbp
 ret
 mov rbx, rdi
 mov rax, rbx
-add rsp, 1
+add rsp, 8
 mov rsp, rbp
 pop rbp
 ret
