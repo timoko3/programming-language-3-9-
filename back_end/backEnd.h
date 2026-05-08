@@ -3,8 +3,11 @@
 
 #include "general/tree/treeExpImp.h"
 
-typedef void (*generator_t) (tree_t*, const char*);
+enum backend_t{
+    NASM,
+    SPU
+};
 
-void compilerBackend(char* sourceFileName, char* destFileName, generator_t codeGenerator);
+void compilerBackend(char* sourceFileName, char* destFileName, backend_t typeBackend);
 
 #endif /* BACK_END_X86_H */

@@ -124,7 +124,7 @@ for(size_t curEmitRuleInd = 0; curEmitRuleInd < EMIT_TABLE_SIZE; curEmitRuleInd+
     return NULL;
 }   
 
-void emitStart(treeNode_t* node, codeGenContext* context){ 
+void emitStartNasm(treeNode_t* node, codeGenContext* context){ 
     assert(node);
     assert(context);
 
@@ -276,7 +276,7 @@ void emitInitFunc(treeNode_t* node, codeGenContext* context){
     initVarMap(&newVarMap, _CONTEXT_REG_TABLE(context));
     _CONTEXT_VAR_MAP(context) = &newVarMap;
 
-    _CONTEXT_STACK_OFFSET(context) = VARIABLE_BYTES_SIZE;
+    _CONTEXT_STACK_OFFSET(context) = VARIABLE_NASM_BYTES_SIZE;
 
     fprintf(_CONTEXT_FILE_PTR(context), "\n\n%s:\n", _NODE_VALUE_STR(node));
     emitFuncProlog(node, context);
@@ -352,7 +352,7 @@ void emitFuncEpilog(treeNode_t* node, codeGenContext* context){
     assert(context);
    
 
-    fprintf(_CONTEXT_FILE_PTR(context), "add rsp, %d\n", _CONTEXT_STACK_OFFSET(context) - VARIABLE_BYTES_SIZE);
+    fprintf(_CONTEXT_FILE_PTR(context), "add rsp, %d\n", _CONTEXT_STACK_OFFSET(context) - VARIABLE_NASM_BYTES_SIZE);
 
     fprintf(_CONTEXT_FILE_PTR(context), "mov rsp, rbp\n");
     fprintf(_CONTEXT_FILE_PTR(context), "pop rbp\n");
@@ -499,7 +499,7 @@ void emitAssign(treeNode_t* node, codeGenContext* context){
         fprintf(_CONTEXT_FILE_PTR(context), "mov %s, %s\n", REG_TABLE_ELEM_NAME(VARIABLE_MAP_LOC_REG((foundVar))), REG_TABLE_ELEM_NAME(_CONTEXT_TEMP_REG(context)));       
     }
     else if(VARIABLE_MAP_LOC_TYPE(foundVar) == LOCK_STACK){
-        fprintf(_CONTEXT_FILE_PTR(context), "sub rsp, %d\n", VARIABLE_BYTES_SIZE);       
+        fprintf(_CONTEXT_FILE_PTR(context), "sub rsp, %d\n", VARIABLE_NASM_BYTES_SIZE);       
         fprintf(_CONTEXT_FILE_PTR(context), "mov [rbp - %d], %s\n", VARIABLE_MAP_LOC_STACK_OFFSET((foundVar)), REG_TABLE_ELEM_NAME(_CONTEXT_TEMP_REG(context)));       
     }
 
@@ -642,7 +642,7 @@ void emitVar(treeNode_t* node, codeGenContext* context){
         foundElem = varMapAddVar(_CONTEXT_VAR_MAP(context), _CONTEXT_REG_TABLE(context), curVarCode, _CONTEXT_STACK_OFFSET(context), _CONTEXT_VAR_REG_USE_SCENERY(context));
 
         if(VARIABLE_MAP_LOC_TYPE(foundElem) == LOCK_STACK){
-            _CONTEXT_STACK_OFFSET(context) += VARIABLE_BYTES_SIZE;
+            _CONTEXT_STACK_OFFSET(context) += VARIABLE_NASM_BYTES_SIZE;
         }
     }
 

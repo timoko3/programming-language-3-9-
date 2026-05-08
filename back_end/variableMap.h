@@ -6,7 +6,9 @@
 
 const int TEMP_VARIABLE_CODE = -33;
 
-const size_t VARIABLE_BYTES_SIZE = 8;
+const size_t VARIABLE_NASM_BYTES_SIZE = 8;
+const size_t VARIABLE_SPU_BYTES_SIZE  = 1;
+
 const size_t LOCAL_VARIABLE_MAX_AMOUNT = 10;
 
 enum varLocationType{

@@ -4,11 +4,12 @@
 #include "general/strFunc.h"
 
 #include "backEnd.h"
+#include "generator.h"
 
 #include <assert.h>
 #include <malloc.h>
 
-void compilerBackend(char* sourceFileName, char* destFileName, generator_t codeGenerator){
+void compilerBackend(char* sourceFileName, char* destFileName, backend_t typeBackend){
     assert(sourceFileName);
     assert(destFileName);
 
@@ -18,7 +19,11 @@ void compilerBackend(char* sourceFileName, char* destFileName, generator_t codeG
     treeRead(&AST, sourceFileName);
     treeGraphDump(&AST);
     
-    codeGenerator(&AST, destFileName);
+    switch (typeBackend){
+        case NASM: genCode(&AST, destFileName, genCodeNasm); break;
+        case SPU:  genCode(&AST, destFileName, genCodeSpu ); break;
+        default: printf("компиляция данным спосбом не поддерживается!"); break;
+    }
     
     treeDtor(&AST);   
 }

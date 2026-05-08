@@ -131,7 +131,7 @@ for(size_t curEmitRuleInd = 0; curEmitRuleInd < EMIT_TABLE_SIZE; curEmitRuleInd+
 }   
 
 // varMapElem_t*
-void emitStart(treeNode_t* node, codeGenContext* context){ 
+void emitStartSpu(treeNode_t* node, codeGenContext* context){ 
     assert(node);
     assert(context);
 

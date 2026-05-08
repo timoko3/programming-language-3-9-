@@ -10,6 +10,41 @@
 
 const size_t MAX_REG_NAME_LEN = 5;
 
+regTableElem_t initRegTableNasm[] = {
+    {RAX, "rax", FUNC_RET_VAL, false,  CALLER_SAVED},  
+    {RBX, "rbx", TEMP_STORE,   false,  CALLEE_SAVED},  
+    {RDI, "rdi", FUNC_ARGS,    false,  CALLER_SAVED},  
+    {RSI, "rsi", FUNC_ARGS,    false,  CALLER_SAVED},  
+    {RDX, "rdx", FUNC_ARGS,    false,  CALLER_SAVED},  
+    {RCX, "rcx", FUNC_ARGS,    false,  CALLER_SAVED},  
+    {R8,  "r8",  FUNC_ARGS,    false,  CALLER_SAVED},  
+    {R9,  "r9",  FUNC_ARGS,    false,  CALLER_SAVED},  
+    {RSP, "rsp", STACK,        true,   CALLER_SAVED},  
+    {RBP, "rbp", STACK,        true,   CALLEE_SAVED},  
+    {R10, "r10", CALC,         false,  CALLER_SAVED},  
+    {R11, "r11", CALC,         false,  CALLER_SAVED},  
+    {R12, "r12", STORE_VAR,    false,  CALLEE_SAVED},  
+    {R13, "r13", STORE_VAR,    false,  CALLEE_SAVED},  
+    {R14, "r14", STORE_VAR,    false,  CALLEE_SAVED},  
+    {R15, "r15", STORE_VAR,    false,  CALLEE_SAVED},  
+};
+
+regTableElem_t initRegTableSpu[] = {
+    {AX, "AX", FUNC_RET_VAL,    false,  CALLER_SAVED},  
+    {BX, "BX", TEMP_STORE,      false,  CALLEE_SAVED},  
+    {CX, "CX", CALC,            false,  CALLER_SAVED},  
+    {DX, "DX", CALC,            false,  CALLER_SAVED},  
+    {EX, "EX", NOT_REG_SCEN,    false,  CALLER_SAVED},  
+    {FX, "FX", NOT_REG_SCEN,    false,  CALLER_SAVED},  
+    {GX, "GX", NOT_REG_SCEN,    false,  CALLER_SAVED},  
+    {HX, "HX", NOT_REG_SCEN,    false,  CALLER_SAVED},  
+    {IX, "IX", STACK,           true,   CALLER_SAVED},  
+    {JX, "JX", STACK,           true,   CALLEE_SAVED},  
+};
+
+const size_t INIT_REG_TABLE_NASM_SIZE = sizeof(initRegTableNasm) / sizeof(regTableElem_t);
+const size_t INIT_REG_TABLE_SPU_SIZE  = sizeof(initRegTableSpu)  / sizeof(regTableElem_t);
+
 regTableElem_t* regTableElemCtor(genPurposeRegs reg, char* name, regUseScenery useScenery, bool isUsed){
     regTableElem_t* elem = (regTableElem_t*) calloc(1, sizeof(regTableElem_t));
     assert(elem);

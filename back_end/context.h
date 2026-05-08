@@ -1,12 +1,10 @@
-#ifndef CODE_GENERATION_H
-#define CODE_GENERATION_H
+#ifndef CONTEXT_H
+#define CONTEXT_H
 
 #include "variableMap.h"
 #include "labels.h"
 
 #include "general/tree/tree.h"
-
-const int MAX_IM_DEPTH = 64;
 
 struct codeGenContext{
     FILE*           filePtr;
@@ -21,8 +19,8 @@ struct codeGenContext{
     list_t*         regTable;
     regTableElem_t* tempReg;
     regTableElem_t* funcRetReg;
-    // regTableElem_t* calcRegA;
-    // regTableElem_t* calcRegB;
+    regTableElem_t* calcRegA;
+    regTableElem_t* calcRegB;
 
     labelsTable_t*  labelsTable;
 
@@ -30,9 +28,9 @@ struct codeGenContext{
     int             stackShift;
     int             curFuncArgsAmount;
 
-    // int             blockImmersionDepth;
+    int             blockImmersionDepth;
 };
 
-void genAsmCodeSpu(tree_t* syntaxTree, const char* destFileName);
+// void initContext(codeGenContext* context, FILE* asmFilePtr, list_t* regTable, list_t* varMap, labelsTable_t* labelsTable, size_t varSize);
 
-#endif /* CODE_GENERATION_H */
+#endif /* CONTEXT_H */
