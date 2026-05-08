@@ -3,9 +3,9 @@
 
 #include "nasmGeneration.h"
 
-typedef varMapElem_t* (*emitter_t) (treeNode_t*, codeGenContext*);
+typedef void (*emitter_t) (treeNode_t*, codeGenContext*);
 
-varMapElem_t* emitStart(treeNode_t* node, codeGenContext* context);
+void emitStart(treeNode_t* node, codeGenContext* context);
 emitter_t getEmitter(ASTnodeType type);
 
 #endif /* EMITERS_X86 */

@@ -13,8 +13,11 @@ struct codeGenContext{
 
     list_t*         varMap;
     varMapElem_t*   tempVar;
+    varMapElem_t*   curVar;
     regUseScenery   curVarRegUseScenery;
 
+    bool            isLValue;
+    bool            isFuncArg;
     list_t*         regTable;
     regTableElem_t* tempReg;
     regTableElem_t* funcRetReg;
@@ -24,6 +27,7 @@ struct codeGenContext{
     labelsTable_t*  labelsTable;
 
     int             stackOffset;
+    int             stackShift;
     int             curFuncArgsAmount;
 
     int             blockImmersionDepth;

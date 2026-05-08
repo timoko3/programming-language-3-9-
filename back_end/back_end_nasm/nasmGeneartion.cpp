@@ -29,8 +29,6 @@ regTableElem_t initRegTable[] = {
 };
 
 static void initContext(codeGenContext* context, FILE* asmFilePtr, list_t* regTable, list_t* varMap, labelsTable_t* labelsTable);
-static void genPreamble(codeGenContext* context);
-static void genEpilogue(codeGenContext* context);
 
 void genAsmCodeX86(tree_t* syntaxTree, const char* destFileName){
     assert(syntaxTree);
@@ -49,9 +47,7 @@ void genAsmCodeX86(tree_t* syntaxTree, const char* destFileName){
     labelsTable_t labelsTable;
     initContext(&context, asmFilePtr, &regTable, &varMap, &labelsTable);
 
-    genPreamble(&context);
     emitStart(syntaxTree->root, &context);
-    genEpilogue(&context);
 
     listDtor(&varMap, varMapElemDtor);
     listDtor(_CONTEXT_REG_TABLE(&context), regTableElemDtor);
@@ -79,6 +75,9 @@ static void initContext(codeGenContext* context, FILE* asmFilePtr, list_t* regTa
     _CONTEXT_LABELS_TABLE(context)          = labelsTable;
     _CONTEXT_BLOCK_IM_DEPTH(context)        = 0;
     _CONTEXT_STACK_OFFSET(context)          = VARIABLE_BYTES_SIZE;
+    _CONTEXT_STACK_SHIFT(context)           = 1;
+    _CONTEXT_IS_L_VALUE(context)            = 0;
+    _CONTEXT_IS_FUNC_ARG(context)           = 0;
     
     _CONTEXT_TEMP_REG(context) = VARIABLE_MAP_LOC_REG(_CONTEXT_TEMP_VAR(context) );
 
@@ -97,15 +96,3 @@ static void initContext(codeGenContext* context, FILE* asmFilePtr, list_t* regTa
     regTableElemDtor(refReg);
 }
 
-static void genPreamble(codeGenContext* context){
-    assert(context);
-
-    fprintf(_CONTEXT_FILE_PTR(context), "section .text\n");
-    fprintf(_CONTEXT_FILE_PTR(context), "global _start\n");
-}
-
-static void genEpilogue(codeGenContext* context){
-    assert(context);
-
-
-}

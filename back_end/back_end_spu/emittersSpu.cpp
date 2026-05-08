@@ -15,8 +15,6 @@ struct emitRule{
     emitter_t   emitter;
 };
 
-// typedef varMapElem_t ...
-
 void emitEb(treeNode_t* node, codeGenContext* context);
 void emitBlock(treeNode_t* node, codeGenContext* context);
 void emitMain(treeNode_t* node, codeGenContext* context);
@@ -39,7 +37,6 @@ void emitCondition(treeNode_t* node, codeGenContext* context);
 
 void emitEs(treeNode_t* node, codeGenContext* context);
 void emitStatement(treeNode_t* node, codeGenContext* context);
-// varMapElem_t* 
 void emitAssign(treeNode_t* node, codeGenContext* context);
 
 void emitExpression(treeNode_t* node, codeGenContext* context);
@@ -484,7 +481,7 @@ void emitAssign(treeNode_t* node, codeGenContext* context){
 
     fprintf(_CONTEXT_FILE_PTR(context), "\n;startAssign\n");
     
-    varMapElem_t* foundVar = NULL;
+    varMapElem_t* foundVar = NULL;  
     if(_R(node)){
         emitExpression(_R(node), context);
     }
