@@ -4,8 +4,8 @@
 #include "general/tree/treeExpImp.h"
 
 enum backend_t{
-    NASM,
-    SPU
+    NASMBE,
+    SPUBE
 };
 
 void compilerBackend(char* sourceFileName, char* destFileName, backend_t typeBackend);

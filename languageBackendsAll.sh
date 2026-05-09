@@ -7,6 +7,7 @@ STD="-std=c++17"
 SOURCES=(
     back_end/*.cpp
     back_end/back_end_nasm/*.cpp
+    back_end/back_end_spu/*.cpp
     general/*.cpp
     general/tree/*.cpp
     general/tokens/*.cpp
@@ -21,6 +22,7 @@ SOURCES=(
 INCLUDES="-I. -I./general -I./derivative -I./devTools -I./core -I./back_end"
 
 CXXFLAGS=(
+    -DNASM -DSPU
     -ggdb3 $STD -O0
     -Wall -Wextra -Waggressive-loop-optimizations -Wc++14-compat 
     -Wmissing-declarations -Wcast-align -Wcast-qual -Wchar-subscripts 

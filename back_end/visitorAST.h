@@ -20,10 +20,15 @@ struct ASTvisitor_t{
     codeGenContext*   context;
 };
 
-// extern ASTvisitorNode_t astNodeVisitorsNasm[];
+#ifdef NASM
+extern ASTvisitorNode_t astNodeVisitorsNasm[];
+extern const size_t NASM_NODE_VISITORS_AMOUNT;
+#endif /* NASM */
+
+#ifdef SPU
 extern ASTvisitorNode_t astNodeVisitorsSpu[];
-// extern const size_t NASM_NODE_VISITORS_AMOUNT;
 extern const size_t SPU_NODE_VISITORS_AMOUNT;
+#endif /* SPU */
 
 void traversalCondOrder(treeNode_t* node, ASTvisitor_t* visitor);
 

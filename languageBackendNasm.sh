@@ -1,12 +1,12 @@
 #!/usr/bin/env bash
 
 CXX="g++"
-TARGET="back_endSpu.out"
+TARGET="back_endNasm.out"
 STD="-std=c++17"
 
 SOURCES=(
-    back_end/*cpp
-    back_end/back_end_spu/*.cpp
+    back_end/*.cpp
+    back_end/back_end_nasm/*.cpp
     general/*.cpp
     general/tree/*.cpp
     general/tokens/*.cpp
@@ -21,7 +21,7 @@ SOURCES=(
 INCLUDES="-I. -I./general -I./derivative -I./devTools -I./core -I./back_end"
 
 CXXFLAGS=(
-    -DSPU
+    -DNASM
     -ggdb3 $STD -O0
     -Wall -Wextra -Waggressive-loop-optimizations -Wc++14-compat 
     -Wmissing-declarations -Wcast-align -Wcast-qual -Wchar-subscripts 

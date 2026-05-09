@@ -20,9 +20,13 @@ void compilerBackend(char* sourceFileName, char* destFileName, backend_t typeBac
     treeGraphDump(&AST);
     
     switch (typeBackend){
-        // case NASM: genCode(&AST, destFileName, genCodeNasm); break;
-        case SPU:  genCode(&AST, destFileName, genCodeSpu ); break;
-        default: printf("компиляция данным спосбом не поддерживается!"); break;
+        #ifdef NASM
+        case NASMBE: genCode(&AST, destFileName, genCodeNasm); break;
+        #endif /* NASM */
+        #ifdef SPU
+        case SPUBE:  genCode(&AST, destFileName, genCodeSpu ); break;
+        #endif /* SPU */
+        default: printf("компиляция данным способом не поддерживается!"); break;
     }
     
     treeDtor(&AST);   

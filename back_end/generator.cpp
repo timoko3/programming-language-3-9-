@@ -10,8 +10,10 @@
 #include <malloc.h>
 #include <assert.h>
 
+#ifdef NASM
 static void genPreambleNasm(codeGenContext* context);
 static void genEpilogueNasm(codeGenContext* context);
+#endif /* NASM */
 
 void genCode(tree_t* AST, const char* destFileName, generator_t generator){
     assert(AST);
@@ -39,27 +41,30 @@ void genCode(tree_t* AST, const char* destFileName, generator_t generator){
     fclose(outputFilePtr);
 }
 
-// void genCodeNasm(FILE* filePtr, tree_t* AST, codeGenContext* context, list_t* varMap, list_t* regTable, labelsTable_t* labelsTable){
-//     assert(filePtr);
-//     assert(AST);
-//     assert(context);
-//     assert(varMap);
-//     assert(regTable);
-//     assert(labelsTable);
+#ifdef NASM
+void genCodeNasm(FILE* filePtr, tree_t* AST, codeGenContext* context, list_t* varMap, list_t* regTable, labelsTable_t* labelsTable){
+    assert(filePtr);
+    assert(AST);
+    assert(context);
+    assert(varMap);
+    assert(regTable);
+    assert(labelsTable);
 
-//     initContextNasm(context, filePtr, regTable, varMap, labelsTable);
+    initContextNasm(context, filePtr, regTable, varMap, labelsTable);
 
-//     ASTvisitor_t visitorAstNasm = {
-//         astNodeVisitorsNasm,
-//         NASM_NODE_VISITORS_AMOUNT,
-//         context
-//     };
+    ASTvisitor_t visitorAstNasm = {
+        astNodeVisitorsNasm,
+        NASM_NODE_VISITORS_AMOUNT,
+        context
+    };
 
-//     genPreambleNasm(context);
-//     traversalCondOrder(AST->root, &visitorAstNasm);
-//     genEpilogueNasm(context);
-// }
+    genPreambleNasm(context);
+    traversalCondOrder(AST->root, &visitorAstNasm);
+    genEpilogueNasm(context);
+}
+#endif /* NASM */
 
+#ifdef SPU
 void genCodeSpu(FILE* filePtr, tree_t* AST, codeGenContext* context, list_t* varMap, list_t* regTable, labelsTable_t* labelsTable){
     assert(filePtr);
     assert(AST);
@@ -78,7 +83,9 @@ void genCodeSpu(FILE* filePtr, tree_t* AST, codeGenContext* context, list_t* var
 
     traversalCondOrder(AST->root, &visitorAstNasm);
 }
+#endif /* SPU */
 
+#ifdef NASM
 static void genPreambleNasm(codeGenContext* context){
     assert(context);
 
@@ -91,3 +98,4 @@ static void genEpilogueNasm(codeGenContext* context){
 
 
 }
+#endif /* NASM */
