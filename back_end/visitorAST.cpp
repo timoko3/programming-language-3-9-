@@ -47,7 +47,7 @@ ASTvisitorNode_t astNodeVisitorsNasm[]{
     {NOT_EQUAL,     NULL,              emitBinaryOpNasmIn,  emitCmpNasmPost,     1},
 
     {END_STATEMENT, NULL,              NULL,                NULL,                1},
-    {ASSIGN,        emitAssignNasmPre, emitAssignNasmIn,    emitAssignNasmPost,  0},
+    {ASSIGN,        NULL,              emitAssignNasmIn,    emitAssignNasmPost,  0},
     {SUB,           NULL,              emitBinaryOpNasmIn,  emitSubNasmPost,     1},
     {MUL,           NULL,              emitBinaryOpNasmIn,  emitMulNasmPost,     1},
     {ADD,           NULL,              emitBinaryOpNasmIn,  emitAddNasmPost,     1},

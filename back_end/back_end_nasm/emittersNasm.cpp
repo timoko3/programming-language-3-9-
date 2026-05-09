@@ -16,51 +16,6 @@ struct emitRule{
     emitter_t   emitter;
 };
 
-// void emitEb(treeNode_t* node, codeGenContext* context);
-// void emitBlock(treeNode_t* node, codeGenContext* context);
-// void emitMain(treeNode_t* node, codeGenContext* context);
-
-// void emitFunc(treeNode_t* node, codeGenContext* context);
-// void emitInitFunc(treeNode_t* node, codeGenContext* context);
-// void emitFuncProlog(treeNode_t* node, codeGenContext* context);
-// void emitFuncEpilog(treeNode_t* node, codeGenContext* context);
-// void emitInitFuncArgs(treeNode_t* node, codeGenContext* context);
-// void emitComma(treeNode_t* node, codeGenContext* context);
-// void emitRet(treeNode_t* node, codeGenContext* context);
-
-// void emitCallFunc(treeNode_t* node, codeGenContext* context);
-// void emitCallFuncArg(treeNode_t* node, codeGenContext* context);
-// void emitCallFuncFreeArgRegs(treeNode_t* node, codeGenContext* context);
-
-// void emitIf(treeNode_t* node, codeGenContext* context);
-// void emitWhile(treeNode_t* node, codeGenContext* context);
-// void emitCondition(treeNode_t* node, codeGenContext* context);
-
-// void emitEs(treeNode_t* node, codeGenContext* context);
-// void emitStatement(treeNode_t* node, codeGenContext* context);
-// void emitAssign(treeNode_t* node, codeGenContext* context);
-
-// void emitExpression(treeNode_t* node, codeGenContext* context);
-// void emitSub(treeNode_t* node, codeGenContext* context);
-// void emitAdd(treeNode_t* node, codeGenContext* context);
-// void emitMul(treeNode_t* node, codeGenContext* context);
-// void emitDiv(treeNode_t* node, codeGenContext* context);
-
-
-// void emitSqrt(treeNode_t* node, codeGenContext* context);
-
-// void emitNumber(treeNode_t* node, codeGenContext* context);
-// void emitVar(treeNode_t* node, codeGenContext* context);
-
-// void emitUnaryOpPreamble(treeNode_t* node, codeGenContext* context);
-// void emitBinaryOpPreamble(treeNode_t* node, codeGenContext* context);
-
-// void emitHlt(treeNode_t* node, codeGenContext* context);
-
-// inline void emitCurNode(treeNode_t* node, codeGenContext* context);
-
-// void emitPlug(treeNode_t* node, codeGenContext* context);
-
 void loadToReg(varMapElem_t* var, codeGenContext* context);
 
     // {IN,            emitPlug     },
@@ -85,65 +40,6 @@ const char* JLE_OPERATION_NAME = "jle";
 const char* JE_OPERATION_NAME  = "je";
 const char* JNE_OPERATION_NAME = "jne";
 
-// const size_t EMIT_TABLE_SIZE = sizeof(emittersTable) / sizeof(emitRule);
-
-// emitter_t getEmitter(ASTnodeType type){
-// for(size_t curEmitRuleInd = 0; curEmitRuleInd < EMIT_TABLE_SIZE; curEmitRuleInd++){
-//         if(type == _EMIT_RULE_TYPE(&emittersTable[curEmitRuleInd])){
-//             return _EMIT_RULE_EMITTER(&emittersTable[curEmitRuleInd]);
-//         }
-//     }
-
-//     return NULL;
-// }   
-
-// void emitStartNasm(treeNode_t* node, codeGenContext* context){ 
-//     assert(node);
-//     assert(context);
-
-//     LPRINTF("emitStart start");
-
-//     genPreamble(context);
-
-//     emitCurNode(node, context);
-
-//     genEpilogue(context);
-
-//     LPRINTF("emitStart end");
-// }
-
-// void emitEb(treeNode_t* node, codeGenContext* context){
-//     assert(node);
-//     assert(context);
-
-//     LPRINTF("emitEb start");
-
-//     if(_L(node)){
-//         emitBlock(_L(node), context);
-//     }
-
-//     if(_R(node)){
-//         emitBlock(_R(node), context);
-//     }
-
-//     LPRINTF("emitEb end");
-// }
-
-// void emitBlock(treeNode_t* node, codeGenContext* context){
-//     assert(node);
-//     assert(context);
-
-//     LPRINTF("emitBlock start");
-
-//     _CONTEXT_BLOCK_IM_DEPTH(context)++;
-
-//     emitCurNode(node, context);
-
-//     _CONTEXT_BLOCK_IM_DEPTH(context)--;
-
-//     LPRINTF("emitBlock end");
-// }
-
 void emitMainNasmPre(treeNode_t* node, codeGenContext* context){
     assert(node);
     assert(context);
@@ -154,23 +50,6 @@ void emitMainNasmPre(treeNode_t* node, codeGenContext* context){
 
     LPRINTF("emitMain end");
 }
-
-// void emitMain(treeNode_t* node, codeGenContext* context){
-//     assert(node);
-//     assert(context);
-
-//     LPRINTF("emitMain start");
-
-//     fprintf(_CONTEXT_FILE_PTR(context), "%s:\n", MAIN_START_NAME);
-
-//     if(_R(node)){
-//         emitBlock(_R(node), context);
-//     }
-
-//     emitHlt(node, context);
-
-//     LPRINTF("emitMain end");
-// }
 
 void emitFuncNasmPre(treeNode_t* node, codeGenContext* context){
     assert(node);
@@ -258,54 +137,6 @@ void emitCallFuncFreeArgRegsNasm(treeNode_t* node, codeGenContext* context){
     regTableElemDtor(refReg);       
 }
 
-// void emitCallFunc(treeNode_t* node, codeGenContext* context){
-//     assert(node);
-//     assert(context);
-
-//     fprintf(_CONTEXT_FILE_PTR(context), "\n;startCallFunc\n");
-
-//     freeTypeRegs(_CONTEXT_REG_TABLE(context), FUNC_ARGS);
-
-//     emitCallFuncArg(node, context);
-
-//     fprintf(_CONTEXT_FILE_PTR(context), "call %s\n", _NODE_VALUE_STR(node));
-
-//     fprintf(_CONTEXT_FILE_PTR(context), "mov %s, %s\n", REG_TABLE_ELEM_NAME(_CONTEXT_TEMP_REG(context)), REG_TABLE_ELEM_NAME(_CONTEXT_FUNC_RET_REG(context)));
-
-//     emitCallFuncFreeArgRegs(node, context);
-
-//     fprintf(_CONTEXT_FILE_PTR(context), "\n\n;endCallFunc\n");
-// }
-
-
-// void emitCallFuncArg(treeNode_t* node, codeGenContext* context){
-//     assert(node);
-//     assert(context);
-
-//     if(_L(node)){
-//         emitCallFuncArg(_L(node), context);
-//     }
-
-//     if(_R(node)){
-//         emitCallFuncArg(_R(node), context);
-//     }   
-
-//     if((_NODE_TYPE(node) != COMMA) && (_NODE_TYPE(node) != FUNCTION)){
-//         emitCurNode(node, context);
-//         loadToReg(_CONTEXT_CUR_VAR(context), context);
-//         regTableElem_t* refReg = regTableElemCtor(NONE, "", FUNC_ARGS, 0);
-
-//         regTableElem_t* foundReg = regTableFind(_CONTEXT_REG_TABLE(context), findTypeRegFree, refReg);
-
-//         regTableElemDtor(refReg);
-
-//         fprintf(_CONTEXT_FILE_PTR(context), "push %s\n", REG_TABLE_ELEM_NAME(foundReg), REG_TABLE_ELEM_NAME(_CONTEXT_TEMP_REG(context)));
-//         fprintf(_CONTEXT_FILE_PTR(context), "mov %s, %s\n", REG_TABLE_ELEM_NAME(foundReg), REG_TABLE_ELEM_NAME(_CONTEXT_TEMP_REG(context)));
-
-//         REG_TABLE_ELEM_USE_BIT(foundReg) = 1;
-//     }
-// }
-
 void emitInitFuncNasmPre(treeNode_t* node, codeGenContext* context){
     assert(node);
     assert(context);
@@ -340,60 +171,6 @@ void emitInitFuncNasmPost(treeNode_t* node, codeGenContext* context){
 
     freeTypeRegs(_CONTEXT_REG_TABLE(context), FUNC_ARGS);
 }
-
-// void emitInitFunc(treeNode_t* node, codeGenContext* context){
-//     assert(node);
-//     assert(context);
-
-//     list_t newVarMap;
-//     initVarMap(&newVarMap, _CONTEXT_REG_TABLE(context));
-//     _CONTEXT_VAR_MAP(context) = &newVarMap;
-
-//     _CONTEXT_STACK_OFFSET(context) = VARIABLE_NASM_BYTES_SIZE;
-
-//     fprintf(_CONTEXT_FILE_PTR(context), "\n\n%s:\n", _NODE_VALUE_STR(node));
-//     emitFuncProlog(node, context);
-
-//     if(_L(node)){
-//         emitInitFuncArgs(_L(node), context);
-//     }
-
-//     _CONTEXT_VAR_REG_USE_SCENERY(context) = NOT_REG_SCEN;
-//     if(_R(node)){
-//         emitBlock(_R(node), context);
-//     }
-//     _CONTEXT_VAR_REG_USE_SCENERY(context) = STORE_VAR;
-
-//     emitRet(node, context);
-
-//     listDtor(&newVarMap, varMapElemDtor);
-
-//     freeTypeRegs(_CONTEXT_REG_TABLE(context), FUNC_ARGS);
-// }
-
-// void emitInitFuncArgs(treeNode_t* node, codeGenContext* context){
-//     assert(node);
-//     assert(context);
-
-//     _CONTEXT_VAR_REG_USE_SCENERY(context) = FUNC_ARGS;
-
-//     emitCurNode(node, context);
-
-//     _CONTEXT_VAR_REG_USE_SCENERY(context) = STORE_VAR;  
-// }
-
-// void emitComma(treeNode_t* node, codeGenContext* context){
-//     assert(node);
-//     assert(context);
-
-//     if(_L(node)){
-//         emitCurNode(_L(node), context);
-//     }
-
-//     if(_R(node)){
-//         emitCurNode(_R(node), context);
-//     }
-// }
 
 void emitFuncPrologNasm(treeNode_t* node, codeGenContext* context){
     assert(node);
@@ -433,22 +210,6 @@ void emitFuncEpilog(treeNode_t* node, codeGenContext* context){
     fprintf(_CONTEXT_FILE_PTR(context), "mov rsp, rbp\n");
     fprintf(_CONTEXT_FILE_PTR(context), "pop rbp\n");
 }
-
-// void emitRet(treeNode_t* node, codeGenContext* context){
-//     assert(node);
-//     assert(context);
-
-//     _CONTEXT_VAR_REG_USE_SCENERY(context) = FUNC_ARGS;
-
-//     emitVar(_L(node), context);
-//     loadToReg(_CONTEXT_CUR_VAR(context), context);
-//     fprintf(_CONTEXT_FILE_PTR(context), "mov %s, %s\n", REG_TABLE_ELEM_NAME(_CONTEXT_FUNC_RET_REG(context)), REG_TABLE_ELEM_NAME(_CONTEXT_TEMP_REG(context)));
-
-//     emitFuncEpilog(node, context);
-//     fprintf(_CONTEXT_FILE_PTR(context), "ret\n");
-
-//     _CONTEXT_VAR_REG_USE_SCENERY(context) = STORE_VAR;
-// }
 
 void emitIfNasmIn(treeNode_t* node, codeGenContext* context){
     assert(node);
@@ -525,19 +286,6 @@ void emitWhileNasmPost(treeNode_t* node, codeGenContext* context){
     fprintf(_CONTEXT_FILE_PTR(context), ".%s_%d:\n", _LABEL_DATA_NAME(_CONTEXT_CUR_LABEL_B(context)), _LABEL_DATA_ID(_CONTEXT_CUR_LABEL_B(context)));
 }
 
-// void emitCondition(treeNode_t* node, codeGenContext* context){
-//     assert(node);
-//     assert(context);
-
-//     LPRINTF("emitCondition start");
-
-//     emitBinaryOpPreamble(node, context);
-
-//     fprintf(_CONTEXT_FILE_PTR(context), "%s %s, %s\n", CMP_OPERATION_NAME, REG_TABLE_ELEM_NAME(_CONTEXT_CALC_REG_A(context)), REG_TABLE_ELEM_NAME(_CONTEXT_CALC_REG_B(context)));
-
-//     LPRINTF("emitCondition end");
-// }
-
 void emitCmpNasmPost(treeNode_t* node, codeGenContext* context){
     assert(node);
     assert(context);
@@ -545,50 +293,6 @@ void emitCmpNasmPost(treeNode_t* node, codeGenContext* context){
     emitBinaryOpNasmPost(node, context);
 
     fprintf(_CONTEXT_FILE_PTR(context), "%s %s, %s\n", CMP_OPERATION_NAME, REG_TABLE_ELEM_NAME(_CONTEXT_CALC_REG_A(context)), REG_TABLE_ELEM_NAME(_CONTEXT_CALC_REG_B(context)));
-}
-
-// void emitEs(treeNode_t* node, codeGenContext* context){
-//     assert(node);
-//     assert(context);
-
-//     LPRINTF("emitEs start");
-
-//     if(_L(node)){
-//         emitStatement(_L(node), context);
-//     }
-
-//     if(_R(node)){
-//         if(_NODE_TYPE(_R(node)) != END_STATEMENT) emitStatement(_R(node), context);
-//         else emitEs(_R(node), context);
-//     }
-
-//     LPRINTF("emitEs end");
-// }
-
-// void emitStatement(treeNode_t* node, codeGenContext* context){
-//     assert(node);
-//     assert(context);
-
-//     LPRINTF("emitStatement start");
-
-//     // emitTabs(context);
-
-//     emitCurNode(node, context);
-
-//     LPRINTF("emitStatement end");
-// }
-
-void emitAssignNasmPre(treeNode_t* node, codeGenContext* context){
-    assert(node);
-    assert(context);
-
-    // LPRINTF("emitAssign start");
-
-    // fprintf(_CONTEXT_FILE_PTR(context), "\n;startAssign\n");
-    
-    
-
-    // LPRINTF("emitAssign end");
 }
 
 void emitAssignNasmIn(treeNode_t* node, codeGenContext* context){
@@ -620,55 +324,6 @@ void emitAssignNasmPost(treeNode_t* node, codeGenContext* context){
 
     LPRINTF("emitAssign end");
 }
-
-// void emitAssign(treeNode_t* node, codeGenContext* context){
-//     assert(node);
-//     assert(context);
-
-//     LPRINTF("emitAssign start");
-
-//     fprintf(_CONTEXT_FILE_PTR(context), "\n;startAssign\n");
-    
-//     varMapElem_t* foundVar = NULL;
-
-//     if(_L(node)){
-//         _CONTEXT_IS_L_VALUE(context) = 1;
-//         emitVar(_L(node), context);
-//         _CONTEXT_IS_L_VALUE(context) = 0;
-//     }
-
-//     _CONTEXT_SAVE_CUR_VAR(context) = 0;
-
-//     if(_R(node)){
-//         emitExpression(_R(node), context);
-//         if(_NODE_TYPE(_R(node)) == VARIABLE) loadToReg(_CONTEXT_CUR_VAR(context), context);
-//     }
-
-//     foundVar = _CONTEXT_CUR_VAR(context);
-
-//     if(VARIABLE_MAP_LOC_TYPE(foundVar) == LOCK_REG){
-//         fprintf(_CONTEXT_FILE_PTR(context), "mov %s, %s\n", REG_TABLE_ELEM_NAME(VARIABLE_MAP_LOC_REG((foundVar))), REG_TABLE_ELEM_NAME(_CONTEXT_TEMP_REG(context)));       
-//     }
-//     else if(VARIABLE_MAP_LOC_TYPE(foundVar) == LOCK_STACK){
-//         fprintf(_CONTEXT_FILE_PTR(context), "sub rsp, %d\n", VARIABLE_NASM_BYTES_SIZE);       
-//         fprintf(_CONTEXT_FILE_PTR(context), "mov [rbp - %d], %s\n", VARIABLE_MAP_LOC_STACK_OFFSET((foundVar)), REG_TABLE_ELEM_NAME(_CONTEXT_TEMP_REG(context)));       
-//     }
-
-//     fprintf(_CONTEXT_FILE_PTR(context), "\n\n;endAssign\n");
-
-//     LPRINTF("emitAssign end");
-// }
-
-// void emitExpression(treeNode_t* node, codeGenContext* context){
-//     assert(node);
-//     assert(context);
-
-//     LPRINTF("emitExpression start");
-
-//     emitCurNode(node, context);
-
-//     LPRINTF("emitExpression end");    
-// }
 
 void emitBinaryOpNasmIn(treeNode_t* node, codeGenContext* context){
     assert(node);
@@ -825,53 +480,6 @@ void emitHltNasmPre(treeNode_t* node, codeGenContext* context){
     fprintf(_CONTEXT_FILE_PTR(context), "mov rdi, 0\n");
     fprintf(_CONTEXT_FILE_PTR(context), "syscall\n");
 }
-
-// void emitPlug(treeNode_t* node, codeGenContext* context){
-//     LPRINTF("plug");
-// }
-
-// inline void emitCurNode(treeNode_t* node, codeGenContext* context){
-//     assert(node);
-//     assert(context);
-
-//     emitter_t curEmitter = getEmitter(_NODE_TYPE(node));    
-//     if(curEmitter){
-//         curEmitter(node, context);
-//     }
-// }
-
-// void emitBinaryOpPreamble(treeNode_t* node, codeGenContext* context){
-//     assert(node);
-//     assert(context);
-
-//     if(_L(node)){
-//         emitExpression(_L(node), context);
-//     }
-    
-//     if(_NODE_TYPE(_L(node)) == VARIABLE) loadToReg(_CONTEXT_CUR_VAR(context), context);
-//     fprintf(_CONTEXT_FILE_PTR(context), "mov %s, %s\n", REG_TABLE_ELEM_NAME(_CONTEXT_CALC_REG_A(context)), REG_TABLE_ELEM_NAME(_CONTEXT_TEMP_REG(context)));
-//     fprintf(_CONTEXT_FILE_PTR(context), "push %s\n", REG_TABLE_ELEM_NAME(_CONTEXT_CALC_REG_A(context)));
-
-//     if(_R(node)){
-//         emitExpression(_R(node), context);
-//     }
-
-//     if(_NODE_TYPE(_R(node)) == VARIABLE) loadToReg(_CONTEXT_CUR_VAR(context), context);
-//     fprintf(_CONTEXT_FILE_PTR(context), "mov %s, %s\n", REG_TABLE_ELEM_NAME(_CONTEXT_CALC_REG_B(context)), REG_TABLE_ELEM_NAME(_CONTEXT_TEMP_REG(context)));
-//     fprintf(_CONTEXT_FILE_PTR(context), "pop %s\n", REG_TABLE_ELEM_NAME(_CONTEXT_CALC_REG_A(context)));
-// }
-
-// void emitUnaryOpPreamble(treeNode_t* node, codeGenContext* context){
-//     assert(node);
-//     assert(context);
-
-//     if(_R(node)){
-//         emitExpression(_R(node), context);
-//     }
-
-//     loadToReg(_CONTEXT_CUR_VAR(context), context);
-//     fprintf(_CONTEXT_FILE_PTR(context), "mov %s, %s\n", REG_TABLE_ELEM_NAME(_CONTEXT_CALC_REG_A(context)), REG_TABLE_ELEM_NAME(_CONTEXT_TEMP_REG(context)));
-// }
 
 void loadToReg(varMapElem_t* var, codeGenContext* context){
     if (VARIABLE_MAP_LOC_TYPE(var) == LOCK_REG){
