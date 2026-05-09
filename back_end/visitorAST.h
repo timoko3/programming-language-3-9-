@@ -2,15 +2,17 @@
 #define VISITOR_H
 
 #include "general/tree/tree.h"
-#include "context.h"
 
+struct codeGenContext;
+
+typedef void (*visitorFunc_t)(treeNode_t* ,codeGenContext*);
 struct ASTvisitorNode_t{
     ASTnodeType   type;
     visitorFunc_t preOrderfunc;
     visitorFunc_t inOrderfunc;
     visitorFunc_t postOrderfunc;
+    bool          isLrOrderFlag;
 };
-typedef void (*visitorFunc_t)(codeGenContext* context);
 
 struct ASTvisitor_t{
     ASTvisitorNode_t* nodeVisitors;
@@ -18,6 +20,9 @@ struct ASTvisitor_t{
     codeGenContext*   context;
 };
 
-void traversalLrAST(treeNode_t* node, ASTvisitor_t* visitor);
+extern ASTvisitorNode_t astNodeVisitorsNasm[];
+extern const size_t NASM_NODE_VISITORS_AMOUNT;
+
+void traversalCondOrder(treeNode_t* node, ASTvisitor_t* visitor);
 
 #endif /* VISITOR_H */

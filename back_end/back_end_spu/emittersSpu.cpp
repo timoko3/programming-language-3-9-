@@ -64,9 +64,6 @@ void emitCurNode(treeNode_t* node, codeGenContext* context);
 
 // regTableElem_t* loadToReg(varMapElem_t* var, codeGenContext* context);
 
-static void genPreamble(codeGenContext* context);
-static void genEpilogue(codeGenContext* context);
-
 static emitRule emittersTable[] = {
     {END_BLOCK,     emitEb       },
     {MAIN,          emitMain     },
@@ -137,11 +134,7 @@ void emitStartSpu(treeNode_t* node, codeGenContext* context){
 
     LPRINTF("emitStart start");
 
-    genPreamble(context);
-
     emitCurNode(node, context);
-
-    genEpilogue(context);
 
     LPRINTF("emitStart end");
 }
@@ -283,13 +276,13 @@ void emitInitFunc(treeNode_t* node, codeGenContext* context){
     fprintf(_CONTEXT_FILE_PTR(context), "\n\n:%s\n", _NODE_VALUE_STR(node));
     emitFuncProlog(node, context);
 
-    _CONTEXT_IS_FUNC_ARG(context) = 1;
+    _CONTEXT_IS_CALL_FUNC_ARG(context) = 1;
 
     if(_L(node)){
         emitInitFuncArgs(_L(node), context);
     }
 
-    _CONTEXT_IS_FUNC_ARG(context) = 0;
+    _CONTEXT_IS_CALL_FUNC_ARG(context) = 0;
 
     _CONTEXT_STACK_OFFSET(context) = 0;
     _CONTEXT_STACK_SHIFT(context)  = 1;
@@ -637,7 +630,7 @@ void emitVar(treeNode_t* node, codeGenContext* context){
         }
     }
 
-    if(!_CONTEXT_IS_FUNC_ARG(context)){
+    if(!_CONTEXT_IS_CALL_FUNC_ARG(context)){
         if(_CONTEXT_IS_L_VALUE(context)){
             fprintf(_CONTEXT_FILE_PTR(context), "PUSH %d\n", VARIABLE_MAP_LOC_STACK_OFFSET(foundElem));
             fprintf(_CONTEXT_FILE_PTR(context), "PUSHREG JX\n");
@@ -782,16 +775,3 @@ void emitUnaryOpPreamble(treeNode_t* node, codeGenContext* context){
 
 //     return _CONTEXT_TEMP_REG(context);
 // }
-
-static void genPreamble(codeGenContext* context){
-    assert(context);
-
-    // fprintf(_CONTEXT_FILE_PTR(context), "section .text\n");
-    // fprintf(_CONTEXT_FILE_PTR(context), "global _start\n");
-}
-
-static void genEpilogue(codeGenContext* context){
-    assert(context);
-
-
-}

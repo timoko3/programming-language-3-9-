@@ -21,7 +21,7 @@ void compilerBackend(char* sourceFileName, char* destFileName, backend_t typeBac
     
     switch (typeBackend){
         case NASM: genCode(&AST, destFileName, genCodeNasm); break;
-        case SPU:  genCode(&AST, destFileName, genCodeSpu ); break;
+        // case SPU:  genCode(&AST, destFileName, genCodeSpu ); break;
         default: printf("компиляция данным спосбом не поддерживается!"); break;
     }
     

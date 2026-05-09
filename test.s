@@ -1,17 +1,11 @@
 section .text
 global _start
 _start:
-
-;startAssign
 mov rbx, 5
 mov r12, rbx
 
 
 ;endAssign
-
-;startAssign
-
-;startCallFunc
 mov rbx, r12
 push rdi
 mov rdi, rbx
@@ -31,17 +25,10 @@ mov rax, 60
 mov rdi, 0
 syscall
 
-; sys_exit(0)
-mov rax, 60
-mov rdi, 0
-syscall
-
 
 FUN472:
 push rbp
 mov rbp, rsp
-
-;startAssign
 mov rbx, rdi
 sub rsp, 8
 mov [rbp - 8], rbx
@@ -56,10 +43,6 @@ mov r11, rbx
 pop r10
 cmp r10, r11
 jge .ifEnd_1
-
-;startAssign
-
-;startSub
 mov rbx, rdi
 mov r10, rbx
 push r10
@@ -68,19 +51,10 @@ mov r11, rbx
 pop r10
 sub r10, r11
 mov rbx, r10
-
-
-;endSub
 mov rdi, rbx
 
 
 ;endAssign
-
-;startAssign
-
-;startMul
-
-;startCallFunc
 mov rbx, rdi
 push rdi
 mov rdi, rbx
@@ -97,9 +71,6 @@ mov r11, rbx
 pop r10
 imul r10, r11
 mov rbx, r10
-
-
-;endMul
 sub rsp, 8
 mov [rbp - 8], rbx
 
@@ -113,12 +84,6 @@ pop rbp
 ret
 .ifEnd_1:
 mov rbx, [rbp - 8]
-mov rax, rbx
-add rsp, 8
-mov rsp, rbp
-pop rbp
-ret
-mov rbx, rdi
 mov rax, rbx
 add rsp, 8
 mov rsp, rbp

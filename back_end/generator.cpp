@@ -1,5 +1,4 @@
-#include "emittersNasm.h"
-#include "emittersSpu.h"
+#include "visitorAST.h"
 
 #include "generator.h"
 
@@ -10,6 +9,9 @@
 
 #include <malloc.h>
 #include <assert.h>
+
+static void genPreambleNasm(codeGenContext* context);
+static void genEpilogueNasm(codeGenContext* context);
 
 void genCode(tree_t* AST, const char* destFileName, generator_t generator){
     assert(AST);
@@ -46,17 +48,39 @@ void genCodeNasm(FILE* filePtr, tree_t* AST, codeGenContext* context, list_t* va
     assert(labelsTable);
 
     initContextNasm(context, filePtr, regTable, varMap, labelsTable);
-    emitStartNasm(AST->root, context);
+
+    ASTvisitor_t visitorAstNasm = {
+        astNodeVisitorsNasm,
+        NASM_NODE_VISITORS_AMOUNT,
+        context
+    };
+
+    genPreambleNasm(context);
+    traversalCondOrder(AST->root, &visitorAstNasm);
+    genEpilogueNasm(context);
 }
 
-void genCodeSpu(FILE* filePtr, tree_t* AST, codeGenContext* context, list_t* varMap, list_t* regTable, labelsTable_t* labelsTable){
-    assert(filePtr);
-    assert(AST);
-    assert(context);
-    assert(varMap);
-    assert(regTable);
-    assert(labelsTable);
+// void genCodeSpu(FILE* filePtr, tree_t* AST, codeGenContext* context, list_t* varMap, list_t* regTable, labelsTable_t* labelsTable){
+//     assert(filePtr);
+//     assert(AST);
+//     assert(context);
+//     assert(varMap);
+//     assert(regTable);
+//     assert(labelsTable);
 
-    initContextSpu(context, filePtr, regTable, varMap, labelsTable);
-    emitStartSpu(AST->root, context);
+//     initContextSpu(context, filePtr, regTable, varMap, labelsTable);
+//     emitStartSpu(AST->root, context);
+// }
+
+static void genPreambleNasm(codeGenContext* context){
+    assert(context);
+
+    fprintf(_CONTEXT_FILE_PTR(context), "section .text\n");
+    fprintf(_CONTEXT_FILE_PTR(context), "global _start\n");
+}
+
+static void genEpilogueNasm(codeGenContext* context){
+    assert(context);
+
+
 }

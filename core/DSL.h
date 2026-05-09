@@ -42,7 +42,7 @@
 #define _CONTEXT_CALC_REG_B(context)          (context)->calcRegB
 #define _CONTEXT_BLOCK_IM_DEPTH(context)      (context)->blockImmersionDepth
 #define _CONTEXT_IS_L_VALUE(context)          (context)->isLValue
-#define _CONTEXT_IS_FUNC_ARG(context)         (context)->isFuncArg
+#define _CONTEXT_IS_CALL_FUNC_ARG(context)         (context)->isFuncArg
 
 #define _SPU_NAME_TABLE_SIZE(spuNameTable) (spuNameTable)->size
 #define _SPU_NAME_TABLE_CAPACITY(spuNameTable) (spuNameTable)->capacity
@@ -79,6 +79,7 @@
 #define VISITOR_IN_ORDER_FUNC(visitor)     visitor->inOrderfunc
 #define VISITOR_POST_ORDER_FUNC(visitor)   visitor->postOrderfunc
 #define VISITOR_TYPE(visitor)              visitor->type
+#define VISITOR_IS_LR_ORDER(visitor)       visitor->isLrOrderFlag
 #define VISITOR_CONTEXT(visitor)           visitor->context
 #define VISITORS_AMOUNT(visitor)           visitor->amountNodeVisitors
 #define NODE_VISITORS(visitor)             visitor->nodeVisitors

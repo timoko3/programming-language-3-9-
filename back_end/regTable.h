@@ -5,10 +5,9 @@
 
 // const int PZN_VARIABLE_CODE = -1;
 
-extern regTableElem_t initRegTableNasm[];
-extern regTableElem_t initRegTableSpu[];
-extern size_t   INIT_REG_TABLE_NASM_SIZE;
-extern size_t   INIT_REG_TABLE_SPU_SIZE;
+
+extern const size_t   INIT_REG_TABLE_NASM_SIZE;
+extern const size_t   INIT_REG_TABLE_SPU_SIZE;
 
 const size_t AMOUNT_REGS    = 16;
 
@@ -67,6 +66,9 @@ struct regTableElem_t{
     bool             useBit;
     callConvention_t callConvention;
 };
+
+extern regTableElem_t initRegTableNasm[];
+extern regTableElem_t initRegTableSpu[];
 
 regTableElem_t* regTableElemCtor(genPurposeRegs reg, char* name = "", regUseScenery useScenery = ANY, bool isUsed = false);
 

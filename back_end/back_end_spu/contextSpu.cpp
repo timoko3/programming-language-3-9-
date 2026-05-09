@@ -27,7 +27,7 @@ void initContextSpu(codeGenContext* context, FILE* asmFilePtr, list_t* regTable,
     _CONTEXT_STACK_OFFSET(context)          = VARIABLE_SPU_BYTES_SIZE;
     _CONTEXT_STACK_SHIFT(context)           = 1;
     _CONTEXT_IS_L_VALUE(context)            = 0;
-    _CONTEXT_IS_FUNC_ARG(context)           = 0;
+    _CONTEXT_IS_CALL_FUNC_ARG(context)           = 0;
     
     _CONTEXT_TEMP_REG(context) = VARIABLE_MAP_LOC_REG(_CONTEXT_TEMP_VAR(context) );
 
