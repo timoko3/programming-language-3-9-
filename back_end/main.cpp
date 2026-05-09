@@ -8,24 +8,26 @@
 
 const size_t MAX_FILE_NAME_SIZE = 64;
 
-void cmdFlagsHandle(int argc, char* argv[], char* sourceFileName, char* destFileName);
+void cmdFlagsHandle(int argc, char* argv[], char* sourceFileName, char* destFileName, backend_t* backendType);
 
 int main(int argc, char* argv[]){
     char sourceFileName       [MAX_FILE_NAME_SIZE] = "syntaxTree.txt";
     char destBackendFileName [MAX_FILE_NAME_SIZE]  = "test.s";
+    backend_t backendType = NASMBE;
 
-    cmdFlagsHandle(argc, argv, sourceFileName, destBackendFileName);
+    cmdFlagsHandle(argc, argv, sourceFileName, destBackendFileName, &backendType);
 
-    compilerBackend(sourceFileName, destBackendFileName, NASMBE);
+    compilerBackend(sourceFileName, destBackendFileName, backendType);
 }
 
-void cmdFlagsHandle(int argc, char* argv[], char* sourceFileName, char* destFileName){
+void cmdFlagsHandle(int argc, char* argv[], char* sourceFileName, char* destFileName, backend_t* backendType){
     assert(argv);
     assert(sourceFileName);
     assert(destFileName);
+    assert(backendType);
 
     int opt;
-    while((opt = getopt(argc, argv, "i:o:")) != -1){
+    while((opt = getopt(argc, argv, "i:o:ns")) != -1){
         switch(opt){
         case 'i':
             strncpy(sourceFileName, optarg, MAX_FILE_NAME_SIZE);
@@ -34,8 +36,14 @@ void cmdFlagsHandle(int argc, char* argv[], char* sourceFileName, char* destFile
         case 'o':
             strncpy(destFileName,   optarg, MAX_FILE_NAME_SIZE);
             break;
-
+        case 'n':
+            *backendType = NASMBE;
+            break;
+        case 's':
+            *backendType = SPUBE;
+            break;
         default:
+            printf("-%c - флан недопустим\n", opt);
             break;
         }
     }

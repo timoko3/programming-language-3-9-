@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 
 CXX="g++"
-TARGET="back_endX86.out"
+TARGET="back_ends.out"
 STD="-std=c++17"
 
 SOURCES=(

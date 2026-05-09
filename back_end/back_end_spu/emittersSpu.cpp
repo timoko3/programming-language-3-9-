@@ -21,23 +21,23 @@ struct emitRule{
 //     // {POPM,          emitPopm  },
 //     // {DRAW,          emitDraw  }
 
-const char* ADD_OPERATION_NAME  = "ADD";
-const char* SUB_OPERATION_NAME  = "SUB" ;
-const char* MUL_OPERATION_NAME  = "MUL";
-const char* DIV_OPERATION_NAME  = "DIV";
+const char* ADD_OPERATION_NAME_SPU  = "ADD";
+const char* SUB_OPERATION_NAME_SPU  = "SUB" ;
+const char* MUL_OPERATION_NAME_SPU  = "MUL";
+const char* DIV_OPERATION_NAME_SPU  = "DIV";
 
-const char* SQRT_OPERATION_NAME = "SQRT";
+const char* SQRT_OPERATION_NAME_SPU = "SQRT";
 
-const char* JMP_OPERATION_NAME  = "JMP";
-const char* JG_OPERATION_NAME   = "JG";
-const char* JGE_OPERATION_NAME  = "JGE";
-const char* JL_OPERATION_NAME   = "JL";
-const char* JLE_OPERATION_NAME  = "JLE";
-const char* JE_OPERATION_NAME   = "JE";
-const char* JNE_OPERATION_NAME  = "JNE";
+const char* JMP_OPERATION_NAME_SPU  = "JMP";
+const char* JG_OPERATION_NAME_SPU   = "JG";
+const char* JGE_OPERATION_NAME_SPU  = "JGE";
+const char* JL_OPERATION_NAME_SPU   = "JL";
+const char* JLE_OPERATION_NAME_SPU  = "JLE";
+const char* JE_OPERATION_NAME_SPU   = "JE";
+const char* JNE_OPERATION_NAME_SPU  = "JNE";
 
-const char* CALL_OPERATION_NAME = "CALL";
-const char* RET_OPERATION_NAME  = "RET";
+const char* CALL_OPERATION_NAME_SPU = "CALL";
+const char* RET_OPERATION_NAME_SPU  = "RET";
 
 void emitMainSpuPre(treeNode_t* node, codeGenContext* context){
     assert(node);
@@ -201,12 +201,12 @@ void  emitIfSpuIn(treeNode_t* node, codeGenContext* context){
     const char* condJumpInstruction = "";
 
     switch(_NODE_TYPE(_L(node))){
-        case LE:        condJumpInstruction = JG_OPERATION_NAME ; break; 
-        case LT:        condJumpInstruction = JGE_OPERATION_NAME; break; 
-        case GE:        condJumpInstruction = JL_OPERATION_NAME ; break; 
-        case GT:        condJumpInstruction = JLE_OPERATION_NAME; break; 
-        case EQUAL:     condJumpInstruction = JNE_OPERATION_NAME; break; 
-        case NOT_EQUAL: condJumpInstruction = JE_OPERATION_NAME ; break; 
+        case LE:        condJumpInstruction = JG_OPERATION_NAME_SPU ; break; 
+        case LT:        condJumpInstruction = JGE_OPERATION_NAME_SPU; break; 
+        case GE:        condJumpInstruction = JL_OPERATION_NAME_SPU ; break; 
+        case GT:        condJumpInstruction = JLE_OPERATION_NAME_SPU; break; 
+        case EQUAL:     condJumpInstruction = JNE_OPERATION_NAME_SPU; break; 
+        case NOT_EQUAL: condJumpInstruction = JE_OPERATION_NAME_SPU ; break; 
         default: break;
     }
 
@@ -244,12 +244,12 @@ void emitWhileSpuIn(treeNode_t* node, codeGenContext* context){
     const char* condJumpInstruction = "";
 
     switch(_NODE_TYPE(_L(node))){
-        case LE:        condJumpInstruction = JG_OPERATION_NAME ; break; 
-        case LT:        condJumpInstruction = JGE_OPERATION_NAME; break; 
-        case GE:        condJumpInstruction = JL_OPERATION_NAME ; break; 
-        case GT:        condJumpInstruction = JLE_OPERATION_NAME; break; 
-        case EQUAL:     condJumpInstruction = JNE_OPERATION_NAME; break; 
-        case NOT_EQUAL: condJumpInstruction = JE_OPERATION_NAME ; break; 
+        case LE:        condJumpInstruction = JG_OPERATION_NAME_SPU ; break; 
+        case LT:        condJumpInstruction = JGE_OPERATION_NAME_SPU; break; 
+        case GE:        condJumpInstruction = JL_OPERATION_NAME_SPU ; break; 
+        case GT:        condJumpInstruction = JLE_OPERATION_NAME_SPU; break; 
+        case EQUAL:     condJumpInstruction = JNE_OPERATION_NAME_SPU; break; 
+        case NOT_EQUAL: condJumpInstruction = JE_OPERATION_NAME_SPU ; break; 
         default: break;
     }
 
@@ -265,7 +265,7 @@ void emitWhileSpuPost(treeNode_t* node, codeGenContext* context){
     assert(node);
     assert(context);
 
-    fprintf(_CONTEXT_FILE_PTR(context), "%s :%s_%d\n", JMP_OPERATION_NAME, _LABEL_DATA_NAME(_CONTEXT_CUR_LABEL_A(context)), _LABEL_DATA_ID(_CONTEXT_CUR_LABEL_A(context)));
+    fprintf(_CONTEXT_FILE_PTR(context), "%s :%s_%d\n", JMP_OPERATION_NAME_SPU, _LABEL_DATA_NAME(_CONTEXT_CUR_LABEL_A(context)), _LABEL_DATA_ID(_CONTEXT_CUR_LABEL_A(context)));
     fprintf(_CONTEXT_FILE_PTR(context), ":%s_%d\n", _LABEL_DATA_NAME(_CONTEXT_CUR_LABEL_B(context)), _LABEL_DATA_ID(_CONTEXT_CUR_LABEL_B(context)));
 }
 
@@ -295,7 +295,7 @@ void emitAddSpuPost(treeNode_t* node, codeGenContext* context){
     assert(node);
     assert(context);
 
-    fprintf(_CONTEXT_FILE_PTR(context), "%s\n", ADD_OPERATION_NAME);
+    fprintf(_CONTEXT_FILE_PTR(context), "%s\n", ADD_OPERATION_NAME_SPU);
 
 }
 
@@ -303,28 +303,28 @@ void emitSubSpuPost(treeNode_t* node, codeGenContext* context){
     assert(node);
     assert(context);
 
-    fprintf(_CONTEXT_FILE_PTR(context), "%s\n", SUB_OPERATION_NAME);
+    fprintf(_CONTEXT_FILE_PTR(context), "%s\n", SUB_OPERATION_NAME_SPU);
 }
 
 void emitMulSpuPost(treeNode_t* node, codeGenContext* context){
     assert(node);
     assert(context);
 
-    fprintf(_CONTEXT_FILE_PTR(context), "%s\n", MUL_OPERATION_NAME);
+    fprintf(_CONTEXT_FILE_PTR(context), "%s\n", MUL_OPERATION_NAME_SPU);
 }
 
 void emitDivSpuPost(treeNode_t* node, codeGenContext* context){
     assert(node);
     assert(context);
 
-    fprintf(_CONTEXT_FILE_PTR(context), "%s\n", DIV_OPERATION_NAME);   
+    fprintf(_CONTEXT_FILE_PTR(context), "%s\n", DIV_OPERATION_NAME_SPU);   
 }
 
 void emitSqrtSpuPost(treeNode_t* node, codeGenContext* context){
     assert(node);
     assert(context);
 
-    fprintf(_CONTEXT_FILE_PTR(context), "%s\n", SQRT_OPERATION_NAME);
+    fprintf(_CONTEXT_FILE_PTR(context), "%s\n", SQRT_OPERATION_NAME_SPU);
 }
 
 void emitVarSpuPre(treeNode_t* node, codeGenContext* context){

@@ -23,22 +23,22 @@ void loadToReg(varMapElem_t* var, codeGenContext* context);
     // {POPM,          emitPopm  },
     // {DRAW,          emitDraw  }
 
-const char* MAIN_START_NAME    = "_start";
+const char* MAIN_START_NAME_NASM    = "_start";
 
-const char* ADD_OPERATION_NAME = "add";
-const char* SUB_OPERATION_NAME = "sub" ;
-const char* MUL_OPERATION_NAME = "imul";
-const char* DIV_OPERATION_NAME = "idiv";
+const char* ADD_OPERATION_NAME_NASM = "add";
+const char* SUB_OPERATION_NAME_NASM = "sub" ;
+const char* MUL_OPERATION_NAME_NASM = "imul";
+const char* DIV_OPERATION_NAME_NASM = "idiv";
 
-const char* SQRT_OPERATION_NAME = "sqrtss";
+const char* SQRT_OPERATION_NAME_NASM = "sqrtss";
 
-const char* CMP_OPERATION_NAME = "cmp";
-const char* JG_OPERATION_NAME  = "jg";
-const char* JGE_OPERATION_NAME = "jge";
-const char* JL_OPERATION_NAME  = "jl";
-const char* JLE_OPERATION_NAME = "jle";
-const char* JE_OPERATION_NAME  = "je";
-const char* JNE_OPERATION_NAME = "jne";
+const char* CMP_OPERATION_NAME_NASM = "cmp";
+const char* JG_OPERATION_NAME_NASM = "jg";
+const char* JGE_OPERATION_NAME_NASM = "jge";
+const char* JL_OPERATION_NAME_NASM  = "jl";
+const char* JLE_OPERATION_NAME_NASM = "jle";
+const char* JE_OPERATION_NAME_NASM  = "je";
+const char* JNE_OPERATION_NAME_NASM = "jne";
 
 void emitMainNasmPre(treeNode_t* node, codeGenContext* context){
     assert(node);
@@ -46,7 +46,7 @@ void emitMainNasmPre(treeNode_t* node, codeGenContext* context){
 
     LPRINTF("emitMain start");
 
-    fprintf(_CONTEXT_FILE_PTR(context), "%s:\n", MAIN_START_NAME);
+    fprintf(_CONTEXT_FILE_PTR(context), "%s:\n", MAIN_START_NAME_NASM);
 
     LPRINTF("emitMain end");
 }
@@ -218,12 +218,12 @@ void emitIfNasmIn(treeNode_t* node, codeGenContext* context){
     const char* condJumpInstruction = "";
 
     switch(_NODE_TYPE(_L(node))){
-        case LE:        condJumpInstruction = JG_OPERATION_NAME ; break; 
-        case LT:        condJumpInstruction = JGE_OPERATION_NAME; break; 
-        case GE:        condJumpInstruction = JL_OPERATION_NAME ; break; 
-        case GT:        condJumpInstruction = JLE_OPERATION_NAME; break; 
-        case EQUAL:     condJumpInstruction = JNE_OPERATION_NAME; break; 
-        case NOT_EQUAL: condJumpInstruction = JE_OPERATION_NAME ; break; 
+        case LE:        condJumpInstruction = JG_OPERATION_NAME_NASM ; break; 
+        case LT:        condJumpInstruction = JGE_OPERATION_NAME_NASM; break; 
+        case GE:        condJumpInstruction = JL_OPERATION_NAME_NASM ; break; 
+        case GT:        condJumpInstruction = JLE_OPERATION_NAME_NASM; break; 
+        case EQUAL:     condJumpInstruction = JNE_OPERATION_NAME_NASM; break; 
+        case NOT_EQUAL: condJumpInstruction = JE_OPERATION_NAME_NASM ; break; 
         default: break;
     }
 
@@ -261,12 +261,12 @@ void emitWhileNasmIn(treeNode_t* node, codeGenContext* context){
     const char* condJumpInstruction = "";
 
     switch(_NODE_TYPE(_L(node))){
-        case LE:        condJumpInstruction = JG_OPERATION_NAME ; break; 
-        case LT:        condJumpInstruction = JGE_OPERATION_NAME; break; 
-        case GE:        condJumpInstruction = JL_OPERATION_NAME ; break; 
-        case GT:        condJumpInstruction = JLE_OPERATION_NAME; break; 
-        case EQUAL:     condJumpInstruction = JNE_OPERATION_NAME; break; 
-        case NOT_EQUAL: condJumpInstruction = JE_OPERATION_NAME ; break; 
+        case LE:        condJumpInstruction = JG_OPERATION_NAME_NASM ; break; 
+        case LT:        condJumpInstruction = JGE_OPERATION_NAME_NASM; break; 
+        case GE:        condJumpInstruction = JL_OPERATION_NAME_NASM ; break; 
+        case GT:        condJumpInstruction = JLE_OPERATION_NAME_NASM; break; 
+        case EQUAL:     condJumpInstruction = JNE_OPERATION_NAME_NASM; break; 
+        case NOT_EQUAL: condJumpInstruction = JE_OPERATION_NAME_NASM ; break; 
         default: break;
     }
 
@@ -292,7 +292,7 @@ void emitCmpNasmPost(treeNode_t* node, codeGenContext* context){
 
     emitBinaryOpNasmPost(node, context);
 
-    fprintf(_CONTEXT_FILE_PTR(context), "%s %s, %s\n", CMP_OPERATION_NAME, REG_TABLE_ELEM_NAME(_CONTEXT_CALC_REG_A(context)), REG_TABLE_ELEM_NAME(_CONTEXT_CALC_REG_B(context)));
+    fprintf(_CONTEXT_FILE_PTR(context), "%s %s, %s\n", CMP_OPERATION_NAME_NASM, REG_TABLE_ELEM_NAME(_CONTEXT_CALC_REG_A(context)), REG_TABLE_ELEM_NAME(_CONTEXT_CALC_REG_B(context)));
 }
 
 void emitAssignNasmIn(treeNode_t* node, codeGenContext* context){
@@ -347,7 +347,7 @@ void emitAddNasmPost(treeNode_t* node, codeGenContext* context){
 
     emitBinaryOpNasmPost(node, context);
 
-    fprintf(_CONTEXT_FILE_PTR(context), "%s %s, %s\n", ADD_OPERATION_NAME, REG_TABLE_ELEM_NAME(_CONTEXT_CALC_REG_A(context)), REG_TABLE_ELEM_NAME(_CONTEXT_CALC_REG_B(context)));
+    fprintf(_CONTEXT_FILE_PTR(context), "%s %s, %s\n", ADD_OPERATION_NAME_NASM, REG_TABLE_ELEM_NAME(_CONTEXT_CALC_REG_A(context)), REG_TABLE_ELEM_NAME(_CONTEXT_CALC_REG_B(context)));
     fprintf(_CONTEXT_FILE_PTR(context), "mov %s, %s\n", REG_TABLE_ELEM_NAME(_CONTEXT_TEMP_REG(context)), REG_TABLE_ELEM_NAME(_CONTEXT_CALC_REG_A(context)));
 }
 
@@ -357,7 +357,7 @@ void emitSubNasmPost(treeNode_t* node, codeGenContext* context){
 
     emitBinaryOpNasmPost(node, context);
 
-    fprintf(_CONTEXT_FILE_PTR(context), "%s %s, %s\n", SUB_OPERATION_NAME, REG_TABLE_ELEM_NAME(_CONTEXT_CALC_REG_A(context)), REG_TABLE_ELEM_NAME(_CONTEXT_CALC_REG_B(context)));
+    fprintf(_CONTEXT_FILE_PTR(context), "%s %s, %s\n", SUB_OPERATION_NAME_NASM, REG_TABLE_ELEM_NAME(_CONTEXT_CALC_REG_A(context)), REG_TABLE_ELEM_NAME(_CONTEXT_CALC_REG_B(context)));
     fprintf(_CONTEXT_FILE_PTR(context), "mov %s, %s\n", REG_TABLE_ELEM_NAME(_CONTEXT_TEMP_REG(context)), REG_TABLE_ELEM_NAME(_CONTEXT_CALC_REG_A(context)));
 }
 
@@ -367,7 +367,7 @@ void emitMulNasmPost(treeNode_t* node, codeGenContext* context){
 
     emitBinaryOpNasmPost(node, context);
 
-    fprintf(_CONTEXT_FILE_PTR(context), "%s %s, %s\n", MUL_OPERATION_NAME, REG_TABLE_ELEM_NAME(_CONTEXT_CALC_REG_A(context)), REG_TABLE_ELEM_NAME(_CONTEXT_CALC_REG_B(context)));
+    fprintf(_CONTEXT_FILE_PTR(context), "%s %s, %s\n", MUL_OPERATION_NAME_NASM, REG_TABLE_ELEM_NAME(_CONTEXT_CALC_REG_A(context)), REG_TABLE_ELEM_NAME(_CONTEXT_CALC_REG_B(context)));
     fprintf(_CONTEXT_FILE_PTR(context), "mov %s, %s\n", REG_TABLE_ELEM_NAME(_CONTEXT_TEMP_REG(context)), REG_TABLE_ELEM_NAME(_CONTEXT_CALC_REG_A(context)));
 }
 
@@ -383,7 +383,7 @@ void emitDivNasmPost(treeNode_t* node, codeGenContext* context){
     fprintf(_CONTEXT_FILE_PTR(context), "xor rdx, rdx\n", REG_TABLE_ELEM_NAME(_CONTEXT_CALC_REG_A(context)));
     fprintf(_CONTEXT_FILE_PTR(context), "mov rax, %s\n", REG_TABLE_ELEM_NAME(_CONTEXT_CALC_REG_A(context)));
 
-    fprintf(_CONTEXT_FILE_PTR(context), "%s %s\n", DIV_OPERATION_NAME, REG_TABLE_ELEM_NAME(_CONTEXT_CALC_REG_B(context)));
+    fprintf(_CONTEXT_FILE_PTR(context), "%s %s\n", DIV_OPERATION_NAME_NASM, REG_TABLE_ELEM_NAME(_CONTEXT_CALC_REG_B(context)));
 
     fprintf(_CONTEXT_FILE_PTR(context), "mov %s, rax\n", REG_TABLE_ELEM_NAME(_CONTEXT_TEMP_REG(context)));
 
@@ -399,7 +399,7 @@ void emitSqrtNasmPost(treeNode_t* node, codeGenContext* context){
     fprintf(_CONTEXT_FILE_PTR(context), "mov %s, %s\n", REG_TABLE_ELEM_NAME(_CONTEXT_CALC_REG_A(context)), REG_TABLE_ELEM_NAME(_CONTEXT_TEMP_REG(context)));
 
     fprintf(_CONTEXT_FILE_PTR(context), "cvtsi2ss xmm0, %s\n", REG_TABLE_ELEM_NAME(_CONTEXT_CALC_REG_A(context)));
-    fprintf(_CONTEXT_FILE_PTR(context), "%s xmm0, xmm0\n", SQRT_OPERATION_NAME);
+    fprintf(_CONTEXT_FILE_PTR(context), "%s xmm0, xmm0\n", SQRT_OPERATION_NAME_NASM);
     fprintf(_CONTEXT_FILE_PTR(context), "cvttss2si %s, xmm0\n", REG_TABLE_ELEM_NAME(_CONTEXT_CALC_REG_A(context)));
 
     fprintf(_CONTEXT_FILE_PTR(context), "mov %s, %s\n", REG_TABLE_ELEM_NAME(_CONTEXT_TEMP_REG(context)), REG_TABLE_ELEM_NAME(_CONTEXT_CALC_REG_A(context)));
@@ -411,12 +411,12 @@ void emitVarNasmPre(treeNode_t* node, codeGenContext* context){
 
     LPRINTF("emitVar start");
     
-    printf("amountVariables: %llu\n", _CONTEXT_VAR_MAP(context)->size);
+    LPRINTF("amountVariables: %llu\n", _CONTEXT_VAR_MAP(context)->size);
 
     int curVarCode = 0;
     sscanf(_NODE_WRITE_FILE(node), "VAR%d", &curVarCode);
 
-    printf("curVarCode: %d\n", curVarCode);
+    LPRINTF("curVarCode: %d\n", curVarCode);
 
     varMapElem_t* refElem = varMapElemCtor(curVarCode, LOCK_ANY);
     assert(refElem);
@@ -450,7 +450,7 @@ void emitVarNasmPre(treeNode_t* node, codeGenContext* context){
     if(_CONTEXT_SAVE_CUR_VAR(context)) _CONTEXT_CUR_VAR(context) = foundElem; 
 
 
-    printf("_CONTEXT_IS_L_VALUE = %d, _CONTEXT_IS_CALL_FUNC_ARG = %d, _CONTEXT_VAR_REG_USE_SCENERY  = %d", _CONTEXT_IS_L_VALUE(context), _CONTEXT_IS_CALL_FUNC_ARG(context), _CONTEXT_VAR_REG_USE_SCENERY(context) );
+    LPRINTF("_CONTEXT_IS_L_VALUE = %d, _CONTEXT_IS_CALL_FUNC_ARG = %d, _CONTEXT_VAR_REG_USE_SCENERY  = %d", _CONTEXT_IS_L_VALUE(context), _CONTEXT_IS_CALL_FUNC_ARG(context), _CONTEXT_VAR_REG_USE_SCENERY(context) );
     if(!_CONTEXT_IS_L_VALUE(context) && 
     !_CONTEXT_IS_CALL_FUNC_ARG(context) && 
     !(_CONTEXT_VAR_REG_USE_SCENERY(context) == FUNC_ARGS)){
