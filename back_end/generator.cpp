@@ -39,28 +39,7 @@ void genCode(tree_t* AST, const char* destFileName, generator_t generator){
     fclose(outputFilePtr);
 }
 
-void genCodeNasm(FILE* filePtr, tree_t* AST, codeGenContext* context, list_t* varMap, list_t* regTable, labelsTable_t* labelsTable){
-    assert(filePtr);
-    assert(AST);
-    assert(context);
-    assert(varMap);
-    assert(regTable);
-    assert(labelsTable);
-
-    initContextNasm(context, filePtr, regTable, varMap, labelsTable);
-
-    ASTvisitor_t visitorAstNasm = {
-        astNodeVisitorsNasm,
-        NASM_NODE_VISITORS_AMOUNT,
-        context
-    };
-
-    genPreambleNasm(context);
-    traversalCondOrder(AST->root, &visitorAstNasm);
-    genEpilogueNasm(context);
-}
-
-// void genCodeSpu(FILE* filePtr, tree_t* AST, codeGenContext* context, list_t* varMap, list_t* regTable, labelsTable_t* labelsTable){
+// void genCodeNasm(FILE* filePtr, tree_t* AST, codeGenContext* context, list_t* varMap, list_t* regTable, labelsTable_t* labelsTable){
 //     assert(filePtr);
 //     assert(AST);
 //     assert(context);
@@ -68,9 +47,37 @@ void genCodeNasm(FILE* filePtr, tree_t* AST, codeGenContext* context, list_t* va
 //     assert(regTable);
 //     assert(labelsTable);
 
-//     initContextSpu(context, filePtr, regTable, varMap, labelsTable);
-//     emitStartSpu(AST->root, context);
+//     initContextNasm(context, filePtr, regTable, varMap, labelsTable);
+
+//     ASTvisitor_t visitorAstNasm = {
+//         astNodeVisitorsNasm,
+//         NASM_NODE_VISITORS_AMOUNT,
+//         context
+//     };
+
+//     genPreambleNasm(context);
+//     traversalCondOrder(AST->root, &visitorAstNasm);
+//     genEpilogueNasm(context);
 // }
+
+void genCodeSpu(FILE* filePtr, tree_t* AST, codeGenContext* context, list_t* varMap, list_t* regTable, labelsTable_t* labelsTable){
+    assert(filePtr);
+    assert(AST);
+    assert(context);
+    assert(varMap);
+    assert(regTable);
+    assert(labelsTable);
+
+    initContextSpu(context, filePtr, regTable, varMap, labelsTable);
+
+    ASTvisitor_t visitorAstNasm = {
+        astNodeVisitorsSpu,
+        SPU_NODE_VISITORS_AMOUNT,
+        context
+    };
+
+    traversalCondOrder(AST->root, &visitorAstNasm);
+}
 
 static void genPreambleNasm(codeGenContext* context){
     assert(context);

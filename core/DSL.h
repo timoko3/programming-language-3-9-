@@ -42,7 +42,8 @@
 #define _CONTEXT_CALC_REG_B(context)          (context)->calcRegB
 #define _CONTEXT_BLOCK_IM_DEPTH(context)      (context)->blockImmersionDepth
 #define _CONTEXT_IS_L_VALUE(context)          (context)->isLValue
-#define _CONTEXT_IS_CALL_FUNC_ARG(context)         (context)->isFuncArg
+#define _CONTEXT_IS_CALL_FUNC_ARG(context)    (context)->isFuncArg
+#define _CONTEXT_COUNT_ARGS(context)          (context)->countArgs
 
 #define _SPU_NAME_TABLE_SIZE(spuNameTable) (spuNameTable)->size
 #define _SPU_NAME_TABLE_CAPACITY(spuNameTable) (spuNameTable)->capacity

@@ -1,7 +1,5 @@
 #include "contextSpu.h"
 
-#include "context.h"
-
 #include "core/DSL.h"
 
 #include <assert.h>

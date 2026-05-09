@@ -32,6 +32,7 @@ struct codeGenContext{
     int             stackOffset;
     int             stackShift;
     int             curFuncArgsAmount;
+    bool            countArgs;
 
     int             blockImmersionDepth;
 };

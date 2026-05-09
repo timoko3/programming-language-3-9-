@@ -16,7 +16,7 @@ int main(int argc, char* argv[]){
 
     cmdFlagsHandle(argc, argv, sourceFileName, destBackendFileName);
 
-    compilerBackend(sourceFileName, destBackendFileName, NASM);
+    compilerBackend(sourceFileName, destBackendFileName, SPU);
 }
 
 void cmdFlagsHandle(int argc, char* argv[], char* sourceFileName, char* destFileName){
