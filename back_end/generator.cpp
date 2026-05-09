@@ -15,6 +15,10 @@ static void genPreambleNasm(codeGenContext* context);
 static void genEpilogueNasm(codeGenContext* context);
 #endif /* NASM */
 
+#ifdef X86ELF
+#include "elfGenerate.h"
+#endif /* X86ELF */
+
 void genCode(tree_t* AST, const char* destFileName, generator_t generator){
     assert(AST);
     assert(destFileName);
@@ -110,14 +114,15 @@ void genCodeX86ELF(FILE* filePtr, tree_t* AST, codeGenContext* context, list_t* 
 
     initContextX86Elf(context, filePtr, regTable, varMap, labelsTable);
 
-    ASTvisitor_t visitorAstNasm = {
-        astNodeVisitorsNasm,
-        NASM_NODE_VISITORS_AMOUNT,
+    ASTvisitor_t visitorAstX86Elf = {
+        astNodeVisitorsX86Elf,
+        X86ELF_NODE_VISITORS_AMOUNT,
         context
     };
 
-    // genPreambleNasm(context);
-    traversalCondOrder(AST->root, &visitorAstNasm);
+    genPreambleX86Elf(context);
+    traversalCondOrder(AST->root, &visitorAstX86Elf);
     // genEpilogueNasm(context);
 }
-#endif /* NASM */
+
+#endif /* X86ELF */
