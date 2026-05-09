@@ -13,6 +13,12 @@ void genCode(tree_t* syntaxTree, const char* destFileName, generator_t generator
 void genCodeNasm(FILE* filePtr, tree_t* AST, codeGenContext* context, list_t* varMap, list_t* regTable, labelsTable_t* labelsTable);
 #endif NASM
 
+#ifdef SPU
 void genCodeSpu(FILE* filePtr, tree_t* AST, codeGenContext* context, list_t* varMap, list_t* regTable, labelsTable_t* labelsTable);
+#endif /* SPU */
+
+#ifdef X86ELF
+void genCodeX86ELF(FILE* filePtr, tree_t* AST, codeGenContext* context, list_t* varMap, list_t* regTable, labelsTable_t* labelsTable);
+#endif /* X86ELF */
 
 #endif /* CODE_GENERATION_H */

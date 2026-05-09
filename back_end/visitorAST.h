@@ -30,6 +30,11 @@ extern ASTvisitorNode_t astNodeVisitorsSpu[];
 extern const size_t SPU_NODE_VISITORS_AMOUNT;
 #endif /* SPU */
 
+#ifdef X86ELF
+extern ASTvisitorNode_t astNodeVisitorsX86Elf[];
+extern const size_t X86ELF_NODE_VISITORS_AMOUNT;
+#endif /* X86ELF */
+
 void traversalCondOrder(treeNode_t* node, ASTvisitor_t* visitor);
 
 #endif /* VISITOR_H */

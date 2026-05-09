@@ -26,6 +26,9 @@ void compilerBackend(char* sourceFileName, char* destFileName, backend_t typeBac
         #ifdef SPU
         case SPUBE:  genCode(&AST, destFileName, genCodeSpu ); break;
         #endif /* SPU */
+        #ifdef X86ELF
+        case X86BE:  genCode
+        #endif /* X86ELF */
         default: printf("компиляция данным способом не поддерживается!"); break;
     }
     

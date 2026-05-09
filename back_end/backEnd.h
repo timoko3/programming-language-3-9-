@@ -5,7 +5,8 @@
 
 enum backend_t{
     NASMBE,
-    SPUBE
+    SPUBE,
+    X86BE
 };
 
 void compilerBackend(char* sourceFileName, char* destFileName, backend_t typeBackend);

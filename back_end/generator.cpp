@@ -62,6 +62,20 @@ void genCodeNasm(FILE* filePtr, tree_t* AST, codeGenContext* context, list_t* va
     traversalCondOrder(AST->root, &visitorAstNasm);
     genEpilogueNasm(context);
 }
+
+static void genPreambleNasm(codeGenContext* context){
+    assert(context);
+
+    fprintf(_CONTEXT_FILE_PTR(context), "section .text\n");
+    fprintf(_CONTEXT_FILE_PTR(context), "global _start\n");
+}
+
+static void genEpilogueNasm(codeGenContext* context){
+    assert(context);
+
+
+}
+
 #endif /* NASM */
 
 #ifdef SPU
@@ -85,17 +99,25 @@ void genCodeSpu(FILE* filePtr, tree_t* AST, codeGenContext* context, list_t* var
 }
 #endif /* SPU */
 
-#ifdef NASM
-static void genPreambleNasm(codeGenContext* context){
+#ifdef X86ELF
+void genCodeX86ELF(FILE* filePtr, tree_t* AST, codeGenContext* context, list_t* varMap, list_t* regTable, labelsTable_t* labelsTable){
+    assert(filePtr);
+    assert(AST);
     assert(context);
+    assert(varMap);
+    assert(regTable);
+    assert(labelsTable);
 
-    fprintf(_CONTEXT_FILE_PTR(context), "section .text\n");
-    fprintf(_CONTEXT_FILE_PTR(context), "global _start\n");
-}
+    initContextX86Elf(context, filePtr, regTable, varMap, labelsTable);
 
-static void genEpilogueNasm(codeGenContext* context){
-    assert(context);
+    ASTvisitor_t visitorAstNasm = {
+        astNodeVisitorsNasm,
+        NASM_NODE_VISITORS_AMOUNT,
+        context
+    };
 
-
+    // genPreambleNasm(context);
+    traversalCondOrder(AST->root, &visitorAstNasm);
+    // genEpilogueNasm(context);
 }
 #endif /* NASM */

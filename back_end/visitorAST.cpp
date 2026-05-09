@@ -44,6 +44,8 @@ ASTvisitorNode_t astNodeVisitorsNasm[]{
     {NUMBER,        emitNumberNasmPre, NULL,                NULL,                1},
     {SQRT,          NULL,              NULL,                emitSqrtNasmPost,    1},
 };
+
+const size_t NASM_NODE_VISITORS_AMOUNT = sizeof(astNodeVisitorsNasm) / sizeof(ASTvisitorNode_t);
 #endif /* NASM */
 
 #ifdef SPU
@@ -73,15 +75,40 @@ ASTvisitorNode_t astNodeVisitorsSpu[]{
     {VARIABLE,      emitVarSpuPre,     NULL,                NULL,                1},
     {NUMBER,        emitNumberSpuPre,  NULL,                NULL,                1},
 };
-#endif /* SPU */
 
-#ifdef NASM
-const size_t NASM_NODE_VISITORS_AMOUNT = sizeof(astNodeVisitorsNasm) / sizeof(ASTvisitorNode_t);
-#endif /* NASM */
-
-#ifdef SPU
 const size_t SPU_NODE_VISITORS_AMOUNT  = sizeof(astNodeVisitorsSpu) / sizeof(ASTvisitorNode_t);
 #endif /* SPU */
+
+#ifdef X86ELF
+ASTvisitorNode_t astNodeVisitorsX86Elf[]{
+    {END_BLOCK,     NULL,                NULL,                  NULL,                 1},
+    {MAIN,          emitMainX86ElfPre,   NULL,                  NULL,                 1},
+    {FUNCTION,      emitFuncX86ElfPre,   emitFuncX86ElfIn,      emitFuncX86ElfPost,   1},
+    {RETURN,        emitRetX86ElfPre,    NULL,                  emitRetX86ElfPost,    1},
+    {COMMA,         NULL,                NULL,                  NULL,                 1},
+    {IF,            NULL,                emitIfX86ElfIn,        emitIfX86ElfPost,     1},
+    {WHILE,         emitWhileX86ElfPre,  emitWhileX86ElfIn,     emitWhileX86ElfPost,  1},
+    {GT,            NULL,                emitBinaryOpX86ElfIn,  emitCmpX86ElfPost,    1},           
+    {LT,            NULL,                emitBinaryOpX86ElfIn,  emitCmpX86ElfPost,    1},
+    {GE,            NULL,                emitBinaryOpX86ElfIn,  emitCmpX86ElfPost,    1},
+    {LE,            NULL,                emitBinaryOpX86ElfIn,  emitCmpX86ElfPost,    1},
+    {EQUAL,         NULL,                emitBinaryOpX86ElfIn,  emitCmpX86ElfPost,    1},
+    {NOT_EQUAL,     NULL,                emitBinaryOpX86ElfIn,  emitCmpX86ElfPost,    1},
+
+    {END_STATEMENT, NULL,                NULL,                  NULL,                 1},
+    {ASSIGN,        NULL,                emitAssignX86ElfIn,    emitAssignX86ElfPost, 0},
+    {SUB,           NULL,                emitBinaryOpX86ElfIn,  emitSubX86ElfPost,    1},
+    {MUL,           NULL,                emitBinaryOpX86ElfIn,  emitMulX86ElfPost,    1},
+    {ADD,           NULL,                emitBinaryOpX86ElfIn,  emitAddX86ElfPost,    1},
+    {DIVIDE,        NULL,                emitBinaryOpX86ElfIn,  emitDivX86ElfPost,    1},
+    {HLT,           emitHltX86ElfPre,    NULL,                  NULL,                 1},
+    {VARIABLE,      emitVarX86ElfPre,    NULL,                  NULL,                 1},
+    {NUMBER,        emitNumberX86ElfPre, NULL,                  NULL,                 1},
+    {SQRT,          NULL,                NULL,                  emitSqrtX86ElfPost,   1},
+};
+
+const size_t X86ELF_NODE_VISITORS_AMOUNT = sizeof(astNodeVisitorsX86Elf) / sizeof(ASTvisitorNode_t);
+#endif /* X86ELF */
 
 void traversalCondOrder(treeNode_t* node, ASTvisitor_t* visitor){
     assert(visitor);

@@ -12,7 +12,7 @@ void cmdFlagsHandle(int argc, char* argv[], char* sourceFileName, char* destFile
 
 int main(int argc, char* argv[]){
     char sourceFileName       [MAX_FILE_NAME_SIZE] = "syntaxTree.txt";
-    char destBackendFileName [MAX_FILE_NAME_SIZE]  = "test.s";
+    char destBackendFileName  [MAX_FILE_NAME_SIZE] = "test.s";
     backend_t backendType = NASMBE;
 
     cmdFlagsHandle(argc, argv, sourceFileName, destBackendFileName, &backendType);
@@ -27,7 +27,7 @@ void cmdFlagsHandle(int argc, char* argv[], char* sourceFileName, char* destFile
     assert(backendType);
 
     int opt;
-    while((opt = getopt(argc, argv, "i:o:ns")) != -1){
+    while((opt = getopt(argc, argv, "i:o:nsx")) != -1){
         switch(opt){
         case 'i':
             strncpy(sourceFileName, optarg, MAX_FILE_NAME_SIZE);
@@ -42,8 +42,11 @@ void cmdFlagsHandle(int argc, char* argv[], char* sourceFileName, char* destFile
         case 's':
             *backendType = SPUBE;
             break;
+        case 'x':
+            *backendType = X86BE;
+            break;
         default:
-            printf("-%c - флан недопустим\n", opt);
+            printf("-%c - флаг недопустим\n", opt);
             break;
         }
     }
