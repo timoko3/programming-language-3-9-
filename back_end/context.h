@@ -8,6 +8,10 @@
 
 #include "visitorAST.h"
 
+#ifdef X86ELF
+#include "back_end_x86elf/elfGenerate.h"
+#endif /* X86ELF */
+
 struct codeGenContext{
     FILE*           filePtr;
 
@@ -35,6 +39,10 @@ struct codeGenContext{
     bool            countArgs;
 
     int             blockImmersionDepth;
+
+    #ifdef X86ELF
+    elfGenerationContext_t elfGenContext;
+    #endif /* X86ELF */
 };
 
 #endif /* CONTEXT_H */

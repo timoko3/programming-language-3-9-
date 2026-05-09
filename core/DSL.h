@@ -45,6 +45,12 @@
 #define _CONTEXT_IS_CALL_FUNC_ARG(context)    (context)->isFuncArg
 #define _CONTEXT_COUNT_ARGS(context)          (context)->countArgs
 
+#define _CONTEXT_ELF_SIZE_EH(context)               (context)->elfGenContext.elfHeaderSize
+#define _CONTEXT_ELF_SIZE_PH(context)               (context)->elfGenContext.programHeaderSize
+#define _CONTEXT_ELF_CODE_SIZE(context)             (context)->elfGenContext.codeSize
+#define _CONTEXT_ELF_SECTION_TABLE_SIZE(context)    (context)->elfGenContext.sectionTableSize
+#define _CONTEXT_ELF_TABLE_NAMES_TS(context)        (context)->elfGenContext.tableNamesTs
+
 #define _SPU_NAME_TABLE_SIZE(spuNameTable) (spuNameTable)->size
 #define _SPU_NAME_TABLE_CAPACITY(spuNameTable) (spuNameTable)->capacity
 #define _SPU_NAME_TABLE_DATA(spuNameTable) (spuNameTable)->data

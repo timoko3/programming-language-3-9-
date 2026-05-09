@@ -16,7 +16,7 @@ static void genEpilogueNasm(codeGenContext* context);
 #endif /* NASM */
 
 #ifdef X86ELF
-#include "elfGenerate.h"
+#include "back_end_x86elf/elfGenerate.h"
 #endif /* X86ELF */
 
 void genCode(tree_t* AST, const char* destFileName, generator_t generator){
@@ -120,8 +120,8 @@ void genCodeX86ELF(FILE* filePtr, tree_t* AST, codeGenContext* context, list_t* 
         context
     };
 
-    genPreambleX86Elf(context);
-    traversalCondOrder(AST->root, &visitorAstX86Elf);
+    genPrologueX86Elf(context);
+    // traversalCondOrder(AST->root, &visitorAstX86Elf);
     // genEpilogueNasm(context);
 }
 

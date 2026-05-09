@@ -6,7 +6,7 @@ STD="-std=c++17"
 
 SOURCES=(
     back_end/*.cpp
-    back_end/back_end_x86/*.cpp
+    back_end/back_end_x86elf/*.cpp
     general/*.cpp
     general/tree/*.cpp
     general/tokens/*.cpp

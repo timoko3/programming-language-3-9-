@@ -2,8 +2,17 @@
 #define CODE_GENERATION_H
 
 #include "context.h"
+#ifdef NASM
 #include "back_end_nasm/contextNasm.h"
+#endif /* NASM */
+
+#ifdef SPU
 #include "back_end_spu/contextSpu.h"
+#endif /* SPU */
+
+#ifdef X86ELF
+#include "back_end_x86elf/contextX86Elf.h"
+#endif /* X86ELF */
 
 typedef void (*generator_t) (FILE* , tree_t* , codeGenContext* , list_t* , list_t* , labelsTable_t* );
 

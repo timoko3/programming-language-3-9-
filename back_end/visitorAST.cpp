@@ -6,6 +6,10 @@
 #include "back_end_spu/emittersSpu.h"
 #endif /* SPU */
 
+#ifdef X86ELF
+#include "back_end_x86elf/emittersX86Elf.h"
+#endif /* X86ELF */
+
 #include "context.h"
 
 #include "visitorAST.h"
