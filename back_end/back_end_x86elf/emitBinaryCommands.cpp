@@ -43,10 +43,14 @@ const uint8_t MOD_RM_REG_MOD        = 3;
 const uint8_t MOD_RM_MEM_DISP8_MOD  = 1;
 const uint8_t MOD_RM_MEM_MOD        = 0;
 
+const uint8_t SIB_SCALE_OFFSET      = 6;
+const uint8_t SIB_INDEX_OFFSET      = 3;
+
 static argInst_t instrGetArg(codeGenContext* context, instrArg_t* arg, const char* strArg, int argNum);
 
 static void emitREX(codeGenContext* context, instructionInfo* instrInfo);
 static void emitModRm(codeGenContext* context, instructionInfo* instrInfo);
+static void emitSIB(codeGenContext* context, instructionInfo* instrInfo);
 static uint8_t emitRegCode(genPurposeRegs reg);
 
 void prepareInstructionEndcodeInfo(codeGenContext* context, instr_t instrType, size_t amountArgs, const char* strArg1, const char* strArg2){
@@ -98,7 +102,7 @@ static argInst_t instrGetArg(codeGenContext* context, instrArg_t* arg, const cha
         INSTRUCTION_ARG_TYPE(arg) = R64;
         INSTRUCTION_ARG_VALUE_REG(arg) = foundReg;
     }
-    else if((parsedVarsAmount = sscanf(strArg, "[%[a-z] %c %d]", memReg, &op, &n) )> 0){
+    else if((parsedVarsAmount = sscanf(strArg, "[%[a-z0-9] %c %d]", memReg, &op, &n) )> 0){
         regTableElem_t* refReg = regTableElemCtor(NONE, memReg, ANY, 0);
         regTableElem_t* foundReg = regTableFind(_CONTEXT_REG_TABLE(context), findNameRegRule, refReg);
         regTableElemDtor(refReg);             
@@ -267,8 +271,34 @@ static void emitModRm(codeGenContext* context, instructionInfo* instrInfo){
 
     writeU8Buf(_CONTEXT_ELF_CODE_BUFFER(context), modRmByte);
 
+    emitSIB(context, instrInfo);
+
     if(INSTRUCTION_ARG_MEM_SHIFT((&arg1)) != 0) writeU8Buf(_CONTEXT_ELF_CODE_BUFFER(context), (uint8_t) INSTRUCTION_ARG_MEM_SHIFT((&arg1)));
     if(INSTRUCTION_ARG_MEM_SHIFT((&arg2)) != 0) writeU8Buf(_CONTEXT_ELF_CODE_BUFFER(context), (uint8_t) INSTRUCTION_ARG_MEM_SHIFT((&arg2)));
+}
+
+static void emitSIB(codeGenContext* context, instructionInfo* instrInfo){
+    assert(context);
+    assert(instrInfo);
+
+    uint8_t SIBByte = 0;
+
+    // temp for only rsp and r12 adressation
+
+
+    for(size_t i = 0; i < INSTRUCTION_INFO_AMOUNT_ARGS(instrInfo); i++){
+        instrArg_t arg = INSTRUCTION_INFO_ARGS(instrInfo)[i];
+        if(INSTRUCTION_ARG_TYPE((&arg)) == MEM64){
+            if( (REG_TABLE_ELEM_REG(INSTRUCTION_ARG_VALUE_REG((&arg))) == R12 ) ||
+                (REG_TABLE_ELEM_REG(INSTRUCTION_ARG_VALUE_REG((&arg))) == RSP) ){
+                SIBByte |= (0 << SIB_SCALE_OFFSET);
+                SIBByte |= (0x4 << SIB_INDEX_OFFSET);
+                SIBByte |= 0x4;
+            }
+        }
+    }
+    
+    if(SIBByte) writeU8Buf(_CONTEXT_ELF_CODE_BUFFER(context), SIBByte);
 }
 
 static uint8_t emitRegCode(genPurposeRegs reg){
@@ -310,7 +340,7 @@ static uint8_t emitRegCode(genPurposeRegs reg){
             curRegCode = R10_CODE;
             break;
         case R11:
-            curRegCode = RDX_CODE;
+            curRegCode = R11_CODE;
             break;
         case R12:
             curRegCode = R12_CODE;
