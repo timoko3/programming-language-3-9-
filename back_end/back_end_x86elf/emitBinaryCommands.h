@@ -10,7 +10,8 @@ enum argInst_t{
     R64, 
     RM64,
     IMM32,
-    MEM64
+    MEM64,
+    NONE_ARG
 };
 
 enum REX_t{
@@ -43,5 +44,6 @@ struct instructionInfo{
 void prepareInstructionEndcodeInfo(codeGenContext* context, instr_t instrType, size_t amountArgs, const char* strArg1, const char* strArg2);
 
 void emitMov(codeGenContext* context, instructionInfo* instrInfo);
+void emitPush(codeGenContext* context, instructionInfo* instrInfo);
 
 #endif /* EMIT_BINARY_COMMANDS_H */

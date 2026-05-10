@@ -16,3 +16,4 @@
 #define INSTRUCTION_ARG_MEM_SHIFT(arg)    arg->memShift
 
 #define _MOV(arg1, arg2)    prepareInstructionEndcodeInfo(context, MOV, 2, arg1, arg2)
+#define _PUSH(arg1)         prepareInstructionEndcodeInfo(context, PUSH, 1, arg1, "")
