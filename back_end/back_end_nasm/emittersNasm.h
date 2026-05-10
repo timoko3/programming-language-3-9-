@@ -1,5 +1,5 @@
-#ifndef EMITTERS_X86
-#define EMITTERS_X86
+#ifndef EMITTERS_NASM
+#define EMITTERS_NASM
 
 #include "generator.h"
 
@@ -57,4 +57,4 @@ void emitNumberNasmPre(treeNode_t* node, codeGenContext* context);
 
 void emitHltNasmPre(treeNode_t* node, codeGenContext* context);
 
-#endif /* EMITERS_X86 */
+#endif /* EMITERS_NASM */

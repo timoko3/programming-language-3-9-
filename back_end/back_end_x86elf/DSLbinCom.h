@@ -1,0 +1,1 @@
+#define BP writeU8Buf(_CONTEXT_ELF_CODE_BUFFER(context), BREAK_POINT_GDB_CODE)

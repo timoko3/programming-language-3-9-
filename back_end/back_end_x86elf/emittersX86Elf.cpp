@@ -16,7 +16,7 @@ struct emitRule{
     emitter_t   emitter;
 };
 
-void loadToReg(varMapElem_t* var, codeGenContext* context);
+void loadToRegX86Elf(varMapElem_t* var, codeGenContext* context);
 
     // {IN,            emitPlug     },
     // {OUT,           emitPlug     },
@@ -191,16 +191,16 @@ void emitRetX86ElfPost(treeNode_t* node, codeGenContext* context){
     assert(node);
     assert(context);
 
-    loadToReg(_CONTEXT_CUR_VAR(context), context);
+    loadToRegX86Elf(_CONTEXT_CUR_VAR(context), context);
     fprintf(_CONTEXT_FILE_PTR(context), "mov %s, %s\n", REG_TABLE_ELEM_NAME(_CONTEXT_FUNC_RET_REG(context)), REG_TABLE_ELEM_NAME(_CONTEXT_TEMP_REG(context)));
 
-    emitFuncEpilog(node, context);
+    emitFuncEpilogX86Elf(node, context);
     fprintf(_CONTEXT_FILE_PTR(context), "ret\n");
 
     _CONTEXT_VAR_REG_USE_SCENERY(context) = STORE_VAR;
 }
 
-void emitFuncEpilog(treeNode_t* node, codeGenContext* context){
+void emitFuncEpilogX86Elf(treeNode_t* node, codeGenContext* context){
     assert(node);
     assert(context);
    
@@ -395,7 +395,7 @@ void emitSqrtX86ElfPost(treeNode_t* node, codeGenContext* context){
     assert(node);
     assert(context);
 
-    loadToReg(_CONTEXT_CUR_VAR(context), context);
+    loadToRegX86Elf(_CONTEXT_CUR_VAR(context), context);
     fprintf(_CONTEXT_FILE_PTR(context), "mov %s, %s\n", REG_TABLE_ELEM_NAME(_CONTEXT_CALC_REG_A(context)), REG_TABLE_ELEM_NAME(_CONTEXT_TEMP_REG(context)));
 
     fprintf(_CONTEXT_FILE_PTR(context), "cvtsi2ss xmm0, %s\n", REG_TABLE_ELEM_NAME(_CONTEXT_CALC_REG_A(context)));
@@ -434,7 +434,7 @@ void emitVarX86ElfPre(treeNode_t* node, codeGenContext* context){
     varMapElemDtor(refElem);
 
     if(_CONTEXT_IS_CALL_FUNC_ARG(context)){
-        loadToReg(foundElem, context);
+        loadToRegX86Elf(foundElem, context);
         regTableElem_t* refReg = regTableElemCtor(NONE, "", FUNC_ARGS, 0);
 
         regTableElem_t* foundReg = regTableFind(_CONTEXT_REG_TABLE(context), findTypeRegFree, refReg);
@@ -454,7 +454,7 @@ void emitVarX86ElfPre(treeNode_t* node, codeGenContext* context){
     if(!_CONTEXT_IS_L_VALUE(context) && 
     !_CONTEXT_IS_CALL_FUNC_ARG(context) && 
     !(_CONTEXT_VAR_REG_USE_SCENERY(context) == FUNC_ARGS)){
-        loadToReg(foundElem, context);
+        loadToRegX86Elf(foundElem, context);
     } 
 
     LPRINTF("emitVar end");
@@ -481,7 +481,7 @@ void emitHltX86ElfPre(treeNode_t* node, codeGenContext* context){
     fprintf(_CONTEXT_FILE_PTR(context), "syscall\n");
 }
 
-void loadToReg(varMapElem_t* var, codeGenContext* context){
+void loadToRegX86Elf(varMapElem_t* var, codeGenContext* context){
     if (VARIABLE_MAP_LOC_TYPE(var) == LOCK_REG){
         if(REG_TABLE_ELEM_USE_SCENERY(VARIABLE_MAP_LOC_REG(var)) != TEMP_STORE) fprintf(_CONTEXT_FILE_PTR(context), "mov %s, %s\n", REG_TABLE_ELEM_NAME(_CONTEXT_TEMP_REG(context)), REG_TABLE_ELEM_NAME(VARIABLE_MAP_LOC_REG(var)));
     }

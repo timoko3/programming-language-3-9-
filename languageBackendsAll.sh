@@ -8,6 +8,7 @@ SOURCES=(
     back_end/*.cpp
     back_end/back_end_nasm/*.cpp
     back_end/back_end_spu/*.cpp
+    back_end/back_end_x86elf/*.cpp
     general/*.cpp
     general/tree/*.cpp
     general/tokens/*.cpp
@@ -15,6 +16,7 @@ SOURCES=(
     # general/stack/*.cpp
     # general/hashTable/*.cpp
     general/cashFriendlyList/*.cpp
+    general/binaryGenerator/*.cpp
     # general/cashFriendlyList/optimizedStrcmp.o
     core/*.cpp
 )
@@ -22,7 +24,7 @@ SOURCES=(
 INCLUDES="-I. -I./general -I./derivative -I./devTools -I./core -I./back_end"
 
 CXXFLAGS=(
-    -DNASM -DSPU
+    -DX86ELF -DNASM -DSPU 
     -ggdb3 $STD -O0
     -Wall -Wextra -Waggressive-loop-optimizations -Wc++14-compat 
     -Wmissing-declarations -Wcast-align -Wcast-qual -Wchar-subscripts 

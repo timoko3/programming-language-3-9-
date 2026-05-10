@@ -14,42 +14,42 @@ static void genSectionTable(codeGenContext* context);
 
 void genPrologueX86Elf(codeGenContext* context){
     assert(context);
-    unsigned char code[] = {
-        // 1. Прыгаем через строку (на 12 байт вперед)
-        0xeb, 0x0c,                         // jmp +12 (смещение к началу кода)
+    // unsigned char code[] = {
+    //     // 1. Прыгаем через строку (на 12 байт вперед)
+    //     0xeb, 0x0c,                         // jmp +12 (смещение к началу кода)
 
-        // 2. Сама строка "Hello, ELF!\n" (12 байт)
-        0x48, 0x65, 0x6c, 0x6c, 0x6f, 0x2c, 0x20, 0x45, 0x4c, 0x46, 0x21, 0x0a,
+    //     // 2. Сама строка "Hello, ELF!\n" (12 байт)
+    //     0x48, 0x65, 0x6c, 0x6c, 0x6f, 0x2c, 0x20, 0x45, 0x4c, 0x46, 0x21, 0x0a,
 
-        // 3. Код вывода (точка входа должна указывать сюда или на jmp)
-        // Вычисляем адрес строки через RIP-relative адресацию (строка выше на 14 байт отсюда)
-        0x48, 0x8d, 0x35, 0xed, 0xff, 0xff, 0xff, // lea rsi, [rip - 19]
+    //     // 3. Код вывода (точка входа должна указывать сюда или на jmp)
+    //     // Вычисляем адрес строки через RIP-relative адресацию (строка выше на 14 байт отсюда)
+    //     0x48, 0x8d, 0x35, 0xed, 0xff, 0xff, 0xff, // lea rsi, [rip - 19]
 
-        // Системный вызов write(stdout, rsi, 12)
-        0x48, 0xc7, 0xc0, 0x01, 0x00, 0x00, 0x00, // mov rax, 1
-        0x48, 0xc7, 0xc7, 0x01, 0x00, 0x00, 0x00, // mov rdi, 1
-        0x48, 0xc7, 0xc2, 0x0c, 0x00, 0x00, 0x00, // mov rdx, 12 (длина строки)
-        0x0f, 0x05,                               // syscall
+    //     // Системный вызов write(stdout, rsi, 12)
+    //     0x48, 0xc7, 0xc0, 0x01, 0x00, 0x00, 0x00, // mov rax, 1
+    //     0x48, 0xc7, 0xc7, 0x01, 0x00, 0x00, 0x00, // mov rdi, 1
+    //     0x48, 0xc7, 0xc2, 0x0c, 0x00, 0x00, 0x00, // mov rdx, 12 (длина строки)
+    //     0x0f, 0x05,                               // syscall
 
-        // Системный вызов exit(0)
-        0x48, 0xc7, 0xc0, 0x3c, 0x00, 0x00, 0x00, // mov rax, 60
-        0x48, 0x31, 0xff,                         // xor rdi, rdi
-        0x0f, 0x05                                // syscall
-    };
+    //     // Системный вызов exit(0)
+    //     0x48, 0xc7, 0xc0, 0x3c, 0x00, 0x00, 0x00, // mov rax, 60
+    //     0x48, 0x31, 0xff,                         // xor rdi, rdi
+    //     0x0f, 0x05                                // syscall
+    // };
 
     const char* shstrtab = "\0.text\0.shstrtab";
     size_t shstrtabSize = 17;
 
     _CONTEXT_ELF_SIZE_EH(context)            = sizeof(Elf64_Ehdr);
     _CONTEXT_ELF_SIZE_PH(context)            = sizeof(Elf64_Phdr);
-    _CONTEXT_ELF_CODE_SIZE(context)          = sizeof(code);
+    _CONTEXT_ELF_CODE_SIZE(context)          = BIN_BUFFER_SIZE(_CONTEXT_ELF_CODE_BUFFER(context)) * sizeof(uint8_t);
     _CONTEXT_ELF_SECTION_TABLE_SIZE(context) = sizeof(Elf64_Shdr);
     _CONTEXT_ELF_TABLE_NAMES_TS(context)     = shstrtabSize;
 
     genElfHeader(context);
     genProgramHeader(context);
 
-    fwrite(code, 1, sizeof(code), _CONTEXT_FILE_PTR(context));
+    fwrite(BIN_BUFFER_DATA(_CONTEXT_ELF_CODE_BUFFER(context)), 1, _CONTEXT_ELF_CODE_SIZE(context), _CONTEXT_FILE_PTR(context));
     fwrite(shstrtab, 1, shstrtabSize, _CONTEXT_FILE_PTR(context));
 
     genSectionTable(context);

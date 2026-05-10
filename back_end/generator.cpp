@@ -7,6 +7,8 @@
 #include "general/file.h"
 #include "general/hash.h"
 
+#include "back_end_x86elf/emitBinaryCommands.h"
+
 #include <malloc.h>
 #include <assert.h>
 
@@ -120,9 +122,12 @@ void genCodeX86ELF(FILE* filePtr, tree_t* AST, codeGenContext* context, list_t* 
         context
     };
 
+    emitMov(context, R64, R64, RAX, RBX);
     genPrologueX86Elf(context);
     // traversalCondOrder(AST->root, &visitorAstX86Elf);
     // genEpilogueNasm(context);
+
+    binBufferDtor(_CONTEXT_ELF_CODE_BUFFER(context));
 }
 
 #endif /* X86ELF */

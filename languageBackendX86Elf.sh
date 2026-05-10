@@ -14,6 +14,7 @@ SOURCES=(
     # general/stack/*.cpp
     # general/hashTable/*.cpp
     general/cashFriendlyList/*.cpp
+    general/binaryGenerator/*.cpp
     # general/cashFriendlyList/optimizedStrcmp.o
     core/*.cpp
 )

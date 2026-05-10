@@ -1,5 +1,5 @@
-#ifndef EMITTERS_X86
-#define EMITTERS_X86
+#ifndef EMITTERS_X86ELF
+#define EMITTERS_X86ELF
 
 #include "generator.h"
 
@@ -26,7 +26,7 @@ void emitRetX86ElfPre(treeNode_t* node, codeGenContext* context);
 void emitRetX86ElfPost(treeNode_t* node, codeGenContext* context);
 
 void emitFuncPrologX86Elf(treeNode_t* node, codeGenContext* context);
-void emitFuncEpilog(treeNode_t* node, codeGenContext* context);
+void emitFuncEpilogX86Elf(treeNode_t* node, codeGenContext* context);
 
 void emitIfX86ElfIn(treeNode_t* node, codeGenContext* context);
 void emitIfX86ElfPost(treeNode_t* node, codeGenContext* context);
@@ -56,4 +56,4 @@ void emitNumberX86ElfPre(treeNode_t* node, codeGenContext* context);
 
 void emitHltX86ElfPre(treeNode_t* node, codeGenContext* context);
 
-#endif /* EMITERS_X86 */
+#endif /* EMITERS_X86ELF */

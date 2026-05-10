@@ -2,7 +2,12 @@
 
 #include "core/DSL.h"
 
+#include "general/binaryGenerator/binGen.h"
+
 #include <assert.h>
+#include <malloc.h>
+
+const size_t BIN_BUFFER_START_SIZE = 8;
 
 void initContextX86Elf(codeGenContext* context, FILE* asmFilePtr, list_t* regTable, list_t* varMap, labelsTable_t* labelsTable){
     
@@ -44,4 +49,6 @@ void initContextX86Elf(codeGenContext* context, FILE* asmFilePtr, list_t* regTab
     _CONTEXT_FUNC_RET_REG(context) = regTableFind(_CONTEXT_REG_TABLE(context), findTypeRegFree, refReg);
 
     regTableElemDtor(refReg);
+
+    _CONTEXT_ELF_CODE_BUFFER(context) = binBufferCtor(BIN_BUFFER_START_SIZE);
 }
