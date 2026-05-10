@@ -41,6 +41,9 @@ const uint8_t POP_RM64_MOD_RM_REG_C  = 0x0;
 
 const uint8_t CALL_REL32_CODE        = 0xE8;
 
+const uint8_t SYSCALL_FIRST_BYTE_CODE  = 0x0f;
+const uint8_t SYSCALL_SECOND_BYTE_CODE = 0x05;
+
 const uint8_t BREAK_POINT_GDB_CODE  = 0xCC;
 
 const uint8_t REX_W_BIT             = 3;
@@ -91,6 +94,9 @@ void prepareInstructionEndcodeInfo(codeGenContext* context, instr_t instrType, s
             break;
         case CALL_I:
             emitCall(context, curInstrInfo);
+            break;
+        case SYSCALL_I:
+            emitSyscall(context, curInstrInfo);
             break;
         default:
             printf("Данная инструкция пока не поддерживается\n");
@@ -268,6 +274,16 @@ void emitCall(codeGenContext* context, instructionInfo* instrInfo){
 
     writeU8Buf(_CONTEXT_ELF_CODE_BUFFER(context), CALL_REL32_CODE);
     writeU32LeBuf(_CONTEXT_ELF_CODE_BUFFER(context), 0x0);    
+}
+
+void emitSyscall(codeGenContext* context, instructionInfo* instrInfo){
+    assert(context);
+    assert(instrInfo);
+
+    BP;
+
+    writeU8Buf(_CONTEXT_ELF_CODE_BUFFER(context), SYSCALL_FIRST_BYTE_CODE);
+    writeU8Buf(_CONTEXT_ELF_CODE_BUFFER(context), SYSCALL_SECOND_BYTE_CODE);
 }
 
 static void emitREX(codeGenContext* context, instructionInfo* instrInfo){
