@@ -122,7 +122,13 @@ void genCodeX86ELF(FILE* filePtr, tree_t* AST, codeGenContext* context, list_t* 
         context
     };
 
-    emitMov(context, R64, R64, RAX, RBX);
+    _MOV("rax", "rbx");
+    _MOV("rcx", "rdx");
+    _MOV("rsi", "123");
+    _MOV("rdi", "rsi");
+    _MOV("r8", "rsi");
+    _MOV("r8", "r15");
+    _MOV("r10", "117");
     genPrologueX86Elf(context);
     // traversalCondOrder(AST->root, &visitorAstX86Elf);
     // genEpilogueNasm(context);

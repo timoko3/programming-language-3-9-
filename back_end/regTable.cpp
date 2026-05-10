@@ -173,6 +173,20 @@ int findIndRegRule(void* a, void* b){
     return result;
 }
 
+int findNameRegRule(void* a, void* b){
+    
+    regTableElem_t* regTa  = (regTableElem_t*) a;
+    regTableElem_t* regTb  = (regTableElem_t*) b;
+    
+    int result = 1;
+
+    if(!strcmp(REG_TABLE_ELEM_NAME(regTa), REG_TABLE_ELEM_NAME(regTb))){
+        result = 0;
+    }
+
+    return result;
+}
+
 // int findVar(void* a, void* b){
 //     regTableElem_t* regTa  = (regTableElem_t*) a;
 //     regTableElem_t* regTb  = (regTableElem_t*) b;

@@ -20,7 +20,7 @@ void binBufferDtor(binBuffer_t* buffer){
     free(buffer);
 }
 
-void writeU32Le(FILE* stream, uint32_t x){
+void writeU32LeBuf(binBuffer_t* buffer, uint32_t x){
     uint8_t byte[4];
 
     byte[0] = x;
@@ -28,13 +28,9 @@ void writeU32Le(FILE* stream, uint32_t x){
     byte[2] = x >> 16;
     byte[3] = x >> 24;
 
-    fwrite(byte, 1, 4, stream);
-}
-
-void writeU8Le(FILE* stream, uint8_t x){
-    uint8_t byte = x;
-
-    fwrite(&byte, 1, 1, stream);
+    for(size_t i = 0; i < 4; i++){
+        writeU8Buf(buffer, byte[i]);
+    }
 }
 
 void writeU8Buf(binBuffer_t* buffer, uint8_t x){

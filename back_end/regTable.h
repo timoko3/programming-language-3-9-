@@ -11,6 +11,7 @@ extern const size_t   INIT_REG_TABLE_SPU_SIZE;
 
 const size_t AMOUNT_REGS    = 16;
 
+/*don't change regs order in enum!*/
 enum genPurposeRegs{
     AX,
     BX,
@@ -82,6 +83,7 @@ int findTypeRegFree(void* a, void* b);
 int findIndRegRule(void* a, void* b);
 int findVar(void* a, void* b);
 // int findTypeReg(void* a, void* b);
+int findNameRegRule(void* a, void* b);
 
 void regTableElemDtor(void* ptr);
 

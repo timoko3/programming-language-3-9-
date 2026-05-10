@@ -18,8 +18,8 @@ binBuffer_t* binBufferCtor(size_t startCapacity);
 void binBufferDtor(binBuffer_t* buffer);
 
 void writeU8Le(FILE* stream, uint8_t x);
-void writeU32Le(FILE* stream, uint32_t x);
 
+void writeU32LeBuf(binBuffer_t* buffer, uint32_t x);
 void writeU8Buf(binBuffer_t* buffer, uint8_t x);
 void binBufferRealloc(binBuffer_t* buffer);
 
