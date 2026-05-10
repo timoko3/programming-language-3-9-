@@ -169,6 +169,10 @@ void genCodeX86ELF(FILE* filePtr, tree_t* AST, codeGenContext* context, list_t* 
     _PUSH("r8");
     _PUSH("[rax + 4]");
 
+    _POP("rax");
+    _POP("r8");
+    _POP("[rax + 5]");
+
     _MOV("[r10 + 1]", "r11");
     _MOV("[r12 + 127]", "r13");
 

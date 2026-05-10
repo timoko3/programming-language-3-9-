@@ -20,7 +20,8 @@ enum REX_t{
 
 enum instr_t{
     MOV,
-    PUSH
+    PUSH,
+    POP
 };
 
 struct  instrArg_t{
@@ -45,5 +46,6 @@ void prepareInstructionEndcodeInfo(codeGenContext* context, instr_t instrType, s
 
 void emitMov(codeGenContext* context, instructionInfo* instrInfo);
 void emitPush(codeGenContext* context, instructionInfo* instrInfo);
+void emitPop(codeGenContext* context, instructionInfo* instrInfo);
 
 #endif /* EMIT_BINARY_COMMANDS_H */

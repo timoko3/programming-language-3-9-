@@ -17,3 +17,4 @@
 
 #define _MOV(arg1, arg2)    prepareInstructionEndcodeInfo(context, MOV, 2, arg1, arg2)
 #define _PUSH(arg1)         prepareInstructionEndcodeInfo(context, PUSH, 1, arg1, "")
+#define _POP(arg1)          prepareInstructionEndcodeInfo(context, POP, 1, arg1, "")
