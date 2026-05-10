@@ -46,6 +46,9 @@ const uint8_t SYSCALL_SECOND_BYTE_CODE = 0x05;
 
 const uint8_t BREAK_POINT_GDB_CODE  = 0xCC;
 
+const uint8_t R64_TO_RM64_ADD_CODE   = 0x01;
+const uint8_t IMM32_TO_RM64_ADD_CODE  = 0x01;
+
 const uint8_t REX_W_BIT             = 3;
 const uint8_t REX_R_BIT             = 2;
 const uint8_t REX_X_BIT             = 1;
@@ -65,6 +68,14 @@ static void emitREX(codeGenContext* context, instructionInfo* instrInfo);
 static void emitModRm(codeGenContext* context, instructionInfo* instrInfo);
 static void emitSIB(codeGenContext* context, instructionInfo* instrInfo);
 static uint8_t emitRegCode(genPurposeRegs reg);
+
+static void emitMov(codeGenContext* context, instructionInfo* instrInfo);
+static void emitPush(codeGenContext* context, instructionInfo* instrInfo);
+static void emitPop(codeGenContext* context, instructionInfo* instrInfo);
+static void emitCall(codeGenContext* context, instructionInfo* instrInfo);
+static void emitSyscall(codeGenContext* context, instructionInfo* instrInfo);
+
+static void emitAdd(codeGenContext* context, instructionInfo* instrInfo);
 
 void prepareInstructionEndcodeInfo(codeGenContext* context, instr_t instrType, size_t amountArgs, const char* strArg1, const char* strArg2){
     assert(context);
@@ -98,6 +109,8 @@ void prepareInstructionEndcodeInfo(codeGenContext* context, instr_t instrType, s
         case SYSCALL_I:
             emitSyscall(context, curInstrInfo);
             break;
+        case ADD_I:
+            emitAdd(context, curInstrInfo);
         default:
             printf("Данная инструкция пока не поддерживается\n");
             break;
@@ -167,8 +180,29 @@ static argInst_t instrGetArg(codeGenContext* context, instrArg_t* arg, const cha
     return INSTRUCTION_ARG_TYPE(arg);
 }
 
-void emitMov(codeGenContext* context, instructionInfo* instrInfo){
+static void emitBinaryInstruction(codeGenContext* context, instructionInfo* instrInfo){
     assert(context);
+    assert(instrInfo);
+
+    BP;
+
+    if(!INSTRUCTION_ARG_IS_MEM_CASE((&INSTRUCTION_INFO_ARGS(instrInfo)[0])) &&
+       !INSTRUCTION_ARG_IS_MEM_CASE((&INSTRUCTION_INFO_ARGS(instrInfo)[1])) &&
+       INSTRUCTION_ARG_TYPE((&INSTRUCTION_INFO_ARGS(instrInfo)[0])) == R64){
+        INSTRUCTION_ARG_TYPE((&INSTRUCTION_INFO_ARGS(instrInfo)[0])) = RM64;
+    }
+
+    instrArg_t arg1 = INSTRUCTION_INFO_ARGS(instrInfo)[0];
+    instrArg_t arg2 = INSTRUCTION_INFO_ARGS(instrInfo)[1];
+}
+
+// static void binaryInstructionGetCode(){
+
+// }
+
+static void emitMov(codeGenContext* context, instructionInfo* instrInfo){
+    assert(context);
+    assert(instrInfo);
 
     BP;
 
@@ -215,7 +249,7 @@ void emitMov(codeGenContext* context, instructionInfo* instrInfo){
     
 }
 
-void emitPush(codeGenContext* context, instructionInfo* instrInfo){
+static void emitPush(codeGenContext* context, instructionInfo* instrInfo){
     assert(context);
     assert(instrInfo);
 
@@ -244,7 +278,7 @@ void emitPush(codeGenContext* context, instructionInfo* instrInfo){
     }
 }
 
-void emitPop(codeGenContext* context, instructionInfo* instrInfo){
+static void emitPop(codeGenContext* context, instructionInfo* instrInfo){
     BP;
 
     if(!INSTRUCTION_ARG_IS_MEM_CASE((&INSTRUCTION_INFO_ARGS(instrInfo)[0])) &&
@@ -266,7 +300,7 @@ void emitPop(codeGenContext* context, instructionInfo* instrInfo){
     }
 }
 
-void emitCall(codeGenContext* context, instructionInfo* instrInfo){
+static void emitCall(codeGenContext* context, instructionInfo* instrInfo){
     assert(context);
     assert(instrInfo);
 
@@ -276,7 +310,7 @@ void emitCall(codeGenContext* context, instructionInfo* instrInfo){
     writeU32LeBuf(_CONTEXT_ELF_CODE_BUFFER(context), 0x0);    
 }
 
-void emitSyscall(codeGenContext* context, instructionInfo* instrInfo){
+static void emitSyscall(codeGenContext* context, instructionInfo* instrInfo){
     assert(context);
     assert(instrInfo);
 
@@ -284,6 +318,54 @@ void emitSyscall(codeGenContext* context, instructionInfo* instrInfo){
 
     writeU8Buf(_CONTEXT_ELF_CODE_BUFFER(context), SYSCALL_FIRST_BYTE_CODE);
     writeU8Buf(_CONTEXT_ELF_CODE_BUFFER(context), SYSCALL_SECOND_BYTE_CODE);
+}
+
+static void emitAdd(codeGenContext* context, instructionInfo* instrInfo){
+    assert(context);
+    assert(instrInfo);
+
+    BP;
+
+    if(!INSTRUCTION_ARG_IS_MEM_CASE((&INSTRUCTION_INFO_ARGS(instrInfo)[0])) &&
+       !INSTRUCTION_ARG_IS_MEM_CASE((&INSTRUCTION_INFO_ARGS(instrInfo)[1])) &&
+       INSTRUCTION_ARG_TYPE((&INSTRUCTION_INFO_ARGS(instrInfo)[0])) == R64){
+        INSTRUCTION_ARG_TYPE((&INSTRUCTION_INFO_ARGS(instrInfo)[0])) = RM64;
+    }
+
+    instrArg_t arg1 = INSTRUCTION_INFO_ARGS(instrInfo)[0];
+    instrArg_t arg2 = INSTRUCTION_INFO_ARGS(instrInfo)[1];
+
+    switch(INSTRUCTION_ARG_TYPE((&arg1))){
+        case R64:
+            switch (INSTRUCTION_ARG_TYPE((&arg2))){
+                case MEM64:
+                    emitREX(context, instrInfo);
+                    writeU8Buf(_CONTEXT_ELF_CODE_BUFFER(context), RM64_TO_R64_MOV_CODE);
+                    emitModRm(context, instrInfo);
+                    break;
+                default:
+                    break;
+            }
+            break;
+        case MEM64:
+        case RM64:
+            switch (INSTRUCTION_ARG_TYPE((&arg2))){
+                case R64:
+                    emitREX(context, instrInfo);
+                    writeU8Buf(_CONTEXT_ELF_CODE_BUFFER(context), R64_TO_RM64_MOV_CODE);
+                    emitModRm(context, instrInfo);
+                    break;
+                case IMM32:
+                    emitREX(context, instrInfo);
+                    writeU8Buf(_CONTEXT_ELF_CODE_BUFFER(context), IMM32_TO_RM64_MOV_CODE);
+                    emitModRm(context, instrInfo);
+                    writeU32LeBuf(_CONTEXT_ELF_CODE_BUFFER(context), (uint32_t) INSTRUCTION_ARG_VALUE_NUM((&arg2)));
+                    break;
+                default: break;
+            }
+            break;
+        default: break;
+    }
 }
 
 static void emitREX(codeGenContext* context, instructionInfo* instrInfo){

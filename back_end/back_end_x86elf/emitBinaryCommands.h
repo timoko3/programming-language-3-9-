@@ -24,7 +24,9 @@ enum instr_t{
     PUSH_I,
     POP_I,
     CALL_I,
-    SYSCALL_I
+    SYSCALL_I,
+
+    ADD_I
 };
 
 struct  instrArg_t{
@@ -47,12 +49,4 @@ struct instructionInfo{
 
 void prepareInstructionEndcodeInfo(codeGenContext* context, instr_t instrType, size_t amountArgs, const char* strArg1, const char* strArg2);
 
-void emitMov(codeGenContext* context, instructionInfo* instrInfo);
-
-void emitPush(codeGenContext* context, instructionInfo* instrInfo);
-void emitPop(codeGenContext* context, instructionInfo* instrInfo);
-
-void emitCall(codeGenContext* context, instructionInfo* instrInfo);
-
-void emitSyscall(codeGenContext* context, instructionInfo* instrInfo);
 #endif /* EMIT_BINARY_COMMANDS_H */
