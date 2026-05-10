@@ -11,6 +11,7 @@ enum argInst_t{
     RM64,
     IMM32,
     MEM64,
+    LABEL,
     NONE_ARG
 };
 
@@ -19,9 +20,10 @@ enum REX_t{
 };
 
 enum instr_t{
-    MOV,
-    PUSH,
-    POP
+    MOV_I,
+    PUSH_I,
+    POP_I,
+    CALL_I
 };
 
 struct  instrArg_t{
@@ -47,5 +49,6 @@ void prepareInstructionEndcodeInfo(codeGenContext* context, instr_t instrType, s
 void emitMov(codeGenContext* context, instructionInfo* instrInfo);
 void emitPush(codeGenContext* context, instructionInfo* instrInfo);
 void emitPop(codeGenContext* context, instructionInfo* instrInfo);
+void emitCall(codeGenContext* context, instructionInfo* instrInfo);
 
 #endif /* EMIT_BINARY_COMMANDS_H */

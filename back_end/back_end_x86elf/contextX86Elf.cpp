@@ -50,5 +50,6 @@ void initContextX86Elf(codeGenContext* context, FILE* asmFilePtr, list_t* regTab
 
     regTableElemDtor(refReg);
 
-    _CONTEXT_ELF_CODE_BUFFER(context) = binBufferCtor(BIN_BUFFER_START_SIZE);
+    _CONTEXT_ELF_CODE_BUFFER(context)     = binBufferCtor(BIN_BUFFER_START_SIZE);
+    _CONTEXT_CURRENT_INSTRUCTION(context) = 0;
 }

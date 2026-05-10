@@ -2,6 +2,7 @@
 
 #include "core/DSL.h"
 
+#include "labels.h"
 
 #include <assert.h>
 #include <ctype.h>
@@ -37,6 +38,8 @@ const uint8_t PUSH_IMM32_CODE        = 0x68;
 
 const uint8_t POP_RM64_CODE          = 0x8F;
 const uint8_t POP_RM64_MOD_RM_REG_C  = 0x0;
+
+const uint8_t CALL_REL32_CODE        = 0xE8;
 
 const uint8_t BREAK_POINT_GDB_CODE  = 0xCC;
 
@@ -76,16 +79,18 @@ void prepareInstructionEndcodeInfo(codeGenContext* context, instr_t instrType, s
         instrGetArg(context, &INSTRUCTION_INFO_ARGS(curInstrInfo)[i], strArgs[i], i + 1);
     }
 
-
     switch (instrType){
-        case MOV:
+        case MOV_I:
             emitMov(context, curInstrInfo);
             break;
-        case PUSH:
+        case PUSH_I:
             emitPush(context, curInstrInfo);
             break;
-        case POP:
+        case POP_I:
             emitPop(context, curInstrInfo);
+            break;
+        case CALL_I:
+            emitCall(context, curInstrInfo);
             break;
         default:
             printf("Данная инструкция пока не поддерживается\n");
@@ -93,6 +98,8 @@ void prepareInstructionEndcodeInfo(codeGenContext* context, instr_t instrType, s
     }
 
     free(curInstrInfo);
+
+    _CONTEXT_CURRENT_INSTRUCTION(context)++;
 }
 
 static argInst_t instrGetArg(codeGenContext* context, instrArg_t* arg, const char* strArg, int argNum){
@@ -106,7 +113,7 @@ static argInst_t instrGetArg(codeGenContext* context, instrArg_t* arg, const cha
 
     regTableElemDtor(refReg);             
     
-    char memReg[5] = "";
+    char strPart[64] = "";
     char op = '+';
     int n = 0;
     int parsedVarsAmount = 0; 
@@ -114,8 +121,8 @@ static argInst_t instrGetArg(codeGenContext* context, instrArg_t* arg, const cha
         INSTRUCTION_ARG_TYPE(arg) = R64;
         INSTRUCTION_ARG_VALUE_REG(arg) = foundReg;
     }
-    else if((parsedVarsAmount = sscanf(strArg, "[%[a-z0-9] %c %d]", memReg, &op, &n) )> 0){
-        regTableElem_t* refReg = regTableElemCtor(NONE, memReg, ANY, 0);
+    else if((parsedVarsAmount = sscanf(strArg, "[%[a-z0-9] %c %d]", strPart, &op, &n) )> 0){
+        regTableElem_t* refReg = regTableElemCtor(NONE, strPart, ANY, 0);
         regTableElem_t* foundReg = regTableFind(_CONTEXT_REG_TABLE(context), findNameRegRule, refReg);
         regTableElemDtor(refReg);             
 
@@ -140,6 +147,12 @@ static argInst_t instrGetArg(codeGenContext* context, instrArg_t* arg, const cha
     else if(sscanf(strArg, "%d", &n) == 1){
         INSTRUCTION_ARG_TYPE(arg)      = IMM32;
         INSTRUCTION_ARG_VALUE_NUM(arg) = n;
+    }
+    else if(sscanf(strArg, "%[a-z]%d", strPart, &n) == 2){
+        INSTRUCTION_ARG_TYPE(arg) = LABEL;
+
+        // label_t* refLabel = createLabel(_CONTEXT_LABELS_TABLE(context), strPart, n, 0);
+        // if(!labelFind(_CONTEXT_LABELS_TABLE(context), labelCmp, refLabel)) createLabel(_CONTEXT_LABELS_TABLE(context), strPart, n, 1);
     }
     else{
         printf("Недопустимой аргумент для данной инструкции\n");
@@ -247,13 +260,23 @@ void emitPop(codeGenContext* context, instructionInfo* instrInfo){
     }
 }
 
+void emitCall(codeGenContext* context, instructionInfo* instrInfo){
+    assert(context);
+    assert(instrInfo);
+
+    BP;
+
+    writeU8Buf(_CONTEXT_ELF_CODE_BUFFER(context), CALL_REL32_CODE);
+    writeU32LeBuf(_CONTEXT_ELF_CODE_BUFFER(context), 0x0);    
+}
+
 static void emitREX(codeGenContext* context, instructionInfo* instrInfo){
     assert(context);
     assert(instrInfo);
 
     uint8_t rexByte = 0 | REX_PREFIX;
 
-    if(INSTRUCTION_INFO_TYPE(instrInfo) == MOV) rexByte |= (1 << REX_W_BIT);   // set REX.W
+    if(INSTRUCTION_INFO_TYPE(instrInfo) == MOV_I) rexByte |= (1 << REX_W_BIT);   // set REX.W
 
     for(size_t i = 0; i < INSTRUCTION_INFO_AMOUNT_ARGS(instrInfo); i++){
         instrArg_t* curArg = (&INSTRUCTION_INFO_ARGS(instrInfo)[i]); 
@@ -301,8 +324,8 @@ static void emitModRm(codeGenContext* context, instructionInfo* instrInfo){
                     modRmByte |= (emitRegCode(REG_TABLE_ELEM_REG(INSTRUCTION_ARG_VALUE_REG((&arg1)))));
                     break;
                 case NONE_ARG:
-                    if(INSTRUCTION_INFO_TYPE(instrInfo) == PUSH) modRmByte |= PUSH_RM64_MOD_RM_REG_C << 3;
-                    if(INSTRUCTION_INFO_TYPE(instrInfo) == POP)  modRmByte |= POP_RM64_MOD_RM_REG_C << 3;
+                    if(INSTRUCTION_INFO_TYPE(instrInfo) == PUSH_I) modRmByte |= PUSH_RM64_MOD_RM_REG_C << 3;
+                    if(INSTRUCTION_INFO_TYPE(instrInfo) == POP_I)  modRmByte |= POP_RM64_MOD_RM_REG_C << 3;
                     
                     modRmByte |= (emitRegCode(REG_TABLE_ELEM_REG(INSTRUCTION_ARG_VALUE_REG((&arg1)))));
 
@@ -333,8 +356,8 @@ static void emitModRm(codeGenContext* context, instructionInfo* instrInfo){
                     modRmByte |= (emitRegCode(REG_TABLE_ELEM_REG(INSTRUCTION_ARG_VALUE_REG((&arg1)))));
                     break;
                 case NONE_ARG:
-                    if(INSTRUCTION_INFO_TYPE(instrInfo) == PUSH) modRmByte |= PUSH_RM64_MOD_RM_REG_C << 3;
-                    if(INSTRUCTION_INFO_TYPE(instrInfo) == POP)  modRmByte |= POP_RM64_MOD_RM_REG_C << 3;
+                    if(INSTRUCTION_INFO_TYPE(instrInfo) == PUSH_I) modRmByte |= PUSH_RM64_MOD_RM_REG_C << 3;
+                    if(INSTRUCTION_INFO_TYPE(instrInfo) == POP_I)  modRmByte |= POP_RM64_MOD_RM_REG_C << 3;
                     modRmByte |= (emitRegCode(REG_TABLE_ELEM_REG(INSTRUCTION_ARG_VALUE_REG((&arg1)))));
                 
                 default: break;

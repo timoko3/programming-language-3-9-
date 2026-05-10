@@ -13,8 +13,9 @@ const size_t MAX_LABEL_NAME_LEN = 64;
 const char* LABEL_PREFIX_WHILE_BEGIN = "whileBegin";
 const char* LABEL_PREFIX_WHILE_END   = "whileEnd";
 const char* LABEL_PREFIX_IF_END      = "ifEnd";
+const char* LABEL_PREFIX_FUNC        = "func";
 
-label_t* createLabel(labelsTable_t* labelsTable, const char* name){
+label_t* createLabel(labelsTable_t* labelsTable, const char* name, int id, bool saveLabel){
     assert(labelsTable);
     assert(name);
 
@@ -28,10 +29,11 @@ label_t* createLabel(labelsTable_t* labelsTable, const char* name){
 
     strcpy(_LABEL_DATA_NAME(curLabel), name);
 
-    _LABEL_DATA_ID(curLabel) = *freeInd(labelsTable);
+    if(id == 0) _LABEL_DATA_ID(curLabel) = *freeInd(labelsTable);
+    else _LABEL_DATA_ID(curLabel) = id;
     
     LPRINTF("curLabelAddr = %p", curLabel);
-    listInsertToTail(labelsTable, (void*) curLabel);
+    if(saveLabel) listInsertToTail(labelsTable, (void*) curLabel);
 
     labelDtor(curLabel);
 
@@ -51,6 +53,23 @@ void* labelCopy(void* dest, void* src){
     strcpy(_LABEL_DATA_NAME(destLabel), _LABEL_DATA_NAME(srcLabel));
 
     return (void*) destLabel;
+}
+
+label_t* labelFind(labelsTable_t* labelsTable, listCmpFunc_t findRule, label_t* refElem){
+    assert(labelsTable);
+
+    listCmpFunc_t saveCmp = labelsTable->cmpFunc;
+    
+    labelsTable->cmpFunc = findRule;
+
+    int result = 0;
+    listFind(labelsTable, (void**) refElem, &result);
+
+    if(result == SEARCH_NOT_FOUND_VALUE) return NULL;
+
+    labelsTable->cmpFunc = saveCmp;
+
+    return (label_t*) labelsTable->elem[result].data;
 }
 
 int labelCmp(void* a, void* b){

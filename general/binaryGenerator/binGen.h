@@ -8,6 +8,11 @@
 #define BIN_BUFFER_CAPACITY(buffer) buffer->capacity
 #define BIN_BUFFER_DATA(buffer)     buffer->data
 
+struct fixUpBinBuf_t{
+    size_t patchOffset;
+    uint32_t replaceValue;
+};
+
 struct binBuffer_t{
     uint8_t* data;
     size_t size;

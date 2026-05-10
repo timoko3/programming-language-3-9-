@@ -19,7 +19,8 @@ struct label_t{
 typedef list_t labelsTable_t;
 
 // label_t* getLabel(labelsTable_t* labelsTable, const char* name);
-label_t* createLabel(labelsTable_t* labelsTable, const char* name);
+label_t* createLabel(labelsTable_t* labelsTable, const char* name,  int id = 0, bool saveLabel = 1);
+label_t* labelFind(labelsTable_t* labelsTable, listCmpFunc_t findRule, label_t* refElem);
 
 void* labelCopy(void* dest, void* src);
 int labelCmp(void* a, void* b);
