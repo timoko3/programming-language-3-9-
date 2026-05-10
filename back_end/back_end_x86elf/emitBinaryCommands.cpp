@@ -40,6 +40,8 @@ const uint8_t REX_B_BIT             = 0;
 
 const uint8_t MOD_RM_MOD_OFFSET     = 6;
 const uint8_t MOD_RM_REG_MOD        = 3;
+const uint8_t MOD_RM_MEM_DISP8_MOD  = 1;
+const uint8_t MOD_RM_MEM_MOD        = 0;
 
 static argInst_t instrGetArg(codeGenContext* context, instrArg_t* arg, const char* strArg, int argNum);
 
@@ -88,12 +90,37 @@ static argInst_t instrGetArg(codeGenContext* context, instrArg_t* arg, const cha
 
     regTableElemDtor(refReg);             
     
-    int n; 
+    char memReg[5] = "";
+    char op = '+';
+    int n = 0;
+    int parsedVarsAmount = 0; 
     if(foundReg){
         INSTRUCTION_ARG_TYPE(arg) = R64;
         INSTRUCTION_ARG_VALUE_REG(arg) = foundReg;
     }
-    // else if()
+    else if((parsedVarsAmount = sscanf(strArg, "[%[a-z] %c %d]", memReg, &op, &n) )> 0){
+        regTableElem_t* refReg = regTableElemCtor(NONE, memReg, ANY, 0);
+        regTableElem_t* foundReg = regTableFind(_CONTEXT_REG_TABLE(context), findNameRegRule, refReg);
+        regTableElemDtor(refReg);             
+
+        INSTRUCTION_ARG_TYPE(arg)        = MEM64;
+        INSTRUCTION_ARG_VALUE_REG(arg)   = foundReg;
+        INSTRUCTION_ARG_IS_MEM_CASE(arg) = 1;
+
+        printf("parsedVarsAmount = %d\n", parsedVarsAmount);
+        switch (parsedVarsAmount){
+            case 1:
+                break;
+            case 2:
+            case 3:
+                if(op == '-') n *= -1; 
+                INSTRUCTION_ARG_MEM_SHIFT(arg) = n;
+                break;
+            default:
+                printf("Недопустимая адресация\n");
+                break;
+        }
+    }
     else if(sscanf(strArg, "%d", &n) == 1){
         INSTRUCTION_ARG_TYPE(arg)      = IMM32;
         INSTRUCTION_ARG_VALUE_NUM(arg) = n;
@@ -123,7 +150,6 @@ void emitMov(codeGenContext* context, instructionInfo* instrInfo){
         case R64:
             switch (INSTRUCTION_ARG_TYPE((&arg2))){
                 case MEM64:
-                case RM64:
                     emitREX(context, instrInfo);
                     writeU8Buf(_CONTEXT_ELF_CODE_BUFFER(context), RM64_TO_R64_MOV_CODE);
                     emitModRm(context, instrInfo);
@@ -183,8 +209,6 @@ static void emitREX(codeGenContext* context, instructionInfo* instrInfo){
         }
     }
 
-    printf("rexByte = %02x", rexByte);
-
     writeU8Buf(_CONTEXT_ELF_CODE_BUFFER(context), rexByte);
 }
 
@@ -213,11 +237,38 @@ static void emitModRm(codeGenContext* context, instructionInfo* instrInfo){
                 default: break;
             }
             break;
-        // case MEM64:
-            
+        case R64:
+            switch(INSTRUCTION_ARG_TYPE((&arg2))){
+                case MEM64:
+                    if(INSTRUCTION_ARG_MEM_SHIFT((&arg2)) != 0) modRmByte |= (MOD_RM_MEM_DISP8_MOD << MOD_RM_MOD_OFFSET);
+                    else                                        modRmByte |= (MOD_RM_MEM_MOD       << MOD_RM_MOD_OFFSET);
+
+                    modRmByte |= (emitRegCode(REG_TABLE_ELEM_REG(INSTRUCTION_ARG_VALUE_REG((&arg1)))) << 3);
+                    modRmByte |= (emitRegCode(REG_TABLE_ELEM_REG(INSTRUCTION_ARG_VALUE_REG((&arg2)))));
+                    break;
+                default: break;
+            }
+            break;
+        case MEM64:
+            if(INSTRUCTION_ARG_MEM_SHIFT((&arg1)) != 0) modRmByte |= (MOD_RM_MEM_DISP8_MOD << MOD_RM_MOD_OFFSET);
+            else                                        modRmByte |= (MOD_RM_MEM_MOD       << MOD_RM_MOD_OFFSET);
+            switch(INSTRUCTION_ARG_TYPE((&arg2))){
+                case R64:
+                modRmByte |= (emitRegCode(REG_TABLE_ELEM_REG(INSTRUCTION_ARG_VALUE_REG((&arg1)))));
+                modRmByte |= (emitRegCode(REG_TABLE_ELEM_REG(INSTRUCTION_ARG_VALUE_REG((&arg2)))) << 3);
+                    break;
+                case IMM32:
+                    modRmByte |= (emitRegCode(REG_TABLE_ELEM_REG(INSTRUCTION_ARG_VALUE_REG((&arg1)))));
+                    break;
+                default: break;
+            }
+            break;
     }
 
     writeU8Buf(_CONTEXT_ELF_CODE_BUFFER(context), modRmByte);
+
+    if(INSTRUCTION_ARG_MEM_SHIFT((&arg1)) != 0) writeU8Buf(_CONTEXT_ELF_CODE_BUFFER(context), (uint8_t) INSTRUCTION_ARG_MEM_SHIFT((&arg1)));
+    if(INSTRUCTION_ARG_MEM_SHIFT((&arg2)) != 0) writeU8Buf(_CONTEXT_ELF_CODE_BUFFER(context), (uint8_t) INSTRUCTION_ARG_MEM_SHIFT((&arg2)));
 }
 
 static uint8_t emitRegCode(genPurposeRegs reg){

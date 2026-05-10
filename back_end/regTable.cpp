@@ -8,7 +8,7 @@
 #include <malloc.h>
 #include <string.h>
 
-const size_t MAX_REG_NAME_LEN = 5;
+const size_t MAX_REG_NAME_LEN = 64;
 
 regTableElem_t initRegTableNasm[] = {
     {RAX, "rax", FUNC_RET_VAL, false,  CALLER_SAVED},  
