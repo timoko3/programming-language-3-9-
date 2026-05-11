@@ -56,36 +56,36 @@ struct instrEncodeRule_t{
     modRmCase_t modRmCase;
     opEn_t      opEn;
     size_t      amountArgs;
-    uint8_t     opcodeFirstByte;
-    uint8_t     opcodeSecondByte;
+    size_t      opcodeAmountBytes;
+    uint8_t     opcodeBytes[2];
 };
 
 instrEncodeRule_t instructionsEncodeRules[]{
-    {PUSH_I, RM64MODE,     MR_CASE_6,  M_OP_EN,  1, 0xFF},
-    {PUSH_I, MEM64MODE,    MR_CASE_6,  M_OP_EN,  1, 0xFF},
-    {PUSH_I, IMM32MODE,    MR_CASE_NO, I_OP_EN,  1, 0x68},
+    {PUSH_I, RM64MODE,     MR_CASE_6,  M_OP_EN,  1, 1, {0xFF}},
+    {PUSH_I, MEM64MODE,    MR_CASE_6,  M_OP_EN,  1, 1, {0xFF}},
+    {PUSH_I, IMM32MODE,    MR_CASE_NO, I_OP_EN,  1, 1, {0x68}},
 
-    {POP_I,  RM64MODE,     MR_CASE_0,  M_OP_EN,  1, 0x8F},
-    {POP_I,  MEM64MODE,    MR_CASE_0,  M_OP_EN,  1, 0x8F},
+    {POP_I,  RM64MODE,     MR_CASE_0,  M_OP_EN,  1, 1, {0x8F}},
+    {POP_I,  MEM64MODE,    MR_CASE_0,  M_OP_EN,  1, 1, {0x8F}},
 
-    {CALL_I, LABELMODE,    MR_CASE_NO, D_OP_EN,  1, 0xE8},
+    {CALL_I, LABELMODE,    MR_CASE_NO, D_OP_EN,  1, 1, {0xE8}},
 
-    {SYSCALL_I, NOMODE,    MR_CASE_NO, NO_OP_EN, 0, 0x0f, 0x05},
+    {SYSCALL_I, NOMODE,    MR_CASE_NO, NO_OP_EN, 0, 2, {0x0f, 0x05}},
 
-    {MOV_I,   R64TORM64,   MR_CASE_R,  MR_OP_EN, 2, 0x89},
-    {MOV_I,   R64TOMEM64,  MR_CASE_R,  MR_OP_EN, 2, 0x89},
+    {MOV_I,   R64TORM64,   MR_CASE_R,  MR_OP_EN, 2, 1, {0x89}},
+    {MOV_I,   R64TOMEM64,  MR_CASE_R,  MR_OP_EN, 2, 1, {0x89}},
 
-    {MOV_I,   MEM64TOR64,  MR_CASE_R,  RM_OP_EN, 2, 0x8b},
+    {MOV_I,   MEM64TOR64,  MR_CASE_R,  RM_OP_EN, 2, 1, {0x8b}},
 
-    {MOV_I,   IMM32TORM64, MR_CASE_0,  MI_OP_EN, 2, 0xc7},
+    {MOV_I,   IMM32TORM64, MR_CASE_0,  MI_OP_EN, 2, 1, {0xc7}},
 
-    {ADD_I,   R64TORM64,   MR_CASE_R,  MR_OP_EN, 2, 0x01},
-    {ADD_I,   R64TOMEM64,  MR_CASE_R,  MR_OP_EN, 2, 0x01},
-    {ADD_I,   IMM32TORM64, MR_CASE_0,  MI_OP_EN, 2, 0x81},
+    {ADD_I,   R64TORM64,   MR_CASE_R,  MR_OP_EN, 2, 1, {0x01}},
+    {ADD_I,   R64TOMEM64,  MR_CASE_R,  MR_OP_EN, 2, 1, {0x01}},
+    {ADD_I,   IMM32TORM64, MR_CASE_0,  MI_OP_EN, 2, 1, {0x81}},
 
-    {SUB_I,   R64TORM64,   MR_CASE_R,  MR_OP_EN, 2, 0x29},
-    {SUB_I,   R64TOMEM64,  MR_CASE_R,  MR_OP_EN, 2, 0x29},
-    {SUB_I,   IMM32TORM64, MR_CASE_5,  MI_OP_EN, 2, 0x81}
+    {SUB_I,   R64TORM64,   MR_CASE_R,  MR_OP_EN, 2, 1, {0x29}},
+    {SUB_I,   R64TOMEM64,  MR_CASE_R,  MR_OP_EN, 2, 1, {0x29}},
+    {SUB_I,   IMM32TORM64, MR_CASE_5,  MI_OP_EN, 2, 1, {0x81}}
 };
 
 const size_t ENCODE_RULES_TABLE_SIZE = sizeof(instructionsEncodeRules) / sizeof(instrEncodeRule_t);
@@ -327,7 +327,11 @@ static void emitInstr(codeGenContext* context, instructionInfo* instrInfo){
     BP;
 
     emitREX(context, instrInfo);
-    writeU8Buf(_CONTEXT_ELF_CODE_BUFFER(context), INSTRUCTION_ENCODE_RULE_F_BYTE(instrEncodeRule));
+
+    for(size_t i = 0; i < INSTRUCTION_ENCODE_RULE_AMOUNT_BYTES(instrEncodeRule); i++){
+        writeU8Buf(_CONTEXT_ELF_CODE_BUFFER(context), INSTRUCTION_ENCODE_RULE_BYTES(instrEncodeRule)[i]);
+    }
+    
     emitModRm(context, instrInfo, INSTRUCTION_ENCODE_RULE_MOD_RM_CASE(instrEncodeRule), INSTRUCTION_ENCODE_RULE_OP_EN(instrEncodeRule));
 
     switch (INSTRUCTION_INFO_MODE(instrInfo)){
@@ -347,7 +351,7 @@ static void emitInstr(codeGenContext* context, instructionInfo* instrInfo){
         case LABELMODE:
             writeU32LeBuf(_CONTEXT_ELF_CODE_BUFFER(context), 0x0);
         case NOMODE:
-            writeU8Buf(_CONTEXT_ELF_CODE_BUFFER(context), INSTRUCTION_ENCODE_RULE_S_BYTE(instrEncodeRule));
+            break;
         default:
             break;
     }
