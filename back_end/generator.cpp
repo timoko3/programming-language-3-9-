@@ -123,6 +123,8 @@ void genCodeX86ELF(FILE* filePtr, tree_t* AST, codeGenContext* context, list_t* 
     };
 
     // _MOV("[rax + 4]", "rbx");
+    _IMUL("rax", "rbx");
+    _IMUL("r8", "r15");
     _MOV("rax", "rbx");
     _ADD("rax", "rbx");
     _SUB("r8", "r9");

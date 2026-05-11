@@ -34,3 +34,4 @@
 
 #define _ADD(arg1, arg2)    prepareInstructionEndcodeInfo(context, ADD_I, 2, arg1, arg2)
 #define _SUB(arg1, arg2)    prepareInstructionEndcodeInfo(context, SUB_I, 2, arg1, arg2)
+#define _IMUL(arg1, arg2)   prepareInstructionEndcodeInfo(context, IMUL_I, 2, arg1, arg2)

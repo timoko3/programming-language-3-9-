@@ -85,7 +85,9 @@ instrEncodeRule_t instructionsEncodeRules[]{
 
     {SUB_I,   R64TORM64,   MR_CASE_R,  MR_OP_EN, 2, 1, {0x29}},
     {SUB_I,   R64TOMEM64,  MR_CASE_R,  MR_OP_EN, 2, 1, {0x29}},
-    {SUB_I,   IMM32TORM64, MR_CASE_5,  MI_OP_EN, 2, 1, {0x81}}
+    {SUB_I,   IMM32TORM64, MR_CASE_5,  MI_OP_EN, 2, 1, {0x81}},
+
+    {IMUL_I,  RM64TOR64,   MR_CASE_R,  RM_OP_EN, 2, 2, {0x0f, 0xaf}}
 };
 
 const size_t ENCODE_RULES_TABLE_SIZE = sizeof(instructionsEncodeRules) / sizeof(instrEncodeRule_t);
@@ -257,7 +259,7 @@ static void chooseArgsMode(codeGenContext* context, instructionInfo* instrInfo){
     if(!INSTRUCTION_ARG_IS_MEM_CASE((&INSTRUCTION_INFO_ARGS(instrInfo)[0])) &&
        !INSTRUCTION_ARG_IS_MEM_CASE((&INSTRUCTION_INFO_ARGS(instrInfo)[1])) &&
        INSTRUCTION_ARG_TYPE((&INSTRUCTION_INFO_ARGS(instrInfo)[0])) == R64){
-        INSTRUCTION_ARG_TYPE((&INSTRUCTION_INFO_ARGS(instrInfo)[0])) = RM64;
+        if(INSTRUCTION_INFO_TYPE(instrInfo) != IMUL_I) INSTRUCTION_ARG_TYPE((&INSTRUCTION_INFO_ARGS(instrInfo)[0])) = RM64;
     }
 
     instrArg_t arg1 = INSTRUCTION_INFO_ARGS(instrInfo)[0];
@@ -268,6 +270,10 @@ static void chooseArgsMode(codeGenContext* context, instructionInfo* instrInfo){
             switch (INSTRUCTION_ARG_TYPE((&arg2))){
                 case MEM64:
                     INSTRUCTION_INFO_MODE(instrInfo) = MEM64TOR64;
+                    break;
+                case R64:
+                    INSTRUCTION_ARG_TYPE((&INSTRUCTION_INFO_ARGS(instrInfo)[1])) = RM64;
+                    INSTRUCTION_INFO_MODE(instrInfo) = RM64TOR64;
                     break;
                 case NONE_ARG:
                     INSTRUCTION_INFO_MODE(instrInfo) = RM64MODE;
@@ -335,6 +341,7 @@ static void emitInstr(codeGenContext* context, instructionInfo* instrInfo){
     emitModRm(context, instrInfo, INSTRUCTION_ENCODE_RULE_MOD_RM_CASE(instrEncodeRule), INSTRUCTION_ENCODE_RULE_OP_EN(instrEncodeRule));
 
     switch (INSTRUCTION_INFO_MODE(instrInfo)){
+        case RM64TOR64:
         case MEM64TOR64:
         case R64TOMEM64:
         case R64TORM64:
@@ -664,6 +671,7 @@ static void emitModRm(codeGenContext* context, instructionInfo* instrInfo, modRm
         case RM64MODE:
         case IMM32TORM64:
         case R64TORM64:
+        case RM64TOR64:
             modRmByte |= (MOD_RM_REG_MOD << MOD_RM_MOD_OFFSET);
             break;
 

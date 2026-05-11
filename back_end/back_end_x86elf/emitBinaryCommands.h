@@ -28,6 +28,7 @@ enum instr_t{
 
     ADD_I,
     SUB_I,
+    IMUL_I
 };
 
 struct  instrArg_t{
@@ -45,7 +46,9 @@ enum instrMode_t{
     IMM32TORM64,
     MEM64TOR64,
     R64TOMEM64,
+    RM64TOR64,
     IMM32TOMEM64,
+
 
     RM64MODE,
     MEM64MODE,
