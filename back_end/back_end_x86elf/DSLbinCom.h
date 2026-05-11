@@ -31,3 +31,6 @@
 
 #define _CALL(arg1)         prepareInstructionEndcodeInfo(context, CALL_I, 1, arg1, "")
 #define _SYSCALL()          prepareInstructionEndcodeInfo(context, SYSCALL_I, 0, "", "")
+
+#define _ADD(arg1, arg2)    prepareInstructionEndcodeInfo(context, ADD_I, 2, arg1, arg2)
+#define _SUB(arg1, arg2)    prepareInstructionEndcodeInfo(context, SUB_I, 2, arg1, arg2)

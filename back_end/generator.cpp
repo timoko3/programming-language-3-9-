@@ -124,6 +124,9 @@ void genCodeX86ELF(FILE* filePtr, tree_t* AST, codeGenContext* context, list_t* 
 
     // _MOV("[rax + 4]", "rbx");
     _MOV("rax", "rbx");
+    _ADD("rax", "rbx");
+    _SUB("r8", "r9");
+    _SUB("r12", "5");
     _MOV("rcx", "rdx");
     _MOV("rsi", "123");
     _MOV("rdi", "rsi");

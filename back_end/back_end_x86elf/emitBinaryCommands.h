@@ -26,7 +26,8 @@ enum instr_t{
     CALL_I,
     SYSCALL_I,
 
-    ADD_I
+    ADD_I,
+    SUB_I,
 };
 
 struct  instrArg_t{
@@ -45,7 +46,7 @@ enum instrMode_t{
     MEM64TOR64,
     R64TOMEM64,
     IMM32TOMEM64,
-    
+
     RM64MODE,
     MEM64MODE,
     IMM32MODE,

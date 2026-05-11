@@ -77,7 +77,15 @@ instrEncodeRule_t instructionsEncodeRules[]{
 
     {MOV_I,   MEM64TOR64,  MR_CASE_R,  RM_OP_EN, 2, 0x8b},
 
-    {MOV_I,   IMM32TORM64, MR_CASE_0,  MI_OP_EN, 2, 0xc7}
+    {MOV_I,   IMM32TORM64, MR_CASE_0,  MI_OP_EN, 2, 0xc7},
+
+    {ADD_I,   R64TORM64,   MR_CASE_R,  MR_OP_EN, 2, 0x01},
+    {ADD_I,   R64TOMEM64,  MR_CASE_R,  MR_OP_EN, 2, 0x01},
+    {ADD_I,   IMM32TORM64, MR_CASE_0,  MI_OP_EN, 2, 0x81},
+
+    {SUB_I,   R64TORM64,   MR_CASE_R,  MR_OP_EN, 2, 0x29},
+    {SUB_I,   R64TOMEM64,  MR_CASE_R,  MR_OP_EN, 2, 0x29},
+    {SUB_I,   IMM32TORM64, MR_CASE_5,  MI_OP_EN, 2, 0x81}
 };
 
 const size_t ENCODE_RULES_TABLE_SIZE = sizeof(instructionsEncodeRules) / sizeof(instrEncodeRule_t);
