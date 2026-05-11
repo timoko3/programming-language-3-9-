@@ -122,7 +122,7 @@ void genCodeX86ELF(FILE* filePtr, tree_t* AST, codeGenContext* context, list_t* 
         context
     };
 
-    _MOV("[rax + 4]", "rbx");
+    // _MOV("[rax + 4]", "rbx");
     _MOV("rax", "rbx");
     _MOV("rcx", "rdx");
     _MOV("rsi", "123");
@@ -166,14 +166,14 @@ void genCodeX86ELF(FILE* filePtr, tree_t* AST, codeGenContext* context, list_t* 
 
     // _CALL("superpuperduperdumblabel13");
     // _SYSCALL();
-    // _PUSH("5");
-    // _PUSH("rax");
-    // _PUSH("r8");
-    // _PUSH("[rax + 4]");
-// 
-    // _POP("rax");
-    // _POP("r8");
-    // _POP("[rax + 5]");
+    _PUSH("5");
+    _PUSH("rax");
+    _PUSH("r8");
+    _PUSH("[rax + 4]");
+// // 
+    _POP("rax");
+    _POP("r8");
+    _POP("[rax + 5]");
 // 
     // _MOV("[r10 + 1]", "r11");
     // _MOV("[r12 + 127]", "r13");
