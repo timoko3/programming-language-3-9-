@@ -20,6 +20,7 @@
 #define INSTRUCTION_ENCODE_RULE_TYPE(instructionsEncodeRule)   instructionsEncodeRule->type
 #define INSTRUCTION_ENCODE_RULE_MODE(instructionsEncodeRule)   instructionsEncodeRule->mode
 #define INSTRUCTION_ENCODE_RULE_F_BYTE(instructionsEncodeRule) instructionsEncodeRule->opcodeFirstByte
+#define INSTRUCTION_ENCODE_RULE_S_BYTE(instructionsEncodeRule) instructionsEncodeRule->opcodeSecondByte
 #define INSTRUCTION_ENCODE_RULE_MOD_RM_CASE(instructionsEncodeRule) instructionsEncodeRule->modRmCase
 #define INSTRUCTION_ENCODE_RULE_OP_EN(instructionsEncodeRule) instructionsEncodeRule->opEn
 

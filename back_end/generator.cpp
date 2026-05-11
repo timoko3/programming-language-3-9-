@@ -164,8 +164,8 @@ void genCodeX86ELF(FILE* filePtr, tree_t* AST, codeGenContext* context, list_t* 
     _MOV("[r8 + 16]", "rax");
     _MOV("[r9 + 32]", "r15");
 
-    // _CALL("superpuperduperdumblabel13");
-    // _SYSCALL();
+    _CALL("superpuperduperdumblabel13");
+    _SYSCALL();
     _PUSH("5");
     _PUSH("rax");
     _PUSH("r8");

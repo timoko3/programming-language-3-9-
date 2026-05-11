@@ -299,6 +299,12 @@ static void chooseArgsMode(codeGenContext* context, instructionInfo* instrInfo){
         case IMM32:
             INSTRUCTION_INFO_MODE(instrInfo) = IMM32MODE;
             break;
+        case LABEL:
+            INSTRUCTION_INFO_MODE(instrInfo) = LABELMODE;
+            break; 
+        case NONE_ARG:
+            INSTRUCTION_INFO_MODE(instrInfo) = NOMODE;
+            break; 
         default: break;
     }
 }
@@ -306,7 +312,6 @@ static void chooseArgsMode(codeGenContext* context, instructionInfo* instrInfo){
 static void emitInstr(codeGenContext* context, instructionInfo* instrInfo){
     assert(context);
     assert(instrInfo);
-
     
     instrEncodeRule_t* instrEncodeRule = findEncodeRule(INSTRUCTION_INFO_TYPE(instrInfo), INSTRUCTION_INFO_MODE(instrInfo));
     assert(instrEncodeRule);
@@ -323,7 +328,6 @@ static void emitInstr(codeGenContext* context, instructionInfo* instrInfo){
         case R64TORM64:
         case RM64MODE:
         case MEM64MODE:
-            // emitRM64(context, instrInfo);
             break;
         case IMM32TORM64:
         case IMM32TOMEM64:
@@ -332,6 +336,10 @@ static void emitInstr(codeGenContext* context, instructionInfo* instrInfo){
         case IMM32MODE:
             emitImm32(context, instrInfo);
             break;
+        case LABELMODE:
+            writeU32LeBuf(_CONTEXT_ELF_CODE_BUFFER(context), 0x0);
+        case NOMODE:
+            writeU8Buf(_CONTEXT_ELF_CODE_BUFFER(context), INSTRUCTION_ENCODE_RULE_S_BYTE(instrEncodeRule));
         default:
             break;
     }
