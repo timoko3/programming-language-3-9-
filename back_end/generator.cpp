@@ -122,91 +122,91 @@ void genCodeX86ELF(FILE* filePtr, tree_t* AST, codeGenContext* context, list_t* 
         context
     };
 
-    // _MOV("[rax + 4]", "rbx");
-    // _MOV("rax", "rbx");
-    // _MOV("rcx", "rdx");
-    // _MOV("rsi", "123");
-    // _MOV("rdi", "rsi");
-    // _MOV("r8", "rsi");
-    // _MOV("r8", "r15");
-    // _MOV("r10", "117");
+    _MOV("[rax + 4]", "rbx");
+    _MOV("rax", "rbx");
+    _MOV("rcx", "rdx");
+    _MOV("rsi", "123");
+    _MOV("rdi", "rsi");
+    _MOV("r8", "rsi");
+    _MOV("r8", "r15");
+    _MOV("r10", "117");
 
-    // _MOV("rax", "1");
-    // _MOV("rbx", "2");
-    // _MOV("rcx", "3");
-    // _MOV("rdx", "4");
+    _MOV("rax", "1");
+    _MOV("rbx", "2");
+    _MOV("rcx", "3");
+    _MOV("rdx", "4");
 
-    // _MOV("r8", "5");
-    // _MOV("r9", "6");
-    // _MOV("r10", "7");
-    // _MOV("r15", "8");
+    _MOV("r8", "5");
+    _MOV("r9", "6");
+    _MOV("r10", "7");
+    _MOV("r15", "8");
 
-    // _MOV("rax", "rbx");
-    // _MOV("rbx", "rax");
-    // _MOV("rcx", "rdx");
-    // _MOV("rdx", "rcx");
+    _MOV("rax", "rbx");
+    _MOV("rbx", "rax");
+    _MOV("rcx", "rdx");
+    _MOV("rdx", "rcx");
 
-    // _MOV("r8", "rax");
-    // _MOV("rax", "r8");
+    _MOV("r8", "rax");
+    _MOV("rax", "r8");
 
-    // _MOV("r9", "r10");
-    // _MOV("r10", "r9");
+    _MOV("r9", "r10");
+    _MOV("r10", "r9");
 
-    // _MOV("r15", "r8");
-    // _MOV("r8", "r15");
+    _MOV("r15", "r8");
+    _MOV("r8", "r15");
 
-    // _MOV("[rax]", "rbx");
-    // _MOV("[rbx]", "rax");
+    _MOV("[rax]", "rbx");
+    _MOV("[rbx]", "rax");
 
-    // _MOV("[rax + 4]", "rbx");
-    // _MOV("[rbx + 8]", "rcx");
+    _MOV("[rax + 4]", "rbx");
+    _MOV("[rbx + 8]", "rcx");
 
-    // _MOV("[r8 + 16]", "rax");
-    // _MOV("[r9 + 32]", "r15");
+    _MOV("[r8 + 16]", "rax");
+    _MOV("[r9 + 32]", "r15");
 
-    _CALL("superpuperduperdumblabel13");
-    _SYSCALL();
-    _PUSH("5");
-    _PUSH("rax");
-    _PUSH("r8");
-    _PUSH("[rax + 4]");
-
-    _POP("rax");
-    _POP("r8");
-    _POP("[rax + 5]");
-
-    _MOV("[r10 + 1]", "r11");
-    _MOV("[r12 + 127]", "r13");
-
-    _MOV("[rax + 128]", "rbx");
-    _MOV("[r8 + 1024]", "r9");
-
-    _MOV("rax", "[rbx]");
-    _MOV("rcx", "[rax + 4]");
-
-    _MOV("r8", "[r9]");
-    _MOV("r10", "[r15 + 8]");
-
-    _MOV("rax", "[r8 + 128]");
-    _MOV("r15", "[r10 + 1024]");
-
-    _MOV("[rax]", "123");
-    _MOV("[rbx + 4]", "456");
-
-    _MOV("[r8 + 8]", "789");
-    _MOV("[r15 + 16]", "111");
-
-    _MOV("rax", "123");
-    _MOV("rbx", "456");
-
-    _MOV("r8", "777");
-    _MOV("r15", "999");
-
-    _MOV("r10", "-1");
-    _MOV("r11", "-123");
-
-    _MOV("[rax + 4]", "-1");
-    _MOV("[r8 + 8]", "-5");
+    // _CALL("superpuperduperdumblabel13");
+    // _SYSCALL();
+    // _PUSH("5");
+    // _PUSH("rax");
+    // _PUSH("r8");
+    // _PUSH("[rax + 4]");
+// 
+    // _POP("rax");
+    // _POP("r8");
+    // _POP("[rax + 5]");
+// 
+    // _MOV("[r10 + 1]", "r11");
+    // _MOV("[r12 + 127]", "r13");
+// 
+    // _MOV("[rax + 128]", "rbx");
+    // _MOV("[r8 + 1024]", "r9");
+// 
+    // _MOV("rax", "[rbx]");
+    // _MOV("rcx", "[rax + 4]");
+// 
+    // _MOV("r8", "[r9]");
+    // _MOV("r10", "[r15 + 8]");
+// 
+    // _MOV("rax", "[r8 + 128]");
+    // _MOV("r15", "[r10 + 1024]");
+// 
+    // _MOV("[rax]", "123");
+    // _MOV("[rbx + 4]", "456");
+// 
+    // _MOV("[r8 + 8]", "789");
+    // _MOV("[r15 + 16]", "111");
+// 
+    // _MOV("rax", "123");
+    // _MOV("rbx", "456");
+// 
+    // _MOV("r8", "777");
+    // _MOV("r15", "999");
+// 
+    // _MOV("r10", "-1");
+    // _MOV("r11", "-123");
+// 
+    // _MOV("[rax + 4]", "-1");
+    // _MOV("[r8 + 8]", "-5");
     genPrologueX86Elf(context);
     // traversalCondOrder(AST->root, &visitorAstX86Elf);
     // genEpilogueNasm(context);

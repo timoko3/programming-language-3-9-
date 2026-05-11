@@ -39,10 +39,30 @@ struct  instrArg_t{
     int memShift;
 };
 
+enum instrMode_t{
+    R64TORM64,
+    IMM32TORM64,
+    MEM64TOR64,
+    R64TOMEM64,
+    IMM32TOMEM64,
+    
+    RM64MODE,
+    MEM64MODE,
+    IMM32MODE,
+
+    LABELMODE,
+
+    NOMODE
+};
+
 
 struct instructionInfo{
     instr_t instrType;
+    instrMode_t instrMode; 
+
     size_t amountArgs;
+
+
 
     instrArg_t args[2];
 };

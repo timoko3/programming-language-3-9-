@@ -28,21 +28,73 @@ const uint8_t R13_CODE   = 0x5;
 const uint8_t R14_CODE   = 0x6;
 const uint8_t R15_CODE   = 0x7;
 
-const uint8_t RM64_TO_R64_MOV_CODE   = 0x8b;
-const uint8_t R64_TO_RM64_MOV_CODE   = 0x89;
-const uint8_t IMM32_TO_RM64_MOV_CODE = 0xc7;
 
-const uint8_t PUSH_RM64_CODE         = 0xFF;
+enum modRmCase_t{
+    MR_CASE_R,
+    MR_CASE_0,
+    MR_CASE_5,
+    MR_CASE_6,
+    MR_CASE_NO
+};
+
+enum opEn_t{
+    M_OP_EN,
+    I_OP_EN,
+    D_OP_EN,
+
+    MR_OP_EN,
+    RM_OP_EN,
+
+    MI_OP_EN,
+
+    NO_OP_EN
+};
+
+struct instrEncodeRule_t{
+    instr_t     type;
+    instrMode_t mode;
+    modRmCase_t modRmCase;
+    opEn_t      opEn;
+    size_t      amountArgs;
+    uint8_t     opcodeFirstByte;
+    uint8_t     opcodeSecondByte;
+};
+
+instrEncodeRule_t instructionsEncodeRules[]{
+    {PUSH_I, RM64MODE,     MR_CASE_6,  M_OP_EN,  1, 0xFF},
+    {PUSH_I, IMM32MODE,    MR_CASE_NO, I_OP_EN,  1, 0x68},
+
+    {POP_I,  RM64MODE,     MR_CASE_0,  M_OP_EN,  1, 0x8F},
+
+    {CALL_I, LABELMODE,    MR_CASE_NO, D_OP_EN,  1, 0xE8},
+
+    {SYSCALL_I, NOMODE,    MR_CASE_NO, NO_OP_EN, 0, 0x0f, 0x05},
+
+    {MOV_I,   R64TORM64,   MR_CASE_R,  MR_OP_EN, 2, 0x89},
+    {MOV_I,   R64TOMEM64,  MR_CASE_R,  MR_OP_EN, 2, 0x89},
+
+    {MOV_I,   MEM64TOR64,  MR_CASE_R,  RM_OP_EN, 2, 0x8b},
+
+    {MOV_I,   IMM32TORM64, MR_CASE_0,  MI_OP_EN, 2, 0xc7}
+};
+
+const size_t ENCODE_RULES_TABLE_SIZE = sizeof(instructionsEncodeRules) / sizeof(instrEncodeRule_t);
+
+// const uint8_t RM64_TO_R64_MOV_CODE   = 0x8b;
+// const uint8_t R64_TO_RM64_MOV_CODE   = 0x89;
+// const uint8_t IMM32_TO_RM64_MOV_CODE = 0xc7;
+
+// const uint8_t PUSH_RM64_CODE         = 0xFF;
 const uint8_t PUSH_RM64_MOD_RM_REG_C = 0x6;
-const uint8_t PUSH_IMM32_CODE        = 0x68;
+// const uint8_t PUSH_IMM32_CODE        = 0x68;
 
-const uint8_t POP_RM64_CODE          = 0x8F;
+// const uint8_t POP_RM64_CODE          = 0x8F;
 const uint8_t POP_RM64_MOD_RM_REG_C  = 0x0;
 
-const uint8_t CALL_REL32_CODE        = 0xE8;
+// const uint8_t CALL_REL32_CODE        = 0xE8;
 
-const uint8_t SYSCALL_FIRST_BYTE_CODE  = 0x0f;
-const uint8_t SYSCALL_SECOND_BYTE_CODE = 0x05;
+// const uint8_t SYSCALL_FIRST_BYTE_CODE  = 0x0f;
+// const uint8_t SYSCALL_SECOND_BYTE_CODE = 0x05;
 
 const uint8_t BREAK_POINT_GDB_CODE  = 0xCC;
 
@@ -64,8 +116,13 @@ const uint8_t SIB_INDEX_OFFSET      = 3;
 
 static argInst_t instrGetArg(codeGenContext* context, instrArg_t* arg, const char* strArg, int argNum);
 
+static void chooseArgsMode(codeGenContext* context, instructionInfo* instrInfo);
+
+static void emitUnaryInstr(codeGenContext* context, instructionInfo* instrInfo);
+static void emitBinaryInstr(codeGenContext* context, instructionInfo* instrInfo);
+
 static void emitREX(codeGenContext* context, instructionInfo* instrInfo);
-static void emitModRm(codeGenContext* context, instructionInfo* instrInfo);
+static void emitModRm(codeGenContext* context, instructionInfo* instrInfo, modRmCase_t modRmType, opEn_t opEnType);
 static void emitSIB(codeGenContext* context, instructionInfo* instrInfo);
 static uint8_t emitRegCode(genPurposeRegs reg);
 
@@ -76,6 +133,11 @@ static void emitCall(codeGenContext* context, instructionInfo* instrInfo);
 static void emitSyscall(codeGenContext* context, instructionInfo* instrInfo);
 
 static void emitAdd(codeGenContext* context, instructionInfo* instrInfo);
+
+static instrEncodeRule_t* findEncodeRule(instr_t type, instrMode_t mode);
+
+static void emitR64toRM64(codeGenContext* context, instructionInfo* instrInfo);
+static void emitImm32toRM64(codeGenContext* context, instructionInfo* instrInfo);
 
 void prepareInstructionEndcodeInfo(codeGenContext* context, instr_t instrType, size_t amountArgs, const char* strArg1, const char* strArg2){
     assert(context);
@@ -93,24 +155,17 @@ void prepareInstructionEndcodeInfo(codeGenContext* context, instr_t instrType, s
         instrGetArg(context, &INSTRUCTION_INFO_ARGS(curInstrInfo)[i], strArgs[i], i + 1);
     }
 
-    switch (instrType){
-        case MOV_I:
-            emitMov(context, curInstrInfo);
+    chooseArgsMode(context, curInstrInfo);
+
+    printf("curMode = %d\n", INSTRUCTION_INFO_MODE(curInstrInfo));
+
+    switch (amountArgs){
+        case 1:
+            emitUnaryInstr(context, curInstrInfo);
             break;
-        case PUSH_I:
-            emitPush(context, curInstrInfo);
+        case 2:
+            emitBinaryInstr(context, curInstrInfo);
             break;
-        case POP_I:
-            emitPop(context, curInstrInfo);
-            break;
-        case CALL_I:
-            emitCall(context, curInstrInfo);
-            break;
-        case SYSCALL_I:
-            emitSyscall(context, curInstrInfo);
-            break;
-        case ADD_I:
-            emitAdd(context, curInstrInfo);
         default:
             printf("Данная инструкция пока не поддерживается\n");
             break;
@@ -180,11 +235,9 @@ static argInst_t instrGetArg(codeGenContext* context, instrArg_t* arg, const cha
     return INSTRUCTION_ARG_TYPE(arg);
 }
 
-static void emitBinaryInstruction(codeGenContext* context, instructionInfo* instrInfo){
+static void chooseArgsMode(codeGenContext* context, instructionInfo* instrInfo){
     assert(context);
     assert(instrInfo);
-
-    BP;
 
     if(!INSTRUCTION_ARG_IS_MEM_CASE((&INSTRUCTION_INFO_ARGS(instrInfo)[0])) &&
        !INSTRUCTION_ARG_IS_MEM_CASE((&INSTRUCTION_INFO_ARGS(instrInfo)[1])) &&
@@ -193,180 +246,284 @@ static void emitBinaryInstruction(codeGenContext* context, instructionInfo* inst
     }
 
     instrArg_t arg1 = INSTRUCTION_INFO_ARGS(instrInfo)[0];
-    instrArg_t arg2 = INSTRUCTION_INFO_ARGS(instrInfo)[1];
+    instrArg_t arg2 = INSTRUCTION_INFO_ARGS(instrInfo)[1];    
+
+    switch(INSTRUCTION_ARG_TYPE((&arg1))){
+        case R64:
+            switch (INSTRUCTION_ARG_TYPE((&arg2))){
+                case MEM64:
+                    INSTRUCTION_INFO_MODE(instrInfo) = MEM64TOR64;
+                    break;
+                case NONE_ARG:
+                    INSTRUCTION_INFO_MODE(instrInfo) = RM64MODE;
+                    break;
+                default:
+                    break;
+            }
+            break;
+        case MEM64:
+            switch (INSTRUCTION_ARG_TYPE((&arg2))){
+                case R64:
+                    INSTRUCTION_INFO_MODE(instrInfo) = R64TOMEM64;
+                    break;
+                case IMM32:
+                    INSTRUCTION_INFO_MODE(instrInfo) = IMM32TOMEM64;
+                    break;
+                case NONE_ARG:
+                    INSTRUCTION_INFO_MODE(instrInfo) = MEM64MODE;
+                    break;
+                default: break;
+            }
+            break;
+        case RM64:
+            switch (INSTRUCTION_ARG_TYPE((&arg2))){
+                case R64:
+                    INSTRUCTION_INFO_MODE(instrInfo) = R64TORM64;
+                    break;
+                case IMM32:
+                    INSTRUCTION_INFO_MODE(instrInfo) = IMM32TORM64;
+                    break;
+                case NONE_ARG:
+                    INSTRUCTION_INFO_MODE(instrInfo) = RM64MODE;
+                    break;
+                default: break;
+            }
+            break;
+        default: break;
+    }
 }
 
-// static void binaryInstructionGetCode(){
+static void emitUnaryInstr(codeGenContext* context, instructionInfo* instrInfo){
+    assert(context);
+    assert(instrInfo);
 
+    switch (INSTRUCTION_INFO_MODE(instrInfo)){
+        case RM64MODE:
+            break;
+        case MEM64MODE:
+            break;
+        case IMM32MODE:
+            break;
+        default:
+            break;
+    }
+
+}
+
+static void emitBinaryInstr(codeGenContext* context, instructionInfo* instrInfo){
+    assert(context);
+    assert(instrInfo);
+
+    BP;
+
+    switch (INSTRUCTION_INFO_MODE(instrInfo)){
+        case MEM64TOR64:
+        case R64TOMEM64:
+        case R64TORM64:
+            emitR64toRM64(context, instrInfo);
+            break;
+        case IMM32TORM64:
+        case IMM32TOMEM64:
+            emitImm32toRM64(context, instrInfo);
+            break;
+        default:
+            break;
+    }
+
+}
+
+static void emitR64toRM64(codeGenContext* context, instructionInfo* instrInfo){
+    assert(context);
+    assert(instrInfo);
+
+    instrEncodeRule_t* instrEncodeRule = findEncodeRule(INSTRUCTION_INFO_TYPE(instrInfo), INSTRUCTION_INFO_MODE(instrInfo));
+    assert(instrEncodeRule);
+
+    emitREX(context, instrInfo);
+    writeU8Buf(_CONTEXT_ELF_CODE_BUFFER(context), INSTRUCTION_ENCODE_RULE_F_BYTE(instrEncodeRule));
+    emitModRm(context, instrInfo, INSTRUCTION_ENCODE_RULE_MOD_RM_CASE(instrEncodeRule), INSTRUCTION_ENCODE_RULE_OP_EN(instrEncodeRule));
+}
+
+static void emitImm32toRM64(codeGenContext* context, instructionInfo* instrInfo){
+    assert(context);
+    assert(instrInfo);
+
+    instrEncodeRule_t* instrEncodeRule = findEncodeRule(INSTRUCTION_INFO_TYPE(instrInfo), INSTRUCTION_INFO_MODE(instrInfo));
+    assert(instrEncodeRule);
+
+    emitREX(context, instrInfo);
+    writeU8Buf(_CONTEXT_ELF_CODE_BUFFER(context), INSTRUCTION_ENCODE_RULE_F_BYTE(instrEncodeRule));
+    emitModRm(context, instrInfo, INSTRUCTION_ENCODE_RULE_MOD_RM_CASE(instrEncodeRule), INSTRUCTION_ENCODE_RULE_OP_EN(instrEncodeRule));
+    writeU32LeBuf(_CONTEXT_ELF_CODE_BUFFER(context), (uint32_t) INSTRUCTION_ARG_VALUE_NUM((&INSTRUCTION_INFO_ARGS(instrInfo)[1])));
+}
+
+// static void emitMov(codeGenContext* context, instructionInfo* instrInfo){
+//     assert(context);
+//     assert(instrInfo);
+
+//     BP;
+
+//     if(!INSTRUCTION_ARG_IS_MEM_CASE((&INSTRUCTION_INFO_ARGS(instrInfo)[0])) &&
+//        !INSTRUCTION_ARG_IS_MEM_CASE((&INSTRUCTION_INFO_ARGS(instrInfo)[1])) &&
+//        INSTRUCTION_ARG_TYPE((&INSTRUCTION_INFO_ARGS(instrInfo)[0])) == R64){
+//         INSTRUCTION_ARG_TYPE((&INSTRUCTION_INFO_ARGS(instrInfo)[0])) = RM64;
+//     }
+
+//     instrArg_t arg1 = INSTRUCTION_INFO_ARGS(instrInfo)[0];
+//     instrArg_t arg2 = INSTRUCTION_INFO_ARGS(instrInfo)[1];
+
+//     switch(INSTRUCTION_ARG_TYPE((&arg1))){
+//         case R64:
+//             switch (INSTRUCTION_ARG_TYPE((&arg2))){
+//                 case MEM64:
+//                     emitREX(context, instrInfo);
+//                     writeU8Buf(_CONTEXT_ELF_CODE_BUFFER(context), RM64_TO_R64_MOV_CODE);
+//                     emitModRm(context, instrInfo);
+//                     break;
+//                 default:
+//                     break;
+//             }
+//             break;
+//         case MEM64:
+//         case RM64:
+//             switch (INSTRUCTION_ARG_TYPE((&arg2))){
+//                 case R64:
+//                     emitREX(context, instrInfo);
+//                     writeU8Buf(_CONTEXT_ELF_CODE_BUFFER(context), R64_TO_RM64_MOV_CODE);
+//                     emitModRm(context, instrInfo);
+//                     break;
+//                 case IMM32:
+//                     emitREX(context, instrInfo);
+//                     writeU8Buf(_CONTEXT_ELF_CODE_BUFFER(context), IMM32_TO_RM64_MOV_CODE);
+//                     emitModRm(context, instrInfo);
+//                     writeU32LeBuf(_CONTEXT_ELF_CODE_BUFFER(context), (uint32_t) INSTRUCTION_ARG_VALUE_NUM((&arg2)));
+//                     break;
+//                 default: break;
+//             }
+//             break;
+//         default: break;
+//     }
+    
 // }
 
-static void emitMov(codeGenContext* context, instructionInfo* instrInfo){
-    assert(context);
-    assert(instrInfo);
+// static void emitPush(codeGenContext* context, instructionInfo* instrInfo){
+//     assert(context);
+//     assert(instrInfo);
 
-    BP;
+//     BP;
 
-    if(!INSTRUCTION_ARG_IS_MEM_CASE((&INSTRUCTION_INFO_ARGS(instrInfo)[0])) &&
-       !INSTRUCTION_ARG_IS_MEM_CASE((&INSTRUCTION_INFO_ARGS(instrInfo)[1])) &&
-       INSTRUCTION_ARG_TYPE((&INSTRUCTION_INFO_ARGS(instrInfo)[0])) == R64){
-        INSTRUCTION_ARG_TYPE((&INSTRUCTION_INFO_ARGS(instrInfo)[0])) = RM64;
-    }
+//     if(!INSTRUCTION_ARG_IS_MEM_CASE((&INSTRUCTION_INFO_ARGS(instrInfo)[0])) &&
+//         INSTRUCTION_ARG_TYPE((&INSTRUCTION_INFO_ARGS(instrInfo)[0])) == R64){
+//         INSTRUCTION_ARG_TYPE((&INSTRUCTION_INFO_ARGS(instrInfo)[0])) = RM64;
+//     }
 
-    instrArg_t arg1 = INSTRUCTION_INFO_ARGS(instrInfo)[0];
-    instrArg_t arg2 = INSTRUCTION_INFO_ARGS(instrInfo)[1];
+//     instrArg_t arg1 = INSTRUCTION_INFO_ARGS(instrInfo)[0];
 
-    switch(INSTRUCTION_ARG_TYPE((&arg1))){
-        case R64:
-            switch (INSTRUCTION_ARG_TYPE((&arg2))){
-                case MEM64:
-                    emitREX(context, instrInfo);
-                    writeU8Buf(_CONTEXT_ELF_CODE_BUFFER(context), RM64_TO_R64_MOV_CODE);
-                    emitModRm(context, instrInfo);
-                    break;
-                default:
-                    break;
-            }
-            break;
-        case MEM64:
-        case RM64:
-            switch (INSTRUCTION_ARG_TYPE((&arg2))){
-                case R64:
-                    emitREX(context, instrInfo);
-                    writeU8Buf(_CONTEXT_ELF_CODE_BUFFER(context), R64_TO_RM64_MOV_CODE);
-                    emitModRm(context, instrInfo);
-                    break;
-                case IMM32:
-                    emitREX(context, instrInfo);
-                    writeU8Buf(_CONTEXT_ELF_CODE_BUFFER(context), IMM32_TO_RM64_MOV_CODE);
-                    emitModRm(context, instrInfo);
-                    writeU32LeBuf(_CONTEXT_ELF_CODE_BUFFER(context), (uint32_t) INSTRUCTION_ARG_VALUE_NUM((&arg2)));
-                    break;
-                default: break;
-            }
-            break;
-        default: break;
-    }
-    
-}
+//     emitREX(context, instrInfo);
 
-static void emitPush(codeGenContext* context, instructionInfo* instrInfo){
-    assert(context);
-    assert(instrInfo);
+//     switch(INSTRUCTION_ARG_TYPE((&arg1))){
+//         case MEM64:
+//         case RM64:
+//             writeU8Buf(_CONTEXT_ELF_CODE_BUFFER(context), PUSH_RM64_CODE);
+//             emitModRm(context, instrInfo);
+//             break;
+//         case IMM32:
+//             writeU8Buf(_CONTEXT_ELF_CODE_BUFFER(context), PUSH_IMM32_CODE);
+//             writeU32LeBuf(_CONTEXT_ELF_CODE_BUFFER(context), (uint32_t) INSTRUCTION_ARG_VALUE_NUM((&arg1)));
+//             break;
+//         default: break;
+//     }
+// }
 
-    BP;
+// static void emitPop(codeGenContext* context, instructionInfo* instrInfo){
+//     BP;
 
-    if(!INSTRUCTION_ARG_IS_MEM_CASE((&INSTRUCTION_INFO_ARGS(instrInfo)[0])) &&
-        INSTRUCTION_ARG_TYPE((&INSTRUCTION_INFO_ARGS(instrInfo)[0])) == R64){
-        INSTRUCTION_ARG_TYPE((&INSTRUCTION_INFO_ARGS(instrInfo)[0])) = RM64;
-    }
+//     if(!INSTRUCTION_ARG_IS_MEM_CASE((&INSTRUCTION_INFO_ARGS(instrInfo)[0])) &&
+//         INSTRUCTION_ARG_TYPE((&INSTRUCTION_INFO_ARGS(instrInfo)[0])) == R64){
+//         INSTRUCTION_ARG_TYPE((&INSTRUCTION_INFO_ARGS(instrInfo)[0])) = RM64;
+//     }
 
-    instrArg_t arg1 = INSTRUCTION_INFO_ARGS(instrInfo)[0];
+//     instrArg_t arg1 = INSTRUCTION_INFO_ARGS(instrInfo)[0];
 
-    emitREX(context, instrInfo);
+//     emitREX(context, instrInfo);
 
-    switch(INSTRUCTION_ARG_TYPE((&arg1))){
-        case MEM64:
-        case RM64:
-            writeU8Buf(_CONTEXT_ELF_CODE_BUFFER(context), PUSH_RM64_CODE);
-            emitModRm(context, instrInfo);
-            break;
-        case IMM32:
-            writeU8Buf(_CONTEXT_ELF_CODE_BUFFER(context), PUSH_IMM32_CODE);
-            writeU32LeBuf(_CONTEXT_ELF_CODE_BUFFER(context), (uint32_t) INSTRUCTION_ARG_VALUE_NUM((&arg1)));
-            break;
-        default: break;
-    }
-}
+//     switch(INSTRUCTION_ARG_TYPE((&arg1))){
+//         case MEM64:
+//         case RM64:
+//             writeU8Buf(_CONTEXT_ELF_CODE_BUFFER(context), POP_RM64_CODE);
+//             emitModRm(context, instrInfo);
+//             break;
+//         default: break;
+//     }
+// }
 
-static void emitPop(codeGenContext* context, instructionInfo* instrInfo){
-    BP;
+// static void emitCall(codeGenContext* context, instructionInfo* instrInfo){
+//     assert(context);
+//     assert(instrInfo);
 
-    if(!INSTRUCTION_ARG_IS_MEM_CASE((&INSTRUCTION_INFO_ARGS(instrInfo)[0])) &&
-        INSTRUCTION_ARG_TYPE((&INSTRUCTION_INFO_ARGS(instrInfo)[0])) == R64){
-        INSTRUCTION_ARG_TYPE((&INSTRUCTION_INFO_ARGS(instrInfo)[0])) = RM64;
-    }
+//     BP;
 
-    instrArg_t arg1 = INSTRUCTION_INFO_ARGS(instrInfo)[0];
+//     writeU8Buf(_CONTEXT_ELF_CODE_BUFFER(context), CALL_REL32_CODE);
+//     writeU32LeBuf(_CONTEXT_ELF_CODE_BUFFER(context), 0x0);    
+// }
 
-    emitREX(context, instrInfo);
+// static void emitSyscall(codeGenContext* context, instructionInfo* instrInfo){
+//     assert(context);
+//     assert(instrInfo);
 
-    switch(INSTRUCTION_ARG_TYPE((&arg1))){
-        case MEM64:
-        case RM64:
-            writeU8Buf(_CONTEXT_ELF_CODE_BUFFER(context), POP_RM64_CODE);
-            emitModRm(context, instrInfo);
-            break;
-        default: break;
-    }
-}
+//     BP;
 
-static void emitCall(codeGenContext* context, instructionInfo* instrInfo){
-    assert(context);
-    assert(instrInfo);
+//     writeU8Buf(_CONTEXT_ELF_CODE_BUFFER(context), SYSCALL_FIRST_BYTE_CODE);
+//     writeU8Buf(_CONTEXT_ELF_CODE_BUFFER(context), SYSCALL_SECOND_BYTE_CODE);
+// }
 
-    BP;
+// static void emitAdd(codeGenContext* context, instructionInfo* instrInfo){
+//     assert(context);
+//     assert(instrInfo);
 
-    writeU8Buf(_CONTEXT_ELF_CODE_BUFFER(context), CALL_REL32_CODE);
-    writeU32LeBuf(_CONTEXT_ELF_CODE_BUFFER(context), 0x0);    
-}
+//     BP;
 
-static void emitSyscall(codeGenContext* context, instructionInfo* instrInfo){
-    assert(context);
-    assert(instrInfo);
+//     if(!INSTRUCTION_ARG_IS_MEM_CASE((&INSTRUCTION_INFO_ARGS(instrInfo)[0])) &&
+//        !INSTRUCTION_ARG_IS_MEM_CASE((&INSTRUCTION_INFO_ARGS(instrInfo)[1])) &&
+//        INSTRUCTION_ARG_TYPE((&INSTRUCTION_INFO_ARGS(instrInfo)[0])) == R64){
+//         INSTRUCTION_ARG_TYPE((&INSTRUCTION_INFO_ARGS(instrInfo)[0])) = RM64;
+//     }
 
-    BP;
+//     instrArg_t arg1 = INSTRUCTION_INFO_ARGS(instrInfo)[0];
+//     instrArg_t arg2 = INSTRUCTION_INFO_ARGS(instrInfo)[1];
 
-    writeU8Buf(_CONTEXT_ELF_CODE_BUFFER(context), SYSCALL_FIRST_BYTE_CODE);
-    writeU8Buf(_CONTEXT_ELF_CODE_BUFFER(context), SYSCALL_SECOND_BYTE_CODE);
-}
-
-static void emitAdd(codeGenContext* context, instructionInfo* instrInfo){
-    assert(context);
-    assert(instrInfo);
-
-    BP;
-
-    if(!INSTRUCTION_ARG_IS_MEM_CASE((&INSTRUCTION_INFO_ARGS(instrInfo)[0])) &&
-       !INSTRUCTION_ARG_IS_MEM_CASE((&INSTRUCTION_INFO_ARGS(instrInfo)[1])) &&
-       INSTRUCTION_ARG_TYPE((&INSTRUCTION_INFO_ARGS(instrInfo)[0])) == R64){
-        INSTRUCTION_ARG_TYPE((&INSTRUCTION_INFO_ARGS(instrInfo)[0])) = RM64;
-    }
-
-    instrArg_t arg1 = INSTRUCTION_INFO_ARGS(instrInfo)[0];
-    instrArg_t arg2 = INSTRUCTION_INFO_ARGS(instrInfo)[1];
-
-    switch(INSTRUCTION_ARG_TYPE((&arg1))){
-        case R64:
-            switch (INSTRUCTION_ARG_TYPE((&arg2))){
-                case MEM64:
-                    emitREX(context, instrInfo);
-                    writeU8Buf(_CONTEXT_ELF_CODE_BUFFER(context), RM64_TO_R64_MOV_CODE);
-                    emitModRm(context, instrInfo);
-                    break;
-                default:
-                    break;
-            }
-            break;
-        case MEM64:
-        case RM64:
-            switch (INSTRUCTION_ARG_TYPE((&arg2))){
-                case R64:
-                    emitREX(context, instrInfo);
-                    writeU8Buf(_CONTEXT_ELF_CODE_BUFFER(context), R64_TO_RM64_MOV_CODE);
-                    emitModRm(context, instrInfo);
-                    break;
-                case IMM32:
-                    emitREX(context, instrInfo);
-                    writeU8Buf(_CONTEXT_ELF_CODE_BUFFER(context), IMM32_TO_RM64_MOV_CODE);
-                    emitModRm(context, instrInfo);
-                    writeU32LeBuf(_CONTEXT_ELF_CODE_BUFFER(context), (uint32_t) INSTRUCTION_ARG_VALUE_NUM((&arg2)));
-                    break;
-                default: break;
-            }
-            break;
-        default: break;
-    }
-}
+//     switch(INSTRUCTION_ARG_TYPE((&arg1))){
+//         case R64:
+//             switch (INSTRUCTION_ARG_TYPE((&arg2))){
+//                 case MEM64:
+//                     emitREX(context, instrInfo);
+//                     writeU8Buf(_CONTEXT_ELF_CODE_BUFFER(context), RM64_TO_R64_MOV_CODE);
+//                     emitModRm(context, instrInfo);
+//                     break;
+//                 default:
+//                     break;
+//             }
+//             break;
+//         case MEM64:
+//         case RM64:
+//             switch (INSTRUCTION_ARG_TYPE((&arg2))){
+//                 case R64:
+//                     emitREX(context, instrInfo);
+//                     writeU8Buf(_CONTEXT_ELF_CODE_BUFFER(context), R64_TO_RM64_MOV_CODE);
+//                     emitModRm(context, instrInfo);
+//                     break;
+//                 case IMM32:
+//                     emitREX(context, instrInfo);
+//                     writeU8Buf(_CONTEXT_ELF_CODE_BUFFER(context), IMM32_TO_RM64_MOV_CODE);
+//                     emitModRm(context, instrInfo);
+//                     writeU32LeBuf(_CONTEXT_ELF_CODE_BUFFER(context), (uint32_t) INSTRUCTION_ARG_VALUE_NUM((&arg2)));
+//                     break;
+//                 default: break;
+//             }
+//             break;
+//         default: break;
+//     }
+// }
 
 static void emitREX(codeGenContext* context, instructionInfo* instrInfo){
     assert(context);
@@ -400,7 +557,7 @@ static void emitREX(codeGenContext* context, instructionInfo* instrInfo){
     writeU8Buf(_CONTEXT_ELF_CODE_BUFFER(context), rexByte);
 }
 
-static void emitModRm(codeGenContext* context, instructionInfo* instrInfo){
+static void emitModRm(codeGenContext* context, instructionInfo* instrInfo, modRmCase_t modRmType, opEn_t opEnType){
     assert(context);
     assert(instrInfo);
 
@@ -409,59 +566,67 @@ static void emitModRm(codeGenContext* context, instructionInfo* instrInfo){
     instrArg_t arg1 = INSTRUCTION_INFO_ARGS(instrInfo)[0];
     instrArg_t arg2 = INSTRUCTION_INFO_ARGS(instrInfo)[1];
 
-    switch(INSTRUCTION_ARG_TYPE((&arg1))){
-        case RM64:
+    uint8_t firstThreeBits = 0;
+    uint8_t secondThreeBits = 0;
+
+    switch (INSTRUCTION_INFO_MODE(instrInfo)){
+        case IMM32TORM64:
+        case R64TORM64:
             modRmByte |= (MOD_RM_REG_MOD << MOD_RM_MOD_OFFSET);
-            switch(INSTRUCTION_ARG_TYPE((&arg2))){
-                case R64:
-                    modRmByte |= (emitRegCode(REG_TABLE_ELEM_REG(INSTRUCTION_ARG_VALUE_REG((&arg1)))));
-                    modRmByte |= (emitRegCode(REG_TABLE_ELEM_REG(INSTRUCTION_ARG_VALUE_REG((&arg2)))) << 3);
-                    break;
-                case IMM32:
-                    
-                    modRmByte |= (emitRegCode(REG_TABLE_ELEM_REG(INSTRUCTION_ARG_VALUE_REG((&arg1)))));
-                    break;
-                case NONE_ARG:
-                    if(INSTRUCTION_INFO_TYPE(instrInfo) == PUSH_I) modRmByte |= PUSH_RM64_MOD_RM_REG_C << 3;
-                    if(INSTRUCTION_INFO_TYPE(instrInfo) == POP_I)  modRmByte |= POP_RM64_MOD_RM_REG_C << 3;
-                    
-                    modRmByte |= (emitRegCode(REG_TABLE_ELEM_REG(INSTRUCTION_ARG_VALUE_REG((&arg1)))));
-
-                default: break;
-            }
             break;
-        case R64:
-            switch(INSTRUCTION_ARG_TYPE((&arg2))){
-                case MEM64:
-                    if(INSTRUCTION_ARG_MEM_SHIFT((&arg2)) != 0) modRmByte |= (MOD_RM_MEM_DISP8_MOD << MOD_RM_MOD_OFFSET);
-                    else                                        modRmByte |= (MOD_RM_MEM_MOD       << MOD_RM_MOD_OFFSET);
 
-                    modRmByte |= (emitRegCode(REG_TABLE_ELEM_REG(INSTRUCTION_ARG_VALUE_REG((&arg1)))) << 3);
-                    modRmByte |= (emitRegCode(REG_TABLE_ELEM_REG(INSTRUCTION_ARG_VALUE_REG((&arg2)))));
-                    break;
-                default: break;
-            }
-            break;
-        case MEM64:
+        case R64TOMEM64:
+        case IMM32TOMEM64:
+        case MEM64TOR64:
             if(INSTRUCTION_ARG_MEM_SHIFT((&arg1)) != 0) modRmByte |= (MOD_RM_MEM_DISP8_MOD << MOD_RM_MOD_OFFSET);
             else                                        modRmByte |= (MOD_RM_MEM_MOD       << MOD_RM_MOD_OFFSET);
-            switch(INSTRUCTION_ARG_TYPE((&arg2))){
-                case R64:
-                    modRmByte |= (emitRegCode(REG_TABLE_ELEM_REG(INSTRUCTION_ARG_VALUE_REG((&arg1)))));
-                    modRmByte |= (emitRegCode(REG_TABLE_ELEM_REG(INSTRUCTION_ARG_VALUE_REG((&arg2)))) << 3);
-                    break;
-                case IMM32:
-                    modRmByte |= (emitRegCode(REG_TABLE_ELEM_REG(INSTRUCTION_ARG_VALUE_REG((&arg1)))));
-                    break;
-                case NONE_ARG:
-                    if(INSTRUCTION_INFO_TYPE(instrInfo) == PUSH_I) modRmByte |= PUSH_RM64_MOD_RM_REG_C << 3;
-                    if(INSTRUCTION_INFO_TYPE(instrInfo) == POP_I)  modRmByte |= POP_RM64_MOD_RM_REG_C << 3;
-                    modRmByte |= (emitRegCode(REG_TABLE_ELEM_REG(INSTRUCTION_ARG_VALUE_REG((&arg1)))));
-                
-                default: break;
-            }
+            break;
+
+        default:
             break;
     }
+
+    if(modRmType == MR_CASE_R){
+        switch(opEnType){
+            case RM_OP_EN:
+                firstThreeBits |= (emitRegCode(REG_TABLE_ELEM_REG(INSTRUCTION_ARG_VALUE_REG((&arg2)))));
+                secondThreeBits |= (emitRegCode(REG_TABLE_ELEM_REG(INSTRUCTION_ARG_VALUE_REG((&arg1)))) << 3);
+                break;
+            case MR_OP_EN:
+                firstThreeBits |= (emitRegCode(REG_TABLE_ELEM_REG(INSTRUCTION_ARG_VALUE_REG((&arg1)))));
+                secondThreeBits |= (emitRegCode(REG_TABLE_ELEM_REG(INSTRUCTION_ARG_VALUE_REG((&arg2)))) << 3);
+                break;
+            case MI_OP_EN:
+                firstThreeBits |= (emitRegCode(REG_TABLE_ELEM_REG(INSTRUCTION_ARG_VALUE_REG((&arg1)))));
+                break;
+            
+            default:
+                break;
+        }
+    }
+    else{
+        firstThreeBits |= (emitRegCode(REG_TABLE_ELEM_REG(INSTRUCTION_ARG_VALUE_REG((&arg1)))));   
+
+        uint8_t specialCaseVal = 0;
+        switch(modRmType){
+            case MR_CASE_0:  
+                specialCaseVal = 0x0;
+                break;
+            case MR_CASE_5:
+                specialCaseVal = 0x5;
+                break;
+            case MR_CASE_6:
+                specialCaseVal = 0x6;
+                break;
+            default:
+                printf("не специальный случай modRm\n");
+                break;
+        }
+        secondThreeBits |= (specialCaseVal << 3);
+    }
+
+    modRmByte |= firstThreeBits;
+    modRmByte |= secondThreeBits;
 
     writeU8Buf(_CONTEXT_ELF_CODE_BUFFER(context), modRmByte);
 
@@ -554,4 +719,16 @@ static uint8_t emitRegCode(genPurposeRegs reg){
     }
 
     return curRegCode;
+}
+
+static instrEncodeRule_t* findEncodeRule(instr_t type, instrMode_t mode){
+
+    for(size_t i = 0; i < ENCODE_RULES_TABLE_SIZE; i++){
+        if(INSTRUCTION_ENCODE_RULE_MODE((&INSTRUCTION_ENCODE_RULE(instructionsEncodeRules, i))) == mode && 
+           INSTRUCTION_ENCODE_RULE_TYPE((&INSTRUCTION_ENCODE_RULE(instructionsEncodeRules, i))) == type)
+
+           return &INSTRUCTION_ENCODE_RULE(instructionsEncodeRules, i);
+    }
+
+    return NULL;
 }
