@@ -34,6 +34,7 @@ enum modRmCase_t{
     MR_CASE_0,
     MR_CASE_5,
     MR_CASE_6,
+    MR_CASE_7,
     MR_CASE_NO
 };
 
@@ -87,7 +88,9 @@ instrEncodeRule_t instructionsEncodeRules[]{
     {SUB_I,   R64TOMEM64,  MR_CASE_R,  MR_OP_EN, 2, 1, {0x29}},
     {SUB_I,   IMM32TORM64, MR_CASE_5,  MI_OP_EN, 2, 1, {0x81}},
 
-    {IMUL_I,  RM64TOR64,   MR_CASE_R,  RM_OP_EN, 2, 2, {0x0f, 0xaf}}
+    {IMUL_I,  RM64TOR64,   MR_CASE_R,  RM_OP_EN, 2, 2, {0x0f, 0xaf}},
+
+    {IDIV_I,  RM64MODE,    MR_CASE_7,  M_OP_EN,  1, 1, {0xf7}},
 };
 
 const size_t ENCODE_RULES_TABLE_SIZE = sizeof(instructionsEncodeRules) / sizeof(instrEncodeRule_t);
@@ -719,6 +722,9 @@ static void emitModRm(codeGenContext* context, instructionInfo* instrInfo, modRm
                 break;
             case MR_CASE_6:
                 specialCaseVal = 0x6;
+                break;
+            case MR_CASE_7:
+                specialCaseVal = 0x7;
                 break;
             default:
                 printf("не специальный случай modRm\n");

@@ -28,7 +28,8 @@ enum instr_t{
 
     ADD_I,
     SUB_I,
-    IMUL_I
+    IMUL_I,
+    IDIV_I
 };
 
 struct  instrArg_t{
