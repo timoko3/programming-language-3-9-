@@ -138,6 +138,8 @@ static instrEncodeRule_t* findEncodeRule(instr_t type, instrMode_t mode);
 
 static void emitR64toRM64(codeGenContext* context, instructionInfo* instrInfo);
 static void emitImm32toRM64(codeGenContext* context, instructionInfo* instrInfo);
+static void emitRM64(codeGenContext* context, instructionInfo* instrInfo);
+static void emitImm32(codeGenContext* context, instructionInfo* instrInfo);
 
 void prepareInstructionEndcodeInfo(codeGenContext* context, instr_t instrType, size_t amountArgs, const char* strArg1, const char* strArg2){
     assert(context);
@@ -299,10 +301,11 @@ static void emitUnaryInstr(codeGenContext* context, instructionInfo* instrInfo){
 
     switch (INSTRUCTION_INFO_MODE(instrInfo)){
         case RM64MODE:
-            break;
         case MEM64MODE:
+            emitRM64(context, instrInfo);
             break;
         case IMM32MODE:
+            emitImm32(context, instrInfo);
             break;
         default:
             break;
@@ -330,6 +333,31 @@ static void emitBinaryInstr(codeGenContext* context, instructionInfo* instrInfo)
             break;
     }
 
+}
+
+static void emitRM64(codeGenContext* context, instructionInfo* instrInfo){
+    assert(context);
+    assert(instrInfo);
+
+    instrEncodeRule_t* instrEncodeRule = findEncodeRule(INSTRUCTION_INFO_TYPE(instrInfo), INSTRUCTION_INFO_MODE(instrInfo));
+    assert(instrEncodeRule);
+
+    emitREX(context, instrInfo);
+    writeU8Buf(_CONTEXT_ELF_CODE_BUFFER(context), INSTRUCTION_ENCODE_RULE_F_BYTE(instrEncodeRule));
+    emitModRm(context, instrInfo, INSTRUCTION_ENCODE_RULE_MOD_RM_CASE(instrEncodeRule), INSTRUCTION_ENCODE_RULE_OP_EN(instrEncodeRule));
+}
+
+static void emitImm32(codeGenContext* context, instructionInfo* instrInfo){
+    assert(context);
+    assert(instrInfo);
+
+    instrEncodeRule_t* instrEncodeRule = findEncodeRule(INSTRUCTION_INFO_TYPE(instrInfo), INSTRUCTION_INFO_MODE(instrInfo));
+    assert(instrEncodeRule);
+
+    emitREX(context, instrInfo);
+    writeU8Buf(_CONTEXT_ELF_CODE_BUFFER(context), INSTRUCTION_ENCODE_RULE_F_BYTE(instrEncodeRule));
+    emitModRm(context, instrInfo, INSTRUCTION_ENCODE_RULE_MOD_RM_CASE(instrEncodeRule), INSTRUCTION_ENCODE_RULE_OP_EN(instrEncodeRule));
+    writeU32LeBuf(_CONTEXT_ELF_CODE_BUFFER(context), (uint32_t) INSTRUCTION_ARG_VALUE_NUM((&INSTRUCTION_INFO_ARGS(instrInfo)[0])));
 }
 
 static void emitR64toRM64(codeGenContext* context, instructionInfo* instrInfo){
@@ -560,6 +588,8 @@ static void emitREX(codeGenContext* context, instructionInfo* instrInfo){
 static void emitModRm(codeGenContext* context, instructionInfo* instrInfo, modRmCase_t modRmType, opEn_t opEnType){
     assert(context);
     assert(instrInfo);
+
+    if(modRmType = MR_CASE_NO) return;
 
     uint8_t modRmByte = 0;
 
