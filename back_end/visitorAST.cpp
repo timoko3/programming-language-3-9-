@@ -131,7 +131,6 @@ void traversalCondOrder(treeNode_t* node, ASTvisitor_t* visitor){
             traversalCondOrder(_R(node), visitor);
         }
     }
-    
 
     if(VISITOR_IN_ORDER_FUNC(curNodeVisitor)) VISITOR_IN_ORDER_FUNC(curNodeVisitor)(node, VISITOR_CONTEXT(visitor));
 
@@ -147,7 +146,6 @@ void traversalCondOrder(treeNode_t* node, ASTvisitor_t* visitor){
     }
 
     if(VISITOR_POST_ORDER_FUNC(curNodeVisitor)) VISITOR_POST_ORDER_FUNC(curNodeVisitor)(node, VISITOR_CONTEXT(visitor));
-
 }
 
 static ASTvisitorNode_t* getNodeVisitor(ASTnodeType typeNode, ASTvisitor_t* visitor){

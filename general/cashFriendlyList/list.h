@@ -24,4 +24,6 @@ listStatus listOptimize(list_t* list);
 listStatus listLinearize(list_t* list);
 listStatus listFreeUnusedMem(list_t* list);
 
+listStatus listCopy(list_t* dest, list_t* src);
+
 #endif /* LIST_H */

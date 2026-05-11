@@ -330,3 +330,28 @@ static listStatus reallocateList(list_t* list){
     return PROCESS_OK_LIST;
 }
 
+listStatus listCopy(list_t* dest, list_t* src){
+    assert(dest);
+    assert(src);
+
+    #ifdef DEBUG
+    verify(dest);
+    verify(src);
+    log(dest, "before %s", "copy");
+    #endif /* DEBUG */
+
+    int curElem = src->elem->next;
+
+    for(size_t i = 0; i < src->size; i++){
+        listInsertToTail(dest, src->elem[curElem].data);
+
+        curElem = src->elem[curElem].next;
+    }
+
+    #ifdef DEBUG
+    verify(dest);
+    log(dest, "after %s", "copy");
+    #endif /* DEBUG */
+
+    return PROCESS_OK_LIST;
+}

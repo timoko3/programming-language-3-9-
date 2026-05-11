@@ -194,7 +194,7 @@ void emitFuncEpilogSpu(treeNode_t* node, codeGenContext* context){
     fprintf(_CONTEXT_FILE_PTR(context), "POPREG JX\n");
 }
 
-void  emitIfSpuIn(treeNode_t* node, codeGenContext* context){
+void emitIfSpuIn(treeNode_t* node, codeGenContext* context){
     assert(node);
     assert(context);
 

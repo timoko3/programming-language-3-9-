@@ -100,6 +100,7 @@ void emitCallFuncX86ElfPost(treeNode_t* node, codeGenContext* context){
     assert(node);
     assert(context);
 
+    
     _CALL(_NODE_VALUE_STR(node));
     _MOV(REG_TABLE_ELEM_NAME(_CONTEXT_TEMP_REG(context)), REG_TABLE_ELEM_NAME(_CONTEXT_FUNC_RET_REG(context)));
 

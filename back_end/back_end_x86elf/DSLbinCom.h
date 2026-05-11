@@ -47,3 +47,6 @@
 #define _JLE(arg1)         prepareInstructionEndcodeInfo(context, JLE_I, 1, arg1, "")
 #define _JE(arg1)          prepareInstructionEndcodeInfo(context, JE_I, 1, arg1, "")
 #define _JNE(arg1)         prepareInstructionEndcodeInfo(context, JNE_I, 1, arg1, "")
+
+#define _LABEL(arg1)
+#define _LABEL_USE(arg1)

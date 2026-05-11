@@ -45,7 +45,7 @@ regTableElem_t initRegTableSpu[] = {
 const size_t INIT_REG_TABLE_NASM_SIZE = sizeof(initRegTableNasm) / sizeof(regTableElem_t);
 const size_t INIT_REG_TABLE_SPU_SIZE  = sizeof(initRegTableSpu)  / sizeof(regTableElem_t);
 
-regTableElem_t* regTableElemCtor(genPurposeRegs reg, char* name, regUseScenery useScenery, bool isUsed){
+regTableElem_t* regTableElemCtor(genPurposeRegs reg, regUseScenery useScenery, bool isUsed, char* name  =""){
     regTableElem_t* elem = (regTableElem_t*) calloc(1, sizeof(regTableElem_t));
     assert(elem);
 
