@@ -214,6 +214,8 @@ static argInst_t instrGetArg(codeGenContext* context, instrArg_t* arg, const cha
     assert(arg);
     assert(strArg);
 
+    printf("strArg: %s\n", strArg);
+
     regTableElem_t* refReg = regTableElemCtor(NONE, (char*) strArg, ANY, 0);
 
     regTableElem_t* foundReg = regTableFind(_CONTEXT_REG_TABLE(context), findNameRegRule, refReg);
@@ -255,7 +257,7 @@ static argInst_t instrGetArg(codeGenContext* context, instrArg_t* arg, const cha
         INSTRUCTION_ARG_TYPE(arg)      = IMM32;
         INSTRUCTION_ARG_VALUE_NUM(arg) = n;
     }
-    else if(sscanf(strArg, "%[a-z]%d", strPart, &n) == 2){
+    else if(sscanf(strArg, "%[a-zA-Z]%d", strPart, &n) == 2){
         INSTRUCTION_ARG_TYPE(arg) = LABEL;
 
         // label_t* refLabel = createLabel(_CONTEXT_LABELS_TABLE(context), strPart, n, 0);

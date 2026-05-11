@@ -1,6 +1,8 @@
 #include "emittersX86Elf.h"
 // #include "format.h"
 
+#include "emitBinaryCommands.h"
+
 #include "core/core.h"
 #include "core/DSL.h"
 
@@ -23,8 +25,6 @@ void loadToRegX86Elf(varMapElem_t* var, codeGenContext* context);
     // {POPM,          emitPopm  },
     // {DRAW,          emitDraw  }
 
-const char* MAIN_START_NAME_X86ELF    = "_start";
-
 const char* ADD_OPERATION_NAME_X86ELF = "add";
 const char* SUB_OPERATION_NAME_X86ELF = "sub" ;
 const char* MUL_OPERATION_NAME_X86ELF = "imul";
@@ -40,16 +40,7 @@ const char* JLE_OPERATION_NAME_X86ELF = "jle";
 const char* JE_OPERATION_NAME_X86ELF  = "je";
 const char* JNE_OPERATION_NAME_X86ELF = "jne";
 
-void emitMainX86ElfPre(treeNode_t* node, codeGenContext* context){
-    assert(node);
-    assert(context);
-
-    LPRINTF("emitMain start");
-
-    fprintf(_CONTEXT_FILE_PTR(context), "%s:\n", MAIN_START_NAME_X86ELF);
-
-    LPRINTF("emitMain end");
-}
+const size_t NUMBER_MAX_SIZE          = 64;
 
 void emitFuncX86ElfPre(treeNode_t* node, codeGenContext* context){
     assert(node);
@@ -109,15 +100,12 @@ void emitCallFuncX86ElfPost(treeNode_t* node, codeGenContext* context){
     assert(node);
     assert(context);
 
-    fprintf(_CONTEXT_FILE_PTR(context), "call %s\n", _NODE_VALUE_STR(node));
-
-    fprintf(_CONTEXT_FILE_PTR(context), "mov %s, %s\n", REG_TABLE_ELEM_NAME(_CONTEXT_TEMP_REG(context)), REG_TABLE_ELEM_NAME(_CONTEXT_FUNC_RET_REG(context)));
+    _CALL(_NODE_VALUE_STR(node));
+    _MOV(REG_TABLE_ELEM_NAME(_CONTEXT_TEMP_REG(context)), REG_TABLE_ELEM_NAME(_CONTEXT_FUNC_RET_REG(context)));
 
     emitCallFuncFreeArgRegsX86Elf(node, context);
     _CONTEXT_IS_CALL_FUNC_ARG(context) = 0;
     _CONTEXT_VAR_REG_USE_SCENERY(context) = STORE_VAR;
-
-    fprintf(_CONTEXT_FILE_PTR(context), "\n\n;endCallFunc\n");
 }
 
 void emitCallFuncFreeArgRegsX86Elf(treeNode_t* node, codeGenContext* context){
@@ -131,8 +119,8 @@ void emitCallFuncFreeArgRegsX86Elf(treeNode_t* node, codeGenContext* context){
         REG_TABLE_ELEM_USE_BIT(foundReg) = 0;
         emitCallFuncFreeArgRegsX86Elf(node, context);
     }
-
-    if(foundReg) fprintf(_CONTEXT_FILE_PTR(context), "pop %s\n", REG_TABLE_ELEM_NAME(foundReg));
+    
+    if(foundReg) _POP(REG_TABLE_ELEM_NAME(foundReg));
     
     regTableElemDtor(refReg);       
 }
@@ -147,7 +135,7 @@ void emitInitFuncX86ElfPre(treeNode_t* node, codeGenContext* context){
 
     _CONTEXT_STACK_OFFSET(context) = VARIABLE_NASM_BYTES_SIZE;
 
-    fprintf(_CONTEXT_FILE_PTR(context), "\n\n%s:\n", _NODE_VALUE_STR(node));
+    // fprintf(_CONTEXT_FILE_PTR(context), "\n\n%s:\n", _NODE_VALUE_STR(node));
     emitFuncPrologX86Elf(node, context);
 
     _CONTEXT_VAR_REG_USE_SCENERY(context) = FUNC_ARGS;
@@ -176,8 +164,8 @@ void emitFuncPrologX86Elf(treeNode_t* node, codeGenContext* context){
     assert(node);
     assert(context);
 
-    fprintf(_CONTEXT_FILE_PTR(context), "push rbp\n");
-    fprintf(_CONTEXT_FILE_PTR(context), "mov rbp, rsp\n");
+    _PUSH("rbp");
+    _MOV("rbp", "rsp");
 }
 
 void emitRetX86ElfPre(treeNode_t* node, codeGenContext* context){
@@ -192,11 +180,10 @@ void emitRetX86ElfPost(treeNode_t* node, codeGenContext* context){
     assert(context);
 
     loadToRegX86Elf(_CONTEXT_CUR_VAR(context), context);
-    fprintf(_CONTEXT_FILE_PTR(context), "mov %s, %s\n", REG_TABLE_ELEM_NAME(_CONTEXT_FUNC_RET_REG(context)), REG_TABLE_ELEM_NAME(_CONTEXT_TEMP_REG(context)));
+    _MOV(REG_TABLE_ELEM_NAME(_CONTEXT_FUNC_RET_REG(context)), REG_TABLE_ELEM_NAME(_CONTEXT_TEMP_REG(context)));
 
     emitFuncEpilogX86Elf(node, context);
-    fprintf(_CONTEXT_FILE_PTR(context), "ret\n");
-
+    _RET();
     _CONTEXT_VAR_REG_USE_SCENERY(context) = STORE_VAR;
 }
 
@@ -204,42 +191,46 @@ void emitFuncEpilogX86Elf(treeNode_t* node, codeGenContext* context){
     assert(node);
     assert(context);
    
+    char numStr[NUMBER_MAX_SIZE] = ""; 
 
-    fprintf(_CONTEXT_FILE_PTR(context), "add rsp, %d\n", _CONTEXT_STACK_OFFSET(context) - VARIABLE_NASM_BYTES_SIZE);
+    sprintf(numStr, "%d", _CONTEXT_STACK_OFFSET(context) - VARIABLE_NASM_BYTES_SIZE);
 
-    fprintf(_CONTEXT_FILE_PTR(context), "mov rsp, rbp\n");
-    fprintf(_CONTEXT_FILE_PTR(context), "pop rbp\n");
+    _ADD("rsp", numStr);
+
+    _MOV("rsp", "rbp");
+    _POP("rbp");
 }
 
 void emitIfX86ElfIn(treeNode_t* node, codeGenContext* context){
     assert(node);
     assert(context);
 
-    const char* condJumpInstruction = "";
-
-    switch(_NODE_TYPE(_L(node))){
-        case LE:        condJumpInstruction = JG_OPERATION_NAME_X86ELF ; break; 
-        case LT:        condJumpInstruction = JGE_OPERATION_NAME_X86ELF; break; 
-        case GE:        condJumpInstruction = JL_OPERATION_NAME_X86ELF ; break; 
-        case GT:        condJumpInstruction = JLE_OPERATION_NAME_X86ELF; break; 
-        case EQUAL:     condJumpInstruction = JNE_OPERATION_NAME_X86ELF; break; 
-        case NOT_EQUAL: condJumpInstruction = JE_OPERATION_NAME_X86ELF ; break; 
-        default: break;
-    }
-
     label_t* ifLabel = createLabel(_CONTEXT_LABELS_TABLE(context), LABEL_PREFIX_IF_END);
     assert(ifLabel);
 
     _CONTEXT_CUR_LABEL_A(context) = ifLabel;
 
-    fprintf(_CONTEXT_FILE_PTR(context), "%s .%s_%d\n", condJumpInstruction, _LABEL_DATA_NAME(ifLabel), _LABEL_DATA_ID(ifLabel));
+    char fullLabelName[NUMBER_MAX_SIZE] = "";
+
+    sprintf(fullLabelName, "%s%d", _LABEL_DATA_NAME(ifLabel), _LABEL_DATA_ID(ifLabel));
+
+    switch(_NODE_TYPE(_L(node))){
+        case LE:        _JG(fullLabelName) ; break; 
+        case LT:        _JGE(fullLabelName); break; 
+        case GE:        _JL(fullLabelName) ; break; 
+        case GT:        _JLE(fullLabelName); break; 
+        case EQUAL:     _JNE(fullLabelName); break; 
+        case NOT_EQUAL: _JE(fullLabelName) ; break; 
+        default: break;
+    }
+
 }
 
 void emitIfX86ElfPost(treeNode_t* node, codeGenContext* context){
     assert(node);
     assert(context);
 
-    fprintf(_CONTEXT_FILE_PTR(context), ".%s_%d:\n", _LABEL_DATA_NAME(_CONTEXT_CUR_LABEL_A(context)), _LABEL_DATA_ID(_CONTEXT_CUR_LABEL_A(context)));
+    // fprintf(_CONTEXT_FILE_PTR(context), ".%s_%d:\n", _LABEL_DATA_NAME(_CONTEXT_CUR_LABEL_A(context)), _LABEL_DATA_ID(_CONTEXT_CUR_LABEL_A(context)));
 }
 
 void emitWhileX86ElfPre(treeNode_t* node, codeGenContext* context){
@@ -249,7 +240,7 @@ void emitWhileX86ElfPre(treeNode_t* node, codeGenContext* context){
     label_t* whileStartLabel = createLabel(_CONTEXT_LABELS_TABLE(context), LABEL_PREFIX_WHILE_BEGIN);
     assert(whileStartLabel);
 
-    fprintf(_CONTEXT_FILE_PTR(context), ".%s_%d\n", _LABEL_DATA_NAME(whileStartLabel), _LABEL_DATA_ID(whileStartLabel));
+    // fprintf(_CONTEXT_FILE_PTR(context), ".%s_%d\n", _LABEL_DATA_NAME(whileStartLabel), _LABEL_DATA_ID(whileStartLabel));
 
     _CONTEXT_CUR_LABEL_A(context) = whileStartLabel;
 }
@@ -258,32 +249,38 @@ void emitWhileX86ElfIn(treeNode_t* node, codeGenContext* context){
     assert(node);
     assert(context);
 
-    const char* condJumpInstruction = "";
-
-    switch(_NODE_TYPE(_L(node))){
-        case LE:        condJumpInstruction = JG_OPERATION_NAME_X86ELF ; break; 
-        case LT:        condJumpInstruction = JGE_OPERATION_NAME_X86ELF; break; 
-        case GE:        condJumpInstruction = JL_OPERATION_NAME_X86ELF ; break; 
-        case GT:        condJumpInstruction = JLE_OPERATION_NAME_X86ELF; break; 
-        case EQUAL:     condJumpInstruction = JNE_OPERATION_NAME_X86ELF; break; 
-        case NOT_EQUAL: condJumpInstruction = JE_OPERATION_NAME_X86ELF ; break; 
-        default: break;
-    }
-
     label_t* whileEndLabel = createLabel(_CONTEXT_LABELS_TABLE(context), LABEL_PREFIX_WHILE_END);
     assert(whileEndLabel);
 
-    fprintf(_CONTEXT_FILE_PTR(context), "%s .%s_%d\n", condJumpInstruction, _LABEL_DATA_NAME(whileEndLabel), _LABEL_DATA_ID(whileEndLabel));
-
     _CONTEXT_CUR_LABEL_B(context) = whileEndLabel;
+
+    char fullLabelName[NUMBER_MAX_SIZE] = "";
+
+    sprintf(fullLabelName, "%s%d", _LABEL_DATA_NAME(whileEndLabel), _LABEL_DATA_ID(whileEndLabel));
+
+    switch(_NODE_TYPE(_L(node))){
+        case LE:        _JG(fullLabelName);  break; 
+        case LT:        _JGE(fullLabelName); break; 
+        case GE:        _JL(fullLabelName);  break; 
+        case GT:        _JLE(fullLabelName); break; 
+        case EQUAL:     _JNE(fullLabelName); break; 
+        case NOT_EQUAL: _JE(fullLabelName);  break; 
+        default: break;
+    }
+    
 }
 
 void emitWhileX86ElfPost(treeNode_t* node, codeGenContext* context){
     assert(node);
     assert(context);
 
-    fprintf(_CONTEXT_FILE_PTR(context), "jmp .%s_%d:\n", _LABEL_DATA_NAME(_CONTEXT_CUR_LABEL_A(context)), _LABEL_DATA_ID(_CONTEXT_CUR_LABEL_A(context)));
-    fprintf(_CONTEXT_FILE_PTR(context), ".%s_%d:\n", _LABEL_DATA_NAME(_CONTEXT_CUR_LABEL_B(context)), _LABEL_DATA_ID(_CONTEXT_CUR_LABEL_B(context)));
+    char fullLabelName[NUMBER_MAX_SIZE] = "";
+
+    sprintf(fullLabelName, "%s%d", _LABEL_DATA_NAME(_CONTEXT_CUR_LABEL_A(context)), _LABEL_DATA_ID(_CONTEXT_CUR_LABEL_A(context)));
+
+    _JMP(fullLabelName);
+
+    // fprintf(_CONTEXT_FILE_PTR(context), ".%s_%d:\n", _LABEL_DATA_NAME(_CONTEXT_CUR_LABEL_B(context)), _LABEL_DATA_ID(_CONTEXT_CUR_LABEL_B(context)));
 }
 
 void emitCmpX86ElfPost(treeNode_t* node, codeGenContext* context){
@@ -292,7 +289,7 @@ void emitCmpX86ElfPost(treeNode_t* node, codeGenContext* context){
 
     emitBinaryOpX86ElfPost(node, context);
 
-    fprintf(_CONTEXT_FILE_PTR(context), "%s %s, %s\n", CMP_OPERATION_NAME_X86ELF, REG_TABLE_ELEM_NAME(_CONTEXT_CALC_REG_A(context)), REG_TABLE_ELEM_NAME(_CONTEXT_CALC_REG_B(context)));
+    _CMP(REG_TABLE_ELEM_NAME(_CONTEXT_CALC_REG_A(context)), REG_TABLE_ELEM_NAME(_CONTEXT_CALC_REG_B(context)));
 }
 
 void emitAssignX86ElfIn(treeNode_t* node, codeGenContext* context){
@@ -313,14 +310,19 @@ void emitAssignX86ElfPost(treeNode_t* node, codeGenContext* context){
     varMapElem_t* foundVar = _CONTEXT_CUR_VAR(context);
 
     if(VARIABLE_MAP_LOC_TYPE(foundVar) == LOCK_REG){
-        fprintf(_CONTEXT_FILE_PTR(context), "mov %s, %s\n", REG_TABLE_ELEM_NAME(VARIABLE_MAP_LOC_REG((foundVar))), REG_TABLE_ELEM_NAME(_CONTEXT_TEMP_REG(context)));       
+        _MOV(REG_TABLE_ELEM_NAME(VARIABLE_MAP_LOC_REG((foundVar))), REG_TABLE_ELEM_NAME(_CONTEXT_TEMP_REG(context)));
     }
     else if(VARIABLE_MAP_LOC_TYPE(foundVar) == LOCK_STACK){
-        fprintf(_CONTEXT_FILE_PTR(context), "sub rsp, %d\n", VARIABLE_NASM_BYTES_SIZE);       
-        fprintf(_CONTEXT_FILE_PTR(context), "mov [rbp - %d], %s\n", VARIABLE_MAP_LOC_STACK_OFFSET((foundVar)), REG_TABLE_ELEM_NAME(_CONTEXT_TEMP_REG(context)));       
-    }
+        char numStr[NUMBER_MAX_SIZE] = ""; 
 
-    fprintf(_CONTEXT_FILE_PTR(context), "\n\n;endAssign\n");
+        sprintf(numStr, "%d", VARIABLE_NASM_BYTES_SIZE);
+
+        _SUB("rsp", numStr);
+
+        sprintf(numStr, "[rbp - %d]", VARIABLE_MAP_LOC_STACK_OFFSET((foundVar)));
+
+        _MOV(numStr, REG_TABLE_ELEM_NAME(_CONTEXT_TEMP_REG(context)));
+    }
 
     LPRINTF("emitAssign end");
 }
@@ -329,16 +331,16 @@ void emitBinaryOpX86ElfIn(treeNode_t* node, codeGenContext* context){
     assert(node);
     assert(context);
 
-    fprintf(_CONTEXT_FILE_PTR(context), "mov %s, %s\n", REG_TABLE_ELEM_NAME(_CONTEXT_CALC_REG_A(context)), REG_TABLE_ELEM_NAME(_CONTEXT_TEMP_REG(context)));
-    fprintf(_CONTEXT_FILE_PTR(context), "push %s\n", REG_TABLE_ELEM_NAME(_CONTEXT_CALC_REG_A(context)));
+    _MOV(REG_TABLE_ELEM_NAME(_CONTEXT_CALC_REG_A(context)), REG_TABLE_ELEM_NAME(_CONTEXT_TEMP_REG(context)));
+    _PUSH(REG_TABLE_ELEM_NAME(_CONTEXT_CALC_REG_A(context)));
 }
 
 void emitBinaryOpX86ElfPost(treeNode_t* node, codeGenContext* context){
     assert(node);
     assert(context);
 
-    fprintf(_CONTEXT_FILE_PTR(context), "mov %s, %s\n", REG_TABLE_ELEM_NAME(_CONTEXT_CALC_REG_B(context)), REG_TABLE_ELEM_NAME(_CONTEXT_TEMP_REG(context)));
-    fprintf(_CONTEXT_FILE_PTR(context), "pop %s\n", REG_TABLE_ELEM_NAME(_CONTEXT_CALC_REG_A(context)));
+    _MOV(REG_TABLE_ELEM_NAME(_CONTEXT_CALC_REG_B(context)), REG_TABLE_ELEM_NAME(_CONTEXT_TEMP_REG(context)));
+    _POP(REG_TABLE_ELEM_NAME(_CONTEXT_CALC_REG_A(context)));
 }
 
 void emitAddX86ElfPost(treeNode_t* node, codeGenContext* context){
@@ -347,8 +349,8 @@ void emitAddX86ElfPost(treeNode_t* node, codeGenContext* context){
 
     emitBinaryOpX86ElfPost(node, context);
 
-    fprintf(_CONTEXT_FILE_PTR(context), "%s %s, %s\n", ADD_OPERATION_NAME_X86ELF, REG_TABLE_ELEM_NAME(_CONTEXT_CALC_REG_A(context)), REG_TABLE_ELEM_NAME(_CONTEXT_CALC_REG_B(context)));
-    fprintf(_CONTEXT_FILE_PTR(context), "mov %s, %s\n", REG_TABLE_ELEM_NAME(_CONTEXT_TEMP_REG(context)), REG_TABLE_ELEM_NAME(_CONTEXT_CALC_REG_A(context)));
+    _ADD(REG_TABLE_ELEM_NAME(_CONTEXT_CALC_REG_A(context)), REG_TABLE_ELEM_NAME(_CONTEXT_CALC_REG_B(context)));
+    _MOV(REG_TABLE_ELEM_NAME(_CONTEXT_TEMP_REG(context)), REG_TABLE_ELEM_NAME(_CONTEXT_CALC_REG_A(context)));
 }
 
 void emitSubX86ElfPost(treeNode_t* node, codeGenContext* context){
@@ -357,8 +359,8 @@ void emitSubX86ElfPost(treeNode_t* node, codeGenContext* context){
 
     emitBinaryOpX86ElfPost(node, context);
 
-    fprintf(_CONTEXT_FILE_PTR(context), "%s %s, %s\n", SUB_OPERATION_NAME_X86ELF, REG_TABLE_ELEM_NAME(_CONTEXT_CALC_REG_A(context)), REG_TABLE_ELEM_NAME(_CONTEXT_CALC_REG_B(context)));
-    fprintf(_CONTEXT_FILE_PTR(context), "mov %s, %s\n", REG_TABLE_ELEM_NAME(_CONTEXT_TEMP_REG(context)), REG_TABLE_ELEM_NAME(_CONTEXT_CALC_REG_A(context)));
+    _SUB(REG_TABLE_ELEM_NAME(_CONTEXT_CALC_REG_A(context)), REG_TABLE_ELEM_NAME(_CONTEXT_CALC_REG_B(context)));
+    _MOV(REG_TABLE_ELEM_NAME(_CONTEXT_TEMP_REG(context)), REG_TABLE_ELEM_NAME(_CONTEXT_CALC_REG_A(context)));
 }
 
 void emitMulX86ElfPost(treeNode_t* node, codeGenContext* context){
@@ -367,8 +369,8 @@ void emitMulX86ElfPost(treeNode_t* node, codeGenContext* context){
 
     emitBinaryOpX86ElfPost(node, context);
 
-    fprintf(_CONTEXT_FILE_PTR(context), "%s %s, %s\n", MUL_OPERATION_NAME_X86ELF, REG_TABLE_ELEM_NAME(_CONTEXT_CALC_REG_A(context)), REG_TABLE_ELEM_NAME(_CONTEXT_CALC_REG_B(context)));
-    fprintf(_CONTEXT_FILE_PTR(context), "mov %s, %s\n", REG_TABLE_ELEM_NAME(_CONTEXT_TEMP_REG(context)), REG_TABLE_ELEM_NAME(_CONTEXT_CALC_REG_A(context)));
+    _IMUL(REG_TABLE_ELEM_NAME(_CONTEXT_CALC_REG_A(context)), REG_TABLE_ELEM_NAME(_CONTEXT_CALC_REG_B(context)));
+    _MOV(REG_TABLE_ELEM_NAME(_CONTEXT_TEMP_REG(context)), REG_TABLE_ELEM_NAME(_CONTEXT_CALC_REG_A(context)));
 }
 
 void emitDivX86ElfPost(treeNode_t* node, codeGenContext* context){
@@ -377,18 +379,18 @@ void emitDivX86ElfPost(treeNode_t* node, codeGenContext* context){
 
     emitBinaryOpX86ElfPost(node, context);
 
-    fprintf(_CONTEXT_FILE_PTR(context), "push rax\n");
-    fprintf(_CONTEXT_FILE_PTR(context), "push rdx\n");
+    _PUSH("rax");
+    _PUSH("rdx");
 
-    fprintf(_CONTEXT_FILE_PTR(context), "xor rdx, rdx\n", REG_TABLE_ELEM_NAME(_CONTEXT_CALC_REG_A(context)));
-    fprintf(_CONTEXT_FILE_PTR(context), "mov rax, %s\n", REG_TABLE_ELEM_NAME(_CONTEXT_CALC_REG_A(context)));
+    _MOV("rdx", "0");
+    _MOV("rax", REG_TABLE_ELEM_NAME(_CONTEXT_CALC_REG_A(context)));
 
-    fprintf(_CONTEXT_FILE_PTR(context), "%s %s\n", DIV_OPERATION_NAME_X86ELF, REG_TABLE_ELEM_NAME(_CONTEXT_CALC_REG_B(context)));
+    _IDIV(REG_TABLE_ELEM_NAME(_CONTEXT_CALC_REG_B(context)));
 
-    fprintf(_CONTEXT_FILE_PTR(context), "mov %s, rax\n", REG_TABLE_ELEM_NAME(_CONTEXT_TEMP_REG(context)));
+    _MOV(REG_TABLE_ELEM_NAME(_CONTEXT_TEMP_REG(context)), "rax");
 
-    fprintf(_CONTEXT_FILE_PTR(context), "pop rdx\n");
-    fprintf(_CONTEXT_FILE_PTR(context), "pop rax\n");
+    _POP("rdx");
+    _POP("rax");
 }
 
 void emitSqrtX86ElfPost(treeNode_t* node, codeGenContext* context){
@@ -441,8 +443,8 @@ void emitVarX86ElfPre(treeNode_t* node, codeGenContext* context){
 
         regTableElemDtor(refReg);
 
-        fprintf(_CONTEXT_FILE_PTR(context), "push %s\n", REG_TABLE_ELEM_NAME(foundReg), REG_TABLE_ELEM_NAME(_CONTEXT_TEMP_REG(context)));
-        fprintf(_CONTEXT_FILE_PTR(context), "mov %s, %s\n", REG_TABLE_ELEM_NAME(foundReg), REG_TABLE_ELEM_NAME(_CONTEXT_TEMP_REG(context)));
+        _PUSH(REG_TABLE_ELEM_NAME(foundReg));
+        _MOV(REG_TABLE_ELEM_NAME(foundReg), REG_TABLE_ELEM_NAME(_CONTEXT_TEMP_REG(context)));
 
         REG_TABLE_ELEM_USE_BIT(foundReg) = 1;
     }
@@ -466,7 +468,11 @@ void emitNumberX86ElfPre(treeNode_t* node, codeGenContext* context){
 
     LPRINTF("emitNumber start");
 
-    fprintf(_CONTEXT_FILE_PTR(context), "mov %s, %d\n", REG_TABLE_ELEM_NAME(_CONTEXT_TEMP_REG(context)), _NODE_VALUE_NUM(node));
+    char numStr[NUMBER_MAX_SIZE] = ""; 
+
+    sprintf(numStr, "%d", _NODE_VALUE_NUM(node));
+
+    _MOV(REG_TABLE_ELEM_NAME(_CONTEXT_TEMP_REG(context)), numStr);
 
     LPRINTF("emitNumber end");
 }
@@ -475,18 +481,26 @@ void emitHltX86ElfPre(treeNode_t* node, codeGenContext* context){
     assert(node);
     assert(context);
 
-    fprintf(_CONTEXT_FILE_PTR(context), "\n; sys_exit(0)\n");
-    fprintf(_CONTEXT_FILE_PTR(context), "mov rax, 60\n");
-    fprintf(_CONTEXT_FILE_PTR(context), "mov rdi, 0\n");
-    fprintf(_CONTEXT_FILE_PTR(context), "syscall\n");
+    char numStr[NUMBER_MAX_SIZE] = ""; 
+
+    sprintf(numStr, "%d", 60);
+    _MOV("rax", numStr);
+
+    sprintf(numStr, "%d", 0);
+    _MOV("rdi", numStr);
+
+    _SYSCALL();
 }
 
 void loadToRegX86Elf(varMapElem_t* var, codeGenContext* context){
     if (VARIABLE_MAP_LOC_TYPE(var) == LOCK_REG){
-        if(REG_TABLE_ELEM_USE_SCENERY(VARIABLE_MAP_LOC_REG(var)) != TEMP_STORE) fprintf(_CONTEXT_FILE_PTR(context), "mov %s, %s\n", REG_TABLE_ELEM_NAME(_CONTEXT_TEMP_REG(context)), REG_TABLE_ELEM_NAME(VARIABLE_MAP_LOC_REG(var)));
+        if(REG_TABLE_ELEM_USE_SCENERY(VARIABLE_MAP_LOC_REG(var)) != TEMP_STORE) _MOV(REG_TABLE_ELEM_NAME(_CONTEXT_TEMP_REG(context)), REG_TABLE_ELEM_NAME(VARIABLE_MAP_LOC_REG(var)));
     }
     else{
-        fprintf(_CONTEXT_FILE_PTR(context), "mov %s, [rbp - %d]\n", 
-        REG_TABLE_ELEM_NAME(_CONTEXT_TEMP_REG(context)), VARIABLE_MAP_LOC_STACK_OFFSET(var));
+        char memAddrStr[NUMBER_MAX_SIZE] = ""; 
+
+        sprintf(memAddrStr, "[rbp - %d]", VARIABLE_MAP_LOC_STACK_OFFSET(var));
+
+        _MOV(REG_TABLE_ELEM_NAME(_CONTEXT_TEMP_REG(context)), memAddrStr);
     }
 }

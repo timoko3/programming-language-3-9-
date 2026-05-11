@@ -11,6 +11,8 @@ extern const char* LABEL_PREFIX_IF_END;
 
 const size_t AMOUNT_LABELS    = 5;
 
+extern const size_t MAX_LABEL_NAME_LEN;
+
 struct label_t{
     char* name;
     int id;
