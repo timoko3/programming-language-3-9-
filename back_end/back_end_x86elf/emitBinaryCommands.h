@@ -24,12 +24,22 @@ enum instr_t{
     PUSH_I,
     POP_I,
     CALL_I,
+    RET_I,
     SYSCALL_I,
+
+    JMP_I,
+    JG_I,
+    JGE_I,
+    JL_I,
+    JLE_I,
+    JE_I,
+    JNE_I,
 
     ADD_I,
     SUB_I,
     IMUL_I,
-    IDIV_I
+    IDIV_I,
+    CMP_I
 };
 
 struct  instrArg_t{

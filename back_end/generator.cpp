@@ -122,6 +122,16 @@ void genCodeX86ELF(FILE* filePtr, tree_t* AST, codeGenContext* context, list_t* 
         context
     };
 
+    _CMP("rax", "rbx");
+    _CMP("r8", "16");
+    _RET();
+    _JMP("superpuperduperdumblabel13");
+    _JG("superpuperduperdumblabel13");
+    _JGE("superpuperduperdumblabel13");
+    _JLE("superpuperduperdumblabel13");
+    _JL("superpuperduperdumblabel13");
+    _JE("superpuperduperdumblabel13");
+    _JNE("superpuperduperdumblabel13");
     // _MOV("[rax + 4]", "rbx");
     _IMUL("rax", "rbx");
     _IMUL("r8", "r15");

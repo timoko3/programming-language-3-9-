@@ -70,6 +70,16 @@ instrEncodeRule_t instructionsEncodeRules[]{
     {POP_I,  MEM64MODE,    MR_CASE_0,  M_OP_EN,  1, 1, {0x8F}},
 
     {CALL_I, LABELMODE,    MR_CASE_NO, D_OP_EN,  1, 1, {0xE8}},
+    {RET_I,  NOMODE,       MR_CASE_NO, NO_OP_EN, 0, 1, {0xC3}},
+
+    {JMP_I,  LABELMODE,    MR_CASE_NO, NO_OP_EN, 1, 1, {0xE9}},
+
+    {JG_I,   LABELMODE,    MR_CASE_NO, NO_OP_EN, 1, 2, {0x0F, 0x8F}},
+    {JGE_I,  LABELMODE,    MR_CASE_NO, NO_OP_EN, 1, 2, {0x0f, 0x8D}},
+    {JL_I,   LABELMODE,    MR_CASE_NO, NO_OP_EN, 1, 2, {0x0f, 0x8C}},
+    {JLE_I,  LABELMODE,    MR_CASE_NO, NO_OP_EN, 1, 2, {0x0f, 0x8E}},
+    {JE_I,   LABELMODE,    MR_CASE_NO, NO_OP_EN, 1, 2, {0x0f, 0x84}},
+    {JNE_I,  LABELMODE,    MR_CASE_NO, NO_OP_EN, 1, 2, {0x0f, 0x85}},
 
     {SYSCALL_I, NOMODE,    MR_CASE_NO, NO_OP_EN, 0, 2, {0x0f, 0x05}},
 
@@ -91,6 +101,9 @@ instrEncodeRule_t instructionsEncodeRules[]{
     {IMUL_I,  RM64TOR64,   MR_CASE_R,  RM_OP_EN, 2, 2, {0x0f, 0xaf}},
 
     {IDIV_I,  RM64MODE,    MR_CASE_7,  M_OP_EN,  1, 1, {0xf7}},
+
+    {CMP_I,   R64TORM64,   MR_CASE_R,  MR_OP_EN, 2, 1, {0x39}},
+    {CMP_I,   IMM32TORM64, MR_CASE_7,  MI_OP_EN, 2, 1, {0x81}},
 };
 
 const size_t ENCODE_RULES_TABLE_SIZE = sizeof(instructionsEncodeRules) / sizeof(instrEncodeRule_t);

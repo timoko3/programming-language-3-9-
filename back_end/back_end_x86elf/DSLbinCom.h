@@ -30,9 +30,20 @@
 #define _POP(arg1)          prepareInstructionEndcodeInfo(context, POP_I, 1, arg1, "")
 
 #define _CALL(arg1)         prepareInstructionEndcodeInfo(context, CALL_I, 1, arg1, "")
+#define _RET()              prepareInstructionEndcodeInfo(context, RET_I, 0, "", "")
 #define _SYSCALL()          prepareInstructionEndcodeInfo(context, SYSCALL_I, 0, "", "")
 
 #define _ADD(arg1, arg2)    prepareInstructionEndcodeInfo(context, ADD_I, 2, arg1, arg2)
 #define _SUB(arg1, arg2)    prepareInstructionEndcodeInfo(context, SUB_I, 2, arg1, arg2)
 #define _IMUL(arg1, arg2)   prepareInstructionEndcodeInfo(context, IMUL_I, 2, arg1, arg2)
 #define _IDIV(arg1)         prepareInstructionEndcodeInfo(context, IDIV_I, 1, arg1, "")
+
+#define _CMP(arg1, arg2)    prepareInstructionEndcodeInfo(context, CMP_I, 2, arg1, arg2)
+
+#define _JMP(arg1)         prepareInstructionEndcodeInfo(context, JMP_I, 1, arg1, "")
+#define _JG(arg1)          prepareInstructionEndcodeInfo(context, JG_I, 1, arg1, "")
+#define _JGE(arg1)         prepareInstructionEndcodeInfo(context, JGE_I, 1, arg1, "")
+#define _JL(arg1)          prepareInstructionEndcodeInfo(context, JL_I, 1, arg1, "")
+#define _JLE(arg1)         prepareInstructionEndcodeInfo(context, JLE_I, 1, arg1, "")
+#define _JE(arg1)          prepareInstructionEndcodeInfo(context, JE_I, 1, arg1, "")
+#define _JNE(arg1)         prepareInstructionEndcodeInfo(context, JNE_I, 1, arg1, "")
