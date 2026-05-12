@@ -47,6 +47,7 @@ ASTvisitorNode_t astNodeVisitorsNasm[]{
     {VARIABLE,      emitVarNasmPre,    NULL,                NULL,                1},
     {NUMBER,        emitNumberNasmPre, NULL,                NULL,                1},
     {SQRT,          NULL,              NULL,                emitSqrtNasmPost,    1},
+    {IN,            emitInNasmPre,     emitInNasmIn,        NULL,                1}
 };
 
 const size_t NASM_NODE_VISITORS_AMOUNT = sizeof(astNodeVisitorsNasm) / sizeof(ASTvisitorNode_t);

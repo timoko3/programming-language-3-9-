@@ -481,6 +481,63 @@ void emitHltNasmPre(treeNode_t* node, codeGenContext* context){
     fprintf(_CONTEXT_FILE_PTR(context), "syscall\n");
 }
 
+void emitInNasmPre(treeNode_t* node, codeGenContext* context){
+    assert(node);
+    assert(context);
+
+    _CONTEXT_IS_L_VALUE(context) = 1;
+}
+
+void emitInNasmIn(treeNode_t* node, codeGenContext* context){
+    assert(node);
+    assert(context);
+
+    _CONTEXT_IS_L_VALUE(context) = 0;
+
+    fprintf(_CONTEXT_FILE_PTR(context), "mov %s, 0\n", REG_TABLE_ELEM_NAME(_CONTEXT_TEMP_REG(context)));
+
+    fprintf(_CONTEXT_FILE_PTR(context), "push rdi\n");
+    fprintf(_CONTEXT_FILE_PTR(context), "push rsi\n");
+    fprintf(_CONTEXT_FILE_PTR(context), "push rdx\n");
+    fprintf(_CONTEXT_FILE_PTR(context), "push rax\n");
+
+    fprintf(_CONTEXT_FILE_PTR(context), ".readLoop:\n");
+
+    fprintf(_CONTEXT_FILE_PTR(context), "push 0\n");
+
+    fprintf(_CONTEXT_FILE_PTR(context), "mov rax, 0\n");
+    fprintf(_CONTEXT_FILE_PTR(context), "mov rdi, 0\n");
+    fprintf(_CONTEXT_FILE_PTR(context), "mov rsi, rsp\n");
+    fprintf(_CONTEXT_FILE_PTR(context), "mov rdx, 1\n");
+    fprintf(_CONTEXT_FILE_PTR(context), "syscall\n");
+
+    fprintf(_CONTEXT_FILE_PTR(context), "test rax, rax\n");
+    fprintf(_CONTEXT_FILE_PTR(context), "jle .doneRead\n");
+
+    fprintf(_CONTEXT_FILE_PTR(context), "pop rcx\n");
+
+    fprintf(_CONTEXT_FILE_PTR(context), "cmp cl, 10\n");
+    fprintf(_CONTEXT_FILE_PTR(context), "je .doneRead\n");
+
+    fprintf(_CONTEXT_FILE_PTR(context), "sub cl, '0'\n");
+    fprintf(_CONTEXT_FILE_PTR(context), "imul rbx, 10\n");
+    fprintf(_CONTEXT_FILE_PTR(context), "add rbx, rcx\n");
+
+    fprintf(_CONTEXT_FILE_PTR(context), "jmp .readLoop\n");
+
+    fprintf(_CONTEXT_FILE_PTR(context), ".doneRead:\n");
+
+    varMapElem_t* foundVar = _CONTEXT_CUR_VAR(context);
+
+    if(VARIABLE_MAP_LOC_TYPE(foundVar) == LOCK_REG){
+        fprintf(_CONTEXT_FILE_PTR(context), "mov %s, %s\n", REG_TABLE_ELEM_NAME(VARIABLE_MAP_LOC_REG((foundVar))), REG_TABLE_ELEM_NAME(_CONTEXT_TEMP_REG(context)));       
+    }
+    else if(VARIABLE_MAP_LOC_TYPE(foundVar) == LOCK_STACK){
+        fprintf(_CONTEXT_FILE_PTR(context), "sub rsp, %d\n", VARIABLE_NASM_BYTES_SIZE);       
+        fprintf(_CONTEXT_FILE_PTR(context), "mov [rbp - %d], %s\n", VARIABLE_MAP_LOC_STACK_OFFSET((foundVar)), REG_TABLE_ELEM_NAME(_CONTEXT_TEMP_REG(context)));       
+    }
+}
+
 void loadToReg(varMapElem_t* var, codeGenContext* context){
     if (VARIABLE_MAP_LOC_TYPE(var) == LOCK_REG){
         if(REG_TABLE_ELEM_USE_SCENERY(VARIABLE_MAP_LOC_REG(var)) != TEMP_STORE) fprintf(_CONTEXT_FILE_PTR(context), "mov %s, %s\n", REG_TABLE_ELEM_NAME(_CONTEXT_TEMP_REG(context)), REG_TABLE_ELEM_NAME(VARIABLE_MAP_LOC_REG(var)));
@@ -490,3 +547,4 @@ void loadToReg(varMapElem_t* var, codeGenContext* context){
         REG_TABLE_ELEM_NAME(_CONTEXT_TEMP_REG(context)), VARIABLE_MAP_LOC_STACK_OFFSET(var));
     }
 }
+

@@ -1,3 +1,3 @@
-nasm -f ELF64 test.s
-ld   test.o -o test.out
-gdb ./test.out
+nasm -f ELF64 in.s
+ld   in.o -o in.out
+gdb ./in.out
