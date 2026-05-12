@@ -225,6 +225,7 @@ static argInst_t instrGetArg(codeGenContext* context, instrArg_t* arg, const cha
             case 3:
                 if(op == '-') n *= -1; 
                 INSTRUCTION_ARG_MEM_SHIFT(arg) = n;
+                printf("INSTRUCTION_ARG_MEM_SHIFT = %d\n", INSTRUCTION_ARG_MEM_SHIFT(arg));
                 break;
             default:
                 printf("Недопустимая адресация\n");
@@ -380,7 +381,9 @@ static void emitREX(codeGenContext* context, instructionInfo* instrInfo){
 
     uint8_t rexByte = 0 | REX_PREFIX;
 
-    if(INSTRUCTION_INFO_TYPE(instrInfo) == MOV_I) rexByte |= (1 << REX_W_BIT);   // set REX.W
+    // if(INSTRUCTION_INFO_TYPE(instrInfo) == MOV_I)
+
+    rexByte |= (1 << REX_W_BIT);   // set REX.W
 
     for(size_t i = 0; i < INSTRUCTION_INFO_AMOUNT_ARGS(instrInfo); i++){
         instrArg_t* curArg = (&INSTRUCTION_INFO_ARGS(instrInfo)[i]); 
@@ -432,8 +435,9 @@ static void emitModRm(codeGenContext* context, instructionInfo* instrInfo, modRm
         case R64TOMEM64:
         case IMM32TOMEM64:
         case MEM64TOR64:
-            if(INSTRUCTION_ARG_MEM_SHIFT((&arg1)) != 0) modRmByte |= (MOD_RM_MEM_DISP8_MOD << MOD_RM_MOD_OFFSET);
-            else                                        modRmByte |= (MOD_RM_MEM_MOD       << MOD_RM_MOD_OFFSET);
+            if(INSTRUCTION_ARG_MEM_SHIFT((&arg1)) != 0)      modRmByte |= (MOD_RM_MEM_DISP8_MOD << MOD_RM_MOD_OFFSET);
+            else if(INSTRUCTION_ARG_MEM_SHIFT((&arg2)) != 0) modRmByte |= (MOD_RM_MEM_DISP8_MOD << MOD_RM_MOD_OFFSET);
+            else                                             modRmByte |= (MOD_RM_MEM_MOD       << MOD_RM_MOD_OFFSET);
             break;
             
 

@@ -1,8 +1,8 @@
 #include "fixUpLabels.h"
-#include "general/binaryGenerator/binGen.h"
 
 #include <assert.h>
 #include <string.h>
+#include <malloc.h>
 
 // fixUpBinBufElem_t* fixUpListInit(fixUpBinBufElem_t* fixUpList){
 //     listCtor(fixUpList, 3, fixUpElemCmp, varMapCopy);
@@ -35,7 +35,7 @@ void codeBufFixUp(binBuffer_t* binBuf, list_t* fixUpList){
         for(size_t j = 0; j < FIX_UP_ELEMENT_PATCH_OFFSETS(fixUpElem)->size; j++){
             uint32_t* patchOffset = (uint32_t*) *data(FIX_UP_ELEMENT_PATCH_OFFSETS(fixUpElem), curPatchOffsetElem);
 
-            binBufPatch(binBuf, *patchOffset, FIX_UP_ELEMENT_LABEL_OFFSET(fixUpElem) - *patchOffset);
+            binBufPatch(binBuf, *patchOffset - sizeof(uint32_t), FIX_UP_ELEMENT_LABEL_OFFSET(fixUpElem) - *patchOffset);
 
             curPatchOffsetElem = *next(FIX_UP_ELEMENT_PATCH_OFFSETS(fixUpElem), curPatchOffsetElem);
         }
@@ -140,6 +140,9 @@ fixUpBinBufElem_t* fixUpElemCtor(char* label){
 
     strcpy(FIX_UP_ELEMENT_LABEL(elem), label);
 
+    FIX_UP_ELEMENT_PATCH_OFFSETS(elem) = (list_t*) calloc(1, sizeof(list_t));
+    assert(FIX_UP_ELEMENT_PATCH_OFFSETS(elem));
+
     listCtor(FIX_UP_ELEMENT_PATCH_OFFSETS(elem), 3, uInt32Cmp, uInt32Copy);
 
     return elem;
@@ -159,6 +162,9 @@ void* fixUpElemCopy(void* dest, void* src){
     assert(FIX_UP_ELEMENT_LABEL(destRegT));
 
     strcpy(FIX_UP_ELEMENT_LABEL(destRegT), FIX_UP_ELEMENT_LABEL(srcRegT));
+
+    FIX_UP_ELEMENT_PATCH_OFFSETS(destRegT) = (list_t*) calloc(1, sizeof(list_t));
+    assert(FIX_UP_ELEMENT_PATCH_OFFSETS(destRegT));
 
     listCtor(FIX_UP_ELEMENT_PATCH_OFFSETS(destRegT), 3, uInt32Cmp, uInt32Copy);
 

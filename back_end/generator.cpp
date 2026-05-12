@@ -125,6 +125,7 @@ void genCodeX86ELF(FILE* filePtr, tree_t* AST, codeGenContext* context, list_t* 
         context
     };
 
+    // _SUB("rsp", "8");
 //     _CMP("rax", "rbx");
 //     _CMP("r8", "16");
 //     _RET();
@@ -152,7 +153,7 @@ void genCodeX86ELF(FILE* filePtr, tree_t* AST, codeGenContext* context, list_t* 
 //     _MOV("r8", "r15");
 //     _MOV("r10", "117");
 
-//     _MOV("rax", "1");
+    // _MOV("rbx", "[rbp - 8]");
 //     _MOV("rbx", "2");
 //     _MOV("rcx", "3");
 //     _MOV("rdx", "4");
@@ -229,12 +230,12 @@ void genCodeX86ELF(FILE* filePtr, tree_t* AST, codeGenContext* context, list_t* 
     // _MOV("[rax + 4]", "-1");
     // _MOV("[r8 + 8]", "-5");
     traversalCondOrder(AST->root, &visitorAstX86Elf);
-    codeBufFixUp(_CONTEXT_ELF_CODE_BUFFER(context), _CONTEXT_ELF_FIX_UP_LIST(context)){
+    codeBufFixUp(_CONTEXT_ELF_CODE_BUFFER(context), _CONTEXT_ELF_FIX_UP_LIST(context));
     genPrologueX86Elf(context);
     // genEpilogueNasm(context);
 
     binBufferDtor(_CONTEXT_ELF_CODE_BUFFER(context));
-    listDtor(&fixUpLabels, fixUpElemDtor);
+    listDtor(&fixUpLabels, (listFreeDataFunc_t) fixUpElemDtor);
 }
 
 #endif /* X86ELF */

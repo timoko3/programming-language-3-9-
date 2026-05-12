@@ -100,8 +100,9 @@ void emitCallFuncX86ElfPost(treeNode_t* node, codeGenContext* context){
     assert(node);
     assert(context);
 
-    _LABEL_USE(_NODE_VALUE_STR(node));
     _CALL(_NODE_VALUE_STR(node));
+    _LABEL_USE(_NODE_VALUE_STR(node));
+
     _MOV(REG_TABLE_ELEM_NAME(_CONTEXT_TEMP_REG(context)), REG_TABLE_ELEM_NAME(_CONTEXT_FUNC_RET_REG(context)));
 
     emitCallFuncFreeArgRegsX86Elf(node, context);
@@ -216,7 +217,6 @@ void emitIfX86ElfIn(treeNode_t* node, codeGenContext* context){
 
     sprintf(fullLabelName, "%s%d", _LABEL_DATA_NAME(ifLabel), _LABEL_DATA_ID(ifLabel));
 
-    _LABEL_USE(fullLabelName);
     switch(_NODE_TYPE(_L(node))){
         case LE:        _JG(fullLabelName) ; break; 
         case LT:        _JGE(fullLabelName); break; 
@@ -226,7 +226,8 @@ void emitIfX86ElfIn(treeNode_t* node, codeGenContext* context){
         case NOT_EQUAL: _JE(fullLabelName) ; break; 
         default: break;
     }
-
+    _LABEL_USE(fullLabelName);
+    
 }
 
 void emitIfX86ElfPost(treeNode_t* node, codeGenContext* context){
@@ -271,7 +272,6 @@ void emitWhileX86ElfIn(treeNode_t* node, codeGenContext* context){
 
     sprintf(fullLabelName, "%s%d", _LABEL_DATA_NAME(whileEndLabel), _LABEL_DATA_ID(whileEndLabel));
 
-    _LABEL_USE(fullLabelName);
     switch(_NODE_TYPE(_L(node))){
         case LE:        _JG(fullLabelName);  break; 
         case LT:        _JGE(fullLabelName); break; 
@@ -281,6 +281,7 @@ void emitWhileX86ElfIn(treeNode_t* node, codeGenContext* context){
         case NOT_EQUAL: _JE(fullLabelName);  break; 
         default: break;
     }
+    _LABEL_USE(fullLabelName);
     
 }
 
@@ -292,8 +293,8 @@ void emitWhileX86ElfPost(treeNode_t* node, codeGenContext* context){
 
     sprintf(fullLabelName, "%s%d", _LABEL_DATA_NAME(_CONTEXT_CUR_LABEL_A(context)), _LABEL_DATA_ID(_CONTEXT_CUR_LABEL_A(context)));
 
-    _LABEL_USE(fullLabelName);
     _JMP(fullLabelName);
+    _LABEL_USE(fullLabelName);
 
     sprintf(fullLabelName, "%s%d", _LABEL_DATA_NAME(_CONTEXT_CUR_LABEL_B(context)), _LABEL_DATA_ID(_CONTEXT_CUR_LABEL_B(context)));
     _LABEL(fullLabelName);

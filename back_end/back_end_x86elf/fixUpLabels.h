@@ -4,6 +4,7 @@
 #include <stdio.h>
 #include <stdint.h>
 
+#include "general/binaryGenerator/binGen.h"
 #include "cashFriendlyList/list.h"
 
 #define FIX_UP_ELEMENT_LABEL(fixUp)          fixUp->label

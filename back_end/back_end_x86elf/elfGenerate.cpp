@@ -103,7 +103,6 @@ static void genSectionTable(codeGenContext* context){
     shdr[1].sh_addr   = START_VIRTUAL_ADDR + _CONTEXT_ELF_SIZE_EH(context) + _CONTEXT_ELF_SIZE_PH(context);
     shdr[1].sh_offset = _CONTEXT_ELF_SIZE_EH(context) + _CONTEXT_ELF_SIZE_PH(context) ;
     shdr[1].sh_size   = _CONTEXT_ELF_CODE_SIZE(context);
-    shr
 
     shdr[2].sh_name = 7;
     shdr[2].sh_type = SHT_STRTAB;
