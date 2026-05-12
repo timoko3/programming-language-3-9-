@@ -8,6 +8,7 @@
 #include "general/hash.h"
 
 #include "back_end_x86elf/emitBinaryCommands.h"
+#include "back_end_x86elf/fixUpLabels.h"
 
 #include <malloc.h>
 #include <assert.h>
@@ -114,7 +115,9 @@ void genCodeX86ELF(FILE* filePtr, tree_t* AST, codeGenContext* context, list_t* 
     assert(regTable);
     assert(labelsTable);
 
-    initContextX86Elf(context, filePtr, regTable, varMap, labelsTable);
+    list_t fixUpLabels;
+
+    initContextX86Elf(context, filePtr, regTable, varMap, labelsTable, &fixUpLabels);
 
     ASTvisitor_t visitorAstX86Elf = {
         astNodeVisitorsX86Elf,
@@ -226,10 +229,12 @@ void genCodeX86ELF(FILE* filePtr, tree_t* AST, codeGenContext* context, list_t* 
     // _MOV("[rax + 4]", "-1");
     // _MOV("[r8 + 8]", "-5");
     traversalCondOrder(AST->root, &visitorAstX86Elf);
+    codeBufFixUp(_CONTEXT_ELF_CODE_BUFFER(context), _CONTEXT_ELF_FIX_UP_LIST(context)){
     genPrologueX86Elf(context);
     // genEpilogueNasm(context);
 
     binBufferDtor(_CONTEXT_ELF_CODE_BUFFER(context));
+    listDtor(&fixUpLabels, fixUpElemDtor);
 }
 
 #endif /* X86ELF */

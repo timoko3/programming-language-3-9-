@@ -3,6 +3,6 @@
 
 #include "context.h"
 
-void initContextX86Elf(codeGenContext* context, FILE* asmFilePtr, list_t* regTable, list_t* varMap, labelsTable_t* labelsTable);
+void initContextX86Elf(codeGenContext* context, FILE* asmFilePtr, list_t* regTable, list_t* varMap, labelsTable_t* labelsTable, list_t* fixUpLabels);
 
 #endif /* CONTEXT_NASM_H */

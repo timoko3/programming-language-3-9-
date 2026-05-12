@@ -2,6 +2,7 @@
 #define ELF_GENERATE_H
 
 #include "general/binaryGenerator/binGen.h"
+#include "fixUpLabels.h"
 
 #include <stddef.h>
 
@@ -14,6 +15,7 @@ struct elfGenerationContext_t{
     size_t sectionTableSize;
     size_t tableNamesTs;
     binBuffer_t* codeBuffer;
+    list_t*      fixUpList;
 };
 
 void genPrologueX86Elf(codeGenContext* context);

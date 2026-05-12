@@ -40,7 +40,7 @@ struct codeGenContext{
 
     int             blockImmersionDepth;
 
-    int             curInstruction;
+    uint32_t        curInstruction;
 
     #ifdef X86ELF
     elfGenerationContext_t elfGenContext;

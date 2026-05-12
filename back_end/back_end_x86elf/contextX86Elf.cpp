@@ -3,13 +3,14 @@
 #include "core/DSL.h"
 
 #include "general/binaryGenerator/binGen.h"
+#include "fixUpLabels.h"
 
 #include <assert.h>
 #include <malloc.h>
 
 const size_t BIN_BUFFER_START_SIZE = 8;
 
-void initContextX86Elf(codeGenContext* context, FILE* asmFilePtr, list_t* regTable, list_t* varMap, labelsTable_t* labelsTable){
+void initContextX86Elf(codeGenContext* context, FILE* asmFilePtr, list_t* regTable, list_t* varMap, labelsTable_t* labelsTable, list_t* fixUpLabels){
     
     listCtor(regTable, AMOUNT_REGS, regTableCmp, regTableCopy);
     regTableInit(regTable, initRegTableNasm, INIT_REG_TABLE_NASM_SIZE);
@@ -52,4 +53,7 @@ void initContextX86Elf(codeGenContext* context, FILE* asmFilePtr, list_t* regTab
 
     _CONTEXT_ELF_CODE_BUFFER(context)     = binBufferCtor(BIN_BUFFER_START_SIZE);
     _CONTEXT_CURRENT_INSTRUCTION(context) = 0;
+
+    listCtor(fixUpLabels, 3, fixUpElemCmp, fixUpElemCopy);
+    _CONTEXT_ELF_FIX_UP_LIST(context) = fixUpLabels;
 }

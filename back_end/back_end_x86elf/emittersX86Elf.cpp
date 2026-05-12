@@ -100,7 +100,7 @@ void emitCallFuncX86ElfPost(treeNode_t* node, codeGenContext* context){
     assert(node);
     assert(context);
 
-    
+    _LABEL_USE(_NODE_VALUE_STR(node));
     _CALL(_NODE_VALUE_STR(node));
     _MOV(REG_TABLE_ELEM_NAME(_CONTEXT_TEMP_REG(context)), REG_TABLE_ELEM_NAME(_CONTEXT_FUNC_RET_REG(context)));
 
@@ -136,6 +136,7 @@ void emitInitFuncX86ElfPre(treeNode_t* node, codeGenContext* context){
 
     _CONTEXT_STACK_OFFSET(context) = VARIABLE_NASM_BYTES_SIZE;
 
+    _LABEL(_NODE_VALUE_STR(node));
     // fprintf(_CONTEXT_FILE_PTR(context), "\n\n%s:\n", _NODE_VALUE_STR(node));
     emitFuncPrologX86Elf(node, context);
 
@@ -215,6 +216,7 @@ void emitIfX86ElfIn(treeNode_t* node, codeGenContext* context){
 
     sprintf(fullLabelName, "%s%d", _LABEL_DATA_NAME(ifLabel), _LABEL_DATA_ID(ifLabel));
 
+    _LABEL_USE(fullLabelName);
     switch(_NODE_TYPE(_L(node))){
         case LE:        _JG(fullLabelName) ; break; 
         case LT:        _JGE(fullLabelName); break; 
@@ -231,6 +233,11 @@ void emitIfX86ElfPost(treeNode_t* node, codeGenContext* context){
     assert(node);
     assert(context);
 
+    char fullLabelName[NUMBER_MAX_SIZE] = "";
+
+    sprintf(fullLabelName, "%s%d", _LABEL_DATA_NAME(_CONTEXT_CUR_LABEL_A(context)), _LABEL_DATA_ID(_CONTEXT_CUR_LABEL_A(context)));
+
+    _LABEL(fullLabelName);
     // fprintf(_CONTEXT_FILE_PTR(context), ".%s_%d:\n", _LABEL_DATA_NAME(_CONTEXT_CUR_LABEL_A(context)), _LABEL_DATA_ID(_CONTEXT_CUR_LABEL_A(context)));
 }
 
@@ -241,6 +248,11 @@ void emitWhileX86ElfPre(treeNode_t* node, codeGenContext* context){
     label_t* whileStartLabel = createLabel(_CONTEXT_LABELS_TABLE(context), LABEL_PREFIX_WHILE_BEGIN);
     assert(whileStartLabel);
 
+    char fullLabelName[NUMBER_MAX_SIZE] = "";
+
+    sprintf(fullLabelName, "%s%d", _LABEL_DATA_NAME(whileStartLabel), _LABEL_DATA_ID(whileStartLabel));
+
+    _LABEL(fullLabelName);
     // fprintf(_CONTEXT_FILE_PTR(context), ".%s_%d\n", _LABEL_DATA_NAME(whileStartLabel), _LABEL_DATA_ID(whileStartLabel));
 
     _CONTEXT_CUR_LABEL_A(context) = whileStartLabel;
@@ -259,6 +271,7 @@ void emitWhileX86ElfIn(treeNode_t* node, codeGenContext* context){
 
     sprintf(fullLabelName, "%s%d", _LABEL_DATA_NAME(whileEndLabel), _LABEL_DATA_ID(whileEndLabel));
 
+    _LABEL_USE(fullLabelName);
     switch(_NODE_TYPE(_L(node))){
         case LE:        _JG(fullLabelName);  break; 
         case LT:        _JGE(fullLabelName); break; 
@@ -279,8 +292,11 @@ void emitWhileX86ElfPost(treeNode_t* node, codeGenContext* context){
 
     sprintf(fullLabelName, "%s%d", _LABEL_DATA_NAME(_CONTEXT_CUR_LABEL_A(context)), _LABEL_DATA_ID(_CONTEXT_CUR_LABEL_A(context)));
 
+    _LABEL_USE(fullLabelName);
     _JMP(fullLabelName);
 
+    sprintf(fullLabelName, "%s%d", _LABEL_DATA_NAME(_CONTEXT_CUR_LABEL_B(context)), _LABEL_DATA_ID(_CONTEXT_CUR_LABEL_B(context)));
+    _LABEL(fullLabelName);
     // fprintf(_CONTEXT_FILE_PTR(context), ".%s_%d:\n", _LABEL_DATA_NAME(_CONTEXT_CUR_LABEL_B(context)), _LABEL_DATA_ID(_CONTEXT_CUR_LABEL_B(context)));
 }
 

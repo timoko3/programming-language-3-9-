@@ -1,3 +1,5 @@
+#include "core/DSL.h"
+
 #define BP writeU8Buf(_CONTEXT_ELF_CODE_BUFFER(context), BREAK_POINT_GDB_CODE)
 
 #define INSTRUCTION_INFO_TYPE(insInfo)        insInfo->instrType
@@ -48,5 +50,5 @@
 #define _JE(arg1)          prepareInstructionEndcodeInfo(context, JE_I, 1, arg1, "")
 #define _JNE(arg1)         prepareInstructionEndcodeInfo(context, JNE_I, 1, arg1, "")
 
-#define _LABEL(arg1)
-#define _LABEL_USE(arg1)
+#define _LABEL(arg1)        fixUpSetLabelOffset(_CONTEXT_ELF_FIX_UP_LIST(context), arg1, BIN_BUFFER_SIZE(_CONTEXT_ELF_CODE_BUFFER(context)))
+#define _LABEL_USE(arg1)    fixUpListAddPatchOffset(_CONTEXT_ELF_FIX_UP_LIST(context), arg1, BIN_BUFFER_SIZE(_CONTEXT_ELF_CODE_BUFFER(context)))
