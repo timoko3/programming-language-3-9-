@@ -26,6 +26,9 @@ typedef list_t labelsTable_t;
 // label_t* getLabel(labelsTable_t* labelsTable, const char* name);
 label_t* createLabel(labelsTable_t* labelsTable, const char* name,  int id = 0, bool saveLabel = 1);
 label_t* labelFind(labelsTable_t* labelsTable, listCmpFunc_t findRule, label_t* refElem);
+void popLabel(labelsTable_t* labelsTable);
+
+label_t* topLabel(labelsTable_t* labelsTable);
 
 void* labelCopy(void* dest, void* src);
 int labelCmp(void* a, void* b);

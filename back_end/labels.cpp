@@ -48,6 +48,27 @@ label_t* createLabel(labelsTable_t* labelsTable, const char* name, int id, bool 
     return (label_t*) *data(labelsTable, *tail(labelsTable));
 }
 
+void popLabel(labelsTable_t* labelsTable){
+    assert(labelsTable);
+
+    if(labelsTable->size == 0) return;
+
+    label_t* topLabel = (label_t*) *data(labelsTable, *tail(labelsTable));
+    assert(topLabel);
+
+    labelDtor(topLabel);
+
+    listDelete(labelsTable, *tail(labelsTable));
+}
+
+label_t* topLabel(labelsTable_t* labelsTable){
+    assert(labelsTable);
+
+    if(labelsTable->size == 0) return NULL;
+
+    return (label_t*) *data(labelsTable, *tail(labelsTable));
+}
+
 void* labelCopy(void* dest, void* src){
     if(dest == NULL || src == NULL) return NULL;
 
