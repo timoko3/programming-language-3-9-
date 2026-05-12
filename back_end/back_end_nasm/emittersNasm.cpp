@@ -47,6 +47,7 @@ void emitMainNasmPre(treeNode_t* node, codeGenContext* context){
     LPRINTF("emitMain start");
 
     fprintf(_CONTEXT_FILE_PTR(context), "%s:\n", MAIN_START_NAME_NASM);
+    fprintf(_CONTEXT_FILE_PTR(context), "mov rbp, rsp\n");
 
     LPRINTF("emitMain end");
 }
@@ -500,17 +501,33 @@ void emitInNasmIn(treeNode_t* node, codeGenContext* context){
 
     _CONTEXT_IS_L_VALUE(context) = 0;
 
-    fprintf(_CONTEXT_FILE_PTR(context), "mov %s, 0\n", REG_TABLE_ELEM_NAME(_CONTEXT_TEMP_REG(context)));
-
     fprintf(_CONTEXT_FILE_PTR(context), "push rdi\n");
     fprintf(_CONTEXT_FILE_PTR(context), "push rsi\n");
     fprintf(_CONTEXT_FILE_PTR(context), "push rdx\n");
     fprintf(_CONTEXT_FILE_PTR(context), "push rax\n");
+    fprintf(_CONTEXT_FILE_PTR(context), "push rcx\n");
+    fprintf(_CONTEXT_FILE_PTR(context), "push r8\n");
+
+    fprintf(_CONTEXT_FILE_PTR(context), "mov %s, 0\n",
+            REG_TABLE_ELEM_NAME(_CONTEXT_TEMP_REG(context)));
+
+    fprintf(_CONTEXT_FILE_PTR(context), "xor r8, r8\n");
 
     label_t* readLabel = createLabel(_CONTEXT_LABELS_TABLE(context), LABEL_PREFIX_READ);
     assert(readLabel);
 
-    fprintf(_CONTEXT_FILE_PTR(context), ".%s_%d:\n", _LABEL_DATA_NAME(readLabel), _LABEL_DATA_ID(readLabel));   
+    label_t* readLabelEnd = createLabel(_CONTEXT_LABELS_TABLE(context), LABEL_PREFIX_READ_END);
+    assert(readLabelEnd);
+
+    label_t* digitLabel = createLabel(_CONTEXT_LABELS_TABLE(context), LABEL_PREFIX_READ);
+    assert(digitLabel);
+
+    label_t* noNegLabel = createLabel(_CONTEXT_LABELS_TABLE(context), LABEL_PREFIX_READ_END);
+    assert(noNegLabel);
+
+    fprintf(_CONTEXT_FILE_PTR(context), ".%s_%d:\n",
+            _LABEL_DATA_NAME(readLabel),
+            _LABEL_DATA_ID(readLabel));
 
     fprintf(_CONTEXT_FILE_PTR(context), "push 0\n");
 
@@ -520,35 +537,87 @@ void emitInNasmIn(treeNode_t* node, codeGenContext* context){
     fprintf(_CONTEXT_FILE_PTR(context), "mov rdx, 1\n");
     fprintf(_CONTEXT_FILE_PTR(context), "syscall\n");
 
-    label_t* readLabelEnd = createLabel(_CONTEXT_LABELS_TABLE(context), LABEL_PREFIX_READ_END);
-    assert(readLabelEnd);
-
     fprintf(_CONTEXT_FILE_PTR(context), "test rax, rax\n");
-    fprintf(_CONTEXT_FILE_PTR(context), "jle .%s_%d\n", _LABEL_DATA_NAME(readLabelEnd), _LABEL_DATA_ID(readLabelEnd));
+    fprintf(_CONTEXT_FILE_PTR(context), "jle .%s_%d\n",
+            _LABEL_DATA_NAME(readLabelEnd),
+            _LABEL_DATA_ID(readLabelEnd));
 
     fprintf(_CONTEXT_FILE_PTR(context), "pop rcx\n");
 
     fprintf(_CONTEXT_FILE_PTR(context), "cmp cl, 10\n");
-    fprintf(_CONTEXT_FILE_PTR(context), "je .%s_%d\n", _LABEL_DATA_NAME(readLabelEnd), _LABEL_DATA_ID(readLabelEnd));
+    fprintf(_CONTEXT_FILE_PTR(context), "je .%s_%d\n",
+            _LABEL_DATA_NAME(readLabelEnd),
+            _LABEL_DATA_ID(readLabelEnd));
+
+    fprintf(_CONTEXT_FILE_PTR(context), "cmp cl, '-'\n");
+    fprintf(_CONTEXT_FILE_PTR(context), "jne .%s_%d\n",
+            _LABEL_DATA_NAME(digitLabel),
+            _LABEL_DATA_ID(digitLabel));
+
+    fprintf(_CONTEXT_FILE_PTR(context), "mov r8, 1\n");
+
+    fprintf(_CONTEXT_FILE_PTR(context), "jmp .%s_%d\n",
+            _LABEL_DATA_NAME(readLabel),
+            _LABEL_DATA_ID(readLabel));
+
+    fprintf(_CONTEXT_FILE_PTR(context), ".%s_%d:\n",
+            _LABEL_DATA_NAME(digitLabel),
+            _LABEL_DATA_ID(digitLabel));
 
     fprintf(_CONTEXT_FILE_PTR(context), "sub cl, '0'\n");
-    fprintf(_CONTEXT_FILE_PTR(context), "imul rbx, 10\n");
-    fprintf(_CONTEXT_FILE_PTR(context), "add rbx, rcx\n");
 
-    fprintf(_CONTEXT_FILE_PTR(context), "jmp .%s_%d\n", _LABEL_DATA_NAME(readLabel), _LABEL_DATA_ID(readLabel));
+    fprintf(_CONTEXT_FILE_PTR(context), "imul %s, 10\n",
+            REG_TABLE_ELEM_NAME(_CONTEXT_TEMP_REG(context)));
 
-    fprintf(_CONTEXT_FILE_PTR(context), ".%s_%d:\n", _LABEL_DATA_NAME(readLabelEnd), _LABEL_DATA_ID(readLabelEnd));
+    fprintf(_CONTEXT_FILE_PTR(context), "add %s, rcx\n",
+            REG_TABLE_ELEM_NAME(_CONTEXT_TEMP_REG(context)));
+
+    fprintf(_CONTEXT_FILE_PTR(context), "jmp .%s_%d\n",
+            _LABEL_DATA_NAME(readLabel),
+            _LABEL_DATA_ID(readLabel));
+
+    fprintf(_CONTEXT_FILE_PTR(context), ".%s_%d:\n",
+            _LABEL_DATA_NAME(readLabelEnd),
+            _LABEL_DATA_ID(readLabelEnd));
+
+    fprintf(_CONTEXT_FILE_PTR(context), "test r8, r8\n");
+
+    fprintf(_CONTEXT_FILE_PTR(context), "jz .%s_%d\n",
+            _LABEL_DATA_NAME(noNegLabel),
+            _LABEL_DATA_ID(noNegLabel));
+
+    fprintf(_CONTEXT_FILE_PTR(context), "neg %s\n",
+            REG_TABLE_ELEM_NAME(_CONTEXT_TEMP_REG(context)));
+
+    fprintf(_CONTEXT_FILE_PTR(context), ".%s_%d:\n",
+            _LABEL_DATA_NAME(noNegLabel),
+            _LABEL_DATA_ID(noNegLabel));
 
     varMapElem_t* foundVar = _CONTEXT_CUR_VAR(context);
 
     if(VARIABLE_MAP_LOC_TYPE(foundVar) == LOCK_REG){
-        fprintf(_CONTEXT_FILE_PTR(context), "mov %s, %s\n", REG_TABLE_ELEM_NAME(VARIABLE_MAP_LOC_REG((foundVar))), REG_TABLE_ELEM_NAME(_CONTEXT_TEMP_REG(context)));       
+        fprintf(_CONTEXT_FILE_PTR(context), "mov %s, %s\n",
+                REG_TABLE_ELEM_NAME(VARIABLE_MAP_LOC_REG(foundVar)),
+                REG_TABLE_ELEM_NAME(_CONTEXT_TEMP_REG(context)));
     }
     else if(VARIABLE_MAP_LOC_TYPE(foundVar) == LOCK_STACK){
-        fprintf(_CONTEXT_FILE_PTR(context), "sub rsp, %d\n", VARIABLE_NASM_BYTES_SIZE);       
-        fprintf(_CONTEXT_FILE_PTR(context), "mov [rbp - %d], %s\n", VARIABLE_MAP_LOC_STACK_OFFSET((foundVar)), REG_TABLE_ELEM_NAME(_CONTEXT_TEMP_REG(context)));       
+        fprintf(_CONTEXT_FILE_PTR(context), "sub rsp, %d\n",
+                VARIABLE_NASM_BYTES_SIZE);
+
+        fprintf(_CONTEXT_FILE_PTR(context), "mov [rbp - %d], %s\n",
+                VARIABLE_MAP_LOC_STACK_OFFSET(foundVar),
+                REG_TABLE_ELEM_NAME(_CONTEXT_TEMP_REG(context)));
     }
 
+    fprintf(_CONTEXT_FILE_PTR(context), "pop r8\n");
+    fprintf(_CONTEXT_FILE_PTR(context), "pop rcx\n");
+    fprintf(_CONTEXT_FILE_PTR(context), "pop rax\n");
+    fprintf(_CONTEXT_FILE_PTR(context), "pop rdx\n");
+    fprintf(_CONTEXT_FILE_PTR(context), "pop rsi\n");
+    fprintf(_CONTEXT_FILE_PTR(context), "pop rdi\n");
+
+    popLabel(_CONTEXT_LABELS_TABLE(context));
+    popLabel(_CONTEXT_LABELS_TABLE(context));
     popLabel(_CONTEXT_LABELS_TABLE(context));
     popLabel(_CONTEXT_LABELS_TABLE(context));
 }
@@ -563,7 +632,6 @@ void emitOutNasmIn(treeNode_t* node, codeGenContext* context){
     fprintf(_CONTEXT_FILE_PTR(context), "push rax\n");
     fprintf(_CONTEXT_FILE_PTR(context), "push rcx\n");
     fprintf(_CONTEXT_FILE_PTR(context), "push r12\n");
-    fprintf(_CONTEXT_FILE_PTR(context), "push r11\n");
 
     
     fprintf(_CONTEXT_FILE_PTR(context), "sub rsp, 1\n");
@@ -573,7 +641,7 @@ void emitOutNasmIn(treeNode_t* node, codeGenContext* context){
     fprintf(_CONTEXT_FILE_PTR(context), "mov rax, %s\n", REG_TABLE_ELEM_NAME(_CONTEXT_TEMP_REG(context)));
     fprintf(_CONTEXT_FILE_PTR(context), "mov rcx, 10\n");
 
-    fprintf(_CONTEXT_FILE_PTR(context), "xor r11, r11\n");
+    fprintf(_CONTEXT_FILE_PTR(context), "xor %s, %s\n", REG_TABLE_ELEM_NAME(_CONTEXT_TEMP_REG(context)), REG_TABLE_ELEM_NAME(_CONTEXT_TEMP_REG(context)));
 
     label_t* positiveLabel = createLabel(_CONTEXT_LABELS_TABLE(context), LABEL_PREFIX_WRITE);
     assert(positiveLabel);
@@ -584,7 +652,7 @@ void emitOutNasmIn(treeNode_t* node, codeGenContext* context){
             _LABEL_DATA_ID(positiveLabel));
 
     fprintf(_CONTEXT_FILE_PTR(context), "neg rax\n");
-    fprintf(_CONTEXT_FILE_PTR(context), "mov r11, 1\n");
+    fprintf(_CONTEXT_FILE_PTR(context), "mov %s, 1\n", REG_TABLE_ELEM_NAME(_CONTEXT_TEMP_REG(context)));
 
     fprintf(_CONTEXT_FILE_PTR(context), ".%s_%d:\n",
             _LABEL_DATA_NAME(positiveLabel),
@@ -613,7 +681,7 @@ void emitOutNasmIn(treeNode_t* node, codeGenContext* context){
     label_t* noMinusLabel = createLabel(_CONTEXT_LABELS_TABLE(context), LABEL_PREFIX_WRITE);
     assert(noMinusLabel);
 
-    fprintf(_CONTEXT_FILE_PTR(context), "test r11, r11\n");
+    fprintf(_CONTEXT_FILE_PTR(context), "test %s, %s\n", REG_TABLE_ELEM_NAME(_CONTEXT_TEMP_REG(context)), REG_TABLE_ELEM_NAME(_CONTEXT_TEMP_REG(context)));
     fprintf(_CONTEXT_FILE_PTR(context), "jz .%s_%d\n", _LABEL_DATA_NAME(noMinusLabel), _LABEL_DATA_ID(noMinusLabel));
 
     fprintf(_CONTEXT_FILE_PTR(context), "sub rsp, 1\n");
@@ -634,7 +702,6 @@ void emitOutNasmIn(treeNode_t* node, codeGenContext* context){
     
     fprintf(_CONTEXT_FILE_PTR(context), "add rsp, r12\n");
 
-    fprintf(_CONTEXT_FILE_PTR(context), "pop r11\n");
     fprintf(_CONTEXT_FILE_PTR(context), "pop r12\n");
     fprintf(_CONTEXT_FILE_PTR(context), "pop rcx\n");
     fprintf(_CONTEXT_FILE_PTR(context), "pop rax\n");
