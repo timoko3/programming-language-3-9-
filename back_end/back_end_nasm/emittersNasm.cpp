@@ -501,7 +501,10 @@ void emitInNasmIn(treeNode_t* node, codeGenContext* context){
     fprintf(_CONTEXT_FILE_PTR(context), "push rdx\n");
     fprintf(_CONTEXT_FILE_PTR(context), "push rax\n");
 
-    fprintf(_CONTEXT_FILE_PTR(context), ".readLoop:\n");
+    label_t* readLabel = createLabel(_CONTEXT_LABELS_TABLE(context), LABEL_PREFIX_READ);
+    assert(readLabel);
+
+    fprintf(_CONTEXT_FILE_PTR(context), ".%s_%d:\n", _LABEL_DATA_NAME(readLabel), _LABEL_DATA_ID(readLabel));   
 
     fprintf(_CONTEXT_FILE_PTR(context), "push 0\n");
 
@@ -511,21 +514,24 @@ void emitInNasmIn(treeNode_t* node, codeGenContext* context){
     fprintf(_CONTEXT_FILE_PTR(context), "mov rdx, 1\n");
     fprintf(_CONTEXT_FILE_PTR(context), "syscall\n");
 
+    label_t* readLabelEnd = createLabel(_CONTEXT_LABELS_TABLE(context), LABEL_PREFIX_READ_END);
+    assert(readLabelEnd);
+
     fprintf(_CONTEXT_FILE_PTR(context), "test rax, rax\n");
-    fprintf(_CONTEXT_FILE_PTR(context), "jle .doneRead\n");
+    fprintf(_CONTEXT_FILE_PTR(context), "jle .%s_%d\n", _LABEL_DATA_NAME(readLabelEnd), _LABEL_DATA_ID(readLabelEnd));
 
     fprintf(_CONTEXT_FILE_PTR(context), "pop rcx\n");
 
     fprintf(_CONTEXT_FILE_PTR(context), "cmp cl, 10\n");
-    fprintf(_CONTEXT_FILE_PTR(context), "je .doneRead\n");
+    fprintf(_CONTEXT_FILE_PTR(context), "je .%s_%d\n", _LABEL_DATA_NAME(readLabelEnd), _LABEL_DATA_ID(readLabelEnd));
 
     fprintf(_CONTEXT_FILE_PTR(context), "sub cl, '0'\n");
     fprintf(_CONTEXT_FILE_PTR(context), "imul rbx, 10\n");
     fprintf(_CONTEXT_FILE_PTR(context), "add rbx, rcx\n");
 
-    fprintf(_CONTEXT_FILE_PTR(context), "jmp .readLoop\n");
+    fprintf(_CONTEXT_FILE_PTR(context), "jmp .%s_%d\n", _LABEL_DATA_NAME(readLabel), _LABEL_DATA_ID(readLabel));
 
-    fprintf(_CONTEXT_FILE_PTR(context), ".doneRead:\n");
+    fprintf(_CONTEXT_FILE_PTR(context), ".%s_%d:\n", _LABEL_DATA_NAME(readLabelEnd), _LABEL_DATA_ID(readLabelEnd));
 
     varMapElem_t* foundVar = _CONTEXT_CUR_VAR(context);
 
@@ -557,7 +563,10 @@ void emitOutNasmIn(treeNode_t* node, codeGenContext* context){
     fprintf(_CONTEXT_FILE_PTR(context), "mov rax, %s\n", REG_TABLE_ELEM_NAME(_CONTEXT_TEMP_REG(context)));
     fprintf(_CONTEXT_FILE_PTR(context), "mov rcx, 10\n");
 
-    fprintf(_CONTEXT_FILE_PTR(context), ".convertLoop:\n");
+    label_t* writeLabel = createLabel(_CONTEXT_LABELS_TABLE(context), LABEL_PREFIX_WRITE);
+    assert(writeLabel);
+
+    fprintf(_CONTEXT_FILE_PTR(context), ".%s_%d:\n", _LABEL_DATA_NAME(writeLabel), _LABEL_DATA_ID(writeLabel));   
 
     fprintf(_CONTEXT_FILE_PTR(context), "mov rdx, 0\n");
     fprintf(_CONTEXT_FILE_PTR(context), "div rcx\n");
@@ -570,7 +579,7 @@ void emitOutNasmIn(treeNode_t* node, codeGenContext* context){
 
 
     fprintf(_CONTEXT_FILE_PTR(context), "test rax, rax\n");
-    fprintf(_CONTEXT_FILE_PTR(context), "jnz .convertLoop\n");
+    fprintf(_CONTEXT_FILE_PTR(context), "jnz .%s_%d\n", _LABEL_DATA_NAME(writeLabel), _LABEL_DATA_ID(writeLabel));
 
     fprintf(_CONTEXT_FILE_PTR(context), "mov rax, 1\n");
     fprintf(_CONTEXT_FILE_PTR(context), "mov rdi, 1\n");

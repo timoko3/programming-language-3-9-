@@ -8,6 +8,9 @@
 extern const char* LABEL_PREFIX_WHILE_BEGIN;
 extern const char* LABEL_PREFIX_WHILE_END;
 extern const char* LABEL_PREFIX_IF_END; 
+extern const char* LABEL_PREFIX_READ; 
+extern const char* LABEL_PREFIX_READ_END; 
+extern const char* LABEL_PREFIX_WRITE; 
 
 const size_t AMOUNT_LABELS    = 5;
 

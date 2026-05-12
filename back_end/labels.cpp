@@ -14,6 +14,11 @@ const char* LABEL_PREFIX_WHILE_BEGIN = "whileBegin";
 const char* LABEL_PREFIX_WHILE_END   = "whileEnd";
 const char* LABEL_PREFIX_IF_END      = "ifEnd";
 const char* LABEL_PREFIX_FUNC        = "func";
+const char* LABEL_PREFIX_READ        = "read";
+const char* LABEL_PREFIX_READ_END    = "readEnd";
+const char* LABEL_PREFIX_WRITE       = "write";
+
+size_t labelNum = 0;
 
 label_t* createLabel(labelsTable_t* labelsTable, const char* name, int id, bool saveLabel){
     assert(labelsTable);
@@ -29,13 +34,16 @@ label_t* createLabel(labelsTable_t* labelsTable, const char* name, int id, bool 
 
     strcpy(_LABEL_DATA_NAME(curLabel), name);
 
-    if(id == 0) _LABEL_DATA_ID(curLabel) = *freeInd(labelsTable);
-    else _LABEL_DATA_ID(curLabel) = id;
+     _LABEL_DATA_ID(curLabel) = labelNum;
+    // if(id == 0) _LABEL_DATA_ID(curLabel) = *freeInd(labelsTable);
+    // else _LABEL_DATA_ID(curLabel) = id;
     
     LPRINTF("curLabelAddr = %p", curLabel);
     if(saveLabel) listInsertToTail(labelsTable, (void*) curLabel);
 
     labelDtor(curLabel);
+
+    labelNum++;
 
     return (label_t*) *data(labelsTable, *tail(labelsTable));
 }
