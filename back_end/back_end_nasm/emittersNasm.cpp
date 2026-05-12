@@ -538,6 +538,57 @@ void emitInNasmIn(treeNode_t* node, codeGenContext* context){
     }
 }
 
+void emitOutNasmIn(treeNode_t* node, codeGenContext* context){
+    assert(node);
+    assert(context);
+
+    fprintf(_CONTEXT_FILE_PTR(context), "push rdi\n");
+    fprintf(_CONTEXT_FILE_PTR(context), "push rsi\n");
+    fprintf(_CONTEXT_FILE_PTR(context), "push rdx\n");
+    fprintf(_CONTEXT_FILE_PTR(context), "push rax\n");
+    fprintf(_CONTEXT_FILE_PTR(context), "push rcx\n");
+    fprintf(_CONTEXT_FILE_PTR(context), "push r12\n");
+
+    
+    fprintf(_CONTEXT_FILE_PTR(context), "sub rsp, 1\n");
+    fprintf(_CONTEXT_FILE_PTR(context), "mov byte [rsp], 10\n");
+    fprintf(_CONTEXT_FILE_PTR(context), "mov r12, 1\n");
+    
+    fprintf(_CONTEXT_FILE_PTR(context), "mov rax, %s\n", REG_TABLE_ELEM_NAME(_CONTEXT_TEMP_REG(context)));
+    fprintf(_CONTEXT_FILE_PTR(context), "mov rcx, 10\n");
+
+    fprintf(_CONTEXT_FILE_PTR(context), ".convertLoop:\n");
+
+    fprintf(_CONTEXT_FILE_PTR(context), "mov rdx, 0\n");
+    fprintf(_CONTEXT_FILE_PTR(context), "div rcx\n");
+
+    fprintf(_CONTEXT_FILE_PTR(context), "add rdx, '0'\n");
+
+    fprintf(_CONTEXT_FILE_PTR(context), "sub rsp, 1\n");
+    fprintf(_CONTEXT_FILE_PTR(context), "mov [rsp], dl\n");
+    fprintf(_CONTEXT_FILE_PTR(context), "add r12, 1\n");
+
+
+    fprintf(_CONTEXT_FILE_PTR(context), "test rax, rax\n");
+    fprintf(_CONTEXT_FILE_PTR(context), "jnz .convertLoop\n");
+
+    fprintf(_CONTEXT_FILE_PTR(context), "mov rax, 1\n");
+    fprintf(_CONTEXT_FILE_PTR(context), "mov rdi, 1\n");
+    fprintf(_CONTEXT_FILE_PTR(context), "mov rsi, rsp\n");
+    fprintf(_CONTEXT_FILE_PTR(context), "mov rdx, r12\n");
+    fprintf(_CONTEXT_FILE_PTR(context), "syscall\n");
+    
+    fprintf(_CONTEXT_FILE_PTR(context), "add rsp, r12\n");
+
+    fprintf(_CONTEXT_FILE_PTR(context), "pop r12\n");
+    fprintf(_CONTEXT_FILE_PTR(context), "pop rcx\n");
+    fprintf(_CONTEXT_FILE_PTR(context), "pop rax\n");
+    fprintf(_CONTEXT_FILE_PTR(context), "pop rdx\n");
+    fprintf(_CONTEXT_FILE_PTR(context), "pop rsi\n");
+    fprintf(_CONTEXT_FILE_PTR(context), "pop rdi\n");
+
+}
+
 void loadToReg(varMapElem_t* var, codeGenContext* context){
     if (VARIABLE_MAP_LOC_TYPE(var) == LOCK_REG){
         if(REG_TABLE_ELEM_USE_SCENERY(VARIABLE_MAP_LOC_REG(var)) != TEMP_STORE) fprintf(_CONTEXT_FILE_PTR(context), "mov %s, %s\n", REG_TABLE_ELEM_NAME(_CONTEXT_TEMP_REG(context)), REG_TABLE_ELEM_NAME(VARIABLE_MAP_LOC_REG(var)));

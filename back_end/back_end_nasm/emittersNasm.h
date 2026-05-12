@@ -60,4 +60,6 @@ void emitHltNasmPre(treeNode_t* node, codeGenContext* context);
 void emitInNasmPre(treeNode_t* node, codeGenContext* context);
 void emitInNasmIn(treeNode_t* node, codeGenContext* context);
 
+void emitOutNasmIn(treeNode_t* node, codeGenContext* context);
+
 #endif /* EMITERS_NASM */
