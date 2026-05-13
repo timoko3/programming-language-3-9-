@@ -193,8 +193,9 @@ void fixUpElemDtor(fixUpBinBufElem_t* elem){
     if(elem == NULL) return;
 
     free(FIX_UP_ELEMENT_LABEL(elem));
-
-    listDtor(FIX_UP_ELEMENT_PATCH_OFFSETS(elem));
+    
+    listDtor(FIX_UP_ELEMENT_PATCH_OFFSETS(elem), (listFreeDataFunc_t) uInt32Dtor);
+    free(FIX_UP_ELEMENT_PATCH_OFFSETS(elem));
 
     free(elem);
 }
@@ -226,4 +227,8 @@ void* uInt32Copy(void* dest, void* src){
     *destNum = *srcNum;
 
     return (void*) destNum;
+}
+
+void uInt32Dtor(uint32_t* num){
+    free(num);
 }

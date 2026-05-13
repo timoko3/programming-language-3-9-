@@ -19,6 +19,7 @@ struct fixUpBinBufElem_t{
 
 int uInt32Cmp(void* a, void* b);
 void* uInt32Copy(void* dest, void* src);
+void uInt32Dtor(uint32_t* num);
 
 void codeBufFixUp(binBuffer_t* binBuf, list_t* fixUpList);
 
