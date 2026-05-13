@@ -54,5 +54,7 @@
 #define _CVTTSS2SI(arg1, arg2)  prepareInstructionEndcodeInfo(context, CVTTSS2SI_I, 2, arg1, arg2)
 #define _SQRTSS(arg1, arg2)     prepareInstructionEndcodeInfo(context, SQRTSS_I, 2, arg1, arg2)
 
+#define _CQO()                  prepareInstructionEndcodeInfo(context, CQO_I, 0, "", "")
+
 #define _LABEL(arg1)        fixUpSetLabelOffset(_CONTEXT_ELF_FIX_UP_LIST(context), arg1, BIN_BUFFER_SIZE(_CONTEXT_ELF_CODE_BUFFER(context)))
 #define _LABEL_USE(arg1)    fixUpListAddPatchOffset(_CONTEXT_ELF_FIX_UP_LIST(context), arg1, BIN_BUFFER_SIZE(_CONTEXT_ELF_CODE_BUFFER(context)))

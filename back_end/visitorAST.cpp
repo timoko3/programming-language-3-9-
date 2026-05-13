@@ -87,8 +87,8 @@ const size_t SPU_NODE_VISITORS_AMOUNT  = sizeof(astNodeVisitorsSpu) / sizeof(AST
 
 #ifdef X86ELF
 ASTvisitorNode_t astNodeVisitorsX86Elf[]{
-    {END_BLOCK,     emitMainX86ElfPre,   NULL,                  NULL,                 1},
-    {MAIN,          NULL,                NULL,                  NULL,                 1},
+    {END_BLOCK,     NULL,                NULL,                  NULL,                 1},
+    {MAIN,          emitMainX86ElfPre,   NULL,                  NULL,                 1},
     {FUNCTION,      emitFuncX86ElfPre,   emitFuncX86ElfIn,      emitFuncX86ElfPost,   1},
     {RETURN,        emitRetX86ElfPre,    NULL,                  emitRetX86ElfPost,    1},
     {COMMA,         NULL,                NULL,                  NULL,                 1},

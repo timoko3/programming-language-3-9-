@@ -243,12 +243,17 @@ void emitIfX86ElfPost(treeNode_t* node, codeGenContext* context){
     assert(node);
     assert(context);
 
+    label_t* ifLabel = topLabel(_CONTEXT_LABELS_TABLE(context)); 
+    assert(ifLabel);
+
     char fullLabelName[NUMBER_MAX_SIZE] = "";
 
-    sprintf(fullLabelName, "%s%d", _LABEL_DATA_NAME(_CONTEXT_CUR_LABEL_A(context)), _LABEL_DATA_ID(_CONTEXT_CUR_LABEL_A(context)));
+    sprintf(fullLabelName, "%s%d", _LABEL_DATA_NAME(ifLabel), _LABEL_DATA_ID(ifLabel));
 
     _LABEL(fullLabelName);
     // fprintf(_CONTEXT_FILE_PTR(context), ".%s_%d:\n", _LABEL_DATA_NAME(_CONTEXT_CUR_LABEL_A(context)), _LABEL_DATA_ID(_CONTEXT_CUR_LABEL_A(context)));
+
+    popLabel(_CONTEXT_LABELS_TABLE(context));
 }
 
 void emitWhileX86ElfPre(treeNode_t* node, codeGenContext* context){
@@ -411,6 +416,7 @@ void emitDivX86ElfPost(treeNode_t* node, codeGenContext* context){
 
     _MOV("rdx", "0");
     _MOV("rax", REG_TABLE_ELEM_NAME(_CONTEXT_CALC_REG_A(context)));
+    _CQO();
 
     _IDIV(REG_TABLE_ELEM_NAME(_CONTEXT_CALC_REG_B(context)));
 
@@ -425,13 +431,13 @@ void emitSqrtX86ElfPost(treeNode_t* node, codeGenContext* context){
     assert(context);
 
     loadToRegX86Elf(_CONTEXT_CUR_VAR(context), context);
-    fprintf(_CONTEXT_FILE_PTR(context), "mov %s, %s\n", REG_TABLE_ELEM_NAME(_CONTEXT_CALC_REG_A(context)), REG_TABLE_ELEM_NAME(_CONTEXT_TEMP_REG(context)));
+    _MOV(REG_TABLE_ELEM_NAME(_CONTEXT_CALC_REG_A(context)), REG_TABLE_ELEM_NAME(_CONTEXT_TEMP_REG(context)));
 
-    fprintf(_CONTEXT_FILE_PTR(context), "cvtsi2ss xmm0, %s\n", REG_TABLE_ELEM_NAME(_CONTEXT_CALC_REG_A(context)));
-    fprintf(_CONTEXT_FILE_PTR(context), "%s xmm0, xmm0\n", SQRT_OPERATION_NAME_X86ELF);
-    fprintf(_CONTEXT_FILE_PTR(context), "cvttss2si %s, xmm0\n", REG_TABLE_ELEM_NAME(_CONTEXT_CALC_REG_A(context)));
+    _CVTSI2SS("xmm0", REG_TABLE_ELEM_NAME(_CONTEXT_CALC_REG_A(context)));
+    _SQRTSS("xmm0", "xmm0");
+    _CVTTSS2SI(REG_TABLE_ELEM_NAME(_CONTEXT_CALC_REG_A(context)), "xmm0");
 
-    fprintf(_CONTEXT_FILE_PTR(context), "mov %s, %s\n", REG_TABLE_ELEM_NAME(_CONTEXT_TEMP_REG(context)), REG_TABLE_ELEM_NAME(_CONTEXT_CALC_REG_A(context)));
+    _MOV(REG_TABLE_ELEM_NAME(_CONTEXT_TEMP_REG(context)), REG_TABLE_ELEM_NAME(_CONTEXT_CALC_REG_A(context)));
 }
 
 void emitVarX86ElfPre(treeNode_t* node, codeGenContext* context){

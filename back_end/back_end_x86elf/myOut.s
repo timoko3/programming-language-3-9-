@@ -1,9 +1,11 @@
 BITS 64
 
 print_int:
-    push rsi
+    push rax
+    push rbx
     push rcx
     push rdx
+    push rsi
     push rdi
 
     sub rsp, 32
@@ -12,11 +14,19 @@ print_int:
     mov byte [rsi], 10
 
     mov rax, rdi
-    mov rcx, 10
+    mov rbx, 10
+
+    xor rcx, rcx
+
+    cmp rax, 0
+    jge .convert
+
+    neg rax
+    mov rcx, 1
 
 .convert:
     xor rdx, rdx
-    div rcx
+    div rbx
 
     add dl, '0'
 
@@ -26,6 +36,13 @@ print_int:
     test rax, rax
     jnz .convert
 
+    test rcx, rcx
+    jz .write
+
+    dec rsi
+    mov byte [rsi], '-'
+
+.write:
     mov rax, 1
     mov rdi, 1
 
@@ -37,7 +54,10 @@ print_int:
     add rsp, 32
 
     pop rdi
+    pop rsi
     pop rdx
     pop rcx
-    pop rsi
+    pop rbx
+    pop rax
+
     ret

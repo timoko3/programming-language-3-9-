@@ -20,6 +20,9 @@ static void genEpilogueNasm(codeGenContext* context);
 
 #ifdef X86ELF
 #include "back_end_x86elf/elfGenerate.h"
+
+const char* OUT_ASM_FUNC_FILE_NAME = "back_end/back_end_x86elf/myOut.bin";
+const char* IN_ASM_FUNC_FILE_NAME  = "back_end/back_end_x86elf/myIn.bin";
 #endif /* X86ELF */
 
 void genCode(tree_t* AST, const char* destFileName, generator_t generator){
@@ -230,15 +233,15 @@ void genCodeX86ELF(FILE* filePtr, tree_t* AST, codeGenContext* context, list_t* 
     // _MOV("[rax + 4]", "-1");
     // _MOV("[r8 + 8]", "-5");
 
-    _CVTSI2SS("xmm0", "rcx");
-    _CVTTSS2SI("rbx", "xmm0");
-    _SQRTSS("xmm0", "xmm0");
-    // traversalCondOrder(AST->root, &visitorAstX86Elf);
-    // _LABEL("printf");
-    // readFileToBinBuffer(_CONTEXT_ELF_CODE_BUFFER(context), "myOut.bin");
-    // _LABEL("scanf");
-    // readFileToBinBuffer(_CONTEXT_ELF_CODE_BUFFER(context), "myIn.bin");
-    // codeBufFixUp(_CONTEXT_ELF_CODE_BUFFER(context), _CONTEXT_ELF_FIX_UP_LIST(context));
+    // _CVTSI2SS("xmm0", "rcx");
+    // _CVTTSS2SI("rbx", "xmm0");
+    // _SQRTSS("xmm0", "xmm0");
+    traversalCondOrder(AST->root, &visitorAstX86Elf);
+    _LABEL("printf");
+    readFileToBinBuffer(_CONTEXT_ELF_CODE_BUFFER(context), OUT_ASM_FUNC_FILE_NAME);
+    _LABEL("scanf");
+    readFileToBinBuffer(_CONTEXT_ELF_CODE_BUFFER(context), IN_ASM_FUNC_FILE_NAME);
+    codeBufFixUp(_CONTEXT_ELF_CODE_BUFFER(context), _CONTEXT_ELF_FIX_UP_LIST(context));
     genPrologueX86Elf(context);
 
     binBufferDtor(_CONTEXT_ELF_CODE_BUFFER(context));

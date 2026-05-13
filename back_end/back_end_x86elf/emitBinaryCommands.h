@@ -44,7 +44,9 @@ enum instr_t{
 
     CVTSI2SS_I,
     CVTTSS2SI_I,
-    SQRTSS_I
+    SQRTSS_I,
+
+    CQO_I
 };
 
 struct  instrArg_t{

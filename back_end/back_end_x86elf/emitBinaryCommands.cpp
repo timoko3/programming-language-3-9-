@@ -111,7 +111,9 @@ instrEncodeRule_t instructionsEncodeRules[]{
 
     {CVTSI2SS_I,  RM64TOXMM, MR_CASE_R, A_OP_EN,  2, 2, {0x0F, 0x2A}},
     {CVTTSS2SI_I, XMMTOR64,  MR_CASE_R, A_OP_EN,  2, 2, {0x0F, 0x2C}},
-    {SQRTSS_I,    XMMTOXMM,  MR_CASE_R, A_OP_EN,  2, 2, {0x0F, 0x51}}
+    {SQRTSS_I,    XMMTOXMM,  MR_CASE_R, A_OP_EN,  2, 2, {0x0F, 0x51}},
+
+    {CQO_I,       NOMODE,  MR_CASE_NO, NO_OP_EN,  0, 1, {0x99}}
 };
 
 const size_t ENCODE_RULES_TABLE_SIZE = sizeof(instructionsEncodeRules) / sizeof(instrEncodeRule_t);
@@ -355,7 +357,7 @@ static void emitInstr(codeGenContext* context, instructionInfo* instrInfo){
     instrEncodeRule_t* instrEncodeRule = findEncodeRule(INSTRUCTION_INFO_TYPE(instrInfo), INSTRUCTION_INFO_MODE(instrInfo));
     assert(instrEncodeRule);
 
-    BP;
+    // BP;
 
     emitMandatory(context, instrInfo);
 
