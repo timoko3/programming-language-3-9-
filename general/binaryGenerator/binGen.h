@@ -27,4 +27,6 @@ void binBufferRealloc(binBuffer_t* buffer);
 
 void binBufPatch(binBuffer_t* buffer, size_t position, uint32_t patchValue);
 
+void readFileToBinBuffer(binBuffer_t* buffer, const char* fileName);
+
 #endif /* BIN_GEN_H */

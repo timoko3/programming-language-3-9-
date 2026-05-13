@@ -1,5 +1,7 @@
 #include "binGen.h"
 
+#include "file.h"
+
 #include <string.h>
 #include <assert.h>
 #include <malloc.h>
@@ -68,4 +70,35 @@ void binBufPatch(binBuffer_t* buffer, size_t position, uint32_t patchValue){
     for(size_t i = 0; i < 4; i++){
         BIN_BUFFER_DATA(buffer)[position + i] = byte[i];
     }
+}
+
+void readFileToBinBuffer(binBuffer_t* buffer, const char* fileName){
+    assert(buffer);
+    assert(fileName);
+
+    size_t fileSize = getFileSize(fileName);
+
+    FILE* file = fopen(fileName, "rb");
+
+    if(!file){
+        fprintf(stderr, ALERT_FILE_OPEN_FAILURE);
+        perror(FUNCTION_FAILURE_ALERT);
+
+        return;
+    }
+
+    while(BIN_BUFFER_SIZE(buffer) + fileSize >= BIN_BUFFER_CAPACITY(buffer)){
+        binBufferRealloc(buffer);
+    }
+
+    size_t readBytes = fread(BIN_BUFFER_DATA(buffer) + BIN_BUFFER_SIZE(buffer),
+                             sizeof(uint8_t),
+                             fileSize,
+                             file);
+
+    assert(readBytes == fileSize);
+
+    BIN_BUFFER_SIZE(buffer) += fileSize;
+
+    fclose(file);
 }

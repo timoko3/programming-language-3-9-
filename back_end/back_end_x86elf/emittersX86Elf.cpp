@@ -519,28 +519,52 @@ void emitHltX86ElfPre(treeNode_t* node, codeGenContext* context){
     _SYSCALL();
 }
 
-// void emitInX86Pre(treeNode_t* node, codeGenContext* context){
-//     assert(node);
-//     assert(context);
+void emitInX86ElfPre(treeNode_t* node, codeGenContext* context){
+    assert(node);
+    assert(context);
 
-//     _CONTEXT_ELF_NEED_DATA_SECTION(context) = 1;
-//     _CONTEXT_IS_L_VALUE(context)            = 1;
-// }
+    _CONTEXT_IS_L_VALUE(context)            = 1;
+}
 
-// void emitInX86In(treeNode_t* node, codeGenContext* context){
-//     assert(node);
-//     assert(context);
+void emitInX86ElfIn(treeNode_t* node, codeGenContext* context){
+    assert(node);
+    assert(context);
 
-//     _CONTEXT_IS_L_VALUE(context) = 0;
+    _CONTEXT_IS_L_VALUE(context) = 0;
 
-//     _PUSH("rax");
-//     _PUSH("rsi");
-//     _PUSH("rdi");
+    _CALL("scanf0");
+    _LABEL_USE("scanf");
+    _MOV("rbx", "rax");
 
-//     _POP("rdi");
-//     _POP("rsi");
-//     _POP("rax");
-// }
+    varMapElem_t* foundVar = _CONTEXT_CUR_VAR(context);
+
+    if(VARIABLE_MAP_LOC_TYPE(foundVar) == LOCK_REG){
+        _MOV(REG_TABLE_ELEM_NAME(VARIABLE_MAP_LOC_REG(foundVar)), REG_TABLE_ELEM_NAME(_CONTEXT_TEMP_REG(context)));
+    }
+    else if(VARIABLE_MAP_LOC_TYPE(foundVar) == LOCK_STACK){
+        char numStr[NUMBER_MAX_SIZE] = ""; 
+
+        sprintf(numStr, "%d", VARIABLE_NASM_BYTES_SIZE);
+            
+        _SUB("rsp", numStr);
+
+        sprintf(numStr, "[rbp - %d]", VARIABLE_MAP_LOC_STACK_OFFSET(foundVar));
+
+        _MOV(numStr, REG_TABLE_ELEM_NAME(_CONTEXT_TEMP_REG(context)));
+    }
+
+}
+
+void emitOutX86ElfIn(treeNode_t* node, codeGenContext* context){
+    assert(node);
+    assert(context);
+
+    _PUSH("rdi");
+    _MOV("rdi", "rbx");
+    _CALL("print0");
+    _LABEL_USE("printf");
+    _POP("rdi");
+}
 
 void loadToRegX86Elf(varMapElem_t* var, codeGenContext* context){
     if (VARIABLE_MAP_LOC_TYPE(var) == LOCK_REG){
