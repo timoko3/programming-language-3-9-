@@ -28,6 +28,8 @@ const uint8_t R13_CODE   = 0x5;
 const uint8_t R14_CODE   = 0x6;
 const uint8_t R15_CODE   = 0x7;
 
+const uint8_t XMM0_CODE  = 0x0;
+
 
 enum modRmCase_t{
     MR_CASE_R,
@@ -48,6 +50,8 @@ enum opEn_t{
 
     MI_OP_EN,
 
+    A_OP_EN,
+
     NO_OP_EN
 };
 
@@ -58,7 +62,7 @@ struct instrEncodeRule_t{
     opEn_t      opEn;
     size_t      amountArgs;
     size_t      opcodeAmountBytes;
-    uint8_t     opcodeBytes[2];
+    uint8_t     opcodeBytes[3];
 };
 
 instrEncodeRule_t instructionsEncodeRules[]{
@@ -104,6 +108,8 @@ instrEncodeRule_t instructionsEncodeRules[]{
 
     {CMP_I,   R64TORM64,   MR_CASE_R,  MR_OP_EN, 2, 1, {0x39}},
     {CMP_I,   IMM32TORM64, MR_CASE_7,  MI_OP_EN, 2, 1, {0x81}},
+
+    {CVTSI2SS_I, RM64TOXMM, MR_CASE_R, A_OP_EN,  2, 2, {0x0F, 0x2A}}
 };
 
 const size_t ENCODE_RULES_TABLE_SIZE = sizeof(instructionsEncodeRules) / sizeof(instrEncodeRule_t);
@@ -126,8 +132,10 @@ const uint8_t POP_RM64_MOD_RM_REG_C  = 0x0;
 
 const uint8_t BREAK_POINT_GDB_CODE  = 0xCC;
 
+const uint8_t MANDATORY_BYTE_CODE   = 0xF3; 
+
 const uint8_t R64_TO_RM64_ADD_CODE   = 0x01;
-const uint8_t IMM32_TO_RM64_ADD_CODE  = 0x01;
+const uint8_t IMM32_TO_RM64_ADD_CODE = 0x01;
 
 const uint8_t REX_W_BIT             = 3;
 const uint8_t REX_R_BIT             = 2;
@@ -148,6 +156,7 @@ static void chooseArgsMode(codeGenContext* context, instructionInfo* instrInfo);
 
 static void emitInstr(codeGenContext* context, instructionInfo* instrInfo);
 
+static void emitMandatory(codeGenContext* context, instructionInfo* instrInfo);
 static void emitREX(codeGenContext* context, instructionInfo* instrInfo);
 static void emitModRm(codeGenContext* context, instructionInfo* instrInfo, modRmCase_t modRmType, opEn_t opEnType);
 static void emitSIB(codeGenContext* context, instructionInfo* instrInfo);
@@ -205,7 +214,9 @@ static argInst_t instrGetArg(codeGenContext* context, instrArg_t* arg, const cha
     int n = 0;
     int parsedVarsAmount = 0; 
     if(foundReg){
-        INSTRUCTION_ARG_TYPE(arg) = R64;
+        if(REG_TABLE_ELEM_USE_SCENERY(foundReg) != VEC_REG) INSTRUCTION_ARG_TYPE(arg) = R64;
+        else INSTRUCTION_ARG_TYPE(arg) = XMM;
+
         INSTRUCTION_ARG_VALUE_REG(arg) = foundReg;
     }
     else if((parsedVarsAmount = sscanf(strArg, "[%[a-z0-9] %c %d]", strPart, &op, &n) )> 0){
@@ -307,6 +318,15 @@ static void chooseArgsMode(codeGenContext* context, instructionInfo* instrInfo){
                 default: break;
             }
             break;
+        case XMM:
+            switch (INSTRUCTION_ARG_TYPE((&arg2))){
+                case R64:
+                    INSTRUCTION_INFO_MODE(instrInfo) = RM64TOXMM;
+                    INSTRUCTION_ARG_TYPE((&INSTRUCTION_INFO_ARGS(instrInfo)[1])) = RM64;
+                    break;
+                default: break;
+            }
+            break;
         case IMM32:
             INSTRUCTION_INFO_MODE(instrInfo) = IMM32MODE;
             break;
@@ -327,7 +347,9 @@ static void emitInstr(codeGenContext* context, instructionInfo* instrInfo){
     instrEncodeRule_t* instrEncodeRule = findEncodeRule(INSTRUCTION_INFO_TYPE(instrInfo), INSTRUCTION_INFO_MODE(instrInfo));
     assert(instrEncodeRule);
 
-    // BP;
+    BP;
+
+    emitMandatory(context, instrInfo);
 
     emitREX(context, instrInfo);
 
@@ -373,6 +395,15 @@ static void emitImm32toRM64(codeGenContext* context, instructionInfo* instrInfo)
     assert(instrInfo);
 
     writeU32LeBuf(_CONTEXT_ELF_CODE_BUFFER(context), (uint32_t) INSTRUCTION_ARG_VALUE_NUM((&INSTRUCTION_INFO_ARGS(instrInfo)[1])));
+}
+
+static void emitMandatory(codeGenContext* context, instructionInfo* instrInfo){
+    assert(context);
+    assert(instrInfo);    
+
+    if(INSTRUCTION_INFO_MODE(instrInfo) == RM64TOXMM){
+        writeU8Buf(_CONTEXT_ELF_CODE_BUFFER(context), MANDATORY_BYTE_CODE);
+    }
 }
 
 static void emitREX(codeGenContext* context, instructionInfo* instrInfo){
@@ -428,6 +459,7 @@ static void emitModRm(codeGenContext* context, instructionInfo* instrInfo, modRm
         case IMM32TORM64:
         case R64TORM64:
         case RM64TOR64:
+        case RM64TOXMM:
             modRmByte |= (MOD_RM_REG_MOD << MOD_RM_MOD_OFFSET);
             break;
 
@@ -457,6 +489,10 @@ static void emitModRm(codeGenContext* context, instructionInfo* instrInfo, modRm
                 break;
             case MI_OP_EN:
                 firstThreeBits |= (emitRegCode(REG_TABLE_ELEM_REG(INSTRUCTION_ARG_VALUE_REG((&arg1)))));
+                break;
+            case A_OP_EN:
+                firstThreeBits |= (emitRegCode(REG_TABLE_ELEM_REG(INSTRUCTION_ARG_VALUE_REG((&arg2)))));
+                secondThreeBits |= (emitRegCode(REG_TABLE_ELEM_REG(INSTRUCTION_ARG_VALUE_REG((&arg1)))) << 3);
                 break;
             
             default:
@@ -573,6 +609,9 @@ static uint8_t emitRegCode(genPurposeRegs reg){
             break;
         case R15:
             curRegCode = R15_CODE;
+            break;
+        case XMM0:
+            curRegCode = XMM0_CODE;
             break;
         
         default:

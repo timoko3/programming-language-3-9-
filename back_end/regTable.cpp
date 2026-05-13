@@ -27,6 +27,7 @@ regTableElem_t initRegTableNasm[] = {
     {R13, "r13", STORE_VAR,    false,  CALLEE_SAVED},  
     {R14, "r14", STORE_VAR,    false,  CALLEE_SAVED},  
     {R15, "r15", STORE_VAR,    false,  CALLEE_SAVED},  
+    {XMM0,"xmm0", VEC_REG,     false,  CALLEE_SAVED},  
 };
 
 regTableElem_t initRegTableSpu[] = {

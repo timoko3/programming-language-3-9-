@@ -12,6 +12,7 @@ enum argInst_t{
     IMM32,
     MEM64,
     LABEL,
+    XMM,
     NONE_ARG
 };
 
@@ -39,7 +40,9 @@ enum instr_t{
     SUB_I,
     IMUL_I,
     IDIV_I,
-    CMP_I
+    CMP_I,
+
+    CVTSI2SS_I
 };
 
 struct  instrArg_t{
@@ -60,12 +63,13 @@ enum instrMode_t{
     RM64TOR64,
     IMM32TOMEM64,
 
-
     RM64MODE,
     MEM64MODE,
     IMM32MODE,
 
     LABELMODE,
+
+    RM64TOXMM,
 
     NOMODE
 };

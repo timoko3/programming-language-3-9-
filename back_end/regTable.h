@@ -24,6 +24,8 @@ enum genPurposeRegs{
     IX,
     JX,
 
+    XMM0,
+    
     RAX,
     RBX,
     RCX,
@@ -41,6 +43,7 @@ enum genPurposeRegs{
     R14,
     R15,
 
+
     NONE
 };
 
@@ -52,7 +55,8 @@ enum regUseScenery{
     STACK,
     STORE_VAR,
     ANY,
-    NOT_REG_SCEN
+    NOT_REG_SCEN,
+    VEC_REG
 };
 
 enum callConvention_t{

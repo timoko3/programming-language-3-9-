@@ -229,14 +229,16 @@ void genCodeX86ELF(FILE* filePtr, tree_t* AST, codeGenContext* context, list_t* 
 // 
     // _MOV("[rax + 4]", "-1");
     // _MOV("[r8 + 8]", "-5");
-    traversalCondOrder(AST->root, &visitorAstX86Elf);
-    _LABEL("printf");
-    readFileToBinBuffer(_CONTEXT_ELF_CODE_BUFFER(context), "myOut.bin");
-    _LABEL("scanf");
-    readFileToBinBuffer(_CONTEXT_ELF_CODE_BUFFER(context), "myIn.bin");
-    codeBufFixUp(_CONTEXT_ELF_CODE_BUFFER(context), _CONTEXT_ELF_FIX_UP_LIST(context));
+
+    _CVTSI2SS("xmm0", "rcx");
+
+    // traversalCondOrder(AST->root, &visitorAstX86Elf);
+    // _LABEL("printf");
+    // readFileToBinBuffer(_CONTEXT_ELF_CODE_BUFFER(context), "myOut.bin");
+    // _LABEL("scanf");
+    // readFileToBinBuffer(_CONTEXT_ELF_CODE_BUFFER(context), "myIn.bin");
+    // codeBufFixUp(_CONTEXT_ELF_CODE_BUFFER(context), _CONTEXT_ELF_FIX_UP_LIST(context));
     genPrologueX86Elf(context);
-    // genEpilogueNasm(context);
 
     binBufferDtor(_CONTEXT_ELF_CODE_BUFFER(context));
     listDtor(&fixUpLabels, (listFreeDataFunc_t) fixUpElemDtor);
