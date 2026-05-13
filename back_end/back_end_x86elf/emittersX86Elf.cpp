@@ -42,6 +42,15 @@ const char* JNE_OPERATION_NAME_X86ELF = "jne";
 
 const size_t NUMBER_MAX_SIZE          = 64;
 
+void emitMainX86ElfPre(treeNode_t* node, codeGenContext* context){
+    assert(node);
+    assert(context);
+
+    LPRINTF("emitMain start");
+    _MOV("rbp", "rsp");
+
+    LPRINTF("emitMain end");
+}
 void emitFuncX86ElfPre(treeNode_t* node, codeGenContext* context){
     assert(node);
     assert(context);
@@ -508,6 +517,29 @@ void emitHltX86ElfPre(treeNode_t* node, codeGenContext* context){
     _MOV("rdi", numStr);
 
     _SYSCALL();
+}
+
+void emitInNasmPre(treeNode_t* node, codeGenContext* context){
+    assert(node);
+    assert(context);
+
+    _CONTEXT_ELF_NEED_DATA_SECTION(context) = 1;
+    _CONTEXT_IS_L_VALUE(context)            = 1;
+}
+
+void emitInNasmIn(treeNode_t* node, codeGenContext* context){
+    assert(node);
+    assert(context);
+
+    _CONTEXT_IS_L_VALUE(context) = 0;
+
+    _PUSH("rax");
+    _PUSH("rsi");
+    _PUSH("rdi");
+
+    _POP("rdi");
+    _POP("rsi");
+    _POP("rax");
 }
 
 void loadToRegX86Elf(varMapElem_t* var, codeGenContext* context){

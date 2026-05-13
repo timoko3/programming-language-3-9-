@@ -54,6 +54,7 @@
 #define _CONTEXT_ELF_TABLE_NAMES_TS(context)        (context)->elfGenContext.tableNamesTs
 #define _CONTEXT_ELF_CODE_BUFFER(context)           (context)->elfGenContext.codeBuffer
 #define _CONTEXT_ELF_FIX_UP_LIST(context)           (context)->elfGenContext.fixUpList
+#define _CONTEXT_ELF_NEED_DATA_SECTION(context)     (context)->elfGenContext.needDataSection
 
 #define _SPU_NAME_TABLE_SIZE(spuNameTable) (spuNameTable)->size
 #define _SPU_NAME_TABLE_CAPACITY(spuNameTable) (spuNameTable)->capacity
