@@ -231,8 +231,6 @@ void emitIfNasmIn(treeNode_t* node, codeGenContext* context){
     label_t* ifLabel = createLabel(_CONTEXT_LABELS_TABLE(context), LABEL_PREFIX_IF_END);
     assert(ifLabel);
 
-    // _CONTEXT_CUR_LABEL_A(context) = ifLabel;
-
     fprintf(_CONTEXT_FILE_PTR(context), "%s .%s_%d\n", condJumpInstruction, _LABEL_DATA_NAME(ifLabel), _LABEL_DATA_ID(ifLabel));
 }
 

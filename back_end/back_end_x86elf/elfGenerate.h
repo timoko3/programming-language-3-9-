@@ -18,6 +18,7 @@ struct elfGenerationContext_t{
     list_t*      fixUpList;
     bool         needDataSection;
     size_t       dataSectionSize;
+    size_t       interpSectionSize;
 };
 
 void genPrologueX86Elf(codeGenContext* context);
