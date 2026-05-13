@@ -16,10 +16,36 @@ const Elf64_Xword MEM_PAGE_SIZE       = 0x1000;
 const size_t DATA_SECTION_SIZE        = 16;
 
 static void genElfHeader(codeGenContext* context);
-static void genProgramHeader(codeGenContext* context);
+static void genProgramHeaders(codeGenContext* context);
 static void genSectionTable(codeGenContext* context);
 
-typedef enum {
+enum segment_t{
+    SEG_LOAD_RX = 0,
+    SEG_LOAD_RW,
+    SEG_INTERP,
+    // SEG_DYNAMIC,
+
+    SEG_COUNT
+};
+
+struct Segment{
+    segment_t type;
+
+    Elf64_Phdr phdr;
+
+    size_t file_offset;
+    size_t file_size;
+
+    size_t vaddr;
+    size_t mem_size;
+
+    uint32_t flags;
+    size_t align;
+};
+
+static Segment segments[SEG_COUNT];
+
+enum section_t{
     SEC_NULL = 0,
     SEC_TEXT,
     SEC_DATA,
@@ -27,7 +53,7 @@ typedef enum {
     SEC_SHSTRTAB,
 
     SEC_COUNT
-} section_t;
+};
 
 struct StringTable{
     char   buf[1024];
@@ -48,6 +74,8 @@ struct Section{
     size_t vaddr;
 
     size_t name_offset;
+
+    segment_t segment;
 };
 
 static Section sections[SEC_COUNT];
@@ -62,28 +90,41 @@ static void layoutSections(size_t phnum);
 static void buildSectionHeaders();
 static Section* getSection(section_t sec);
 
+static void initSegments();
+static void buildSegments();
+
 void genPrologueX86Elf(codeGenContext* context){
     assert(context);
 
     initSections();
+    initSegments();
     
     sections[SEC_TEXT].data = BIN_BUFFER_DATA(_CONTEXT_ELF_CODE_BUFFER(context));
 
     sections[SEC_TEXT].size = BIN_BUFFER_SIZE(_CONTEXT_ELF_CODE_BUFFER(context)) * sizeof(uint8_t);
 
+    sections[SEC_TEXT].segment = SEG_LOAD_RX;
+
+    
     static uint8_t raw_data[] = {
         '%', 'd', '\0'
     };
-
+    
     sections[SEC_DATA].data = raw_data;
     sections[SEC_DATA].size = sizeof(raw_data);
+    
+    sections[SEC_DATA].segment = SEG_LOAD_RW;
+    
+    static uint8_t interp[] = "/lib64/ld-linux-x86-64.so.2";
+    sections[SEC_INTERP].data = interp;
+    sections[SEC_INTERP].size = sizeof(interp);
 
-    static uint8_t dynamicINt[] = {
-        '%', 'd', '\0'
-    };    
+    sections[SEC_INTERP].segment = SEG_INTERP;
 
     buildShStrTab();
-    layoutSections(1);
+    layoutSections(SEG_COUNT);
+
+    buildSegments();
     buildSectionHeaders();
 
     _CONTEXT_ELF_SIZE_EH(context)            = sizeof(Elf64_Ehdr);
@@ -92,14 +133,13 @@ void genPrologueX86Elf(codeGenContext* context){
     _CONTEXT_ELF_SECTION_TABLE_SIZE(context) = sizeof(Elf64_Shdr);
 
     genElfHeader(context);
-    genProgramHeader(context);
+    genProgramHeaders(context);
 
-    fwrite(sections[SEC_TEXT].data, sections[SEC_TEXT].size, 1, _CONTEXT_FILE_PTR(context));
-
-    fwrite(sections[SEC_DATA].data, sections[SEC_DATA].size, 1, _CONTEXT_FILE_PTR(context));
-
+    fwrite(sections[SEC_TEXT].data,     sections[SEC_TEXT].size,     1, _CONTEXT_FILE_PTR(context));
+    fwrite(sections[SEC_DATA].data,     sections[SEC_DATA].size,     1, _CONTEXT_FILE_PTR(context));
+    fwrite(sections[SEC_INTERP].data,   sections[SEC_INTERP].size,   1, _CONTEXT_FILE_PTR(context));
     fwrite(sections[SEC_SHSTRTAB].data, sections[SEC_SHSTRTAB].size, 1, _CONTEXT_FILE_PTR(context));
-    
+
     genSectionTable(context);
 }
 
@@ -128,9 +168,9 @@ static void genElfHeader(codeGenContext* context){
 
     ehdr.e_phoff     = _CONTEXT_ELF_SIZE_EH(context); 
     ehdr.e_phentsize = _CONTEXT_ELF_SIZE_PH(context);
-    ehdr.e_phnum     = 1;               
+    ehdr.e_phnum     = SEG_COUNT;               
 
-    ehdr.e_shoff = sections[SEC_SHSTRTAB].file_offset + sections[SEC_SHSTRTAB].size;;  
+    ehdr.e_shoff = sections[SEC_SHSTRTAB].file_offset + sections[SEC_SHSTRTAB].size;
     ehdr.e_shentsize = _CONTEXT_ELF_SECTION_TABLE_SIZE(context);
     ehdr.e_shnum     = SEC_COUNT; 
     ehdr.e_shstrndx  = SEC_SHSTRTAB;  
@@ -138,23 +178,32 @@ static void genElfHeader(codeGenContext* context){
     fwrite(&ehdr, sizeof(ehdr), 1, _CONTEXT_FILE_PTR(context));
 }
 
-static void genProgramHeader(codeGenContext* context){
+static void genProgramHeaders(codeGenContext* context){
     assert(context);
 
-    Elf64_Phdr phdr;
-    memset(&phdr, 0, sizeof(phdr));
+    segments[SEG_LOAD_RX].phdr.p_type  = PT_LOAD;
+    segments[SEG_LOAD_RX].phdr.p_flags = PF_R | PF_X;
 
-    phdr.p_type   = PT_LOAD; 
-    phdr.p_offset = 0;                 
-    phdr.p_vaddr  = START_VIRTUAL_ADDR;         
-    phdr.p_paddr  = START_PHYSICAL_ADDR;
+    segments[SEG_LOAD_RW].phdr.p_type  = PT_LOAD;
+    segments[SEG_LOAD_RW].phdr.p_flags = PF_R | PF_W;
 
-    phdr.p_filesz = _CONTEXT_ELF_SIZE_EH(context) + _CONTEXT_ELF_SIZE_PH(context) + _CONTEXT_ELF_CODE_SIZE(context) + _CONTEXT_ELF_DATA_SECTION_SIZE(context) + _CONTEXT_ELF_TABLE_NAMES_TS(context) ;
-    phdr.p_memsz  = phdr.p_filesz;
-    phdr.p_flags  = PF_R | PF_X | PF_W; 
-    phdr.p_align  = MEM_PAGE_SIZE;   
+    segments[SEG_INTERP].phdr.p_type  = PT_INTERP;
+    segments[SEG_INTERP].phdr.p_flags = PF_R;
 
-    fwrite(&phdr, sizeof(phdr), 1, _CONTEXT_FILE_PTR(context));
+    for(size_t i = 0; i < SEG_COUNT; i++){
+        segments[i].phdr.p_offset = segments[i].file_offset;
+        segments[i].phdr.p_vaddr  = segments[i].vaddr;
+        segments[i].phdr.p_paddr  = segments[i].vaddr;
+        segments[i].phdr.p_filesz = segments[i].file_size;
+        segments[i].phdr.p_memsz  = segments[i].mem_size;
+        segments[i].phdr.p_align  = MEM_PAGE_SIZE;
+
+        if(segments[i].phdr.p_type == 0)
+            continue;
+
+        fwrite(&segments[i].phdr, sizeof(Elf64_Phdr), 1, _CONTEXT_FILE_PTR(context));
+    }
+    
 }
 
 static void genSectionTable(codeGenContext* context){
@@ -166,12 +215,57 @@ static void genSectionTable(codeGenContext* context){
         shdr[i] = sections[i].shdr;
     }
 
-    fwrite(
-        shdr,
-        sizeof(Elf64_Shdr),
-        SEC_COUNT,
-        _CONTEXT_FILE_PTR(context)
-    );
+    fwrite(shdr, sizeof(Elf64_Shdr), SEC_COUNT, _CONTEXT_FILE_PTR(context));
+}
+
+static void initSegments(){
+    memset(segments, 0, sizeof(segments));
+
+    segments[SEG_LOAD_RX].type = SEG_LOAD_RX;
+    segments[SEG_LOAD_RW].type = SEG_LOAD_RW;
+    segments[SEG_INTERP].type  = SEG_INTERP;
+}
+
+static void buildSegments(){
+
+    for(size_t s = 0; s < SEG_COUNT; s++){
+
+        size_t min_off = SIZE_MAX;
+        size_t max_off = 0;
+
+        size_t min_vaddr = SIZE_MAX;
+        size_t max_vaddr = 0;
+
+        for(size_t i = 1; i < SEC_COUNT; i++){
+
+            if(sections[i].segment != s)
+                continue;
+
+            if(sections[i].file_offset < min_off)
+                min_off = sections[i].file_offset;
+
+            size_t end = sections[i].file_offset + sections[i].size;
+
+            if(end > max_off)
+                max_off = end;
+
+            if(sections[i].vaddr < min_vaddr)
+                min_vaddr = sections[i].vaddr;
+
+            size_t vend =
+                sections[i].vaddr +
+                sections[i].size;
+
+            if(vend > max_vaddr)
+                max_vaddr = vend;
+        }
+
+        segments[s].file_offset = min_off;
+        segments[s].file_size   = max_off - min_off;
+
+        segments[s].vaddr       = min_vaddr;
+        segments[s].mem_size    = max_vaddr - min_vaddr;
+    }
 }
 
 static void strtabInit(StringTable* tab){
@@ -211,15 +305,12 @@ static void buildShStrTab(){
     strtabInit(&shstrtab);
 
     for(size_t i = 1; i < SEC_COUNT; i++){
-        sections[i].name_offset =
-            strtabAdd(&shstrtab, sections[i].name);
+        sections[i].name_offset = strtabAdd(&shstrtab, sections[i].name);
     }
 
-    sections[SEC_SHSTRTAB].data =
-        (uint8_t*)shstrtab.buf;
+    sections[SEC_SHSTRTAB].data = (uint8_t*)shstrtab.buf;
 
-    sections[SEC_SHSTRTAB].size =
-        shstrtab.size;
+    sections[SEC_SHSTRTAB].size = shstrtab.size;
 }
 
 static void layoutSections(size_t phnum){
@@ -231,8 +322,7 @@ static void layoutSections(size_t phnum){
 
         sections[i].file_offset = cur;
 
-        sections[i].vaddr =
-            START_VIRTUAL_ADDR + cur;
+        sections[i].vaddr = START_VIRTUAL_ADDR + cur;
 
         cur += sections[i].size;
     }
@@ -250,16 +340,17 @@ static void buildSectionHeaders(){
         sections[i].shdr.sh_size   = sections[i].size;
     }
 
-    sections[SEC_TEXT].shdr.sh_type      = SHT_PROGBITS;
-    sections[SEC_TEXT].shdr.sh_flags     = SHF_ALLOC | SHF_EXECINSTR;
-    sections[SEC_TEXT].shdr.sh_addralign = 16;
+    sections[SEC_TEXT].shdr.sh_type          = SHT_PROGBITS;
+    sections[SEC_TEXT].shdr.sh_flags         = SHF_ALLOC | SHF_EXECINSTR;
+    sections[SEC_TEXT].shdr.sh_addralign     = 16;
 
-    sections[SEC_DATA].shdr.sh_type      = SHT_PROGBITS;
-    sections[SEC_DATA].shdr.sh_flags     = SHF_ALLOC | SHF_WRITE;
-    sections[SEC_DATA].shdr.sh_addralign = 8;
+    sections[SEC_DATA].shdr.sh_type          = SHT_PROGBITS;
+    sections[SEC_DATA].shdr.sh_flags         = SHF_ALLOC | SHF_WRITE;
+    sections[SEC_DATA].shdr.sh_addralign     = 8;
 
-    sections[SEC_INTERP].shdr.sh_type  = SHT_PROGBITS;
-    sections[SEC_INTERP].shdr.sh_flags = SHF_ALLOC;
+    sections[SEC_INTERP].shdr.sh_type        = SHT_PROGBITS;
+    sections[SEC_INTERP].shdr.sh_flags       = SHF_ALLOC;
+    sections[SEC_INTERP].shdr.sh_addralign   = 1;
     
     sections[SEC_SHSTRTAB].shdr.sh_type      = SHT_STRTAB;
     sections[SEC_SHSTRTAB].shdr.sh_addralign = 1;
