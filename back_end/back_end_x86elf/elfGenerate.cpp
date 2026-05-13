@@ -20,12 +20,10 @@ static void genProgramHeaders(codeGenContext* context);
 static void genSectionTable(codeGenContext* context);
 
 enum segment_t{
-    SEG_LOAD_RX = 0,
-    SEG_LOAD_RW,
-    SEG_INTERP,
-    SEG_DYNAMIC,
-
-    SEG_COUNT
+    SEG_LOAD_RX = 1ull << 0,
+    SEG_LOAD_RW = 1ull << 1,
+    SEG_INTERP  = 1ull << 2,
+    SEG_DYNAMIC = 1ull << 3,
 };
 
 struct Segment{
@@ -43,7 +41,16 @@ struct Segment{
     size_t align;
 };
 
+const size_t SEG_COUNT = 4;
+
 static Segment segments[SEG_COUNT];
+
+static const uint64_t segmentFlags[] = {
+    SEG_LOAD_RX,
+    SEG_LOAD_RW,
+    SEG_INTERP,
+    SEG_DYNAMIC
+};
 
 enum section_t{
     SEC_NULL = 0,
@@ -52,6 +59,10 @@ enum section_t{
     SEC_INTERP,
     SEC_DYNAMIC,
     SEC_DYNSTR,
+    SEC_DYNSYM,
+    SEC_RELA_PLT,
+    SEC_PLT,
+    SEC_GOT_PLT,
     SEC_SHSTRTAB,
 
     SEC_COUNT
@@ -77,7 +88,7 @@ struct Section{
 
     size_t name_offset;
 
-    segment_t segment;
+    uint64_t segment_mask;
 };
 
 static Section sections[SEC_COUNT];
@@ -85,7 +96,11 @@ static Section sections[SEC_COUNT];
 static StringTable shstrtab;
 static StringTable dynstr;
 
-static Elf64_Dyn dynamicEntries[4];
+static Elf64_Dyn  dynamicEntries[9];
+static Elf64_Sym  dynsymEntries[3];
+static Elf64_Rela relaPltEntries[2];
+static uint8_t    pltCode[48];
+static uint64_t   gotPlt[4];
 
 static void strtabInit(StringTable* tab);
 static size_t strtabAdd(StringTable* tab, const char* str);
@@ -100,6 +115,10 @@ static void buildSegments();
 
 static void buildDynStr();
 static void buildDynamicSection();
+static void buildDynSym();
+static void buildRelaPlt();
+static void buildPlt();
+static void buildGotPlt();
 
 void genPrologueX86Elf(codeGenContext* context){
     assert(context);
@@ -107,28 +126,37 @@ void genPrologueX86Elf(codeGenContext* context){
     initSections();
     initSegments();
     
-    sections[SEC_TEXT].data    = BIN_BUFFER_DATA(_CONTEXT_ELF_CODE_BUFFER(context));
-    sections[SEC_TEXT].size    = BIN_BUFFER_SIZE(_CONTEXT_ELF_CODE_BUFFER(context)) * sizeof(uint8_t);
-    sections[SEC_TEXT].segment = SEG_LOAD_RX;
+    sections[SEC_TEXT].data             = BIN_BUFFER_DATA(_CONTEXT_ELF_CODE_BUFFER(context));
+    sections[SEC_TEXT].size             = BIN_BUFFER_SIZE(_CONTEXT_ELF_CODE_BUFFER(context)) * sizeof(uint8_t);
+    sections[SEC_TEXT].segment_mask     = SEG_LOAD_RX;
     
-    static uint8_t raw_data[]  = {'%', 'd', '\0'};
-    sections[SEC_DATA].data    = raw_data;
-    sections[SEC_DATA].size    = sizeof(raw_data);
-    sections[SEC_DATA].segment = SEG_LOAD_RW;
+    static uint8_t raw_data[]           = {'%', 'd', '\0'};
+    sections[SEC_DATA].data             = raw_data;
+    sections[SEC_DATA].size             = sizeof(raw_data);
+    sections[SEC_DATA].segment_mask     = SEG_LOAD_RW;
     
-    static uint8_t interp[]      = "/lib64/ld-linux-x86-64.so.2";
-    sections[SEC_INTERP].data    = interp;
-    sections[SEC_INTERP].size    = sizeof(interp);
-    sections[SEC_INTERP].segment = SEG_INTERP;
+    static uint8_t interp[]             = "/lib64/ld-linux-x86-64.so.2";
+    sections[SEC_INTERP].data           = interp;
+    sections[SEC_INTERP].size           = sizeof(interp);
+    sections[SEC_INTERP].segment_mask   = SEG_INTERP | SEG_LOAD_RX;
 
-    sections[SEC_DYNAMIC].size   = sizeof(dynamicEntries);
-    sections[SEC_DYNAMIC].segment = SEG_DYNAMIC;
+    sections[SEC_DYNAMIC].size          = sizeof(dynamicEntries);
+    sections[SEC_DYNAMIC].segment_mask  = SEG_DYNAMIC | SEG_LOAD_RW;
+
+    sections[SEC_PLT].size = 48;
+    sections[SEC_GOT_PLT].size = sizeof(gotPlt);
 
     buildShStrTab();
     buildDynStr();
+    buildDynSym();
+    buildGotPlt();
+    buildRelaPlt();
+    buildPlt();
     layoutSections(SEG_COUNT);
 
     buildDynamicSection();
+
+    layoutSections(SEG_COUNT);
 
     buildSegments();
     buildSectionHeaders();
@@ -136,12 +164,11 @@ void genPrologueX86Elf(codeGenContext* context){
     genElfHeader(context);
     genProgramHeaders(context);
 
-    fwrite(sections[SEC_TEXT].data,     sections[SEC_TEXT].size,     1, _CONTEXT_FILE_PTR(context));
-    fwrite(sections[SEC_DATA].data,     sections[SEC_DATA].size,     1, _CONTEXT_FILE_PTR(context));
-    fwrite(sections[SEC_INTERP].data,   sections[SEC_INTERP].size,   1, _CONTEXT_FILE_PTR(context));
-    fwrite(sections[SEC_DYNAMIC].data,  sections[SEC_DYNAMIC].size,  1, _CONTEXT_FILE_PTR(context));
-    fwrite(sections[SEC_DYNSTR].data,   sections[SEC_DYNSTR].size,   1, _CONTEXT_FILE_PTR(context));
-    fwrite(sections[SEC_SHSTRTAB].data, sections[SEC_SHSTRTAB].size, 1, _CONTEXT_FILE_PTR(context));
+    for(size_t i = 1; i < SEC_COUNT; i++){
+        if(sections[i].size == 0)
+            continue;
+        fwrite(sections[i].data, sections[i].size, 1, _CONTEXT_FILE_PTR(context));
+    }
 
     genSectionTable(context);
 }
@@ -184,17 +211,17 @@ static void genElfHeader(codeGenContext* context){
 static void genProgramHeaders(codeGenContext* context){
     assert(context);
 
-    segments[SEG_LOAD_RX].phdr.p_type  = PT_LOAD;
-    segments[SEG_LOAD_RX].phdr.p_flags = PF_R | PF_X;
+    segments[0].phdr.p_type  = PT_LOAD;
+    segments[0].phdr.p_flags = PF_R | PF_X;
 
-    segments[SEG_LOAD_RW].phdr.p_type  = PT_LOAD;
-    segments[SEG_LOAD_RW].phdr.p_flags = PF_R | PF_W;
+    segments[1].phdr.p_type  = PT_LOAD;
+    segments[1].phdr.p_flags = PF_R | PF_W;
 
-    segments[SEG_INTERP].phdr.p_type   = PT_INTERP;
-    segments[SEG_INTERP].phdr.p_flags  = PF_R;
+    segments[2].phdr.p_type   = PT_INTERP;
+    segments[2].phdr.p_flags  = PF_R;
 
-    segments[SEG_DYNAMIC].phdr.p_type  = PT_DYNAMIC;
-    segments[SEG_DYNAMIC].phdr.p_flags = PF_R | PF_W;;
+    segments[3].phdr.p_type  = PT_DYNAMIC;
+    segments[3].phdr.p_flags = PF_R | PF_W;;
 
     for(size_t i = 0; i < SEG_COUNT; i++){
         segments[i].phdr.p_offset = segments[i].file_offset;
@@ -227,50 +254,75 @@ static void genSectionTable(codeGenContext* context){
 static void initSegments(){
     memset(segments, 0, sizeof(segments));
 
-    segments[SEG_LOAD_RX].type   = SEG_LOAD_RX;
-    segments[SEG_LOAD_RW].type   = SEG_LOAD_RW;
-    segments[SEG_INTERP].type    = SEG_INTERP;
-    sections[SEC_DYNSTR].segment = SEG_LOAD_RW;
+    segments[0].type   = SEG_LOAD_RX;
+    segments[1].type   = SEG_LOAD_RW;
+    segments[2].type   = SEG_INTERP;
+    segments[3].type   = SEG_DYNAMIC;
 }
 
 static void buildSegments(){
-    for(size_t s = 0; s < SEG_COUNT; s++){
+    for(size_t j = 0; j < SEG_COUNT; j++){
 
-        size_t min_off = SIZE_MAX;
-        size_t max_off = 0;
+        uint64_t seg = segmentFlags[j];
+
+        size_t min_off   = SIZE_MAX;
+        size_t max_off   = 0;
 
         size_t min_vaddr = SIZE_MAX;
         size_t max_vaddr = 0;
 
+        bool found = false;
         for(size_t i = 1; i < SEC_COUNT; i++){
-
-            if(sections[i].segment != s)
+            if(!(sections[i].segment_mask & seg)){
                 continue;
+            }
 
-            if(sections[i].file_offset < min_off)
+            if(sections[i].size == 0){
+                continue;
+            }
+
+            found = true;
+
+            if(sections[i].file_offset < min_off){
                 min_off = sections[i].file_offset;
+            }
 
             size_t end = sections[i].file_offset + sections[i].size;
 
-            if(end > max_off)
+            if(end > max_off){
                 max_off = end;
+            }
 
-            if(sections[i].vaddr < min_vaddr)
+            if(sections[i].vaddr < min_vaddr){
                 min_vaddr = sections[i].vaddr;
+            }
 
-            size_t vend =
-                sections[i].vaddr +
-                sections[i].size;
+            size_t vend = sections[i].vaddr + sections[i].size;
 
-            if(vend > max_vaddr)
+            if(vend > max_vaddr){
                 max_vaddr = vend;
+            }
         }
 
-        segments[s].file_offset = min_off;
-        segments[s].file_size   = max_off - min_off;
+        if(!found){
+            continue;
+        }
+        if(seg == SEG_DYNAMIC){
+            Section* dyn = &sections[SEC_DYNAMIC];
 
-        segments[s].vaddr       = min_vaddr;
-        segments[s].mem_size    = max_vaddr - min_vaddr;
+            segments[j].file_offset = dyn->file_offset;
+            segments[j].file_size   = dyn->size;
+
+            segments[j].vaddr       = dyn->vaddr;
+            segments[j].mem_size    = dyn->size;
+        }
+        else{
+            segments[j].file_offset = min_off;
+            segments[j].file_size   = max_off - min_off;
+
+            segments[j].vaddr       = min_vaddr;
+            segments[j].mem_size    = max_vaddr - min_vaddr;
+        }
     }
 }
 
@@ -311,6 +363,18 @@ static void initSections(){
 
     sections[SEC_SHSTRTAB].type = SEC_SHSTRTAB;
     sections[SEC_SHSTRTAB].name = ".shstrtab";
+
+    sections[SEC_DYNSYM].type   = SEC_DYNSYM;
+    sections[SEC_DYNSYM].name   = ".dynsym";
+
+    sections[SEC_RELA_PLT].type = SEC_RELA_PLT;
+    sections[SEC_RELA_PLT].name = ".rela.plt";
+
+    sections[SEC_PLT].type      = SEC_PLT;
+    sections[SEC_PLT].name      = ".plt";
+
+    sections[SEC_GOT_PLT].type  = SEC_GOT_PLT;
+    sections[SEC_GOT_PLT].name  = ".got.plt";
 }
 
 static void buildShStrTab(){
@@ -321,7 +385,6 @@ static void buildShStrTab(){
     }
 
     sections[SEC_SHSTRTAB].data = (uint8_t*)shstrtab.buf;
-
     sections[SEC_SHSTRTAB].size = shstrtab.size;
 }
 
@@ -342,13 +405,10 @@ static void layoutSections(size_t phnum){
 
 static void buildSectionHeaders(){
     for(size_t i = 1; i < SEC_COUNT; i++){
-
+        memset(&sections[i].shdr, 0, sizeof(Elf64_Shdr));
         sections[i].shdr.sh_name   = sections[i].name_offset;
-
         sections[i].shdr.sh_offset = sections[i].file_offset;
-
         sections[i].shdr.sh_addr   = sections[i].vaddr;
-
         sections[i].shdr.sh_size   = sections[i].size;
     }
 
@@ -368,10 +428,33 @@ static void buildSectionHeaders(){
     sections[SEC_DYNAMIC].shdr.sh_flags       = SHF_ALLOC | SHF_WRITE;
     sections[SEC_DYNAMIC].shdr.sh_link        = SEC_DYNSTR;
     sections[SEC_DYNAMIC].shdr.sh_addralign   = 8;
-    
+    sections[SEC_DYNAMIC].shdr.sh_entsize     = sizeof(Elf64_Dyn);
+
     sections[SEC_DYNSTR].shdr.sh_type         = SHT_STRTAB;
     sections[SEC_DYNSTR].shdr.sh_flags        = SHF_ALLOC;
     sections[SEC_DYNSTR].shdr.sh_addralign    = 1;
+
+    sections[SEC_DYNSYM].shdr.sh_type         = SHT_DYNSYM;
+    sections[SEC_DYNSYM].shdr.sh_flags        = SHF_ALLOC;
+    sections[SEC_DYNSYM].shdr.sh_link         = SEC_DYNSTR;
+    sections[SEC_DYNSYM].shdr.sh_info         = 1;
+    sections[SEC_DYNSYM].shdr.sh_entsize      = sizeof(Elf64_Sym);
+    sections[SEC_DYNSYM].shdr.sh_addralign    = 8;
+
+    sections[SEC_RELA_PLT].shdr.sh_type       = SHT_RELA;
+    sections[SEC_RELA_PLT].shdr.sh_flags      = SHF_ALLOC;
+    sections[SEC_RELA_PLT].shdr.sh_link       = SEC_DYNSYM;
+    sections[SEC_RELA_PLT].shdr.sh_info       = SEC_PLT;
+    sections[SEC_RELA_PLT].shdr.sh_entsize    = sizeof(Elf64_Rela);
+    sections[SEC_RELA_PLT].shdr.sh_addralign  = 8;
+
+    sections[SEC_PLT].shdr.sh_type            = SHT_PROGBITS;
+    sections[SEC_PLT].shdr.sh_flags           = SHF_ALLOC | SHF_EXECINSTR;
+    sections[SEC_PLT].shdr.sh_addralign       = 16;
+
+    sections[SEC_GOT_PLT].shdr.sh_type        = SHT_PROGBITS;
+    sections[SEC_GOT_PLT].shdr.sh_flags       = SHF_ALLOC | SHF_WRITE;
+    sections[SEC_GOT_PLT].shdr.sh_addralign   = 8;
 
     sections[SEC_SHSTRTAB].shdr.sh_type       = SHT_STRTAB;
     sections[SEC_SHSTRTAB].shdr.sh_addralign  = 1;
@@ -390,24 +473,95 @@ static void buildDynStr(){
 
     sections[SEC_DYNSTR].data = (uint8_t*)dynstr.buf;
     sections[SEC_DYNSTR].size = dynstr.size;
+    sections[SEC_DYNSTR].segment_mask = SEG_LOAD_RX;
 }
 
 static void buildDynamicSection(){
     memset(dynamicEntries, 0, sizeof(dynamicEntries));
 
-    dynamicEntries[0].d_tag      = DT_STRTAB;
-    dynamicEntries[0].d_un.d_ptr = sections[SEC_DYNSTR].vaddr;
+    dynamicEntries[0].d_tag      = DT_SYMTAB;
+    dynamicEntries[0].d_un.d_ptr = sections[SEC_DYNSYM].vaddr;
 
-    dynamicEntries[1].d_tag      = DT_STRSZ;
-    dynamicEntries[1].d_un.d_val = sections[SEC_DYNSTR].size;
+    dynamicEntries[1].d_tag      = DT_SYMENT;
+    dynamicEntries[1].d_un.d_val = sizeof(Elf64_Sym);
 
-    dynamicEntries[2].d_tag      = DT_NEEDED;
-    dynamicEntries[2].d_un.d_val = 1;
+    dynamicEntries[2].d_tag      = DT_STRTAB;
+    dynamicEntries[2].d_un.d_ptr = sections[SEC_DYNSTR].vaddr;
 
-    dynamicEntries[3].d_tag      = DT_NULL;
-    dynamicEntries[3].d_un.d_val = 0;
+    dynamicEntries[3].d_tag      = DT_STRSZ;
+    dynamicEntries[3].d_un.d_val = sections[SEC_DYNSTR].size;
 
-    sections[SEC_DYNAMIC].data    = (uint8_t*) dynamicEntries;
-    sections[SEC_DYNAMIC].size    = sizeof(dynamicEntries);
-    sections[SEC_DYNAMIC].segment = SEG_DYNAMIC;
+    dynamicEntries[4].d_tag      = DT_NEEDED;
+    dynamicEntries[4].d_un.d_val = 1;
+
+    dynamicEntries[5].d_tag      = DT_JMPREL;
+    dynamicEntries[5].d_un.d_ptr = sections[SEC_RELA_PLT].vaddr;
+
+    dynamicEntries[6].d_tag      = DT_PLTRELSZ;
+    dynamicEntries[6].d_un.d_val = sections[SEC_RELA_PLT].size;
+
+    dynamicEntries[7].d_tag      = DT_PLTREL;
+    dynamicEntries[7].d_un.d_val = DT_RELA;
+
+    dynamicEntries[8].d_tag      = DT_NULL;
+    dynamicEntries[8].d_un.d_val = 0;
+
+    sections[SEC_DYNAMIC].data         = (uint8_t*) dynamicEntries;
+    sections[SEC_DYNAMIC].size         = sizeof(dynamicEntries);
+    sections[SEC_DYNAMIC].segment_mask = SEG_DYNAMIC | SEG_LOAD_RW;
+}
+
+static void buildDynSym(){
+    memset(dynsymEntries, 0, sizeof(dynsymEntries));
+
+    dynsymEntries[0].st_name  = 0;
+    dynsymEntries[0].st_info  = 0;
+    dynsymEntries[0].st_other = 0;
+    dynsymEntries[0].st_shndx = SHN_UNDEF;
+
+    dynsymEntries[1].st_name  = 11;
+    dynsymEntries[1].st_info  = ELF64_ST_INFO(STB_GLOBAL, STT_FUNC);
+    dynsymEntries[1].st_other = 0;
+    dynsymEntries[1].st_shndx = SHN_UNDEF;
+
+    dynsymEntries[2].st_name  = 18;
+    dynsymEntries[2].st_info  = ELF64_ST_INFO(STB_GLOBAL, STT_FUNC);
+    dynsymEntries[2].st_other = 0;
+    dynsymEntries[2].st_shndx = SHN_UNDEF;
+
+    sections[SEC_DYNSYM].data         = (uint8_t*)dynsymEntries;
+    sections[SEC_DYNSYM].size         = sizeof(dynsymEntries);
+    sections[SEC_DYNSYM].segment_mask = SEG_LOAD_RX;
+}
+
+static void buildRelaPlt(){
+    memset(relaPltEntries, 0, sizeof(relaPltEntries));
+
+    relaPltEntries[0].r_offset = sections[SEC_GOT_PLT].vaddr + 8 * 2;
+    relaPltEntries[0].r_info   = ELF64_R_INFO(1, R_X86_64_JUMP_SLOT);
+    relaPltEntries[0].r_addend = 0;
+
+    relaPltEntries[1].r_offset = sections[SEC_GOT_PLT].vaddr + 8 * 3;
+    relaPltEntries[1].r_info   = ELF64_R_INFO(2, R_X86_64_JUMP_SLOT);
+    relaPltEntries[1].r_addend = 0;
+
+    sections[SEC_RELA_PLT].data         = (uint8_t*)relaPltEntries;
+    sections[SEC_RELA_PLT].size         = sizeof(relaPltEntries);
+    sections[SEC_RELA_PLT].segment_mask = SEG_LOAD_RX;
+}
+
+static void buildPlt(){
+    memset(pltCode, 0x90, sizeof(pltCode));
+
+    sections[SEC_PLT].data         = pltCode;
+    sections[SEC_PLT].size         = sizeof(pltCode);
+    sections[SEC_PLT].segment_mask = SEG_LOAD_RX;
+}
+
+static void buildGotPlt(){
+    memset(gotPlt, 0, sizeof(gotPlt));
+
+    sections[SEC_GOT_PLT].data         = (uint8_t*)gotPlt;
+    sections[SEC_GOT_PLT].size         = sizeof(gotPlt);
+    sections[SEC_GOT_PLT].segment_mask = SEG_LOAD_RW;
 }
