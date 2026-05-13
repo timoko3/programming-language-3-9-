@@ -23,7 +23,7 @@ enum segment_t{
     SEG_LOAD_RX = 0,
     SEG_LOAD_RW,
     SEG_INTERP,
-    // SEG_DYNAMIC,
+    SEG_DYNAMIC,
 
     SEG_COUNT
 };
@@ -50,6 +50,8 @@ enum section_t{
     SEC_TEXT,
     SEC_DATA,
     SEC_INTERP,
+    SEC_DYNAMIC,
+    SEC_DYNSTR,
     SEC_SHSTRTAB,
 
     SEC_COUNT
@@ -81,6 +83,9 @@ struct Section{
 static Section sections[SEC_COUNT];
 
 static StringTable shstrtab;
+static StringTable dynstr;
+
+static Elf64_Dyn dynamicEntries[4];
 
 static void strtabInit(StringTable* tab);
 static size_t strtabAdd(StringTable* tab, const char* str);
@@ -93,44 +98,40 @@ static Section* getSection(section_t sec);
 static void initSegments();
 static void buildSegments();
 
+static void buildDynStr();
+static void buildDynamicSection();
+
 void genPrologueX86Elf(codeGenContext* context){
     assert(context);
 
     initSections();
     initSegments();
     
-    sections[SEC_TEXT].data = BIN_BUFFER_DATA(_CONTEXT_ELF_CODE_BUFFER(context));
-
-    sections[SEC_TEXT].size = BIN_BUFFER_SIZE(_CONTEXT_ELF_CODE_BUFFER(context)) * sizeof(uint8_t);
-
+    sections[SEC_TEXT].data    = BIN_BUFFER_DATA(_CONTEXT_ELF_CODE_BUFFER(context));
+    sections[SEC_TEXT].size    = BIN_BUFFER_SIZE(_CONTEXT_ELF_CODE_BUFFER(context)) * sizeof(uint8_t);
     sections[SEC_TEXT].segment = SEG_LOAD_RX;
-
     
-    static uint8_t raw_data[] = {
-        '%', 'd', '\0'
-    };
-    
-    sections[SEC_DATA].data = raw_data;
-    sections[SEC_DATA].size = sizeof(raw_data);
-    
+    static uint8_t raw_data[]  = {'%', 'd', '\0'};
+    sections[SEC_DATA].data    = raw_data;
+    sections[SEC_DATA].size    = sizeof(raw_data);
     sections[SEC_DATA].segment = SEG_LOAD_RW;
     
-    static uint8_t interp[] = "/lib64/ld-linux-x86-64.so.2";
-    sections[SEC_INTERP].data = interp;
-    sections[SEC_INTERP].size = sizeof(interp);
-
+    static uint8_t interp[]      = "/lib64/ld-linux-x86-64.so.2";
+    sections[SEC_INTERP].data    = interp;
+    sections[SEC_INTERP].size    = sizeof(interp);
     sections[SEC_INTERP].segment = SEG_INTERP;
 
+    sections[SEC_DYNAMIC].size   = sizeof(dynamicEntries);
+    sections[SEC_DYNAMIC].segment = SEG_DYNAMIC;
+
     buildShStrTab();
+    buildDynStr();
     layoutSections(SEG_COUNT);
+
+    buildDynamicSection();
 
     buildSegments();
     buildSectionHeaders();
-
-    _CONTEXT_ELF_SIZE_EH(context)            = sizeof(Elf64_Ehdr);
-    _CONTEXT_ELF_SIZE_PH(context)            = sizeof(Elf64_Phdr);
-    _CONTEXT_ELF_DATA_SECTION_SIZE(context)  = sizeof(raw_data);
-    _CONTEXT_ELF_SECTION_TABLE_SIZE(context) = sizeof(Elf64_Shdr);
 
     genElfHeader(context);
     genProgramHeaders(context);
@@ -138,6 +139,8 @@ void genPrologueX86Elf(codeGenContext* context){
     fwrite(sections[SEC_TEXT].data,     sections[SEC_TEXT].size,     1, _CONTEXT_FILE_PTR(context));
     fwrite(sections[SEC_DATA].data,     sections[SEC_DATA].size,     1, _CONTEXT_FILE_PTR(context));
     fwrite(sections[SEC_INTERP].data,   sections[SEC_INTERP].size,   1, _CONTEXT_FILE_PTR(context));
+    fwrite(sections[SEC_DYNAMIC].data,  sections[SEC_DYNAMIC].size,  1, _CONTEXT_FILE_PTR(context));
+    fwrite(sections[SEC_DYNSTR].data,   sections[SEC_DYNSTR].size,   1, _CONTEXT_FILE_PTR(context));
     fwrite(sections[SEC_SHSTRTAB].data, sections[SEC_SHSTRTAB].size, 1, _CONTEXT_FILE_PTR(context));
 
     genSectionTable(context);
@@ -164,14 +167,14 @@ static void genElfHeader(codeGenContext* context){
     ehdr.e_version = EV_CURRENT;
 
     ehdr.e_entry  = sections[SEC_TEXT].vaddr;
-    ehdr.e_ehsize = _CONTEXT_ELF_SIZE_EH(context);    
+    ehdr.e_ehsize = sizeof(Elf64_Ehdr);;    
 
-    ehdr.e_phoff     = _CONTEXT_ELF_SIZE_EH(context); 
-    ehdr.e_phentsize = _CONTEXT_ELF_SIZE_PH(context);
+    ehdr.e_phoff     = sizeof(Elf64_Ehdr); 
+    ehdr.e_phentsize = sizeof(Elf64_Phdr);;
     ehdr.e_phnum     = SEG_COUNT;               
 
     ehdr.e_shoff = sections[SEC_SHSTRTAB].file_offset + sections[SEC_SHSTRTAB].size;
-    ehdr.e_shentsize = _CONTEXT_ELF_SECTION_TABLE_SIZE(context);
+    ehdr.e_shentsize = sizeof(Elf64_Shdr);
     ehdr.e_shnum     = SEC_COUNT; 
     ehdr.e_shstrndx  = SEC_SHSTRTAB;  
 
@@ -187,8 +190,11 @@ static void genProgramHeaders(codeGenContext* context){
     segments[SEG_LOAD_RW].phdr.p_type  = PT_LOAD;
     segments[SEG_LOAD_RW].phdr.p_flags = PF_R | PF_W;
 
-    segments[SEG_INTERP].phdr.p_type  = PT_INTERP;
-    segments[SEG_INTERP].phdr.p_flags = PF_R;
+    segments[SEG_INTERP].phdr.p_type   = PT_INTERP;
+    segments[SEG_INTERP].phdr.p_flags  = PF_R;
+
+    segments[SEG_DYNAMIC].phdr.p_type  = PT_DYNAMIC;
+    segments[SEG_DYNAMIC].phdr.p_flags = PF_R | PF_W;;
 
     for(size_t i = 0; i < SEG_COUNT; i++){
         segments[i].phdr.p_offset = segments[i].file_offset;
@@ -221,13 +227,13 @@ static void genSectionTable(codeGenContext* context){
 static void initSegments(){
     memset(segments, 0, sizeof(segments));
 
-    segments[SEG_LOAD_RX].type = SEG_LOAD_RX;
-    segments[SEG_LOAD_RW].type = SEG_LOAD_RW;
-    segments[SEG_INTERP].type  = SEG_INTERP;
+    segments[SEG_LOAD_RX].type   = SEG_LOAD_RX;
+    segments[SEG_LOAD_RW].type   = SEG_LOAD_RW;
+    segments[SEG_INTERP].type    = SEG_INTERP;
+    sections[SEC_DYNSTR].segment = SEG_LOAD_RW;
 }
 
 static void buildSegments(){
-
     for(size_t s = 0; s < SEG_COUNT; s++){
 
         size_t min_off = SIZE_MAX;
@@ -288,14 +294,20 @@ static size_t strtabAdd(StringTable* tab, const char* str){
 static void initSections(){
     memset(sections, 0, sizeof(sections));
 
-    sections[SEC_TEXT].type = SEC_TEXT;
-    sections[SEC_TEXT].name = ".text";
+    sections[SEC_TEXT].type     = SEC_TEXT;
+    sections[SEC_TEXT].name     = ".text";
 
-    sections[SEC_DATA].type = SEC_DATA;
-    sections[SEC_DATA].name = ".data";
+    sections[SEC_DATA].type     = SEC_DATA;
+    sections[SEC_DATA].name     = ".data";
 
-    sections[SEC_INTERP].type = SEC_INTERP;
-    sections[SEC_INTERP].name = ".interp";
+    sections[SEC_INTERP].type   = SEC_INTERP;
+    sections[SEC_INTERP].name   = ".interp";
+
+    sections[SEC_DYNAMIC].type  = SEC_DYNAMIC;
+    sections[SEC_DYNAMIC].name  = ".dynamic";
+
+    sections[SEC_DYNSTR].type   = SEC_DYNSTR;
+    sections[SEC_DYNSTR].name   = ".dynstr";
 
     sections[SEC_SHSTRTAB].type = SEC_SHSTRTAB;
     sections[SEC_SHSTRTAB].name = ".shstrtab";
@@ -340,28 +352,62 @@ static void buildSectionHeaders(){
         sections[i].shdr.sh_size   = sections[i].size;
     }
 
-    sections[SEC_TEXT].shdr.sh_type          = SHT_PROGBITS;
-    sections[SEC_TEXT].shdr.sh_flags         = SHF_ALLOC | SHF_EXECINSTR;
-    sections[SEC_TEXT].shdr.sh_addralign     = 16;
+    sections[SEC_TEXT].shdr.sh_type           = SHT_PROGBITS;
+    sections[SEC_TEXT].shdr.sh_flags          = SHF_ALLOC | SHF_EXECINSTR;
+    sections[SEC_TEXT].shdr.sh_addralign      = 16;
 
-    sections[SEC_DATA].shdr.sh_type          = SHT_PROGBITS;
-    sections[SEC_DATA].shdr.sh_flags         = SHF_ALLOC | SHF_WRITE;
-    sections[SEC_DATA].shdr.sh_addralign     = 8;
+    sections[SEC_DATA].shdr.sh_type           = SHT_PROGBITS;
+    sections[SEC_DATA].shdr.sh_flags          = SHF_ALLOC | SHF_WRITE;
+    sections[SEC_DATA].shdr.sh_addralign      = 8;
 
-    sections[SEC_INTERP].shdr.sh_type        = SHT_PROGBITS;
-    sections[SEC_INTERP].shdr.sh_flags       = SHF_ALLOC;
-    sections[SEC_INTERP].shdr.sh_addralign   = 1;
+    sections[SEC_INTERP].shdr.sh_type         = SHT_PROGBITS;
+    sections[SEC_INTERP].shdr.sh_flags        = SHF_ALLOC;
+    sections[SEC_INTERP].shdr.sh_addralign    = 1;
+
+    sections[SEC_DYNAMIC].shdr.sh_type        = SHT_DYNAMIC;
+    sections[SEC_DYNAMIC].shdr.sh_flags       = SHF_ALLOC | SHF_WRITE;
+    sections[SEC_DYNAMIC].shdr.sh_link        = SEC_DYNSTR;
+    sections[SEC_DYNAMIC].shdr.sh_addralign   = 8;
     
-    sections[SEC_SHSTRTAB].shdr.sh_type      = SHT_STRTAB;
-    sections[SEC_SHSTRTAB].shdr.sh_addralign = 1;
+    sections[SEC_DYNSTR].shdr.sh_type         = SHT_STRTAB;
+    sections[SEC_DYNSTR].shdr.sh_flags        = SHF_ALLOC;
+    sections[SEC_DYNSTR].shdr.sh_addralign    = 1;
+
+    sections[SEC_SHSTRTAB].shdr.sh_type       = SHT_STRTAB;
+    sections[SEC_SHSTRTAB].shdr.sh_addralign  = 1;
 }
 
 static Section* getSection(section_t sec){
     return &sections[sec];
 }
 
+static void buildDynStr(){
+    strtabInit(&dynstr);
 
+    strtabAdd(&dynstr, "libc.so.6");
+    strtabAdd(&dynstr, "printf");
+    strtabAdd(&dynstr, "scanf");
 
+    sections[SEC_DYNSTR].data = (uint8_t*)dynstr.buf;
+    sections[SEC_DYNSTR].size = dynstr.size;
+}
 
+static void buildDynamicSection(){
+    memset(dynamicEntries, 0, sizeof(dynamicEntries));
 
+    dynamicEntries[0].d_tag      = DT_STRTAB;
+    dynamicEntries[0].d_un.d_ptr = sections[SEC_DYNSTR].vaddr;
 
+    dynamicEntries[1].d_tag      = DT_STRSZ;
+    dynamicEntries[1].d_un.d_val = sections[SEC_DYNSTR].size;
+
+    dynamicEntries[2].d_tag      = DT_NEEDED;
+    dynamicEntries[2].d_un.d_val = 1;
+
+    dynamicEntries[3].d_tag      = DT_NULL;
+    dynamicEntries[3].d_un.d_val = 0;
+
+    sections[SEC_DYNAMIC].data    = (uint8_t*) dynamicEntries;
+    sections[SEC_DYNAMIC].size    = sizeof(dynamicEntries);
+    sections[SEC_DYNAMIC].segment = SEG_DYNAMIC;
+}
