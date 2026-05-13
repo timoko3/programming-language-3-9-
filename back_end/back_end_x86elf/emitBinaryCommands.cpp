@@ -327,7 +327,7 @@ static void emitInstr(codeGenContext* context, instructionInfo* instrInfo){
     instrEncodeRule_t* instrEncodeRule = findEncodeRule(INSTRUCTION_INFO_TYPE(instrInfo), INSTRUCTION_INFO_MODE(instrInfo));
     assert(instrEncodeRule);
 
-    BP;
+    // BP;
 
     emitREX(context, instrInfo);
 
