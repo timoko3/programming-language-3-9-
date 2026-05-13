@@ -142,9 +142,9 @@ void genCodeX86ELF(FILE* filePtr, tree_t* AST, codeGenContext* context, list_t* 
 //     _IDIV("r8");
 //     _IDIV("rbx");
 //     _IDIV("rcx");
-//     _MOV("rax", "rbx");
-//     _ADD("rax", "rbx");
-//     _SUB("r8", "r9");
+    _MOV("rax", "rbx");
+    _ADD("rax", "rbx");
+    _SUB("r8", "r9");
 //     _SUB("r12", "5");
 //     _MOV("rcx", "rdx");
 //     _MOV("rsi", "123");
@@ -229,8 +229,8 @@ void genCodeX86ELF(FILE* filePtr, tree_t* AST, codeGenContext* context, list_t* 
 // 
     // _MOV("[rax + 4]", "-1");
     // _MOV("[r8 + 8]", "-5");
-    traversalCondOrder(AST->root, &visitorAstX86Elf);
-    codeBufFixUp(_CONTEXT_ELF_CODE_BUFFER(context), _CONTEXT_ELF_FIX_UP_LIST(context));
+    // traversalCondOrder(AST->root, &visitorAstX86Elf);
+    // codeBufFixUp(_CONTEXT_ELF_CODE_BUFFER(context), _CONTEXT_ELF_FIX_UP_LIST(context));
     genPrologueX86Elf(context);
     // genEpilogueNasm(context);
 

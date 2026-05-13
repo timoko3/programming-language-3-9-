@@ -16,7 +16,8 @@ struct elfGenerationContext_t{
     size_t tableNamesTs;
     binBuffer_t* codeBuffer;
     list_t*      fixUpList;
-    bool         needDatasection;
+    bool         needDataSection;
+    size_t       dataSectionSize;
 };
 
 void genPrologueX86Elf(codeGenContext* context);

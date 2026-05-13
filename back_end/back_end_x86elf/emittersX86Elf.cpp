@@ -519,28 +519,28 @@ void emitHltX86ElfPre(treeNode_t* node, codeGenContext* context){
     _SYSCALL();
 }
 
-void emitInNasmPre(treeNode_t* node, codeGenContext* context){
-    assert(node);
-    assert(context);
+// void emitInX86Pre(treeNode_t* node, codeGenContext* context){
+//     assert(node);
+//     assert(context);
 
-    _CONTEXT_ELF_NEED_DATA_SECTION(context) = 1;
-    _CONTEXT_IS_L_VALUE(context)            = 1;
-}
+//     _CONTEXT_ELF_NEED_DATA_SECTION(context) = 1;
+//     _CONTEXT_IS_L_VALUE(context)            = 1;
+// }
 
-void emitInNasmIn(treeNode_t* node, codeGenContext* context){
-    assert(node);
-    assert(context);
+// void emitInX86In(treeNode_t* node, codeGenContext* context){
+//     assert(node);
+//     assert(context);
 
-    _CONTEXT_IS_L_VALUE(context) = 0;
+//     _CONTEXT_IS_L_VALUE(context) = 0;
 
-    _PUSH("rax");
-    _PUSH("rsi");
-    _PUSH("rdi");
+//     _PUSH("rax");
+//     _PUSH("rsi");
+//     _PUSH("rdi");
 
-    _POP("rdi");
-    _POP("rsi");
-    _POP("rax");
-}
+//     _POP("rdi");
+//     _POP("rsi");
+//     _POP("rax");
+// }
 
 void loadToRegX86Elf(varMapElem_t* var, codeGenContext* context){
     if (VARIABLE_MAP_LOC_TYPE(var) == LOCK_REG){

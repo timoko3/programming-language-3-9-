@@ -13,6 +13,8 @@ const Elf64_Addr  START_PHYSICAL_ADDR = START_VIRTUAL_ADDR;
 
 const Elf64_Xword MEM_PAGE_SIZE       = 0x1000;
 
+const size_t DATA_SECTION_SIZE        = 16;
+
 static void genElfHeader(codeGenContext* context);
 static void genProgramHeader(codeGenContext* context);
 static void genSectionTable(codeGenContext* context);
@@ -20,22 +22,30 @@ static void genSectionTable(codeGenContext* context);
 void genPrologueX86Elf(codeGenContext* context){
     assert(context);
 
-    const char* shstrtab = "\0.text\0.shstrtab";
-    size_t shstrtabSize  = 17;
+    const char* shstrtab = "\0.text\0.data\0.shstrtab";
+    size_t shstrtabSize  = 23;
+
+    uint8_t raw_data[] = {
+        '%', 'd', '\0', '\0', '\0', '\0', '\0', '\0', '\0', '\0', '\0', '\0', '\0', '\0'
+    };
 
     _CONTEXT_ELF_SIZE_EH(context)            = sizeof(Elf64_Ehdr);
     _CONTEXT_ELF_SIZE_PH(context)            = sizeof(Elf64_Phdr);
     _CONTEXT_ELF_CODE_SIZE(context)          = BIN_BUFFER_SIZE(_CONTEXT_ELF_CODE_BUFFER(context)) * sizeof(uint8_t);
     _CONTEXT_ELF_SECTION_TABLE_SIZE(context) = sizeof(Elf64_Shdr);
     _CONTEXT_ELF_TABLE_NAMES_TS(context)     = shstrtabSize;
+    _CONTEXT_ELF_DATA_SECTION_SIZE(context)  = sizeof(raw_data);
 
     genElfHeader(context);
     genProgramHeader(context);
+
+    fwrite(raw_data, _CONTEXT_ELF_DATA_SECTION_SIZE(context), 1, _CONTEXT_FILE_PTR(context));
 
     fwrite(BIN_BUFFER_DATA(_CONTEXT_ELF_CODE_BUFFER(context)), _CONTEXT_ELF_CODE_SIZE(context), 1, _CONTEXT_FILE_PTR(context));
     fwrite(shstrtab, shstrtabSize, 1, _CONTEXT_FILE_PTR(context));
 
     genSectionTable(context);
+
 }
 
 static void genElfHeader(codeGenContext* context){
@@ -65,10 +75,10 @@ static void genElfHeader(codeGenContext* context){
     ehdr.e_phentsize = _CONTEXT_ELF_SIZE_PH(context);
     ehdr.e_phnum     = 1;               
 
-    ehdr.e_shoff     = _CONTEXT_ELF_SIZE_EH(context) + _CONTEXT_ELF_SIZE_PH(context) + _CONTEXT_ELF_CODE_SIZE(context) + _CONTEXT_ELF_TABLE_NAMES_TS(context);  
+    ehdr.e_shoff     = _CONTEXT_ELF_SIZE_EH(context) + _CONTEXT_ELF_SIZE_PH(context) + _CONTEXT_ELF_CODE_SIZE(context) + _CONTEXT_ELF_DATA_SECTION_SIZE(context) + _CONTEXT_ELF_TABLE_NAMES_TS(context);  
     ehdr.e_shentsize = _CONTEXT_ELF_SECTION_TABLE_SIZE(context);
-    ehdr.e_shnum     = 3; 
-    ehdr.e_shstrndx  = 2;  
+    ehdr.e_shnum     = 4; 
+    ehdr.e_shstrndx  = 3;  
 
     fwrite(&ehdr, sizeof(ehdr), 1, _CONTEXT_FILE_PTR(context));
 }
@@ -84,9 +94,9 @@ static void genProgramHeader(codeGenContext* context){
     phdr.p_vaddr  = START_VIRTUAL_ADDR;         
     phdr.p_paddr  = START_PHYSICAL_ADDR;
 
-    phdr.p_filesz = _CONTEXT_ELF_SIZE_EH(context) + _CONTEXT_ELF_SIZE_PH(context) + _CONTEXT_ELF_CODE_SIZE(context) + _CONTEXT_ELF_TABLE_NAMES_TS(context);
+    phdr.p_filesz = _CONTEXT_ELF_SIZE_EH(context) + _CONTEXT_ELF_SIZE_PH(context) + _CONTEXT_ELF_CODE_SIZE(context) + _CONTEXT_ELF_DATA_SECTION_SIZE(context) + _CONTEXT_ELF_TABLE_NAMES_TS(context) ;
     phdr.p_memsz  = phdr.p_filesz;
-    phdr.p_flags  = PF_R | PF_X; 
+    phdr.p_flags  = PF_R | PF_X || PF_W; 
     phdr.p_align  = MEM_PAGE_SIZE;   
 
     fwrite(&phdr, sizeof(phdr), 1, _CONTEXT_FILE_PTR(context));
@@ -95,7 +105,7 @@ static void genProgramHeader(codeGenContext* context){
 static void genSectionTable(codeGenContext* context){
     assert(context);
 
-    Elf64_Shdr shdr[3] = {0};
+    Elf64_Shdr shdr[4] = {0};
 
     shdr[1].sh_name   = 1;                
     shdr[1].sh_type   = SHT_PROGBITS;
@@ -104,10 +114,18 @@ static void genSectionTable(codeGenContext* context){
     shdr[1].sh_offset = _CONTEXT_ELF_SIZE_EH(context) + _CONTEXT_ELF_SIZE_PH(context) ;
     shdr[1].sh_size   = _CONTEXT_ELF_CODE_SIZE(context);
 
-    shdr[2].sh_name = 7;
-    shdr[2].sh_type = SHT_STRTAB;
-    shdr[2].sh_offset = _CONTEXT_ELF_SIZE_EH(context) + _CONTEXT_ELF_SIZE_PH(context) + _CONTEXT_ELF_CODE_SIZE(context);
-    shdr[2].sh_size = _CONTEXT_ELF_TABLE_NAMES_TS(context);
+    shdr[2].sh_name      = 7;
+    shdr[2].sh_type      = SHT_PROGBITS;
+    shdr[2].sh_flags     = SHF_ALLOC | SHF_WRITE;
+    shdr[2].sh_addr = START_VIRTUAL_ADDR + _CONTEXT_ELF_SIZE_EH(context) + _CONTEXT_ELF_SIZE_PH(context) + _CONTEXT_ELF_CODE_SIZE(context);
+    shdr[2].sh_offset    = _CONTEXT_ELF_SIZE_EH(context) + _CONTEXT_ELF_SIZE_PH(context) + _CONTEXT_ELF_CODE_SIZE(context);
+    shdr[2].sh_size      = _CONTEXT_ELF_DATA_SECTION_SIZE(context);
+    shdr[2].sh_addralign = 8;
+
+    shdr[3].sh_name   = 13;
+    shdr[3].sh_type   = SHT_STRTAB;
+    shdr[3].sh_offset = _CONTEXT_ELF_SIZE_EH(context) + _CONTEXT_ELF_SIZE_PH(context) + _CONTEXT_ELF_CODE_SIZE(context) + _CONTEXT_ELF_DATA_SECTION_SIZE(context);
+    shdr[3].sh_size   = _CONTEXT_ELF_TABLE_NAMES_TS(context);
 
     fwrite(&shdr, sizeof(shdr), 1, _CONTEXT_FILE_PTR(context));
 }
