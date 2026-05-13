@@ -42,7 +42,9 @@ enum instr_t{
     IDIV_I,
     CMP_I,
 
-    CVTSI2SS_I
+    CVTSI2SS_I,
+    CVTTSS2SI_I,
+    SQRTSS_I
 };
 
 struct  instrArg_t{
@@ -70,6 +72,8 @@ enum instrMode_t{
     LABELMODE,
 
     RM64TOXMM,
+    XMMTOR64,
+    XMMTOXMM,
 
     NOMODE
 };

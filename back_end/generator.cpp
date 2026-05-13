@@ -231,7 +231,8 @@ void genCodeX86ELF(FILE* filePtr, tree_t* AST, codeGenContext* context, list_t* 
     // _MOV("[r8 + 8]", "-5");
 
     _CVTSI2SS("xmm0", "rcx");
-
+    _CVTTSS2SI("rbx", "xmm0");
+    _SQRTSS("xmm0", "xmm0");
     // traversalCondOrder(AST->root, &visitorAstX86Elf);
     // _LABEL("printf");
     // readFileToBinBuffer(_CONTEXT_ELF_CODE_BUFFER(context), "myOut.bin");

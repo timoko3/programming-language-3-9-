@@ -109,7 +109,9 @@ instrEncodeRule_t instructionsEncodeRules[]{
     {CMP_I,   R64TORM64,   MR_CASE_R,  MR_OP_EN, 2, 1, {0x39}},
     {CMP_I,   IMM32TORM64, MR_CASE_7,  MI_OP_EN, 2, 1, {0x81}},
 
-    {CVTSI2SS_I, RM64TOXMM, MR_CASE_R, A_OP_EN,  2, 2, {0x0F, 0x2A}}
+    {CVTSI2SS_I,  RM64TOXMM, MR_CASE_R, A_OP_EN,  2, 2, {0x0F, 0x2A}},
+    {CVTTSS2SI_I, XMMTOR64,  MR_CASE_R, A_OP_EN,  2, 2, {0x0F, 0x2C}},
+    {SQRTSS_I,    XMMTOXMM,  MR_CASE_R, A_OP_EN,  2, 2, {0x0F, 0x51}}
 };
 
 const size_t ENCODE_RULES_TABLE_SIZE = sizeof(instructionsEncodeRules) / sizeof(instrEncodeRule_t);
@@ -312,6 +314,10 @@ static void chooseArgsMode(codeGenContext* context, instructionInfo* instrInfo){
                 case IMM32:
                     INSTRUCTION_INFO_MODE(instrInfo) = IMM32TORM64;
                     break;
+                case XMM:
+                    INSTRUCTION_INFO_MODE(instrInfo) = XMMTOR64;
+                    INSTRUCTION_ARG_TYPE((&INSTRUCTION_INFO_ARGS(instrInfo)[0])) = R64;
+                    break;
                 case NONE_ARG:
                     INSTRUCTION_INFO_MODE(instrInfo) = RM64MODE;
                     break;
@@ -324,6 +330,8 @@ static void chooseArgsMode(codeGenContext* context, instructionInfo* instrInfo){
                     INSTRUCTION_INFO_MODE(instrInfo) = RM64TOXMM;
                     INSTRUCTION_ARG_TYPE((&INSTRUCTION_INFO_ARGS(instrInfo)[1])) = RM64;
                     break;
+                case XMM:
+                    INSTRUCTION_INFO_MODE(instrInfo) = XMMTOXMM;
                 default: break;
             }
             break;
@@ -401,7 +409,9 @@ static void emitMandatory(codeGenContext* context, instructionInfo* instrInfo){
     assert(context);
     assert(instrInfo);    
 
-    if(INSTRUCTION_INFO_MODE(instrInfo) == RM64TOXMM){
+    if(INSTRUCTION_INFO_MODE(instrInfo) == RM64TOXMM || 
+       INSTRUCTION_INFO_MODE(instrInfo) == XMMTOR64  ||
+       INSTRUCTION_INFO_MODE(instrInfo) == XMMTOXMM){
         writeU8Buf(_CONTEXT_ELF_CODE_BUFFER(context), MANDATORY_BYTE_CODE);
     }
 }
@@ -460,6 +470,8 @@ static void emitModRm(codeGenContext* context, instructionInfo* instrInfo, modRm
         case R64TORM64:
         case RM64TOR64:
         case RM64TOXMM:
+        case XMMTOR64:
+        case XMMTOXMM:
             modRmByte |= (MOD_RM_REG_MOD << MOD_RM_MOD_OFFSET);
             break;
 

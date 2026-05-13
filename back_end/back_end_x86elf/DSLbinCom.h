@@ -51,6 +51,8 @@
 #define _JNE(arg1)         prepareInstructionEndcodeInfo(context, JNE_I, 1, arg1, "")
 
 #define _CVTSI2SS(arg1, arg2)   prepareInstructionEndcodeInfo(context, CVTSI2SS_I, 2, arg1, arg2)
+#define _CVTTSS2SI(arg1, arg2)  prepareInstructionEndcodeInfo(context, CVTTSS2SI_I, 2, arg1, arg2)
+#define _SQRTSS(arg1, arg2)     prepareInstructionEndcodeInfo(context, SQRTSS_I, 2, arg1, arg2)
 
 #define _LABEL(arg1)        fixUpSetLabelOffset(_CONTEXT_ELF_FIX_UP_LIST(context), arg1, BIN_BUFFER_SIZE(_CONTEXT_ELF_CODE_BUFFER(context)))
 #define _LABEL_USE(arg1)    fixUpListAddPatchOffset(_CONTEXT_ELF_FIX_UP_LIST(context), arg1, BIN_BUFFER_SIZE(_CONTEXT_ELF_CODE_BUFFER(context)))
