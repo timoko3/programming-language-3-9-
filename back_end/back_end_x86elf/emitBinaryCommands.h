@@ -13,6 +13,7 @@ enum argInst_t{
     MEM64,
     LABEL,
     XMM,
+    RIPADDR,
     NONE_ARG
 };
 
@@ -46,7 +47,9 @@ enum instr_t{
     CVTTSS2SI_I,
     SQRTSS_I,
 
-    CQO_I
+    CQO_I,
+
+    LEA_I
 };
 
 struct  instrArg_t{
@@ -76,6 +79,8 @@ enum instrMode_t{
     RM64TOXMM,
     XMMTOR64,
     XMMTOXMM,
+
+    RIPADDRTOR64,
 
     NOMODE
 };

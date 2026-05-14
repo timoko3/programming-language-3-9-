@@ -237,12 +237,14 @@ void genCodeX86ELF(FILE* filePtr, tree_t* AST, codeGenContext* context, list_t* 
     // _CVTSI2SS("xmm0", "rcx");
     // _CVTTSS2SI("rbx", "xmm0");
     // _SQRTSS("xmm0", "xmm0");
-    traversalCondOrder(AST->root, &visitorAstX86Elf);
-    _LABEL("printf");
-    readFileToBinBuffer(_CONTEXT_ELF_CODE_BUFFER(context), OUT_ASM_FUNC_FILE_NAME);
-    _LABEL("scanf");
-    readFileToBinBuffer(_CONTEXT_ELF_CODE_BUFFER(context), IN_ASM_FUNC_FILE_NAME);
-    codeBufFixUp(_CONTEXT_ELF_CODE_BUFFER(context), _CONTEXT_ELF_FIX_UP_LIST(context));
+
+    _LEA("rsi", "[circle]");
+    // traversalCondOrder(AST->root, &visitorAstX86Elf);
+    // _LABEL("printf");
+    // readFileToBinBuffer(_CONTEXT_ELF_CODE_BUFFER(context), OUT_ASM_FUNC_FILE_NAME);
+    // _LABEL("scanf");
+    // readFileToBinBuffer(_CONTEXT_ELF_CODE_BUFFER(context), IN_ASM_FUNC_FILE_NAME);
+    // codeBufFixUp(_CONTEXT_ELF_CODE_BUFFER(context), _CONTEXT_ELF_FIX_UP_LIST(context));
     genPrologueX86Elf(context);
 
     binBufferDtor(_CONTEXT_ELF_CODE_BUFFER(context));

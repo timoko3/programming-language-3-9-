@@ -11,6 +11,7 @@
 const size_t MAX_REG_NAME_LEN = 64;
 
 regTableElem_t initRegTableNasm[] = {
+    {RIP, "rip", INST_POINTER, true,   CALLER_SAVED},  
     {RAX, "rax", FUNC_RET_VAL, false,  CALLER_SAVED},  
     {RBX, "rbx", TEMP_STORE,   false,  CALLEE_SAVED},  
     {RDI, "rdi", FUNC_ARGS,    false,  CALLER_SAVED},  
@@ -27,7 +28,7 @@ regTableElem_t initRegTableNasm[] = {
     {R13, "r13", STORE_VAR,    false,  CALLEE_SAVED},  
     {R14, "r14", STORE_VAR,    false,  CALLEE_SAVED},  
     {R15, "r15", STORE_VAR,    false,  CALLEE_SAVED},  
-    {XMM0,"xmm0", VEC_REG,     false,  CALLEE_SAVED},  
+    {XMM0,"xmm0", VEC_REG,     true ,  CALLEE_SAVED},  
 };
 
 regTableElem_t initRegTableSpu[] = {

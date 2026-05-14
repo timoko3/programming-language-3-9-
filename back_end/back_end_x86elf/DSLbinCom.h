@@ -56,5 +56,7 @@
 
 #define _CQO()                  prepareInstructionEndcodeInfo(context, CQO_I, 0, "", "")
 
+#define _LEA(arg1, arg2)        prepareInstructionEndcodeInfo(context, LEA_I, 2, arg1, arg2)
+
 #define _LABEL(arg1)        fixUpSetLabelOffset(_CONTEXT_ELF_FIX_UP_LIST(context), arg1, BIN_BUFFER_SIZE(_CONTEXT_ELF_CODE_BUFFER(context)))
 #define _LABEL_USE(arg1)    fixUpListAddPatchOffset(_CONTEXT_ELF_FIX_UP_LIST(context), arg1, BIN_BUFFER_SIZE(_CONTEXT_ELF_CODE_BUFFER(context)))

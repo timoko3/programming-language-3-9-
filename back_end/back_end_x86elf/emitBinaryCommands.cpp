@@ -19,6 +19,8 @@ const uint8_t RBP_CODE   = 0x5;
 const uint8_t RSI_CODE   = 0x6;
 const uint8_t RDI_CODE   = 0x7;
 
+const uint8_t RIP_CODE   = 0x5;
+
 const uint8_t R8_CODE    = 0x0;
 const uint8_t R9_CODE    = 0x1;
 const uint8_t R10_CODE   = 0x2;
@@ -113,7 +115,9 @@ instrEncodeRule_t instructionsEncodeRules[]{
     {CVTTSS2SI_I, XMMTOR64,  MR_CASE_R, A_OP_EN,  2, 2, {0x0F, 0x2C}},
     {SQRTSS_I,    XMMTOXMM,  MR_CASE_R, A_OP_EN,  2, 2, {0x0F, 0x51}},
 
-    {CQO_I,       NOMODE,  MR_CASE_NO, NO_OP_EN,  0, 1, {0x99}}
+    {CQO_I,       NOMODE,  MR_CASE_NO, NO_OP_EN,  0, 1, {0x99}},
+
+    {LEA_I,      RIPADDRTOR64, MR_CASE_R, RM_OP_EN, 2, 1, {0x8d}}
 };
 
 const size_t ENCODE_RULES_TABLE_SIZE = sizeof(instructionsEncodeRules) / sizeof(instrEncodeRule_t);
@@ -228,9 +232,17 @@ static argInst_t instrGetArg(codeGenContext* context, instrArg_t* arg, const cha
         regTableElem_t* foundReg = regTableFind(_CONTEXT_REG_TABLE(context), findNameRegRule, refReg);
         regTableElemDtor(refReg);             
 
-        INSTRUCTION_ARG_TYPE(arg)        = MEM64;
-        INSTRUCTION_ARG_VALUE_REG(arg)   = foundReg;
-        INSTRUCTION_ARG_IS_MEM_CASE(arg) = 1;
+        if(!foundReg){
+            INSTRUCTION_ARG_TYPE(arg)        = RIPADDR;
+
+            regTableElem_t* refReg = regTableElemCtor(RIP, "", ANY, 0);
+            foundReg = regTableFind(_CONTEXT_REG_TABLE(context), findIndRegRule, refReg);
+            regTableElemDtor(refReg);         
+
+            INSTRUCTION_ARG_VALUE_REG(arg)   = foundReg;
+            INSTRUCTION_ARG_IS_MEM_CASE(arg) = 1;
+            return INSTRUCTION_ARG_TYPE(arg);
+        }
 
         printf("parsedVarsAmount = %d\n", parsedVarsAmount);
         switch (parsedVarsAmount){
@@ -286,6 +298,10 @@ static void chooseArgsMode(codeGenContext* context, instructionInfo* instrInfo){
                 case R64:
                     INSTRUCTION_ARG_TYPE((&INSTRUCTION_INFO_ARGS(instrInfo)[1])) = RM64;
                     INSTRUCTION_INFO_MODE(instrInfo) = RM64TOR64;
+                    break;
+                case RIPADDR:
+                    INSTRUCTION_INFO_MODE(instrInfo) = RIPADDRTOR64;
+                    INSTRUCTION_ARG_TYPE((&INSTRUCTION_INFO_ARGS(instrInfo)[1])) = R64;
                     break;
                 case NONE_ARG:
                     INSTRUCTION_INFO_MODE(instrInfo) = RM64MODE;
@@ -357,7 +373,7 @@ static void emitInstr(codeGenContext* context, instructionInfo* instrInfo){
     instrEncodeRule_t* instrEncodeRule = findEncodeRule(INSTRUCTION_INFO_TYPE(instrInfo), INSTRUCTION_INFO_MODE(instrInfo));
     assert(instrEncodeRule);
 
-    // BP;
+    BP;
 
     emitMandatory(context, instrInfo);
 
@@ -384,6 +400,7 @@ static void emitInstr(codeGenContext* context, instructionInfo* instrInfo){
         case IMM32MODE:
             emitImm32(context, instrInfo);
             break;
+        case RIPADDRTOR64:
         case LABELMODE:
             writeU32LeBuf(_CONTEXT_ELF_CODE_BUFFER(context), 0x0);
         case NOMODE:
@@ -485,7 +502,10 @@ static void emitModRm(codeGenContext* context, instructionInfo* instrInfo, modRm
             else if(INSTRUCTION_ARG_MEM_SHIFT((&arg2)) != 0) modRmByte |= (MOD_RM_MEM_DISP8_MOD << MOD_RM_MOD_OFFSET);
             else                                             modRmByte |= (MOD_RM_MEM_MOD       << MOD_RM_MOD_OFFSET);
             break;
-            
+         
+        case RIPADDRTOR64:
+            modRmByte |= (MOD_RM_MEM_MOD << MOD_RM_MOD_OFFSET);
+            break;
 
         default:
             break;
@@ -628,6 +648,9 @@ static uint8_t emitRegCode(genPurposeRegs reg){
             curRegCode = XMM0_CODE;
             break;
         
+        case RIP:
+            curRegCode = RIP_CODE;
+            break;
         default:
             break;
     }
