@@ -14,6 +14,9 @@ enum argInst_t{
     LABEL,
     XMM,
     RIPADDR,
+    RM8,
+    MEM8,
+    IMM8,
     NONE_ARG
 };
 
@@ -81,6 +84,8 @@ enum instrMode_t{
     XMMTOXMM,
 
     RIPADDRTOR64,
+
+    IMM8TOMEM8,
 
     NOMODE
 };

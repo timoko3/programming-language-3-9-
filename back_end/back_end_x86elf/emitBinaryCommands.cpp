@@ -117,7 +117,9 @@ instrEncodeRule_t instructionsEncodeRules[]{
 
     {CQO_I,       NOMODE,  MR_CASE_NO, NO_OP_EN,  0, 1, {0x99}},
 
-    {LEA_I,      RIPADDRTOR64, MR_CASE_R, RM_OP_EN, 2, 1, {0x8d}}
+    {LEA_I,      RIPADDRTOR64, MR_CASE_R, RM_OP_EN, 2, 1, {0x8d}},
+
+    {MOV_I,      IMM8TOMEM8,   MR_CASE_0, MI_OP_EN, 2, 1, {0xc6}}
 };
 
 const size_t ENCODE_RULES_TABLE_SIZE = sizeof(instructionsEncodeRules) / sizeof(instrEncodeRule_t);
@@ -176,6 +178,7 @@ static void emitR64toRM64(codeGenContext* context, instructionInfo* instrInfo);
 static void emitImm32toRM64(codeGenContext* context, instructionInfo* instrInfo);
 static void emitRM64(codeGenContext* context, instructionInfo* instrInfo);
 static void emitImm32(codeGenContext* context, instructionInfo* instrInfo);
+static void emitImm8(codeGenContext* context, instructionInfo* instrInfo);
 
 void prepareInstructionEndcodeInfo(codeGenContext* context, instr_t instrType, size_t amountArgs, const char* strArg1, const char* strArg2){
     assert(context);
@@ -227,6 +230,29 @@ static argInst_t instrGetArg(codeGenContext* context, instrArg_t* arg, const cha
 
         INSTRUCTION_ARG_VALUE_REG(arg) = foundReg;
     }
+    else if((parsedVarsAmount = sscanf(strArg, "byte [%[a-z0-9] %c %d]", strPart, &op, &n) )> 0){
+        regTableElem_t* refReg = regTableElemCtor(NONE, strPart, ANY, 0);
+        regTableElem_t* foundReg = regTableFind(_CONTEXT_REG_TABLE(context), findNameRegRule, refReg);
+        regTableElemDtor(refReg);       
+        
+        INSTRUCTION_ARG_TYPE(arg)        = MEM8;
+        INSTRUCTION_ARG_VALUE_REG(arg)   = foundReg;
+        INSTRUCTION_ARG_IS_MEM_CASE(arg) = 1;
+
+        switch (parsedVarsAmount){
+            case 1:
+                break;
+            case 2:
+            case 3:
+                if(op == '-') n *= -1; 
+                INSTRUCTION_ARG_MEM_SHIFT(arg) = n;
+                printf("INSTRUCTION_ARG_MEM_SHIFT = %d\n", INSTRUCTION_ARG_MEM_SHIFT(arg));
+                break;
+            default:
+                printf("Недопустимая адресация\n");
+                break;
+        }
+    }
     else if((parsedVarsAmount = sscanf(strArg, "[%[a-z0-9] %c %d]", strPart, &op, &n) )> 0){
         regTableElem_t* refReg = regTableElemCtor(NONE, strPart, ANY, 0);
         regTableElem_t* foundReg = regTableFind(_CONTEXT_REG_TABLE(context), findNameRegRule, refReg);
@@ -243,6 +269,10 @@ static argInst_t instrGetArg(codeGenContext* context, instrArg_t* arg, const cha
             INSTRUCTION_ARG_IS_MEM_CASE(arg) = 1;
             return INSTRUCTION_ARG_TYPE(arg);
         }
+
+        INSTRUCTION_ARG_TYPE(arg)        = MEM64;
+        INSTRUCTION_ARG_VALUE_REG(arg)   = foundReg;
+        INSTRUCTION_ARG_IS_MEM_CASE(arg) = 1;
 
         printf("parsedVarsAmount = %d\n", parsedVarsAmount);
         switch (parsedVarsAmount){
@@ -359,6 +389,10 @@ static void chooseArgsMode(codeGenContext* context, instructionInfo* instrInfo){
         case LABEL:
             INSTRUCTION_INFO_MODE(instrInfo) = LABELMODE;
             break; 
+        case MEM8:
+            INSTRUCTION_INFO_MODE(instrInfo) = IMM8TOMEM8;
+            INSTRUCTION_ARG_TYPE((&INSTRUCTION_INFO_ARGS(instrInfo)[1])) = IMM8;
+            break;
         case NONE_ARG:
             INSTRUCTION_INFO_MODE(instrInfo) = NOMODE;
             break; 
@@ -403,11 +437,22 @@ static void emitInstr(codeGenContext* context, instructionInfo* instrInfo){
         case RIPADDRTOR64:
         case LABELMODE:
             writeU32LeBuf(_CONTEXT_ELF_CODE_BUFFER(context), 0x0);
+            break;
+        case IMM8TOMEM8:
+            emitImm8(context, instrInfo);
+            break;
         case NOMODE:
             break;
         default:
             break;
     }
+}
+
+static void emitImm8(codeGenContext* context, instructionInfo* instrInfo){
+    assert(context);
+    assert(instrInfo);
+
+    writeU8Buf(_CONTEXT_ELF_CODE_BUFFER(context), (uint8_t) INSTRUCTION_ARG_VALUE_NUM((&INSTRUCTION_INFO_ARGS(instrInfo)[1])));
 }
 
 static void emitImm32(codeGenContext* context, instructionInfo* instrInfo){
@@ -443,7 +488,7 @@ static void emitREX(codeGenContext* context, instructionInfo* instrInfo){
 
     // if(INSTRUCTION_INFO_TYPE(instrInfo) == MOV_I)
 
-    rexByte |= (1 << REX_W_BIT);   // set REX.W
+    if(!(INSTRUCTION_INFO_MODE(instrInfo) == IMM8TOMEM8)) rexByte |= (1 << REX_W_BIT);   // set REX.W
 
     for(size_t i = 0; i < INSTRUCTION_INFO_AMOUNT_ARGS(instrInfo); i++){
         instrArg_t* curArg = (&INSTRUCTION_INFO_ARGS(instrInfo)[i]); 

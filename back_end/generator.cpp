@@ -239,6 +239,7 @@ void genCodeX86ELF(FILE* filePtr, tree_t* AST, codeGenContext* context, list_t* 
     // _SQRTSS("xmm0", "xmm0");
 
     _LEA("rsi", "[circle]");
+    _MOV("byte [rbx]", "5");
     // traversalCondOrder(AST->root, &visitorAstX86Elf);
     // _LABEL("printf");
     // readFileToBinBuffer(_CONTEXT_ELF_CODE_BUFFER(context), OUT_ASM_FUNC_FILE_NAME);
