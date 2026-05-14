@@ -53,7 +53,8 @@ ASTnodeData_t ASTdata[]{
       "как лист перед травой",     CALL_FUNC,      "no"   },
     {"побороть корень зла",        SQRT,           "sqrt" },
     {"ляпота",                     POPM,           "popm" },
-    {"закругляемся",               DRAW,           "draw" }
+    {"закругляемся",               DRAW,           "draw" },
+    {"движемъся",                  NEW_LINE,       "newL" },
 };
 
 const size_t AST_DATA_COUNT = sizeof(ASTdata) / sizeof(ASTdata[0]);

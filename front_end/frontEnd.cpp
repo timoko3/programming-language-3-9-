@@ -37,7 +37,7 @@ void compilerFrontend(char* sourceFileName, char* destFileName, bool debugSymbol
 
     treeWrite(&AST, destFileName);
 
-    treeGraphDump(&AST);
+    // treeGraphDump(&AST);
 
     treeDtor(&AST);
 

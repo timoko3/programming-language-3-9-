@@ -298,6 +298,39 @@ mov [rbp - 24], rbx
 ;endAssign
 jmp .whileBegin_6
 .whileEnd_7:
+mov rbx, r13
+mov r10, rbx
+push r10
+mov rbx, [rbp - 32]
+mov r11, rbx
+pop r10
+imul r10, r11
+mov rbx, r10
+mov r10, rbx
+push r10
+mov rbx, [rbp - 24]
+mov r11, rbx
+pop r10
+add r10, r11
+mov rbx, r10
+mov r10, rbx
+push r10
+mov rbx, 1
+mov r11, rbx
+pop r10
+sub r10, r11
+mov rbx, r10
+sub rsp, 8
+mov [rbp - 48], rbx
+
+
+;endAssign
+mov rbx, [rbp - 48]
+push rsi
+lea rsi, [circle]
+add rbx, rsi
+mov byte [rbx], 0xa
+pop rsi
 mov rbx, [rbp - 32]
 mov r10, rbx
 push r10
@@ -313,19 +346,7 @@ mov [rbp - 32], rbx
 ;endAssign
 jmp .whileBegin_4
 .whileEnd_5:
-mov rbx, r13
-mov r10, rbx
-push r10
-mov rbx, r13
-mov r11, rbx
-pop r10
-imul r10, r11
-mov rbx, r10
-mov r13, rbx
-
-
-;endAssign
-mov rbx, r13
+mov rbx, r14
 push rsi
 push rdi
 push rdx

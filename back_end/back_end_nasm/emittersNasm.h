@@ -64,5 +64,6 @@ void emitOutNasmIn(treeNode_t* node, codeGenContext* context);
 
 void emitPopMNasmIn(treeNode_t* node, codeGenContext* context);
 void emitDrawNasmIn(treeNode_t* node, codeGenContext* context);
+void emitNewLineNasmIn(treeNode_t* node, codeGenContext* context);
 
 #endif /* EMITERS_NASM */

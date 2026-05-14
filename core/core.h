@@ -50,7 +50,8 @@ enum ASTnodeType{
     POPM,
     DRAW,
     VARIABLE,
-    FUNCTION
+    FUNCTION,
+    NEW_LINE
 };
 
 union ASTVal_t{

@@ -41,6 +41,7 @@ static treeNode_t* getIn         (treeNode_t* node, token_t** curToken);
 static treeNode_t* getSqrt       (treeNode_t* node, token_t** curToken);
 static treeNode_t* getPopm       (treeNode_t* node, token_t** curToken);
 static treeNode_t* getDraw       (treeNode_t* node, token_t** curToken);
+static treeNode_t* getNewLine    (treeNode_t* node, token_t** curToken);
 
 static treeNode_t* createTreeNodeFromToken(token_t* curToken, treeNode_t* left, treeNode_t* right);
 
@@ -127,6 +128,7 @@ static treeNode_t* getBlock(treeNode_t* node, token_t** curToken){
           _TOKEN_TYPE(*curToken) == IN ||
           _TOKEN_TYPE(*curToken) == POPM ||
           _TOKEN_TYPE(*curToken) == DRAW ||
+          _TOKEN_TYPE(*curToken) == NEW_LINE ||
           _TOKEN_TYPE(*curToken) == MAIN ||
           _TOKEN_TYPE(*curToken) == HLT){
         treeNode_t* stmt = getES(node, curToken);
@@ -184,6 +186,7 @@ static treeNode_t* getStatement(treeNode_t* node, token_t** curToken){
     if (_TOKEN_TYPE(*curToken) == IN)              return getIn(node, curToken);
     if (_TOKEN_TYPE(*curToken) == POPM)            return getPopm(node, curToken);
     if (_TOKEN_TYPE(*curToken) == DRAW)            return getDraw(node, curToken);
+    if (_TOKEN_TYPE(*curToken) == NEW_LINE)        return getNewLine(node, curToken);
 
     return NULL;
 }
@@ -212,6 +215,23 @@ static treeNode_t* getPopm(treeNode_t* node, token_t** curToken){
 
     token_t tempToken = **curToken;
     EXPECT(curToken, POPM);
+
+    treeNode_t* val1 = getE(node, curToken);
+
+    treeNode_t* result = createTreeNodeFromToken(&tempToken, val1, NULL);
+
+    LPRINTF("Вышел из Draw. Текущий токен: %p", *curToken);
+
+    return result;
+}
+
+static treeNode_t* getNewLine(treeNode_t* node, token_t** curToken){
+    assert(curToken);
+
+    LPRINTF("Зашел в PopM. Текущий токен: %p", *curToken);
+
+    token_t tempToken = **curToken;
+    EXPECT(curToken, NEW_LINE);
 
     treeNode_t* val1 = getE(node, curToken);
 

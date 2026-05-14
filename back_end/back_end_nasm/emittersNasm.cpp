@@ -740,6 +740,23 @@ void emitPopMNasmIn(treeNode_t* node, codeGenContext* context){
     LPRINTF("emitNumber end");
 }
 
+void emitNewLineNasmIn(treeNode_t* node, codeGenContext* context){
+    assert(node);
+    assert(context);
+
+    LPRINTF("emitNumber start");
+    
+    fprintf(_CONTEXT_FILE_PTR(context), "push rsi\n");
+
+    fprintf(_CONTEXT_FILE_PTR(context), "lea rsi, [circle]\n");
+    fprintf(_CONTEXT_FILE_PTR(context), "add rbx, rsi\n");
+    fprintf(_CONTEXT_FILE_PTR(context), "mov byte [rbx], 0xa\n");
+
+    fprintf(_CONTEXT_FILE_PTR(context), "pop rsi\n");
+
+    LPRINTF("emitNumber end");
+}
+
 void emitDrawNasmIn(treeNode_t* node, codeGenContext* context){
     assert(node);
     assert(context);

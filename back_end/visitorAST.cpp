@@ -50,7 +50,8 @@ ASTvisitorNode_t astNodeVisitorsNasm[]{
     {IN,            emitInNasmPre,     emitInNasmIn,        NULL,                1},
     {OUT,           NULL,              emitOutNasmIn,       NULL,                1},
     {POPM,          NULL,              emitPopMNasmIn,      NULL,                1},
-    {DRAW,          NULL,              emitDrawNasmIn,      NULL,                1}
+    {DRAW,          NULL,              emitDrawNasmIn,      NULL,                1},
+    {NEW_LINE,      NULL,              emitNewLineNasmIn,   NULL,                1}
 };
 
 const size_t NASM_NODE_VISITORS_AMOUNT = sizeof(astNodeVisitorsNasm) / sizeof(ASTvisitorNode_t);
