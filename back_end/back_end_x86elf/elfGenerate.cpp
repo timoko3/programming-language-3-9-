@@ -55,7 +55,7 @@ static const uint64_t segmentFlags[] = {
 enum section_t{
     SEC_NULL = 0,
     SEC_TEXT,
-    // SEC_DATA,
+    SEC_DATA,
     // SEC_INTERP,
     // SEC_DYNAMIC,
     // SEC_DYNSTR,
@@ -130,10 +130,11 @@ void genPrologueX86Elf(codeGenContext* context){
     sections[SEC_TEXT].size             = BIN_BUFFER_SIZE(_CONTEXT_ELF_CODE_BUFFER(context)) * sizeof(uint8_t);
     sections[SEC_TEXT].segment_mask     = SEG_LOAD_RX;
     
-    // static uint8_t raw_data[]           = {'%', 'd', '\0'};
-    // sections[SEC_DATA].data             = raw_data;
-    // sections[SEC_DATA].size             = sizeof(raw_data);
-    // sections[SEC_DATA].segment_mask     = SEG_LOAD_RW;
+    static uint8_t raw_data[5000]       = {};
+    memset(&raw_data, '#', sizeof(raw_data));
+    sections[SEC_DATA].data             = raw_data;
+    sections[SEC_DATA].size             = sizeof(raw_data);
+    sections[SEC_DATA].segment_mask     = SEG_LOAD_RX;
     
     // static uint8_t interp[]             = "/lib64/ld-linux-x86-64.so.2";
     // sections[SEC_INTERP].data           = interp;
@@ -210,7 +211,7 @@ static void genProgramHeaders(codeGenContext* context){
     assert(context);
 
     segments[0].phdr.p_type  = PT_LOAD;
-    segments[0].phdr.p_flags = PF_R | PF_X;
+    segments[0].phdr.p_flags = PF_R | PF_X | PF_W;
 
     segments[1].phdr.p_type  = PT_LOAD;
     segments[1].phdr.p_flags = PF_R | PF_W;
@@ -345,8 +346,8 @@ static void initSections(){
     sections[SEC_TEXT].type     = SEC_TEXT;
     sections[SEC_TEXT].name     = ".text";
 
-    // sections[SEC_DATA].type     = SEC_DATA;
-    // sections[SEC_DATA].name     = ".data";
+    sections[SEC_DATA].type     = SEC_DATA;
+    sections[SEC_DATA].name     = ".data";
 
     // sections[SEC_INTERP].type   = SEC_INTERP;
     // sections[SEC_INTERP].name   = ".interp";
@@ -412,9 +413,9 @@ static void buildSectionHeaders(){
     sections[SEC_TEXT].shdr.sh_flags          = SHF_ALLOC | SHF_EXECINSTR;
     sections[SEC_TEXT].shdr.sh_addralign      = 16;
 
-    // sections[SEC_DATA].shdr.sh_type           = SHT_PROGBITS;
-    // sections[SEC_DATA].shdr.sh_flags          = SHF_ALLOC | SHF_WRITE;
-    // sections[SEC_DATA].shdr.sh_addralign      = 8;
+    sections[SEC_DATA].shdr.sh_type           = SHT_PROGBITS;
+    sections[SEC_DATA].shdr.sh_flags          = SHF_ALLOC | SHF_WRITE;
+    sections[SEC_DATA].shdr.sh_addralign      = 8;
 
     // sections[SEC_INTERP].shdr.sh_type         = SHT_PROGBITS;
     // sections[SEC_INTERP].shdr.sh_flags        = SHF_ALLOC;

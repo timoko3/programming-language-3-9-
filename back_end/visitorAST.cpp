@@ -115,7 +115,10 @@ ASTvisitorNode_t astNodeVisitorsX86Elf[]{
     {NUMBER,        emitNumberX86ElfPre, NULL,                  NULL,                 1},
     {SQRT,          NULL,                NULL,                  emitSqrtX86ElfPost,   1},
     {IN,            emitInX86ElfPre,     emitInX86ElfIn,        NULL,                 1},
-    {OUT,           NULL,                emitOutX86ElfIn,       NULL,                 1}
+    {OUT,           NULL,                emitOutX86ElfIn,       NULL,                 1},
+    {POPM,          NULL,                emitPopMX86ElfIn,      NULL,                 1},
+    {DRAW,          NULL,                emitDrawX86ElfIn,      NULL,                 1},
+    {NEW_LINE,      NULL,                emitNewLineX86ElfIn,   NULL,                 1}
 };
 
 const size_t X86ELF_NODE_VISITORS_AMOUNT = sizeof(astNodeVisitorsX86Elf) / sizeof(ASTvisitorNode_t);

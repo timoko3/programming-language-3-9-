@@ -303,16 +303,28 @@ void emitWhileX86ElfPost(treeNode_t* node, codeGenContext* context){
     assert(node);
     assert(context);
 
-    char fullLabelName[NUMBER_MAX_SIZE] = "";
+    label_t* whileEndLabel = topLabel(_CONTEXT_LABELS_TABLE(context)); 
+    assert(whileEndLabel);
 
-    sprintf(fullLabelName, "%s%d", _LABEL_DATA_NAME(_CONTEXT_CUR_LABEL_A(context)), _LABEL_DATA_ID(_CONTEXT_CUR_LABEL_A(context)));
+    char fullLabelName1[NUMBER_MAX_SIZE] = "";
+    char fullLabelName2[NUMBER_MAX_SIZE] = "";
 
-    _JMP(fullLabelName);
-    _LABEL_USE(fullLabelName);
+    sprintf(fullLabelName1, "%s%d", _LABEL_DATA_NAME(whileEndLabel), _LABEL_DATA_ID(whileEndLabel));
 
-    sprintf(fullLabelName, "%s%d", _LABEL_DATA_NAME(_CONTEXT_CUR_LABEL_B(context)), _LABEL_DATA_ID(_CONTEXT_CUR_LABEL_B(context)));
-    _LABEL(fullLabelName);
+    popLabel(_CONTEXT_LABELS_TABLE(context));
+
+    label_t* whileStartLabel = topLabel(_CONTEXT_LABELS_TABLE(context)); 
+    assert(whileStartLabel);
+
+    sprintf(fullLabelName2, "%s%d", _LABEL_DATA_NAME(whileStartLabel), _LABEL_DATA_ID(whileStartLabel));
+
+    _JMP(fullLabelName2);
+    _LABEL_USE(fullLabelName2);
+
+    _LABEL(fullLabelName1);
     // fprintf(_CONTEXT_FILE_PTR(context), ".%s_%d:\n", _LABEL_DATA_NAME(_CONTEXT_CUR_LABEL_B(context)), _LABEL_DATA_ID(_CONTEXT_CUR_LABEL_B(context)));
+
+    popLabel(_CONTEXT_LABELS_TABLE(context));
 }
 
 void emitCmpX86ElfPost(treeNode_t* node, codeGenContext* context){
@@ -570,6 +582,68 @@ void emitOutX86ElfIn(treeNode_t* node, codeGenContext* context){
     _CALL("print0");
     _LABEL_USE("printf");
     _POP("rdi");
+}
+
+void emitPopMX86ElfIn(treeNode_t* node, codeGenContext* context){
+    assert(node);
+    assert(context);
+
+    LPRINTF("emitNumber start");
+    
+    _PUSH("rsi");
+
+    _LEA("rsi", "[circle]");
+    _LABEL_USE("circle");
+
+    _ADD("rbx", "rsi");
+    _MOV("byte [rbx]", "53");
+
+    _POP("rsi");
+
+    LPRINTF("emitNumber end");
+}
+
+void emitNewLineX86ElfIn(treeNode_t* node, codeGenContext* context){
+    assert(node);
+    assert(context);
+
+    LPRINTF("emitNumber start");
+    
+    _PUSH("rsi");
+
+    _LEA("rsi", "[circle]");
+    _LABEL_USE("circle");
+
+    _ADD("rbx", "rsi");
+    _MOV("byte [rbx]", "10");
+
+    _POP("rsi");
+
+    LPRINTF("emitNumber end");
+}
+
+void emitDrawX86ElfIn(treeNode_t* node, codeGenContext* context){
+    assert(node);
+    assert(context);
+
+    LPRINTF("emitNumber start");
+    
+    _PUSH("rsi");
+    _PUSH("rdi");
+    _PUSH("rdx");
+
+    _MOV("rax", "1");
+    _LEA("rsi", "[circle]");
+    _LABEL_USE("circle");
+    _MOV("rdx", "rbx");
+    _MOV("rdi", "1");
+    _SYSCALL();
+
+    _POP("rdx");
+    _POP("rdi");
+    _POP("rsi");
+
+    LPRINTF("emitNumber end");
 }
 
 void loadToRegX86Elf(varMapElem_t* var, codeGenContext* context){

@@ -198,7 +198,7 @@ void prepareInstructionEndcodeInfo(codeGenContext* context, instr_t instrType, s
 
     chooseArgsMode(context, curInstrInfo);
 
-    printf("curMode = %d\n", INSTRUCTION_INFO_MODE(curInstrInfo));
+    // printf("curMode = %d\n", INSTRUCTION_INFO_MODE(curInstrInfo));
 
     emitInstr(context, curInstrInfo);
 
@@ -212,7 +212,7 @@ static argInst_t instrGetArg(codeGenContext* context, instrArg_t* arg, const cha
     assert(arg);
     assert(strArg);
 
-    printf("strArg: %s\n", strArg);
+    // printf("strArg: %s\n", strArg);
 
     regTableElem_t* refReg = regTableElemCtor(NONE, (char*) strArg, ANY, 0);
 
@@ -246,7 +246,7 @@ static argInst_t instrGetArg(codeGenContext* context, instrArg_t* arg, const cha
             case 3:
                 if(op == '-') n *= -1; 
                 INSTRUCTION_ARG_MEM_SHIFT(arg) = n;
-                printf("INSTRUCTION_ARG_MEM_SHIFT = %d\n", INSTRUCTION_ARG_MEM_SHIFT(arg));
+                // printf("INSTRUCTION_ARG_MEM_SHIFT = %d\n", INSTRUCTION_ARG_MEM_SHIFT(arg));
                 break;
             default:
                 printf("Недопустимая адресация\n");
@@ -274,7 +274,7 @@ static argInst_t instrGetArg(codeGenContext* context, instrArg_t* arg, const cha
         INSTRUCTION_ARG_VALUE_REG(arg)   = foundReg;
         INSTRUCTION_ARG_IS_MEM_CASE(arg) = 1;
 
-        printf("parsedVarsAmount = %d\n", parsedVarsAmount);
+        // printf("parsedVarsAmount = %d\n", parsedVarsAmount);
         switch (parsedVarsAmount){
             case 1:
                 break;
@@ -282,7 +282,7 @@ static argInst_t instrGetArg(codeGenContext* context, instrArg_t* arg, const cha
             case 3:
                 if(op == '-') n *= -1; 
                 INSTRUCTION_ARG_MEM_SHIFT(arg) = n;
-                printf("INSTRUCTION_ARG_MEM_SHIFT = %d\n", INSTRUCTION_ARG_MEM_SHIFT(arg));
+                // printf("INSTRUCTION_ARG_MEM_SHIFT = %d\n", INSTRUCTION_ARG_MEM_SHIFT(arg));
                 break;
             default:
                 printf("Недопустимая адресация\n");
@@ -407,7 +407,7 @@ static void emitInstr(codeGenContext* context, instructionInfo* instrInfo){
     instrEncodeRule_t* instrEncodeRule = findEncodeRule(INSTRUCTION_INFO_TYPE(instrInfo), INSTRUCTION_INFO_MODE(instrInfo));
     assert(instrEncodeRule);
 
-    BP;
+    // BP;
 
     emitMandatory(context, instrInfo);
 

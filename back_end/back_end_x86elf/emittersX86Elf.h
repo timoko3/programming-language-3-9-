@@ -61,4 +61,8 @@ void emitOutX86ElfIn(treeNode_t* node, codeGenContext* context);
 void emitInX86ElfPre(treeNode_t* node, codeGenContext* context);
 void emitInX86ElfIn(treeNode_t* node, codeGenContext* context);
 
+void emitPopMX86ElfIn(treeNode_t* node, codeGenContext* context);
+void emitNewLineX86ElfIn(treeNode_t* node, codeGenContext* context);
+void emitDrawX86ElfIn(treeNode_t* node, codeGenContext* context);
+
 #endif /* EMITERS_X86ELF */
