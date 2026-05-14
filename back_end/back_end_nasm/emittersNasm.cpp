@@ -253,7 +253,7 @@ void emitWhileNasmPre(treeNode_t* node, codeGenContext* context){
     label_t* whileStartLabel = createLabel(_CONTEXT_LABELS_TABLE(context), LABEL_PREFIX_WHILE_BEGIN);
     assert(whileStartLabel);
 
-    fprintf(_CONTEXT_FILE_PTR(context), ".%s_%d\n", _LABEL_DATA_NAME(whileStartLabel), _LABEL_DATA_ID(whileStartLabel));
+    fprintf(_CONTEXT_FILE_PTR(context), ".%s_%d:\n", _LABEL_DATA_NAME(whileStartLabel), _LABEL_DATA_ID(whileStartLabel));
 
     _CONTEXT_CUR_LABEL_A(context) = whileStartLabel;
 }
@@ -286,8 +286,21 @@ void emitWhileNasmPost(treeNode_t* node, codeGenContext* context){
     assert(node);
     assert(context);
 
-    fprintf(_CONTEXT_FILE_PTR(context), "jmp .%s_%d:\n", _LABEL_DATA_NAME(_CONTEXT_CUR_LABEL_A(context)), _LABEL_DATA_ID(_CONTEXT_CUR_LABEL_A(context)));
-    fprintf(_CONTEXT_FILE_PTR(context), ".%s_%d:\n", _LABEL_DATA_NAME(_CONTEXT_CUR_LABEL_B(context)), _LABEL_DATA_ID(_CONTEXT_CUR_LABEL_B(context)));
+    label_t* whileEndLabel = topLabel(_CONTEXT_LABELS_TABLE(context)); 
+    assert(whileEndLabel);
+
+    char fullLabelName[64] = "";
+    sprintf(fullLabelName, ".%s_%d:", _LABEL_DATA_NAME(whileEndLabel), _LABEL_DATA_ID(whileEndLabel));
+
+    popLabel(_CONTEXT_LABELS_TABLE(context));
+
+    label_t* whileStartLabel = topLabel(_CONTEXT_LABELS_TABLE(context)); 
+    assert(whileStartLabel);
+
+    fprintf(_CONTEXT_FILE_PTR(context), "jmp .%s_%d\n", _LABEL_DATA_NAME(whileStartLabel), _LABEL_DATA_ID(whileStartLabel));
+    fprintf(_CONTEXT_FILE_PTR(context), "%s\n", fullLabelName);
+
+    popLabel(_CONTEXT_LABELS_TABLE(context));
 }
 
 void emitCmpNasmPost(treeNode_t* node, codeGenContext* context){
@@ -708,6 +721,46 @@ void emitOutNasmIn(treeNode_t* node, codeGenContext* context){
     fprintf(_CONTEXT_FILE_PTR(context), "pop rdi\n");
 
     popLabel(_CONTEXT_LABELS_TABLE(context));
+}
+
+void emitPopMNasmIn(treeNode_t* node, codeGenContext* context){
+    assert(node);
+    assert(context);
+
+    LPRINTF("emitNumber start");
+    
+    fprintf(_CONTEXT_FILE_PTR(context), "push rsi\n");
+
+    fprintf(_CONTEXT_FILE_PTR(context), "lea rsi, [circle]\n");
+    fprintf(_CONTEXT_FILE_PTR(context), "add rbx, rsi\n");
+    fprintf(_CONTEXT_FILE_PTR(context), "mov byte [rbx], '5'\n");
+
+    fprintf(_CONTEXT_FILE_PTR(context), "pop rsi\n");
+
+    LPRINTF("emitNumber end");
+}
+
+void emitDrawNasmIn(treeNode_t* node, codeGenContext* context){
+    assert(node);
+    assert(context);
+
+    LPRINTF("emitNumber start");
+    
+    fprintf(_CONTEXT_FILE_PTR(context), "push rsi\n");
+    fprintf(_CONTEXT_FILE_PTR(context), "push rdi\n");
+    fprintf(_CONTEXT_FILE_PTR(context), "push rdx\n");
+
+    fprintf(_CONTEXT_FILE_PTR(context), "mov rax, 1\n");
+    fprintf(_CONTEXT_FILE_PTR(context), "lea rsi, [circle]\n");
+    fprintf(_CONTEXT_FILE_PTR(context), "mov rdx, rbx\n");
+    fprintf(_CONTEXT_FILE_PTR(context), "mov rdi, 1\n");
+    fprintf(_CONTEXT_FILE_PTR(context), "syscall\n");
+
+    fprintf(_CONTEXT_FILE_PTR(context), "pop rdx\n");
+    fprintf(_CONTEXT_FILE_PTR(context), "pop rdi\n");
+    fprintf(_CONTEXT_FILE_PTR(context), "pop rsi\n");
+
+    LPRINTF("emitNumber end");
 }
 
 void loadToReg(varMapElem_t* var, codeGenContext* context){

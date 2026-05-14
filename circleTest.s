@@ -1,0 +1,346 @@
+section .text
+global _start
+_start:
+mov rbp, rsp
+mov rbx, 0
+mov r12, rbx
+
+
+;endAssign
+push rdi
+push rsi
+push rdx
+push rax
+push rcx
+push r8
+mov rbx, 0
+xor r8, r8
+.read_0:
+push 0
+mov rax, 0
+mov rdi, 0
+mov rsi, rsp
+mov rdx, 1
+syscall
+test rax, rax
+jle .readEnd_1
+pop rcx
+cmp cl, 10
+je .readEnd_1
+cmp cl, '-'
+jne .read_2
+mov r8, 1
+jmp .read_0
+.read_2:
+sub cl, '0'
+imul rbx, 10
+add rbx, rcx
+jmp .read_0
+.readEnd_1:
+test r8, r8
+jz .readEnd_3
+neg rbx
+.readEnd_3:
+mov r12, rbx
+pop r8
+pop rcx
+pop rax
+pop rdx
+pop rsi
+pop rdi
+mov rbx, 2
+mov r10, rbx
+push r10
+mov rbx, r12
+mov r11, rbx
+pop r10
+imul r10, r11
+mov rbx, r10
+mov r10, rbx
+push r10
+mov rbx, 1
+mov r11, rbx
+pop r10
+add r10, r11
+mov rbx, r10
+mov r13, rbx
+
+
+;endAssign
+mov rbx, r13
+mov r10, rbx
+push r10
+mov rbx, r13
+mov r11, rbx
+pop r10
+imul r10, r11
+mov rbx, r10
+mov r14, rbx
+
+
+;endAssign
+mov rbx, r12
+mov r10, rbx
+push r10
+mov rbx, r12
+mov r11, rbx
+pop r10
+imul r10, r11
+mov rbx, r10
+mov r15, rbx
+
+
+;endAssign
+mov rbx, 0
+sub rsp, 8
+mov [rbp - 8], rbx
+
+
+;endAssign
+mov rbx, 0
+sub rsp, 8
+mov [rbp - 16], rbx
+
+
+;endAssign
+mov rbx, 0
+sub rsp, 8
+mov [rbp - 24], rbx
+
+
+;endAssign
+mov rbx, 0
+sub rsp, 8
+mov [rbp - 32], rbx
+
+
+;endAssign
+mov rbx, 0
+sub rsp, 8
+mov [rbp - 40], rbx
+
+
+;endAssign
+mov rbx, 0
+sub rsp, 8
+mov [rbp - 48], rbx
+
+
+;endAssign
+mov rbx, 0
+sub rsp, 8
+mov [rbp - 56], rbx
+
+
+;endAssign
+.whileBegin_4:
+mov rbx, [rbp - 32]
+mov r10, rbx
+push r10
+mov rbx, r13
+mov r11, rbx
+pop r10
+cmp r10, r11
+jge .whileEnd_5
+mov rbx, 0
+sub rsp, 8
+mov [rbp - 24], rbx
+
+
+;endAssign
+.whileBegin_6:
+mov rbx, [rbp - 24]
+mov r10, rbx
+push r10
+mov rbx, r13
+mov r11, rbx
+pop r10
+cmp r10, r11
+jge .whileEnd_7
+mov rbx, 0
+sub rsp, 8
+mov [rbp - 40], rbx
+
+
+;endAssign
+mov rbx, [rbp - 24]
+mov r10, rbx
+push r10
+mov rbx, r12
+mov r11, rbx
+pop r10
+sub r10, r11
+mov rbx, r10
+sub rsp, 8
+mov [rbp - 56], rbx
+
+
+;endAssign
+mov rbx, [rbp - 56]
+mov r10, rbx
+push r10
+mov rbx, [rbp - 56]
+mov r11, rbx
+pop r10
+imul r10, r11
+mov rbx, r10
+sub rsp, 8
+mov [rbp - 56], rbx
+
+
+;endAssign
+mov rbx, [rbp - 40]
+mov r10, rbx
+push r10
+mov rbx, [rbp - 56]
+mov r11, rbx
+pop r10
+add r10, r11
+mov rbx, r10
+sub rsp, 8
+mov [rbp - 40], rbx
+
+
+;endAssign
+mov rbx, [rbp - 32]
+mov r10, rbx
+push r10
+mov rbx, r12
+mov r11, rbx
+pop r10
+sub r10, r11
+mov rbx, r10
+sub rsp, 8
+mov [rbp - 56], rbx
+
+
+;endAssign
+mov rbx, [rbp - 56]
+mov r10, rbx
+push r10
+mov rbx, [rbp - 56]
+mov r11, rbx
+pop r10
+imul r10, r11
+mov rbx, r10
+mov r10, rbx
+push r10
+mov rbx, 2
+mov r11, rbx
+pop r10
+imul r10, r11
+mov rbx, r10
+sub rsp, 8
+mov [rbp - 56], rbx
+
+
+;endAssign
+mov rbx, [rbp - 40]
+mov r10, rbx
+push r10
+mov rbx, [rbp - 56]
+mov r11, rbx
+pop r10
+add r10, r11
+mov rbx, r10
+sub rsp, 8
+mov [rbp - 40], rbx
+
+
+;endAssign
+mov rbx, [rbp - 40]
+mov r10, rbx
+push r10
+mov rbx, r15
+mov r11, rbx
+pop r10
+cmp r10, r11
+jge .ifEnd_8
+mov rbx, r13
+mov r10, rbx
+push r10
+mov rbx, [rbp - 32]
+mov r11, rbx
+pop r10
+imul r10, r11
+mov rbx, r10
+mov r10, rbx
+push r10
+mov rbx, [rbp - 24]
+mov r11, rbx
+pop r10
+add r10, r11
+mov rbx, r10
+sub rsp, 8
+mov [rbp - 48], rbx
+
+
+;endAssign
+mov rbx, [rbp - 48]
+push rsi
+lea rsi, [circle]
+add rbx, rsi
+mov byte [rbx], '5'
+pop rsi
+.ifEnd_8:
+mov rbx, [rbp - 24]
+mov r10, rbx
+push r10
+mov rbx, 1
+mov r11, rbx
+pop r10
+add r10, r11
+mov rbx, r10
+sub rsp, 8
+mov [rbp - 24], rbx
+
+
+;endAssign
+jmp .whileBegin_6
+.whileEnd_7:
+mov rbx, [rbp - 32]
+mov r10, rbx
+push r10
+mov rbx, 1
+mov r11, rbx
+pop r10
+add r10, r11
+mov rbx, r10
+sub rsp, 8
+mov [rbp - 32], rbx
+
+
+;endAssign
+jmp .whileBegin_4
+.whileEnd_5:
+mov rbx, r13
+mov r10, rbx
+push r10
+mov rbx, r13
+mov r11, rbx
+pop r10
+imul r10, r11
+mov rbx, r10
+mov r13, rbx
+
+
+;endAssign
+mov rbx, r13
+push rsi
+push rdi
+push rdx
+mov rax, 1
+lea rsi, [circle]
+mov rdx, rbx
+mov rdi, 1
+syscall
+pop rdx
+pop rdi
+pop rsi
+
+; sys_exit(0)
+mov rax, 60
+mov rdi, 0
+syscall
+section .data
+circle: times 1000 db '0'

@@ -17,7 +17,7 @@ void compilerBackend(char* sourceFileName, char* destFileName, backend_t typeBac
     treeCtor(&AST);
 
     treeRead(&AST, sourceFileName);
-    treeGraphDump(&AST);
+    // treeGraphDump(&AST);
     
     switch (typeBackend){
         #ifdef NASM

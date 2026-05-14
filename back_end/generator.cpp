@@ -83,7 +83,8 @@ static void genPreambleNasm(codeGenContext* context){
 static void genEpilogueNasm(codeGenContext* context){
     assert(context);
 
-
+    fprintf(_CONTEXT_FILE_PTR(context), "section .data\n");
+    fprintf(_CONTEXT_FILE_PTR(context), "circle: times 1000 db '0'\n");
 }
 
 #endif /* NASM */
